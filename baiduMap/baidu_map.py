@@ -50,10 +50,10 @@ def color_block_finder(img, lowerb, upperb,
     return_cnt=None
     for index,cnt in enumerate(contours):
         in_cnt = cv2.pointPolygonTest(cnt,(512,512),False)
-        print('in cnt',in_cnt)
+        # print('in cnt',in_cnt)
 
         if in_cnt>0:
-            print('len(cnt)',len(cnt))
+            # print('len(cnt)',len(cnt))
             return_cnt = cnt
             show_img = cv2.drawContours(show_img, cnt, -1, (0, 0, 255), 3)
     return show_img,return_cnt
@@ -153,7 +153,7 @@ class BaiduMap(object):
     # 静态图蓝色护坡区域抠图
     def get_pool_pix(self,img_path='114_392697_30_559696_15.png',b_show=True):
 
-        row_img = cv2.imread(img_path)
+        self.row_img = cv2.imread(img_path)
         # 图片路径
         # 颜色阈值下界(HSV) lower boudnary
         lowerb = self.threshold_hsv[0]
@@ -227,6 +227,50 @@ class BaiduMap(object):
         with open('map.json','w') as f:
             json.dump(return_gps,f)
         return return_gps
+
+    def scan_pool(self,contour,pix_gap=20):
+        """
+        传入湖泊像素轮廓返回活泼扫描点
+        :param contour 轮廓点
+        :param pix_gap 指定扫描间隔，单位像素
+        """
+        (x, y, w, h) = cv2.boundingRect(contour)
+        print('(x, y, w, h)',(x, y, w, h))
+        # 循环生成点同时判断点是否在湖泊范围在则添加到列表中
+        scan_points = []
+        # 起始点
+        start_x,start_y = x,y+pix_gap
+        # 当前点
+        current_x,current_y = start_x,start_y
+        # 判断x轴是递增的加还是减 True 为加
+        b_add_or_sub = True
+
+        while current_y<(y+h):
+            while current_x<=(x+w) and current_x>=x:
+                point = (current_x,current_y )
+                in_cnt = cv2.pointPolygonTest(contour, point, False)
+                # print('in cnt',in_cnt)
+                if in_cnt > 0:
+                    scan_points.append(list(point))
+                if b_add_or_sub:
+                    current_x+=pix_gap
+                else:
+                    current_x -= pix_gap
+            current_y+=pix_gap
+            if b_add_or_sub:
+                current_x -= pix_gap
+                b_add_or_sub=False
+            else:
+                current_x += pix_gap
+                b_add_or_sub = True
+        show_img = np.copy(self.row_img)
+        for point in scan_points:
+            cv2.circle(show_img,tuple(point), 3, (0,0,255), -1)
+        cv2.polylines(show_img,[np.array(scan_points,dtype=np.int32)],False,(255,0,0),2)
+        cv2.imshow('scan',show_img)
+        cv2.waitKey(0)
+
+
 
     def select_roi(self):
         '''
@@ -472,9 +516,10 @@ if __name__ == '__main__':
     # obj.select_roi()
     # obj.analyse_hsv()
     # obj.hsv_image_threshold()
-    return_cnt = obj.get_pool_pix(b_show=True)
-    gps = obj.pix_to_gps(return_cnt)
-    print(gps)
+    return_cnt = obj.get_pool_pix(b_show=False)
+    obj.scan_pool(return_cnt)
+    # gps = obj.pix_to_gps(return_cnt)
+    # print(gps)
     # 请求指定位置图片
     # obj.draw_image('114.37854,30.663444')
 
