@@ -194,13 +194,17 @@ class BaiduMap(object):
         :param cnt:
         :return:
         """
+        # 返回经纬度坐标集合
         return_gps = []
+        # 初始点（中心点）经纬度坐标
         center_gps = [114.392697,30.559696]
+        # 初始点（中心点）像素坐标
         center = (self.width/2,self.height/2)
+
         for point in cnt:
             delta_pix_x = point[0][0]-center[0]
             delta_pix_y = point[0][1]-center[1]
-            pix_2_meter = float(self.scale_map[self.zoom][0]) / self.scale_map[self.zoom][1]
+            pix_2_meter = math.pow(2,18-self.zoom)
             delta_meter_x = delta_pix_x*(pix_2_meter)
             delta_meter_y = delta_pix_y*(pix_2_meter)
 
@@ -508,6 +512,8 @@ def millerToLonLat(x,y):
     # TODO 最终需要确认经纬度保留小数点后几位
     lonlat_coordinate.append((round(lon,7),round(lat,7)))
     return lonlat_coordinate
+
+
 
 """
 
