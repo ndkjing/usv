@@ -4,7 +4,8 @@ import random
 import cv2
 import numpy as np
 import math
-
+import os
+import sys
 """
 ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
 """
@@ -76,10 +77,15 @@ def draw_color_block_rect(img, rects, color=(0, 0, 255)):
     return canvas
 
 class BaiduMap(object):
-    def __init__(self,ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY',height=1024,width=1024,zoom=9):
+    def __init__(self,lng_lat,ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY',height=1024,width=1024,zoom=9):
+        # 经纬度
+        self.lng_lat=lng_lat
+        # 访问秘钥
         self.ak = ak
+        # 图像高度和宽度
         self.height = height
         self.width = width
+        # 缩放比例
         self.zoom = zoom
         self.addr = str(round(100*random.random(),3))
         # ＨＳＶ阈值　［［低　ＨＳＶ］,　［高　ＨＳＶ］］
@@ -104,6 +110,9 @@ class BaiduMap(object):
             5:[500000, 76],
             4:[1000000,76],
             }
+        self.save_img_path = './%f_%f_%i.png'%(self.lng_lat[0],self.lng_lat[1],self.zoom)
+        if not os.path.exists(self.save_img_path):
+            self.draw_image()
 
     # 获取地址的url
     def get_url(self,addr):
@@ -129,31 +138,29 @@ class BaiduMap(object):
         return lat, lng
 
     # 获取经纬度url
-    def get_image_url(self,position):
+    def get_image_url(self):
         '''
             调用地图API获取待查询地址专属url
             最高查询次数30w/天，最大并发量160/秒
             http://api.map.baidu.com/staticimage/v2?ak=E4805d16520de693a3fe707cdc962045&mcode=666666&center=116.403874,39.914888&width=300&height=200&zoom=11
             '''
         return 'http://api.map.baidu.com/staticimage/v2?ak={myAk}&center={position}&width={width}&height={height}&zoom={zoom}'.format(
-            myAk=self.ak,position=position, width=self.width,height=self.height,zoom=self.zoom)
+            myAk=self.ak,position='%f,%f'%(self.lng_lat[0],self.lng_lat[1]), width=self.width,height=self.height,zoom=self.zoom)
 
     # 按照经纬度url获取静态图
-    def draw_image(self,position):
-        png_url = self.get_image_url(position)
+    def draw_image(self,):
+        png_url = self.get_image_url()
         print('png_url',png_url)
         response = requests.get(png_url)
         # 获取的文本实际上是图片的二进制文本
         img = response.content
         # 将他拷贝到本地文件 w 写  b 二进制  wb代表写入二进制文本
-        position = position.replace('.','_').replace(',','_')
-        with open( './%s_%i.png'%(position,self.zoom),'wb' ) as f:
+        with open(self.save_img_path,'wb' ) as f:
             f.write(img)
 
     # 静态图蓝色护坡区域抠图
-    def get_pool_pix(self,img_path='114_392697_30_559696_15.png',b_show=True):
-
-        self.row_img = cv2.imread(img_path)
+    def get_pool_pix(self,b_show=True):
+        self.row_img = cv2.imread(self.save_img_path)
         # 图片路径
         # 颜色阈值下界(HSV) lower boudnary
         lowerb = self.threshold_hsv[0]
@@ -161,7 +168,7 @@ class BaiduMap(object):
         upperb = self.threshold_hsv[1]
 
         # 读入素材图片 BGR
-        img = cv2.imread(img_path, cv2.IMREAD_COLOR)
+        img = cv2.imread(self.save_img_path, cv2.IMREAD_COLOR)
         # 检查图片是否读取成功
         if img is None:
             print("Error: 请检查图片文件路径")
@@ -187,52 +194,72 @@ class BaiduMap(object):
             cv2.destroyAllWindows()
         return return_cnt
 
-    # 蓝色区域围栏像素点转换为经纬度坐标点
+    # 区域像素点转换为经纬度坐标点
     def pix_to_gps(self,cnt):
         """
-
         :param cnt:
         :return:
         """
         # 返回经纬度坐标集合
         return_gps = []
         # 初始点（中心点）经纬度坐标
-        center_gps = [114.392697,30.559696]
         # 初始点（中心点）像素坐标
         center = (self.width/2,self.height/2)
 
         for point in cnt:
-            delta_pix_x = point[0][0]-center[0]
-            delta_pix_y = point[0][1]-center[1]
-            pix_2_meter = math.pow(2,18-self.zoom)
+            delta_pix_x = point[0]-center[0]
+            delta_pix_y = point[1]-center[1]
+            # pix_2_meter = math.pow(2,18-self.zoom)
+            pix_2_meter = float(self.scale_map[self.zoom][0])/self.scale_map[self.zoom][1]
             delta_meter_x = delta_pix_x*(pix_2_meter)
             delta_meter_y = delta_pix_y*(pix_2_meter)
+            # 方法一：直接计算
+            # 方法二：当做圆球计算
+            method=2
+            if method==1:
+                L = 6381372 * math.pi * 2
+                W = L
+                H = L / 2
+                mill = 2.3
+                delta_lat = ((H / 2 - delta_meter_y) * 2 * mill) / (1.25 * H)
+                delta_lat = ((math.atan(math.exp(delta_lat)) - 0.25 * math.pi) * 180) / (0.4 * math.pi)
+                delta_lon = (delta_meter_x - W / 2) * 360 / W
 
-            L = 6381372 * math.pi * 2
-            W = L
-            H = L / 2
-            mill = 2.3
-            delta_lat = ((H / 2 - delta_meter_y) * 2 * mill) / (1.25 * H)
-            delta_lat = ((math.atan(math.exp(delta_lat)) - 0.25 * math.pi) * 180) / (0.4 * math.pi)
-            delta_lon = (delta_meter_x - W / 2) * 360 / W
+                center_lat = ((H / 2 - 0) * 2 * mill) / (1.25 * H)
+                center_lat = ((math.atan(math.exp(center_lat)) - 0.25 * math.pi) * 180) / (0.4 * math.pi)
+                center_lon = (0 - W / 2) * 360 / W
 
-            center_lat = ((H / 2 - 0) * 2 * mill) / (1.25 * H)
-            center_lat = ((math.atan(math.exp(center_lat)) - 0.25 * math.pi) * 180) / (0.4 * math.pi)
-            center_lon = (0 - W / 2) * 360 / W
+                gpx_x = -(center_lon-delta_lon)
+                gpx_y = -(center_lat-delta_lat)
 
-            gpx_x = -(center_lon-delta_lon)
-            gpx_y = -(center_lat-delta_lat)
+                # TODO 最终需要确认经纬度保留小数点后几位
+                point_gps = [center_gps[0]+gpx_x,center_gps[1]+gpx_y]
+                return_gps.append({"lat":point_gps[1],"lng":point_gps[0]})
 
+            elif method==2:
+                """
+                    地理中常用的数学计算，把地球简化成了一个标准球形，如果想要推广到任意星球可以改成类的写法，然后修改半径即可
+                """
+                earth_radius = (6378.1370)*1000  # 地球平均半径，单位km，最简单的模型往往把地球当做完美的球形，这个值就是常说的RE
+                math_2pi = math.pi * 2
+                pis_per_degree = math_2pi / 360  # 角度一度所对应的弧度数，360对应2*pi
+                # 计算维度上圆面半径
+                real_radius = earth_radius * math.cos(self.lng_lat[1] * pis_per_degree)
+                # 经度偏差
+                delta_lng = (delta_meter_x/real_radius)/pis_per_degree
+                # 纬度偏差
+                delta_lat = -(delta_meter_y/earth_radius)/pis_per_degree
+                print(delta_lng,delta_lat)
+                # TODO 最终需要确认经纬度保留小数点后几位
+                point_gps = [self.lng_lat[0] + delta_lng, self.lng_lat[1] + delta_lat]
+                return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
 
-            # TODO 最终需要确认经纬度保留小数点后几位
-            point_gps = [center_gps[0]+gpx_x,center_gps[1]+gpx_y]
-            return_gps.append({"lat":point_gps[1],"lng":point_gps[0]})
         print('len ',len(return_gps))
         with open('map.json','w') as f:
             json.dump(return_gps,f)
         return return_gps
 
-    def scan_pool(self,contour,pix_gap=20):
+    def scan_pool(self,contour,pix_gap=20,b_show=True):
         """
         传入湖泊像素轮廓返回活泼扫描点
         :param contour 轮廓点
@@ -268,12 +295,13 @@ class BaiduMap(object):
                 current_x += pix_gap
                 b_add_or_sub = True
         show_img = np.copy(self.row_img)
-        for point in scan_points:
-            cv2.circle(show_img,tuple(point), 3, (0,0,255), -1)
-        cv2.polylines(show_img,[np.array(scan_points,dtype=np.int32)],False,(255,0,0),2)
-        cv2.imshow('scan',show_img)
-        cv2.waitKey(0)
-
+        if b_show:
+            for point in scan_points:
+                cv2.circle(show_img,tuple(point), 3, (0,0,255), -1)
+            cv2.polylines(show_img,[np.array(scan_points,dtype=np.int32)],False,(255,0,0),2)
+            cv2.imshow('scan',show_img)
+            cv2.waitKey(0)
+        return scan_points
 
 
     def select_roi(self):
@@ -366,7 +394,6 @@ class BaiduMap(object):
 
         # 显示画面
         plt.show()
-
 
     def hsv_image_threshold(self):
         '''
@@ -518,14 +545,20 @@ def millerToLonLat(x,y):
 """
 
 if __name__ == '__main__':
-    obj = BaiduMap(zoom=15)
+    obj = BaiduMap([120.181176,31.246429],zoom=10)
     # obj.select_roi()
     # obj.analyse_hsv()
     # obj.hsv_image_threshold()
-    return_cnt = obj.get_pool_pix(b_show=False)
-    obj.scan_pool(return_cnt)
-    # gps = obj.pix_to_gps(return_cnt)
+    pool_cnt = obj.get_pool_pix(b_show=False)
+    pool_cnt = np.squeeze(pool_cnt)
+
+    scan_cnt = obj.scan_pool(pool_cnt,pix_gap=40,b_show=True)
+
+    all_cnt = []
+    all_cnt.extend(list(pool_cnt))
+    all_cnt.extend(scan_cnt)
+    gps = obj.pix_to_gps(all_cnt)
     # print(gps)
     # 请求指定位置图片
-    # obj.draw_image('114.37854,30.663444')
+    # obj.draw_image()
 
