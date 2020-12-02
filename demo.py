@@ -1,0 +1,15 @@
+# encoding: utf-8
+
+import paho.mqtt.client as mqtt
+
+HOST = "ws://116.62.44.118"
+PORT = 8083
+
+def test():
+    client = mqtt.Client()
+    client.connect(HOST, PORT, 60)
+    client.pub("chat","hello liefyuan",2) # 发布一个主题为'chat',内容为‘hello liefyuan’的信息
+    client.loop_forever()
+
+if __name__ == '__main__':
+    test()

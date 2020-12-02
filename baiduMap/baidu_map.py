@@ -44,7 +44,7 @@ def color_block_finder(img, lowerb, upperb,
     #         # 将矩形的信息(tuple)添加到rects中
     #         rects.append((x, y, w, h))
     # 绘制轮廓
-    show_img = cv2.drawContours(show_img, contours, -1, (0, 255, 0), 2)
+    # show_img = cv2.drawContours(show_img, contours, -1, (0, 255, 0), 2)
     point = np.array((512,512))
     in_cnt=-1
     # 找到中心点所在的轮廓
@@ -75,6 +75,7 @@ def draw_color_block_rect(img, rects, color=(0, 0, 255)):
         cv2.rectangle(canvas, pt1=(x, y), pt2=(x + w, y + h), color=color, thickness=3)
 
     return canvas
+
 
 class BaiduMap(object):
     def __init__(self,lng_lat,ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY',height=1024,width=1024,zoom=9):
@@ -110,7 +111,7 @@ class BaiduMap(object):
             5:[500000, 76],
             4:[1000000,76],
             }
-        self.save_img_path = './%f_%f_%i.png'%(self.lng_lat[0],self.lng_lat[1],self.zoom)
+        self.save_img_path = './imgs/%f_%f_%i.png'%(self.lng_lat[0],self.lng_lat[1],self.zoom)
         if not os.path.exists(self.save_img_path):
             self.draw_image()
 
@@ -189,9 +190,9 @@ class BaiduMap(object):
             cv2.imshow('result', show_img)
 
             # 等待任意按键按下
-            cv2.waitKey(0)
+            # cv2.waitKey(0)
             # 关闭其他窗口
-            cv2.destroyAllWindows()
+            # cv2.destroyAllWindows()
         return return_cnt
 
     # 区域像素点转换为经纬度坐标点
@@ -233,14 +234,14 @@ class BaiduMap(object):
                 gpx_y = -(center_lat-delta_lat)
 
                 # TODO 最终需要确认经纬度保留小数点后几位
-                point_gps = [center_gps[0]+gpx_x,center_gps[1]+gpx_y]
+                point_gps = [self.lng_lat[0]+gpx_x,self.lng_lat[1]+gpx_y]
                 return_gps.append({"lat":point_gps[1],"lng":point_gps[0]})
 
             elif method==2:
                 """
                     地理中常用的数学计算，把地球简化成了一个标准球形，如果想要推广到任意星球可以改成类的写法，然后修改半径即可
                 """
-                earth_radius = (6378.1370)*1000  # 地球平均半径，单位km，最简单的模型往往把地球当做完美的球形，这个值就是常说的RE
+                earth_radius = (6370.8560)*1000  # 地球平均半径，单位km，最简单的模型往往把地球当做完美的球形，这个值就是常说的RE  平均半径　6370.856　　赤道半径6378.1370
                 math_2pi = math.pi * 2
                 pis_per_degree = math_2pi / 360  # 角度一度所对应的弧度数，360对应2*pi
                 # 计算维度上圆面半径
@@ -315,7 +316,7 @@ class BaiduMap(object):
         import sys
 
         # 文件路径
-        img_path = '114_392697_30_559696_15.png'
+        img_path = 'imgs/114_392697_30_559696_15.png'
         # 读入图片
         img = cv2.imread(img_path)
         # 创建一个窗口
@@ -338,9 +339,8 @@ class BaiduMap(object):
 
         # Display cropped image
         cv2.imshow("image_roi", imCrop)
-        cv2.imwrite("image_roi.png", imCrop)
+        cv2.imwrite("imgs/image_roi.png", imCrop)
         cv2.waitKey(0)
-
     '''
     绘制彩图在HSV颜色空间下的统计直方图
     '''
@@ -351,7 +351,7 @@ class BaiduMap(object):
         import sys
 
         # 读入图片
-        img_path = 'image_roi.png'
+        img_path = 'imgs/image_roi.png'
         img = cv2.imread(img_path)
         # img = cv2.imread('little_chess.png')
         if img is None:
@@ -494,7 +494,7 @@ class BaiduMap(object):
 
 
         # image_path = sys.argv[1]
-        image_path = '114_392697_30_559696_15.png'
+        image_path = 'imgs/114_392697_30_559696_15.png'
         # 样例图片 (在代码中填入)
         img = cv2.imread(image_path)
         if img is None:
@@ -540,16 +540,14 @@ def millerToLonLat(x,y):
     lonlat_coordinate.append((round(lon,7),round(lat,7)))
     return lonlat_coordinate
 
-
-
 """
 
 if __name__ == '__main__':
-    obj = BaiduMap([120.181176,31.246429],zoom=10)
+    obj = BaiduMap([99.937205,45.161601],zoom=4)
     # obj.select_roi()
     # obj.analyse_hsv()
     # obj.hsv_image_threshold()
-    pool_cnt = obj.get_pool_pix(b_show=False)
+    pool_cnt = obj.get_pool_pix(b_show=True)
     pool_cnt = np.squeeze(pool_cnt)
 
     scan_cnt = obj.scan_pool(pool_cnt,pix_gap=40,b_show=True)
