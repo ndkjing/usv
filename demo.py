@@ -2,14 +2,35 @@
 
 import paho.mqtt.client as mqtt
 
-HOST = "ws://116.62.44.118"
-PORT = 8083
+host = "116.62.44.118"
+port = 1883
 
-def test():
+import paho.mqtt.client as mqtt
+
+
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code " + str(rc))
+
+
+def on_message(client, userdata, msg):
+    print(msg.topic + " " + str(msg.payload))
+
+def pub():
+    client = mqtt.Client(client_id="jing")
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.connect(host, port, 600)
+    client.publish('qqq', payload='Hello,EMQ!', qos=2)
+    client.loop_start()
+
+def sub():
     client = mqtt.Client()
-    client.connect(HOST, PORT, 60)
-    client.pub("chat","hello liefyuan",2) # 发布一个主题为'chat',内容为‘hello liefyuan’的信息
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.connect(host, port, 600)
+    client.subscribe('qqq', qos=0)
+    # client.loop_start()
     client.loop_forever()
 
 if __name__ == '__main__':
-    test()
+    sub()
