@@ -122,9 +122,9 @@ if __name__ == '__main__':
     # 简单测试获取数据
     obj = DataDefine()
     data_dict = {}
-    data_dict.update({'statistics_data': obj.statistics_data()})
-    data_dict.update({'status_data':obj.status_data()})
-    data_dict.update({'meteorological_data':obj.meteorological_data()})
-    data_dict.update({'water_quality_data':obj.water_quality_data()})
+    data_dict.update({'statistics_data': obj.statistics_data()})  # http
+    data_dict.update({'status_data':obj.status_data()})   # mqtt
+    data_dict.update({'meteorological_data':obj.meteorological_data()})  # http
+    data_dict.update({'water_quality_data':obj.water_quality_data()})  #  http
     print(data_dict)
 
