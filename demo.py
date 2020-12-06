@@ -1,36 +1,28 @@
-# encoding: utf-8
+"""
+Companion routing UDP client example.
 
-import paho.mqtt.client as mqtt
+This script connects to a endpoint at the Companion exposed using the IP 0.0.0.0
+and a given port. It then sends some data so the server knows it has a client
+and starts relaying the serial data back at it.
+You should run this at your topside computer.
+"""
+import socket
+import time
 
-host = "116.62.44.118"
-port = 1883
+UDP_IP = "192.168.2.2" # Remote (Companion's) IP to connect to
+UDP_PORT = 8888        # Remote (Companion's) port to connect to
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-import paho.mqtt.client as mqtt
+try:
+    # Send something so the server knows where to reply to
+    # sent = sock.sendto(b"hello", (UDP_IP, UDP_PORT))
+    # Loop receiving data
+    while True:
+        data, server = sock.recvfrom(4096)
+        print(data.decode())
+        time.sleep(0.01)
+except Exception as e:
+    print(e)
+finally:
+    sock.close()
 
-
-def on_connect(client, userdata, flags, rc):
-    print("Connected with result code " + str(rc))
-
-
-def on_message(client, userdata, msg):
-    print(msg.topic + " " + str(msg.payload))
-
-def pub():
-    client = mqtt.Client(client_id="jing")
-    client.on_connect = on_connect
-    client.on_message = on_message
-    client.connect(host, port, 600)
-    client.publish('qqq', payload='Hello,EMQ!', qos=2)
-    client.loop_start()
-
-def sub():
-    client = mqtt.Client()
-    client.on_connect = on_connect
-    client.on_message = on_message
-    client.connect(host, port, 600)
-    client.subscribe('qqq', qos=0)
-    # client.loop_start()
-    client.loop_forever()
-
-if __name__ == '__main__':
-    sub()
