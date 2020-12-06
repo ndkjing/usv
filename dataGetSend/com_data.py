@@ -8,11 +8,11 @@ class ComData:
         pass
 
     # 发送数据到单片机
-    def send_server_http_data(self):
+    def send_data(self,data):
         pass
 
     # 从单片机接收数据
-    def send_server_mqtt_data(self):
+    def get_data(self):
         pass
 
 

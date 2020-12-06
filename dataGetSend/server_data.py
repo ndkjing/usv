@@ -11,7 +11,7 @@ import requests
 
 
 class ServerData:
-    def __init__(self):
+    def __init__(self,topic='control_data'):
         self.data_define_obj = DataDefine()
         data_dict = {}
         data_dict.update({'statistics_data': self.data_define_obj.statistics_data()})
@@ -19,17 +19,21 @@ class ServerData:
         data_dict.update({'meteorological_data': self.data_define_obj.meteorological_data()})
         data_dict.update({'water_quality_data': self.data_define_obj.water_quality_data()})
         self.log = LogHandler('server_data')
-        self.log.info(data_dict)
+        # self.log.info(data_dict)
         self.http_send_get_obj = HttpSendGet()
         self.mqtt_send_get_obj = MqttSendGet()
+        # 启动后自动订阅话题
+        self.mqtt_send_get_obj.subscribe_topic(topic=topic,qos=1)
+
+
 
     # 发送数据到服务器http
-    def send_server_http_data(self):
+    def send_server_http_data(self,data):
         pass
 
     # 发送数据到服务器mqtt
-    def send_server_mqtt_data(self):
-        pass
+    def send_server_mqtt_data(self,topic='test', data="", qos=1):
+        self.mqtt_send_get_obj.publish_topic(topic=topic, data=data, qos=qos)
 
     # 从服务器mqtt接收数据
     def get_server_mqtt_data(self):
@@ -77,6 +81,13 @@ class MqttSendGet:
         self.mqtt_client.on_message = self.on_message_callback
         self.mqtt_connect()
 
+        # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　
+        self.move_direction = -1
+        # 测量控制位　false为不采样　true为采样
+        self.b_sampling = False
+        # 抽水控制位
+        self.b_draw = False
+
     # 连接MQTT服务器
     def mqtt_connect(self):
         self.mqtt_client.connect(self.mqtt_host, self.mqtt_port, 60)
@@ -93,7 +104,18 @@ class MqttSendGet:
 
     # 消息处理函数回调
     def on_message_callback(self, client, userdata, msg):
-        print(msg.topic + " " + ":" + str(msg.payload))
+        # print(msg.topic + " " + ":" + str(msg.payload),type(msg.payload))
+        # 回调更新控制数据
+        control_data = json.loads(msg.payload)
+        assert isinstance(control_data,dict),'please send dict data'
+        if control_data.get('move_direction') is not None:
+            # print('self.move_direction',self.move_direction)
+            self.move_direction = control_data['move_direction']
+        if control_data.get('b_sampling') is not None:
+            self.b_sampling = control_data['b_sampling']
+        if control_data.get('b_draw') is not None:
+            self.b_draw = control_data['b_draw']
+
 
     # 发布消息
     def publish_topic(self,topic, data, qos=0):

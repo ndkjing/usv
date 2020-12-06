@@ -6,7 +6,57 @@
 class DataDefine:
 
     def __init__(self):
-        pass
+        ## 水质
+        self.pH = 0.00
+        self.DO = 0.00
+        self.COD = 0.00
+        self.EC = 0.00
+        self.TD = 0.00
+        self.NH3_NH4 = 0.00
+        self.TN = 0.00
+        self.TP = 0.00
+
+        ## 气象
+        self.wind_speed = 0.000
+        self.wind_direction = ""
+        self.rainfall = 0.000
+        self.illuminance = 0.000
+        self.temperature = 0.000
+        self.humidity = 0.000
+        self.pm25 = 0.000
+        self.pm10 = 0.000
+
+        ## 控制
+        # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　
+        self.move_direction = -1
+        # 测量控制位　false为不采样　true为采样
+        self.b_sampling = False
+        # 抽水控制位
+        self.b_draw = False
+
+        ## 状态数据
+        self.dump_energy = 0.000
+        self.current_lng_lat = [100.155214, 36.993676]
+        self.liquid_level = 0.000
+        self.b_leakage = False
+        self.direction = 90.0
+        self.speed = 0.000
+        self.attitude_angle = [0, 0, 90.0]
+        self.b_online = True
+        self.b_homing = False
+        self.charge_energy = 0.000
+        self.sampling_depth = 0.000
+        self.ship_code = "S9999"
+        self.data_flow = 0.000
+        self.sampling_count = 0
+        self.capicity = 0.00
+
+        ## 统计数据
+        self.work_time=.000
+        self.work_distance=0.000
+        self.sampling_lng_lat=[[100.155214, 36.993676], [100.837558, 37.117129]]
+
+
 
     # 水质数据
     def water_quality_data(self):
@@ -32,6 +82,7 @@ class DataDefine:
                        }
         return return_dict
 
+
     # 气象数据
     def meteorological_data(self):
         """
@@ -56,6 +107,7 @@ class DataDefine:
                        "pm10": 0.000,
                        }
         return return_dict
+
 
     # 控制数据
     def control_data(self):
@@ -86,12 +138,12 @@ class DataDefine:
         船舱容量状态：　　capicity　　　浮点数（0.0--1.0  百分比率　垃圾收集船内部容量）
         """
         return_dict = {"dump_energy": 0.000,
-                       "current_lng_lat": [100.155214,36.993676],
+                       "current_lng_lat": [100.155214, 36.993676],
                        "liquid_level": 0.000,
                        "b_leakage": False,
                        "direction": 90.0,
                        "speed": 0.000,
-                       "attitude_angle": [0,0,90.0],
+                       "attitude_angle": [0, 0, 90.0],
                        "b_online": True,
                        "b_homing": False,
                        "charge_energy": 0.000,
@@ -104,6 +156,7 @@ class DataDefine:
 
         return return_dict
 
+
     def statistics_data(self):
         """
         解释　　　　　字典键名称　　    数据类型　　
@@ -113,18 +166,25 @@ class DataDefine:
         """
         return_dict = {"work_time": 0.000,
                        "work_distance": 0.000,
-                       "sampling_lng_lat": [[100.155214,36.993676],[100.837558,37.117129]],
+                       "sampling_lng_lat": [[100.155214, 36.993676], [100.837558, 37.117129]],
                        }
         return return_dict
+
+    def get_all_data(self):
+        """
+        获取所有数据
+        """
+        data_dict = {}
+        data_dict.update({'statistics_data': self.statistics_data()})  # http
+        data_dict.update({'status_data': self.status_data()})  # mqtt
+        data_dict.update({'control_data': self.control_data()})  # mqtt
+        data_dict.update({'meteorological_data': self.meteorological_data()})  # http
+        data_dict.update({'water_quality_data': self.water_quality_data()})  # http
+        return data_dict
 
 
 if __name__ == '__main__':
     # 简单测试获取数据
     obj = DataDefine()
-    data_dict = {}
-    data_dict.update({'statistics_data': obj.statistics_data()})  # http
-    data_dict.update({'status_data':obj.status_data()})   # mqtt
-    data_dict.update({'meteorological_data':obj.meteorological_data()})  # http
-    data_dict.update({'water_quality_data':obj.water_quality_data()})  #  http
+    data_dict = obj.get_all_data()
     print(data_dict)
-
