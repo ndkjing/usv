@@ -6,7 +6,8 @@ import binascii
 import time
 
 class SerialData:
-    def __init__(self, com='com10', bot=38400, timeout=0.5):
+    def __init__(self, log,com='com10', bot=38400, timeout=0.5):
+        self.log = log
         self.com = com
         self.bot = bot
         try:
@@ -24,8 +25,11 @@ class SerialData:
                 self.data=row_data
 
 class ComData:
-    def __init__(self):
-        self.serial_obj = SerialData()
+    """
+    读取与写入串口数据
+    """
+    def __init__(self,log):
+        self.serial_obj = SerialData(log,com='com10', bot=38400, timeout=0.5)
 
     # 发送数据到单片机
     def send_data(self,data):

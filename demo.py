@@ -1,28 +1,36 @@
-"""
-Companion routing UDP client example.
+import config
 
-This script connects to a endpoint at the Companion exposed using the IP 0.0.0.0
-and a given port. It then sends some data so the server knows it has a client
-and starts relaying the serial data back at it.
-You should run this at your topside computer.
-"""
-import socket
-import time
+import json, os
 
-UDP_IP = "192.168.2.2" # Remote (Companion's) IP to connect to
-UDP_PORT = 8888        # Remote (Companion's) port to connect to
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+# if not os.path.exists(config.local_map_data_path):
+#     with open(config.local_map_data_path, 'w') as f:
+#         json.dump({'2': 2}, f)
+# else:
+#     with open(config.local_map_data_path, 'r') as f:
+#         data = json.load(f)
+#         print(data)
+#     with open(config.local_map_data_path, 'w') as f:
+#         data.update({'1':1})
+#         print(data)
+#         json.dump(data, f)
 
-try:
-    # Send something so the server knows where to reply to
-    # sent = sock.sendto(b"hello", (UDP_IP, UDP_PORT))
-    # Loop receiving data
-    while True:
-        data, server = sock.recvfrom(4096)
-        print(data.decode())
-        time.sleep(0.01)
-except Exception as e:
-    print(e)
-finally:
-    sock.close()
+# with open(config.local_map_data_path, 'r') as f:
+#     data = json.load(f)
+#     print(data)
+# import utils.log as log
+#
+# logger = log.LogHandler('test_log')
+# logger.info({"海带丝":123})
 
+
+import numpy as np
+with open('test.json' ,'w') as f:
+    a = np.array([[1,2],[3,4]])
+    l = a.tolist()
+    print(type(l))
+    json.dump({'1':l},f)
+
+with open('test.json' ,'r') as f1:
+    out_data = json.load(f1)
+    print(out_data)
+    print(type(out_data['1']))

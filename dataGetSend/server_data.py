@@ -3,6 +3,7 @@
 """
 from dataGetSend.data_define import DataDefine
 from utils.log import LogHandler
+import config
 
 import paho.mqtt.client as mqtt
 import time
@@ -11,7 +12,12 @@ import requests
 
 
 class ServerData:
-    def __init__(self,topic='control_data'):
+    def __init__(self,log,
+                 topics=(('control_data',1),
+                         ('path_confirm',1),
+                         ('user_lng_lat',1))):
+        self.log = log
+        self.topics = topics
         self.data_define_obj = DataDefine()
         data_dict = {}
         data_dict.update({'statistics_data': self.data_define_obj.statistics_data()})
@@ -23,13 +29,27 @@ class ServerData:
         self.http_send_get_obj = HttpSendGet()
         self.mqtt_send_get_obj = MqttSendGet()
         # 启动后自动订阅话题
-        self.mqtt_send_get_obj.subscribe_topic(topic=topic,qos=1)
-
+        for topic,qos in self.topics:
+            self.mqtt_send_get_obj.subscribe_topic(topic=topic,qos=1)
 
 
     # 发送数据到服务器http
-    def send_server_http_data(self,data):
-        pass
+    def send_server_http_data(self,request_type,data,url):
+        # 请求头设置
+        payloadHeader = {
+            # 'Host': 'sellercentral.amazon.com',
+            'Content-Type': 'application/json',
+        }
+        assert request_type in ['POST','GET']
+        if request_type=='POST':
+            print(type(data))
+            dumpJsonData = json.dumps(data)
+            # print(f"dumpJsonData = {dumpJsonData}")
+            # print('url',url)
+            return_data = requests.post(url=url,data=dumpJsonData,headers=payloadHeader)
+        else :
+            return_data = requests.get(url=url)
+        return return_data
 
     # 发送数据到服务器mqtt
     def send_server_mqtt_data(self,topic='test', data="", qos=1):
@@ -106,16 +126,37 @@ class MqttSendGet:
     # 消息处理函数回调
     def on_message_callback(self, client, userdata, msg):
         # print(msg.topic + " " + ":" + str(msg.payload),type(msg.payload))
-        # 回调更新控制数据
-        control_data = json.loads(msg.payload)
-        assert isinstance(control_data,dict),'please send dict data'
-        if control_data.get('move_direction') is not None:
-            # print('self.move_direction',self.move_direction)
-            self.move_direction = control_data['move_direction']
-        if control_data.get('b_sampling') is not None:
-            self.b_sampling = control_data['b_sampling']
-        if control_data.get('b_draw') is not None:
-            self.b_draw = control_data['b_draw']
+        ## 回调更新控制数据
+        # 判断topic
+        topic = msg.topic
+        if topic =='control_data':
+            # 处理控制数据
+            control_data = json.loads(msg.payload)
+            assert isinstance(control_data,dict),'please send dict data'
+            if control_data.get('move_direction') is not None:
+                # print('self.move_direction',self.move_direction)
+                self.move_direction = control_data['move_direction']
+            if control_data.get('b_sampling') is not None:
+                self.b_sampling = control_data['b_sampling']
+            if control_data.get('b_draw') is not None:
+                self.b_draw = control_data['b_draw']
+        elif topic=='user_lng_lat':
+            # 用户点击经纬度和图层 保存到指定路径
+            user_lng_lat_data = json.loads(msg.payload)
+            with open(config.usr_lng_lat_path,'w') as f:
+                json.dump(user_lng_lat_data,f)
+
+        elif topic=='path_confirm':
+            # 判断是否确然当前路径
+            path_confirm_data=json.loads(msg.payload)
+            with open(config.usr_lng_lat_path,'rw') as f:
+                user_lng_lat_data = json.load(f)
+                b_confirm = path_confirm_data['confirm']
+                if b_confirm:
+                    user_lng_lat_data.update({'confirm':True})
+                else:
+                    user_lng_lat_data.update({'confirm': False})
+
 
 
     # 发布消息

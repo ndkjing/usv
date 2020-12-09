@@ -14,7 +14,7 @@ ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
 def color_block_finder(img, lowerb, upperb,
                        min_w=0, max_w=None, min_h=0, max_h=None):
     '''
-    色块识别 返回矩形信息
+    色块识别 返回矩形信息，若没有找到返回矩形框为None
     '''
     # 转换色彩空间 HSV
     img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -47,17 +47,26 @@ def color_block_finder(img, lowerb, upperb,
     # show_img = cv2.drawContours(show_img, contours, -1, (0, 255, 0), 2)
     point = np.array((512,512))
     in_cnt=-1
+    contours_cx = -1
+    contours_cy = -1
     # 找到中心点所在的轮廓
     return_cnt=None
     for index,cnt in enumerate(contours):
+        # 判断是否在轮廓内部
         in_cnt = cv2.pointPolygonTest(cnt,(512,512),False)
         # print('in cnt',in_cnt)
 
         if in_cnt>0:
             # print('len(cnt)',len(cnt))
+            # 计算轮廓的中心点
+            M = cv2.moments(contours[index])  # 计算第一条轮廓的矩
+            # print(M)
+            # 这两行是计算中心点坐标
+            contours_cx = int(M['m10'] / M['m00'])
+            contours_cy = int(M['m01'] / M['m00'])
             return_cnt = cnt
             show_img = cv2.drawContours(show_img, cnt, -1, (0, 0, 255), 3)
-    return show_img,return_cnt
+    return show_img,return_cnt,(contours_cx,contours_cy)
 
     # return rects
 
@@ -75,6 +84,21 @@ def draw_color_block_rect(img, rects, color=(0, 0, 255)):
         cv2.rectangle(canvas, pt1=(x, y), pt2=(x + w, y + h), color=color, thickness=3)
 
     return canvas
+
+# 判断地图上一点是否属于曾经出现在湖泊上的点
+def is_in_contours(point,local_map_data):
+    # 没有返回None
+    if len(local_map_data)==0:
+        return None
+    else:
+        # 判断是否在轮廓内部
+        for index,cnt in enumerate(local_map_data['mapList']):
+            in_cnt = cv2.pointPolygonTest(np.array(cnt['pool_cnt']), point, False)
+            # 大于0说明属于该轮廓
+            if in_cnt>0:
+                return cnt['id']
+        # 循环结束返回None
+        return None
 
 
 class BaiduMap(object):
@@ -111,6 +135,8 @@ class BaiduMap(object):
             5:[500000, 76],
             4:[1000000,76],
             }
+        if not os.path.exists('./imgs'):
+            os.mkdir('./imgs')
         self.save_img_path = './imgs/%f_%f_%i.png'%(self.lng_lat[0],self.lng_lat[1],self.zoom)
         if not os.path.exists(self.save_img_path):
             self.draw_image()
@@ -160,7 +186,12 @@ class BaiduMap(object):
             f.write(img)
 
     # 静态图蓝色护坡区域抠图
-    def get_pool_pix(self,b_show=True):
+    def get_pool_pix(self,b_show=False):
+        """
+        查找点击位置湖泊锁在的轮廓
+        :param b_show: True显示轮廓图像
+        :return:
+        """
         self.row_img = cv2.imread(self.save_img_path)
         # 图片路径
         # 颜色阈值下界(HSV) lower boudnary
@@ -176,16 +207,19 @@ class BaiduMap(object):
             exit(1)
 
         # 识别色块 获取矩形区域数组
-        show_img,return_cnt = color_block_finder(img, lowerb, upperb)
+
+        show_img,return_cnt,(contours_cx,contours_cy) = color_block_finder(img, lowerb, upperb)
+        center_pix =(contours_cx,contours_cy)
         if return_cnt is None:
             print('无法在点击处找到湖')
-            exit()
+            return return_cnt,center_pix
 
         # 绘制色块的矩形区域
         # canvas = draw_color_block_rect(img, rects)
         # 在HighGUI窗口 展示最终结果
         if b_show:
             cv2.namedWindow('result', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
+            cv2.circle(show_img,(contours_cx,contours_cy),5,[255,255,0],-1)
             # cv2.imshow('result', canvas)
             cv2.imshow('result', show_img)
 
@@ -193,7 +227,7 @@ class BaiduMap(object):
             # cv2.waitKey(0)
             # 关闭其他窗口
             # cv2.destroyAllWindows()
-        return return_cnt
+        return return_cnt,center_pix
 
     # 区域像素点转换为经纬度坐标点
     def pix_to_gps(self,cnt):
@@ -203,6 +237,8 @@ class BaiduMap(object):
         """
         # 返回经纬度坐标集合
         return_gps = []
+        # 给后端的返回
+        return_gps_list=[]
         # 初始点（中心点）经纬度坐标
         # 初始点（中心点）像素坐标
         center = (self.width/2,self.height/2)
@@ -250,17 +286,18 @@ class BaiduMap(object):
                 delta_lng = (delta_meter_x/real_radius)/pis_per_degree
                 # 纬度偏差
                 delta_lat = -(delta_meter_y/earth_radius)/pis_per_degree
-                print(delta_lng,delta_lat)
+                # print(delta_lng,delta_lat)
                 # TODO 最终需要确认经纬度保留小数点后几位
                 point_gps = [self.lng_lat[0] + delta_lng, self.lng_lat[1] + delta_lat]
                 return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
+                return_gps_list.append(point_gps)
 
         print('len ',len(return_gps))
         with open('map.json','w') as f:
             json.dump(return_gps,f)
-        return return_gps
+        return return_gps,return_gps_list
 
-    def scan_pool(self,contour,pix_gap=20,b_show=True):
+    def scan_pool(self,contour,pix_gap=20,b_show=False):
         """
         传入湖泊像素轮廓返回活泼扫描点
         :param contour 轮廓点
@@ -503,51 +540,14 @@ class BaiduMap(object):
 
         main(img)
 
-"""
-xy_coordinate = []  # 转换后的XY坐标集
-def millerToXY (lon, lat):
-    经纬度转换为平面坐标系中的x,y 利用米勒坐标系
-    :param lon: 经度
-    :param lat: 维度
-    :return:
 
-    L = 6381372*math.pi*2
-    W = L
-    H = L/2
-    mill = 2.3
-    x = lon*math.pi/180
-    y = lat*math.pi/180
-    y = 1.25*math.log(math.tan(0.25*math.pi+0.4*y))
-    x = (W/2)+(W/(2*math.pi))*x
-    y = (H/2)-(H/(2*mill))*y
-    xy_coordinate.append((int(round(x)),int(round(y))))
-    return xy_coordinate
-
-lonlat_coordinate = []  # 经纬度坐标集
-def millerToLonLat(x,y):
-    将平面坐标系中的x,y转换为经纬度，利用米勒坐标系
-    :param x: x轴
-    :param y: y轴
-    :return:
-    L = 6381372 * math.pi*2
-    W = L
-    H = L/2
-    mill = 2.3
-    lat = ((H/2-y)*2*mill)/(1.25*H)
-    lat = ((math.atan(math.exp(lat))-0.25*math.pi)*180)/(0.4*math.pi)
-    lon = (x-W/2)*360/W
-    # TODO 最终需要确认经纬度保留小数点后几位
-    lonlat_coordinate.append((round(lon,7),round(lat,7)))
-    return lonlat_coordinate
-
-"""
 
 if __name__ == '__main__':
-    obj = BaiduMap([99.937205,45.161601],zoom=4)
+    obj = BaiduMap([114.393142,30.558981],zoom=14)
     # obj.select_roi()
     # obj.analyse_hsv()
     # obj.hsv_image_threshold()
-    pool_cnt = obj.get_pool_pix(b_show=True)
+    pool_cnt,(pool_cx,pool_cy) = obj.get_pool_pix(b_show=True)
     pool_cnt = np.squeeze(pool_cnt)
 
     scan_cnt = obj.scan_pool(pool_cnt,pix_gap=40,b_show=True)

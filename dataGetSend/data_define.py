@@ -1,12 +1,39 @@
 """
 定义数据类型
 """
-
-
+name_mappings = {
+    # 'pool_id':'mapId',
+    # 'ship_code':'deviceId',
+    'water_quality_data':{
+    'pH':'ph',
+    'DO':'doDo',
+    'COD':'cod',
+    'EC':'ec',
+    'TD':'td',
+    'NH3_NH4':'nh3Nh4',
+    'TN':'tn',
+    'TP':'tp'},
+    'meteorological_data':{
+    'wind_speed': 'windSpeed',
+   'wind_direction': 'windDirection',
+   'rainfall': 'rainfall',
+   'illuminance': 'illuminance',
+   'temperature': 'temperature',
+   'humidity': 'humidity',
+   'pm25': 'pm25',
+   'pm10': 'pm10',
+    }
+}
 class DataDefine:
 
-    def __init__(self):
-        pass
+    def __init__(self,ship_code=None):
+        """
+        数据定义对象
+        :param ship_code:船编号
+        :param pool_code:湖泊编号
+        """
+        self.ship_code = ship_code
+        self.pool_code = ""
 
     # 水质数据
     def water_quality_data(self):
@@ -64,7 +91,6 @@ class DataDefine:
         解释　　　　　字典键名称　　数据类型　　
         """
 
-
     # 状态数据
     def status_data(self):
         """
@@ -81,6 +107,7 @@ class DataDefine:
         充电状态：　　charge_energy　　浮点数（0.0--1.0  百分比率　在充电状态下的充电电量）　　　
         采样深度：　　sampling_depth　　浮点数(单位:ｍ)
         船号：　　　　ship_code      字符串（船出厂编号）
+        湖泊编号     pool_code      字符串（湖泊编号）
         4G卡流量：　　data_flow       浮点数（单位：ＭＢ）
         采样量：　　　sampling_count　　整数（采样点的个数）
         船舱容量状态：　　capicity　　　浮点数（0.0--1.0  百分比率　垃圾收集船内部容量）
@@ -96,12 +123,12 @@ class DataDefine:
                        "b_homing": False,
                        "charge_energy": 0.000,
                        "sampling_depth": 0.000,
-                       "ship_code": "S9999",
+                       "ship_code": self.ship_code,
+                       "pool_code":self.pool_code,
                        "data_flow": 0.000,
                        "sampling_count": 0,
                        "capicity": 0.00
                        }
-
         return return_dict
 
     def statistics_data(self):
