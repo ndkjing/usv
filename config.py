@@ -11,3 +11,9 @@ local_map_data_path = os.path.join(maps_dir,'local_map.json')
 # 保存当前用户点击位置相关信息
 usr_lng_lat_path = os.path.join(maps_dir,'usr_lng_lat_path.json')
 
+# 单片机发送给树莓派频率
+com2pi_interval=2
+# 给单片机发送频率
+pi2com_interval=10
+# 给服务器发送间隔
+pi2mqtt_interval = 3

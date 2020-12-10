@@ -2,8 +2,9 @@
 网络数据收发
 """
 from dataGetSend.data_define import DataDefine
-from utils.log import LogHandler
 import config
+from dataGetSend import data_define
+from utils import log
 
 import paho.mqtt.client as mqtt
 import time
@@ -12,26 +13,16 @@ import requests
 
 
 class ServerData:
-    def __init__(self,log,
-                 topics=(('control_data',1),
-                         ('path_confirm',1),
-                         ('user_lng_lat',1))):
-        self.log = log
+
+    def __init__(self,logger,
+                 topics):
+        self.logger = logger
         self.topics = topics
-        self.data_define_obj = DataDefine()
-        data_dict = {}
-        data_dict.update({'statistics_data': self.data_define_obj.statistics_data()})
-        data_dict.update({'status_data': self.data_define_obj.status_data()})
-        data_dict.update({'meteorological_data': self.data_define_obj.meteorological_data()})
-        data_dict.update({'water_quality_data': self.data_define_obj.water_quality_data()})
-        self.log = LogHandler('server_data')
-        # self.log.info(data_dict)
         self.http_send_get_obj = HttpSendGet()
-        self.mqtt_send_get_obj = MqttSendGet()
+        self.mqtt_send_get_obj = MqttSendGet(self.logger)
         # 启动后自动订阅话题
         for topic,qos in self.topics:
-            self.mqtt_send_get_obj.subscribe_topic(topic=topic,qos=1)
-
+            self.mqtt_send_get_obj.subscribe_topic(topic=topic,qos=qos)
 
     # 发送数据到服务器http
     def send_server_http_data(self,request_type,data,url):
@@ -42,7 +33,7 @@ class ServerData:
         }
         assert request_type in ['POST','GET']
         if request_type=='POST':
-            print(type(data))
+            # print(type(data))
             dumpJsonData = json.dumps(data)
             # print(f"dumpJsonData = {dumpJsonData}")
             # print('url',url)
@@ -55,12 +46,6 @@ class ServerData:
     def send_server_mqtt_data(self,topic='test', data="", qos=1):
         self.mqtt_send_get_obj.publish_topic(topic=topic, data=data, qos=qos)
 
-    # 从服务器mqtt接收数据
-    def get_server_mqtt_data(self):
-        pass
-    # 从服务器http接收数据
-    def get_server_http_data(self):
-        pass
 
 
 class HttpSendGet:
@@ -91,7 +76,8 @@ class MqttSendGet:
     """
     处理mqtt数据收发
     """
-    def __init__(self,mqtt_host='116.62.44.118',mqtt_port=1883,client_id='jing'):
+    def __init__(self,logger,mqtt_host='116.62.44.118',mqtt_port=1883,client_id='jing'):
+        self.logger = logger
         self.mqtt_host = mqtt_host
         self.mqtt_port = mqtt_port
         self.mqtt_client= mqtt.Client(client_id=client_id)
@@ -102,11 +88,15 @@ class MqttSendGet:
         self.mqtt_connect()
 
         # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　
-        self.move_direction = -1
-        # 测量控制位　false为不采样　true为采样
-        self.b_sampling = False
-        # 抽水控制位
-        self.b_draw = False
+        self.move_direction = 360
+        # 测量控制位　0为不采样　1为采样
+        self.b_sampling = 0
+        # 抽水控制位  0为不抽水　1为抽水
+        self.b_draw = 0
+        # 接收到的经纬度
+        self.lng_lat = None
+        self.zoom = None
+
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -129,24 +119,32 @@ class MqttSendGet:
         ## 回调更新控制数据
         # 判断topic
         topic = msg.topic
-        if topic =='control_data':
+        if topic =='control_data_%s'%(data_define.ship_code):
             # 处理控制数据
             control_data = json.loads(msg.payload)
             assert isinstance(control_data,dict),'please send dict data'
             if control_data.get('move_direction') is not None:
-                # print('self.move_direction',self.move_direction)
                 self.move_direction = control_data['move_direction']
+                self.logger('move_direction', self.move_direction)
             if control_data.get('b_sampling') is not None:
-                self.b_sampling = control_data['b_sampling']
+                if int(control_data['b_sampling'])==1:
+                    self.b_sampling = 1
             if control_data.get('b_draw') is not None:
-                self.b_draw = control_data['b_draw']
-        elif topic=='user_lng_lat':
+                if int(control_data['b_draw'])==1:
+                    self.b_draw = 1
+
+        elif topic=='user_lng_lat_%s'%(data_define.ship_code):
             # 用户点击经纬度和图层 保存到指定路径
             user_lng_lat_data = json.loads(msg.payload)
-            with open(config.usr_lng_lat_path,'w') as f:
-                json.dump(user_lng_lat_data,f)
+            # TODO 暂时不保存
+            # with open(config.usr_lng_lat_path,'w') as f:
+            #     json.dump(user_lng_lat_data,f)
+            if user_lng_lat_data.get('b_draw') is not None:
+                self.lng_lat = user_lng_lat_data.get('lng_lat')
+                self.zoom = user_lng_lat_data.get('zoom')
+                self.logger.info({'lng_lat':user_lng_lat_data.get('lng_lat'),'zoom':user_lng_lat_data.get('zoom')})
 
-        elif topic=='path_confirm':
+        elif topic=='path_confirm_%s'%(data_define.ship_code):
             # 判断是否确然当前路径
             path_confirm_data=json.loads(msg.payload)
             with open(config.usr_lng_lat_path,'rw') as f:
@@ -156,8 +154,6 @@ class MqttSendGet:
                     user_lng_lat_data.update({'confirm':True})
                 else:
                     user_lng_lat_data.update({'confirm': False})
-
-
 
     # 发布消息
     def publish_topic(self,topic, data, qos=0):
@@ -190,13 +186,15 @@ class MqttSendGet:
 
 if __name__ == '__main__':
     # obj = ServerData()
-    obj = MqttSendGet()
-    obj.subscribe_topic(topic='qqq')
+    logger = log.LogHandler('server_data_test')
+    mqtt_obj = MqttSendGet(logger)
+    data_define_obj = DataDefine()
+    # 启动后自动订阅话题
+    for topic, qos in data_define_obj.topics:
+        mqtt_obj.subscribe_topic(topic=topic, qos=qos)
+    # http发送检测数据给服务器
     while True:
-        obj.publish_topic(topic='qqq', data={'12312':'Hello,EMQ!'}, qos=2)
-        time.sleep(2)
-    # obj.mqtt_client.loop_forever()
-    # while True:
-    #     print("%s"%(str(time.time())))
-    #     obj.on_publish("jing1", "%s"%(str(time.time())), 1)
-    #     time.sleep(2)
+        mqtt_obj.publish_topic(topic='status_data_%s' % (data_define.ship_code), data=data_define.status_data(), qos=1)
+        mqtt_obj.publish_topic(topic='detect_data_%s' % (data_define.ship_code), data=data_define.detect_data(), qos=1)
+        time.sleep(config.pi2mqtt_interval)
+

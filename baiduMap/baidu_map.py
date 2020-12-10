@@ -93,7 +93,13 @@ def is_in_contours(point,local_map_data):
     else:
         # 判断是否在轮廓内部
         for index,cnt in enumerate(local_map_data['mapList']):
-            in_cnt = cv2.pointPolygonTest(np.array(cnt['pool_cnt']), point, False)
+            # 直接使用像素位置判断
+            # in_cnt = cv2.pointPolygonTest(np.array(cnt['pool_cnt']), point, False)
+            # 使用经纬度判断
+            new_cnt = []
+            for i in cnt['mapData']:
+                new_cnt.append([int(i[0]*1000000),int(i[1]*1000000)])
+            in_cnt = cv2.pointPolygonTest(np.array(new_cnt), (point[0][0],point[0][1]), False)
             # 大于0说明属于该轮廓
             if in_cnt>0:
                 return cnt['id']
@@ -292,7 +298,7 @@ class BaiduMap(object):
                 return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
                 return_gps_list.append(point_gps)
 
-        print('len ',len(return_gps))
+        # print('len ',len(return_gps))
         with open('map.json','w') as f:
             json.dump(return_gps,f)
         return return_gps,return_gps_list

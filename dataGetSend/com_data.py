@@ -1,50 +1,167 @@
 """
 串口数据收发
 """
-import serial, time
+import serial
+import serial.tools.list_ports
 import binascii
 import time
+import copy
+from threading import Thread
+
+from utils import log
+
+logger = log.LogHandler('test_com')
+
+
+
 
 class SerialData:
-    def __init__(self, log,com='com10', bot=38400, timeout=0.5):
-        self.log = log
-        self.com = com
-        self.bot = bot
+    def __init__(self, com, baud, timeout,logger):
+        self.logger = logger
+        self.port = com
+        self.baud = baud
+        self.timeout = timeout
         try:
-            self.serial_com = serial.Serial(self.com, self.bot, timeout=timeout)
+            # 打开串口，并得到串口对象
+            self.main_engine = serial.Serial(self.port, self.baud, timeout=self.timeout)
+            # 判断是否打开成功
+            if not (self.main_engine.is_open):
+                self.logger.error('无法打开串口')
         except Exception as e:
-            print('error',e)
-        self.data=None
+            self.logger.info({"串口连接异常：":e})
 
-    def read(self):
+    # 打印设备基本信息
+    def Print_Name(self):
+        print(self.main_engine.name)  # 设备名字
+        print(self.main_engine.port)  # 读或者写端口
+        print(self.main_engine.baudrate)  # 波特率
+        print(self.main_engine.bytesize)  # 字节大小
+        print(self.main_engine.parity)  # 校验位
+        print(self.main_engine.stopbits)  # 停止位
+        print(self.main_engine.timeout)  # 读超时设置
+        print(self.main_engine.writeTimeout)  # 写超时
+        print(self.main_engine.xonxoff)  # 软件流控
+        print(self.main_engine.rtscts)  # 软件流控
+        print(self.main_engine.dsrdtr)  # 硬件流控
+        print(self.main_engine.interCharTimeout)  # 字符间隔超时
+
+    # 打开串口
+    def Open_Engine(self):
+        self.main_engine.open()
+
+    # 关闭串口
+    def Close_Engine(self):
+        self.main_engine.close()
+        print(self.main_engine.is_open)  # 检验串口是否打开
+
+    # 打印可用串口列表
+    @staticmethod
+    def Print_Used_Com():
+        port_list = list(serial.tools.list_ports.comports())
+        print(port_list)
+
+    # 接收指定大小的数据
+    # 从串口读size个字节。如果指定超时，则可能在超时后返回较少的字节；如果没有指定超时，则会一直等到收完指定的字节数。
+    def Read_Size(self, size):
+        return self.main_engine.read(size=size)
+
+    # 接收一行数据
+    # 使用readline()时应该注意：打开串口时应该指定超时，否则如果串口没有收到新行，则会一直等待。
+    # 如果没有超时，readline会报异常。
+    def read_Line(self):
+        data_read = self.main_engine.readline()
+        self.logger.info({'单片机读取数据':data_read})
+        self.logger.info({'单片机读取数据处理后':str(data_read)[2:-5]})
+        return str(data_read)[2:-5]
+
+    # 发数据
+    def send_data(self, data):
+        self.main_engine.write(data)
+
+    # 更多示例
+    # self.main_engine.write(chr(0x06).encode("utf-8"))  # 十六制发送一个数据
+    # print(self.main_engine.read().hex())  #  # 十六进制的读取读一个字节
+    # print(self.main_engine.read())#读一个字节
+    # print(self.main_engine.read(10).decode("gbk"))#读十个字节
+    # print(self.main_engine.readline().decode("gbk"))#读一行
+    # print(self.main_engine.readlines())#读取多行，返回列表，必须匹配超时（timeout)使用
+    # print(self.main_engine.in_waiting)#获取输入缓冲区的剩余字节数
+    # print(self.main_engine.out_waiting)#获取输出缓冲区的字节数
+    # print(self.main_engine.readall())#读取全部字符。
+
+    # 接收数据
+    # 一个整型数据占两个字节
+    # 一个字符占一个字节
+
+    def Recive_data(self, way):
+        # 循环接收数据，此为死循环，可用线程实现
+        print("开始接收数据：")
         while True:
-            row_data = str(binascii.b2a_hex(self.serial_com.read(100)))
-            if len(row_data)>3:
-                print('time',time.time())
-                print('row_data', len(row_data),row_data)
-                self.data=row_data
-
-class ComData:
-    """
-    读取与写入串口数据
-    """
-    def __init__(self,log):
-        self.serial_obj = SerialData(log,com='com10', bot=38400, timeout=0.5)
-
-    # 发送数据到单片机
-    def send_data(self,data):
-        pass
-
-    # 从单片机接收数据
-    def get_data(self):
-        pass
-
-
-
-
+            try:
+                # 一个字节一个字节的接收
+                if self.main_engine.in_waiting:
+                    if (way == 0):
+                        for i in range(self.main_engine.in_waiting):
+                            print("接收ascii数据：" + str(self.Read_Size(1)))
+                            data1 = self.Read_Size(1).hex()  # 转为十六进制
+                            data2 = int(data1, 16)  # 转为十进制print("收到数据十六进制："+data1+"  收到数据十进制："+str(data2))
+                    if (way == 1):
+                        # 整体接收
+                        # data = self.main_engine.read(self.main_engine.in_waiting).decode("utf-8")#方式一
+                        data = self.main_engine.read_all()  # 方式二print("接收ascii数据：", data)
+            except Exception as e:
+                print("异常报错：", e)
 
 
 if __name__ == '__main__':
-    obj = SerialData()
-    obj.read()
+    import random
+    logger = log.LogHandler('test')
+    import config
+    # Engine1 = Communication("com12", 115200, 0.5)
+    # if (Ret):
+    #     Engine1.Recive_data(0)
+    obj = SerialData('com8', 9600, timeout=1/config.com2pi_interval,logger=logger)
+    def get_com_data():
+        while True:
+            com_data_read = obj.read_Line()
+            ## 解析串口发送过来的数据
+            # 经纬度
+            lng_lat = com_data_read
+            # 左右侧的超声波检测距离
+            l_distance, r_distance = com_data_read
+            ## 水质数据
+            # 水温
+            water_temperature = com_data_read
+            # TDO
+            water_td = com_data_read
 
+
+    # 读取函数会阻塞 必须使用线程
+    def send_com_data():
+        ship_move_direction = [0,90,180,270,360]
+        while True:
+            data_send_com = 'A%sZ' % str(ship_move_direction[random.randint(0,len(ship_move_direction)-1)])
+            obj.send_data(data_send_com)
+            # 打印传输给单片机的控制数据
+            logger.info('move_direction: ' + 'A%sZ' % (data_send_com))
+            time.sleep(1 / config.pi2com_interval)
+
+    def read():
+        while 1:
+            read_data = obj.read_Line()
+            print('读取',read_data , str(read_data)[2:-5])
+
+    def send():
+        while 1:
+            data_send = 'a123z'.encode('ascii')
+            print('发送', type(data_send), data_send)
+            obj.send_data(data_send)
+            time.sleep(1)
+
+    t1 = Thread(target=get_com_data)
+    t2 = Thread(target=send_com_data)
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+    # print(str(obj.Read_Line())[2:-5])
