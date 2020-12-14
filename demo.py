@@ -48,15 +48,22 @@ if __name__ == '__main__':
 
 """
 
-import numpy as np
-a = [[1,2],[3.32,4.421]]
-str_a = str(a)
+# import numpy as np
+# a = [[1,2],[3.32,4.421]]
+# str_a = str(a)
+#
+# print(str_a,type(str_a))
+# array_a = np.array(str_a)
+# # print(type(array_a),array_a,array_a.shape,array_a[0])
+# new_array =[]
+# for i in array_a:
+#     new_array.append([i[0]*100,i[1]*100])
+#
+# print(new_array)
+# import re
+# s = 'AAA231.31'
+#
+# print(s.split('AAA'))
+# print('dsa,ds,asdsa,wq,3123'.count(','))
 
-print(str_a,type(str_a))
-array_a = np.array(str_a)
-# print(type(array_a),array_a,array_a.shape,array_a[0])
-new_array =[]
-for i in array_a:
-    new_array.append([i[0]*100,i[1]*100])
 
-print(new_array)

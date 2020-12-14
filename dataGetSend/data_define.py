@@ -8,8 +8,7 @@ import random
 import copy
 import time
 
-
-
+import config
 
 # 本地名称与发送名称映射
 name_mappings = {
@@ -52,17 +51,19 @@ def get_dump_energy():
 # 当前经纬度
 def get_current_lng_lat(init_lng_lat):
     if random.random()>0.5:
-        init_lng_lat = [init_lng_lat[0] - round(random.random(), 1)/1000,init_lng_lat[1]]
+        init_lng_lat = [round(init_lng_lat[0] - round(random.random(), 1)/1000,6),
+                        round(init_lng_lat[1],6)]
     else:
-        init_lng_lat = [init_lng_lat[0],init_lng_lat[1] - round(random.random(),1)/1000]
+        init_lng_lat = [round(init_lng_lat[0],6),
+                        round(init_lng_lat[1] - round(random.random(),1)/1000,6)]
 
     return init_lng_lat
 
 
 # 船号
-ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380c'
-if ship_code == None:
-    ship_code = get_ship_code()
+
+# if ship_code == None:
+#     ship_code = get_ship_code()
 
 # 湖号
 pool_code = None
@@ -86,7 +87,7 @@ init_ststus_data={"dump_energy": 0.000,
                    "b_homing": False,
                    "charge_energy": 0.000,
                    "sampling_depth": 0.000,
-                   "ship_code": ship_code,
+                   "ship_code": config.ship_code,
                    "pool_code":pool_code,
                    "data_flow": 0.000,
                    "sampling_count": 0,
@@ -94,15 +95,17 @@ init_ststus_data={"dump_energy": 0.000,
                    }
 
 init_detect_data={
-    "water":{"pH": 0.000,
-                       "DO": 0.000,
-                       "COD": 0.000,
-                       "EC": 0.000,
-                       "TD": 0.000,
-                       "NH3_NH4": 0.000,
-                       "TN": 0.000,
-                       "TP": 0.000,
-                       },
+    "water":{
+        "wt":0.000,
+        "pH": 0.000,
+       "DO": 0.000,
+       "COD": 0.000,
+       "EC": 0.000,
+       "TD": 0.000,
+       "NH3_NH4": 0.000,
+       "TN": 0.000,
+       "TP": 0.000,
+       },
     "weather":{"wind_speed": 0.000,
                        "wind_direction": "",
                        "rainfall": 0.000,
@@ -113,7 +116,6 @@ init_detect_data={
                        "pm10": 0.000,
                        }
 }
-#
 # 风向定义['东北','正北','西北','正西','西南','正南','东南','正东']
 wind_direction=['315','0','45','90','135','180','225','270']
 
@@ -125,18 +127,19 @@ def status_data(data_define_obj=None):
     :param data_define_obj: 该对象不为空表示用数据内部部位None的数据替换随机数据
     :return: 检测数据字典
     """
-    if data_define_obj ==None:
+    if data_define_obj == None:
         return_dict = copy.deepcopy(init_ststus_data)
-        return_dict.update({'dump_energy':get_dump_energy()})
-        return_dict.update({'current_lng_lat':get_current_lng_lat(init_lng_lat)})
-        return_dict.update({'sampling_depth':round(random.random(),2)})
-        return_dict.update({"deviceId": ship_code})
+        return_dict.update({'dump_energy': get_dump_energy()})
+        return_dict.update({'current_lng_lat': get_current_lng_lat(init_lng_lat)})
+        return_dict.update({'sampling_depth': round(random.random(), 2)})
+        return_dict.update({"deviceId": config.ship_code})
     else:
         return_dict = copy.deepcopy(init_ststus_data)
-        for k,v in data_define_obj.status:
+        for k, v in data_define_obj.status:
             if v is not None:
-                return_dict.update({k,v})
+                return_dict.update({k, v})
     return return_dict
+
 
 # 返回检测数据
 def detect_data(data_define_obj=None):
@@ -146,25 +149,26 @@ def detect_data(data_define_obj=None):
     :return: 检测数据字典
     """
     if data_define_obj == None:
-        init_detect_data["weather"].update({"wind_speed":round(round(random.random(),2)*10,1)})
-        init_detect_data["weather"].update({"wind_direction":wind_direction[random.randint(0,len(wind_direction)-1)]})
-        init_detect_data["weather"].update({"rainfall":round(round(random.random(),2)*10,1)})
-        init_detect_data["weather"].update({"illuminance":round(round(random.random(),2)*10,2)})
-        init_detect_data["weather"].update({"temperature":random.randint(0,40)})
-        init_detect_data["weather"].update({"humidity":random.randint(40,90)})
-        init_detect_data["weather"].update({"pm25":random.randint(0,20)})
-        init_detect_data["weather"].update({"pm10":random.randint(20,40)})
+        init_detect_data["weather"].update({"wind_speed": round(round(random.random(), 2) * 10, 1)})
+        init_detect_data["weather"].update(
+            {"wind_direction": wind_direction[random.randint(0, len(wind_direction) - 1)]})
+        init_detect_data["weather"].update({"rainfall": round(round(random.random(), 2) * 10, 1)})
+        init_detect_data["weather"].update({"illuminance": round(round(random.random(), 2) * 10, 2)})
+        init_detect_data["weather"].update({"temperature": random.randint(0, 40)})
+        init_detect_data["weather"].update({"humidity": random.randint(40, 90)})
+        init_detect_data["weather"].update({"pm25": random.randint(0, 20)})
+        init_detect_data["weather"].update({"pm10": random.randint(20, 40)})
 
-        init_detect_data["water"].update({"pH":random.randint(50,90)/10.0})
-        init_detect_data["water"].update({"DO":random.randint(20,100)/10.0})
-        init_detect_data["water"].update({"COD":random.randint(50,400)/10.0})
-        init_detect_data["water"].update({"TD":random.randint(1,10)/10.0})
-        init_detect_data["water"].update({"NH3_NH4":random.randint(2,100)/100.0})
-        init_detect_data["water"].update({"TN":random.randint(10,200)/10.0})
-        init_detect_data["water"].update({"TP":random.randint(0,2)/10.0})
-        init_detect_data["water"].update({"EC":random.randint(480,600)/10.0})
+        init_detect_data["water"].update({"pH": random.randint(50, 90) / 10.0})
+        init_detect_data["water"].update({"DO": random.randint(20, 100) / 10.0})
+        init_detect_data["water"].update({"COD": random.randint(50, 400) / 10.0})
+        init_detect_data["water"].update({"TD": random.randint(1, 10) / 10.0})
+        init_detect_data["water"].update({"NH3_NH4": random.randint(2, 100) / 100.0})
+        init_detect_data["water"].update({"TN": random.randint(10, 200) / 10.0})
+        init_detect_data["water"].update({"TP": random.randint(0, 2) / 10.0})
+        init_detect_data["water"].update({"EC": random.randint(480, 600) / 10.0})
 
-        init_detect_data.update({"deviceId": ship_code})
+        init_detect_data.update({"deviceId": config.ship_code})
     else:
         return_dict = copy.deepcopy(init_detect_data)
         for k, v in data_define_obj.water:
@@ -177,24 +181,39 @@ def detect_data(data_define_obj=None):
     return init_detect_data
 
 class DataDefine:
-    def __init__(self,ship_code_=None):
+    def __init__(self):
         """
         数据定义对象
-        :param ship_code:船编号
         """
-        if ship_code !=None:
-            self.ship_code = ship_code_
-        else:
-            self.ship_code = ship_code
+        self.ship_code = config.ship_code
 
-        self.topics = (('control_data_%s' % (self.ship_code), 1),
-                         ('path_confirm_%s' % (self.ship_code), 1),
-                         ('user_lng_lat_%s' % (self.ship_code), 1))
-        self.pool_code = ""
+        self.topics = (('control_data_%s' % (self.ship_code), 0),
+                         ('path_confirm_%s' % (self.ship_code), 0),
+                         ('user_lng_lat_%s' % (self.ship_code), 0))
+        self.pool_code = ''
         self.water = self.water_data()
         self.weather = self.weather_data()
-        self.status = self.status_data()
+
+        self.status = {"dump_energy": None,
+                       "current_lng_lat": None,
+                       "liquid_level": None,
+                       "b_leakage": None,
+                       "direction": None,
+                       "speed": None,
+                       "attitude_angle": None,
+                       "b_online": True,
+                       "b_homing": None,
+                       "charge_energy": None,
+                       "sampling_depth": None,
+                       "ship_code": self.ship_code,
+                       "pool_code":None,
+                       "data_flow": None,
+                       "sampling_count": None,
+                       "capicity": None
+                       }
+
         self.control = self.control_data()
+        self.detect = self.detect_data()
 
     # 水质数据
     def water_data(self):
@@ -210,7 +229,8 @@ class DataDefine:
         总氮       TN　　　　   浮点数　　
         总磷       TP　　　   　浮点数　　
         """
-        return_dict = {"pH": None,
+        return_dict = {'wt':None,
+                        "pH": None,
                        "DO": None,
                        "COD": None,
                        "EC": None,
@@ -315,6 +335,50 @@ class DataDefine:
                        }
         return return_dict
 
+    # 返回检测数据
+    def detect_data(self,data_define_obj=None):
+        """
+        返回检测数据
+        :param data_define_obj: 该对象不为空表示用数据内部部位None的数据替换随机数据
+        :return: 检测数据字典
+        """
+        return_detect_data={}
+        return_detect_data['weather'] = self.weather
+        return_detect_data['water'] = self.water
+        return_detect_data['deviceId'] = config.ship_code
+
+        return return_detect_data
+        # if data_define_obj == None:
+        #     init_detect_data["weather"].update({"wind_speed": round(round(random.random(), 2) * 10, 1)})
+        #     init_detect_data["weather"].update(
+        #         {"wind_direction": wind_direction[random.randint(0, len(wind_direction) - 1)]})
+        #     init_detect_data["weather"].update({"rainfall": round(round(random.random(), 2) * 10, 1)})
+        #     init_detect_data["weather"].update({"illuminance": round(round(random.random(), 2) * 10, 2)})
+        #     init_detect_data["weather"].update({"temperature": random.randint(0, 40)})
+        #     init_detect_data["weather"].update({"humidity": random.randint(40, 90)})
+        #     init_detect_data["weather"].update({"pm25": random.randint(0, 20)})
+        #     init_detect_data["weather"].update({"pm10": random.randint(20, 40)})
+        #
+        #     init_detect_data["water"].update({"pH": random.randint(50, 90) / 10.0})
+        #     init_detect_data["water"].update({"DO": random.randint(20, 100) / 10.0})
+        #     init_detect_data["water"].update({"COD": random.randint(50, 400) / 10.0})
+        #     init_detect_data["water"].update({"TD": random.randint(1, 10) / 10.0})
+        #     init_detect_data["water"].update({"NH3_NH4": random.randint(2, 100) / 100.0})
+        #     init_detect_data["water"].update({"TN": random.randint(10, 200) / 10.0})
+        #     init_detect_data["water"].update({"TP": random.randint(0, 2) / 10.0})
+        #     init_detect_data["water"].update({"EC": random.randint(480, 600) / 10.0})
+        #
+        #     init_detect_data.update({"deviceId": ship_code})
+        # else:
+        #     return_dict = copy.deepcopy(init_detect_data)
+        #     for k, v in data_define_obj.water:
+        #         if v is not None:
+        #             return_dict['water'].update({k, v})
+        #     for k, v in data_define_obj.weather:
+        #         if v is not None:
+        #             return_dict['weather'].update({k, v})
+        #
+        # return init_detect_data
 
 if __name__ == '__main__':
     # 简单测试获取数据

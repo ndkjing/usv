@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import math
 import os
+from math import radians,cos,sin,degrees,atan2
 import sys
 """
 ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
@@ -94,17 +95,43 @@ def is_in_contours(point,local_map_data):
         # 判断是否在轮廓内部
         for index,cnt in enumerate(local_map_data['mapList']):
             # 直接使用像素位置判断
-            # in_cnt = cv2.pointPolygonTest(np.array(cnt['pool_cnt']), point, False)
+            in_cnt = cv2.pointPolygonTest(np.array(cnt['pool_cnt']), point, False)
             # 使用经纬度判断
-            new_cnt = []
-            for i in cnt['mapData']:
-                new_cnt.append([int(i[0]*1000000),int(i[1]*1000000)])
-            in_cnt = cv2.pointPolygonTest(np.array(new_cnt), (point[0][0],point[0][1]), False)
+            # new_cnt = []
+            # for i in cnt['mapData']:
+            #     new_cnt.append([int(i[0]*1000000),int(i[1]*1000000)])
+            # in_cnt = cv2.pointPolygonTest(np.array(new_cnt), (point[0][0],point[0][1]), False)
             # 大于0说明属于该轮廓
             if in_cnt>0:
                 return cnt['id']
         # 循环结束返回None
         return None
+
+
+def get_degree(lonA, latA, lonB, latB):
+    """
+    两点经纬度计算角度　以第一点为中心　第一点（经度，纬度），第二点（经度，纬度）
+    Args:
+        point p1(latA, lonA)
+        point p2(latB, lonB)
+    Returns:
+        bearing between the two GPS points,
+        default: the basis of heading direction is north
+    """
+    radLatA = radians(latA)
+    radLonA = radians(lonA)
+    radLatB = radians(latB)
+    radLonB = radians(lonB)
+    dLon = radLonB - radLonA
+    y = sin(dLon) * cos(radLatB)
+    x = cos(radLatA) * sin(radLatB) - sin(radLatA) * cos(radLatB) * cos(dLon)
+    brng = degrees(atan2(y, x))
+    brng = (brng + 360) % 360
+    return_brg = 360-brng
+    if int(return_brg)==360:
+        return 0
+    else:
+        return return_brg
 
 
 class BaiduMap(object):

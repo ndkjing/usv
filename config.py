@@ -12,8 +12,20 @@ local_map_data_path = os.path.join(maps_dir,'local_map.json')
 usr_lng_lat_path = os.path.join(maps_dir,'usr_lng_lat_path.json')
 
 # 单片机发送给树莓派频率
-com2pi_interval=2
+com2pi_interval=1
 # 给单片机发送频率
 pi2com_interval=10
-# 给服务器发送间隔
-pi2mqtt_interval = 3
+
+# 给服务器发送频率
+pi2mqtt_interval = 0.2
+
+# 接收服务器方向控制间隔
+mqtt_control_interval = 1
+
+# 船编号
+ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380c'
+
+# 串口位置 和波特率
+port = '/dev/ttyUSB0'
+baud = 115200
+
