@@ -1,6 +1,9 @@
 """
 管理数据收发
 """
+import time
+import json
+
 from dataGetSend.data_define import DataDefine
 from dataGetSend import data_define
 from dataGetSend.server_data import ServerData
@@ -8,8 +11,7 @@ from dataGetSend.com_data import SerialData
 from utils.log import LogHandler
 from baiduMap import baidu_map
 import  config
-import time
-import json
+
 
 class DataManager:
     def __init__(self,ship_code=None):
@@ -30,7 +32,7 @@ class DataManager:
     # 读取函数会阻塞 必须使用线程
     def get_com_data(self):
         while True:
-            com_data_read = self.com_data_obj.read_Line()
+            com_data_read = self.com_data_obj.readline()
             ## 解析串口发送过来的数据
             if com_data_read is None:
                 continue
@@ -91,16 +93,16 @@ class DataManager:
                 auto_move_direction = 360
                 # 判断移动方向
                 if delta_degree>=0:
-                    if delta_degree < 45:
+                    if delta_degree < 45 or delta_degree >= 315:
                         auto_move_direction = 0
                     elif delta_degree >= 45 and delta_degree < 135:
-                        auto_move_direction = 270
+                        auto_move_direction = 90
                     elif delta_degree >= 135 and delta_degree<225:
                         auto_move_direction = 180
                     elif delta_degree >= 225 and delta_degree < 315:
-                        auto_move_direction = 90
+                        auto_move_direction = 270
                 else:
-                    if abs(delta_degree) < 45 and abs(delta_degree) >= 315:
+                    if abs(delta_degree) < 45 or abs(delta_degree) >= 315:
                         auto_move_direction = 0
                     elif abs(delta_degree) >= 45 and abs(delta_degree) < 135:
                         auto_move_direction = 270

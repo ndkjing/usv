@@ -35,8 +35,6 @@ class Control():
         return self.dir_
 
 
-
-
 if __name__ == '__main__':
     serial_obj = com_data.SerialData(config.port, config.baud, timeout=1/config.com2pi_interval)
     key_obj = Control()
