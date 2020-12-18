@@ -5,16 +5,19 @@ import cv2
 import numpy as np
 import math
 import os
+from math import radians,cos,sin,degrees,atan2
 import sys
 """
+百度地图
 ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
 """
-
+method_0 = cv2.CHAIN_APPROX_NONE
+method_1 = cv2.CHAIN_APPROX_SIMPLE
 
 def color_block_finder(img, lowerb, upperb,
-                       min_w=0, max_w=None, min_h=0, max_h=None):
+                       min_w=0, max_w=None, min_h=0, max_h=None,):
     '''
-    色块识别 返回矩形信息
+    色块识别 返回矩形信息，若没有找到返回矩形框为None
     '''
     # 转换色彩空间 HSV
     img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -22,12 +25,12 @@ def color_block_finder(img, lowerb, upperb,
     img_bin = cv2.inRange(img_hsv, lowerb, upperb)
 
     # 寻找轮廓（只寻找最外侧的色块）
-    contours, hier = cv2.findContours(img_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hier = cv2.findContours(img_bin, cv2.RETR_EXTERNAL, method=method_0)
     # 声明画布 拷贝自img
     show_img = np.copy(img)
     # 外接矩形区域集合
     rects = []
-
+    print('len(contours)',len(contours))
     if max_w is None:
         # 如果最大宽度没有设定，就设定为图像的宽度
         max_w = img.shape[1]
@@ -47,19 +50,26 @@ def color_block_finder(img, lowerb, upperb,
     # show_img = cv2.drawContours(show_img, contours, -1, (0, 255, 0), 2)
     point = np.array((512,512))
     in_cnt=-1
+    contours_cx = -1
+    contours_cy = -1
     # 找到中心点所在的轮廓
     return_cnt=None
     for index,cnt in enumerate(contours):
-        in_cnt = cv2.pointPolygonTest(cnt,(512,512),False)
+        # 判断是否在轮廓内部
+        in_cnt = cv2.pointPolygonTest(cnt,(512,512),True)
         # print('in cnt',in_cnt)
-
-        if in_cnt>0:
+        if in_cnt>2:
+            print('index,cnt',index,cnt)
             # print('len(cnt)',len(cnt))
-            return_cnt = cnt
+            # 计算轮廓的中心点
+            M = cv2.moments(contours[index])  # 计算第一条轮廓的矩
+            # print(M)
+            # 这两行是计算中心点坐标
+            contours_cx = int(M['m10'] / M['m00'])
+            contours_cy = int(M['m01'] / M['m00'])
             show_img = cv2.drawContours(show_img, cnt, -1, (0, 0, 255), 3)
-    return show_img,return_cnt
-
-    # return rects
+            return show_img,cnt,(contours_cx,contours_cy)
+    return None,None,(contours_cx,contours_cy)
 
 
 def draw_color_block_rect(img, rects, color=(0, 0, 255)):
@@ -76,9 +86,56 @@ def draw_color_block_rect(img, rects, color=(0, 0, 255)):
 
     return canvas
 
+# 判断地图上一点是否属于曾经出现在湖泊上的点
+def is_in_contours(point,local_map_data):
+    # 没有返回None
+    if len(local_map_data)==0:
+        return None
+    else:
+        # 判断是否在轮廓内部
+        for index,cnt in enumerate(local_map_data['mapList']):
+            # 直接使用像素位置判断
+            in_cnt = cv2.pointPolygonTest(np.array(cnt['pool_cnt']), point, False)
+            # 使用经纬度判断
+            # new_cnt = []
+            # for i in cnt['mapData']:
+            #     new_cnt.append([int(i[0]*1000000),int(i[1]*1000000)])
+            # in_cnt = cv2.pointPolygonTest(np.array(new_cnt), (point[0][0],point[0][1]), False)
+            # 大于0说明属于该轮廓
+            if in_cnt>0:
+                return cnt['id']
+        # 循环结束返回None
+        return None
+
+
+def get_degree(lonA, latA, lonB, latB):
+    """
+    两点经纬度计算角度　以第一点为中心　第一点（经度，纬度），第二点（经度，纬度）
+    Args:
+        point p1(latA, lonA)
+        point p2(latB, lonB)
+    Returns:
+        bearing between the two GPS points,
+        default: the basis of heading direction is north
+    """
+    radLatA = radians(latA)
+    radLonA = radians(lonA)
+    radLatB = radians(latB)
+    radLonB = radians(lonB)
+    dLon = radLonB - radLonA
+    y = sin(dLon) * cos(radLatB)
+    x = cos(radLatA) * sin(radLatB) - sin(radLatA) * cos(radLatB) * cos(dLon)
+    brng = degrees(atan2(y, x))
+    brng = (brng + 360) % 360
+    return_brg = 360-brng
+    if int(return_brg)==360:
+        return 0
+    else:
+        return return_brg
+
 
 class BaiduMap(object):
-    def __init__(self,lng_lat,ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY',height=1024,width=1024,zoom=9):
+    def __init__(self,lng_lat,ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY',height=1024,width=1024,zoom=None):
         # 经纬度
         self.lng_lat=lng_lat
         # 访问秘钥
@@ -111,6 +168,8 @@ class BaiduMap(object):
             5:[500000, 76],
             4:[1000000,76],
             }
+        if not os.path.exists('./imgs'):
+            os.mkdir('./imgs')
         self.save_img_path = './imgs/%f_%f_%i.png'%(self.lng_lat[0],self.lng_lat[1],self.zoom)
         if not os.path.exists(self.save_img_path):
             self.draw_image()
@@ -160,7 +219,15 @@ class BaiduMap(object):
             f.write(img)
 
     # 静态图蓝色护坡区域抠图
-    def get_pool_pix(self,b_show=True):
+    def get_pool_pix(self,b_show=False):
+        """
+        查找点击位置湖泊锁在的轮廓
+        :param b_show: True显示轮廓图像
+        :return:
+        """
+        print(self.save_img_path)
+        if not os.path.exists(self.save_img_path):
+            print('no image ')
         self.row_img = cv2.imread(self.save_img_path)
         # 图片路径
         # 颜色阈值下界(HSV) lower boudnary
@@ -176,24 +243,24 @@ class BaiduMap(object):
             exit(1)
 
         # 识别色块 获取矩形区域数组
-        show_img,return_cnt = color_block_finder(img, lowerb, upperb)
+        self.show_img,return_cnt,(contours_cx,contours_cy) = color_block_finder(img, lowerb, upperb)
+        center_pix =(contours_cx,contours_cy)
         if return_cnt is None:
             print('无法在点击处找到湖')
-            exit()
+            return return_cnt,center_pix
 
         # 绘制色块的矩形区域
         # canvas = draw_color_block_rect(img, rects)
         # 在HighGUI窗口 展示最终结果
+        cv2.circle(self.show_img, (contours_cx, contours_cy), 5, [255, 255, 0], -1)
         if b_show:
             cv2.namedWindow('result', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
-            # cv2.imshow('result', canvas)
-            cv2.imshow('result', show_img)
-
+            cv2.imshow('result', self.show_img)
             # 等待任意按键按下
-            # cv2.waitKey(0)
+            cv2.waitKey(0)
             # 关闭其他窗口
             # cv2.destroyAllWindows()
-        return return_cnt
+        return return_cnt,center_pix
 
     # 区域像素点转换为经纬度坐标点
     def pix_to_gps(self,cnt):
@@ -203,6 +270,8 @@ class BaiduMap(object):
         """
         # 返回经纬度坐标集合
         return_gps = []
+        # 给后端的返回
+        return_gps_list=[]
         # 初始点（中心点）经纬度坐标
         # 初始点（中心点）像素坐标
         center = (self.width/2,self.height/2)
@@ -250,22 +319,24 @@ class BaiduMap(object):
                 delta_lng = (delta_meter_x/real_radius)/pis_per_degree
                 # 纬度偏差
                 delta_lat = -(delta_meter_y/earth_radius)/pis_per_degree
-                print(delta_lng,delta_lat)
+                # print(delta_lng,delta_lat)
                 # TODO 最终需要确认经纬度保留小数点后几位
                 point_gps = [self.lng_lat[0] + delta_lng, self.lng_lat[1] + delta_lat]
                 return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
+                return_gps_list.append(point_gps)
 
-        print('len ',len(return_gps))
+        # print('len ',len(return_gps))
         with open('map.json','w') as f:
             json.dump(return_gps,f)
-        return return_gps
+        return return_gps,return_gps_list
 
-    def scan_pool(self,contour,pix_gap=20,b_show=True):
+    def scan_pool(self,contour,pix_gap=20,b_show=False):
         """
         传入湖泊像素轮廓返回活泼扫描点
         :param contour 轮廓点
         :param pix_gap 指定扫描间隔，单位像素
         """
+        # 求坐标点最大外围矩阵
         (x, y, w, h) = cv2.boundingRect(contour)
         print('(x, y, w, h)',(x, y, w, h))
         # 循环生成点同时判断点是否在湖泊范围在则添加到列表中
@@ -276,13 +347,13 @@ class BaiduMap(object):
         current_x,current_y = start_x,start_y
         # 判断x轴是递增的加还是减 True 为加
         b_add_or_sub = True
-
+        safe_distance=10
         while current_y<(y+h):
             while current_x<=(x+w) and current_x>=x:
                 point = (current_x,current_y )
-                in_cnt = cv2.pointPolygonTest(contour, point, False)
+                in_cnt = cv2.pointPolygonTest(contour, point, True)
                 # print('in cnt',in_cnt)
-                if in_cnt > 0:
+                if in_cnt > safe_distance:
                     scan_points.append(list(point))
                 if b_add_or_sub:
                     current_x+=pix_gap
@@ -295,25 +366,222 @@ class BaiduMap(object):
             else:
                 current_x += pix_gap
                 b_add_or_sub = True
-        show_img = np.copy(self.row_img)
+        for point in scan_points:
+            cv2.circle(self.show_img, tuple(point), 5, (0, 255, 255), -1)
         if b_show:
-            for point in scan_points:
-                cv2.circle(show_img,tuple(point), 3, (0,0,255), -1)
-            cv2.polylines(show_img,[np.array(scan_points,dtype=np.int32)],False,(255,0,0),2)
-            cv2.imshow('scan',show_img)
+            # cv2.polylines(self.show_img,[np.array(scan_points,dtype=np.int32)],False,(255,0,0),2)
+            cv2.imshow('scan',self.show_img)
             cv2.waitKey(0)
         return scan_points
 
 
+    def select_roi(self):
+        '''
+        选取ROI区域
+        回车或者空格确认选择
+        c键 撤销选择
+        '''
+        import numpy as np
+        import cv2
+        import sys
 
+        # 文件路径
+        img_path = 'imgs/114_392697_30_559696_15.png'
+        # 读入图片
+        img = cv2.imread(img_path)
+        # 创建一个窗口
+        cv2.namedWindow("image", flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
+        cv2.imshow("image", img)
+        # 是否显示网格
+        showCrosshair = True
+
+        # 如果为Ture的话 , 则鼠标的其实位置就作为了roi的中心
+        # False: 从左上角到右下角选中区域
+        fromCenter = False
+        # Select ROI
+        rect = cv2.selectROI("image", img, showCrosshair, fromCenter)
+
+        print("选中矩形区域")
+        (x, y, w, h) = rect
+
+        # Crop image
+        imCrop = img[y: y + h, x:x + w]
+
+        # Display cropped image
+        cv2.imshow("image_roi", imCrop)
+        cv2.imwrite("imgs/image_roi.png", imCrop)
+        cv2.waitKey(0)
+    '''
+    绘制彩图在HSV颜色空间下的统计直方图
+    '''
+    def analyse_hsv(self):
+        from matplotlib import pyplot as plt
+        import numpy as np
+        import cv2
+        import sys
+
+        # 读入图片
+        img_path = 'imgs/image_roi.png'
+        img = cv2.imread(img_path)
+        # img = cv2.imread('little_chess.png')
+        if img is None:
+            print("图片读入失败, 请检查图片路径及文件名")
+            exit()
+
+        # 将图片转换为HSV格式
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        # 创建画布
+        fig, ax = plt.subplots()
+        # Matplotlib预设的颜色字符
+        hsvColor = ('y', 'g', 'k')
+        # 统计窗口间隔 , 设置小了锯齿状较为明显 最小为1 最好可以被256整除
+        bin_win = 3
+        # 设定统计窗口bins的总数
+        bin_num = int(256 / bin_win)
+        # 控制画布的窗口x坐标的稀疏程度. 最密集就设定xticks_win=1
+        xticks_win = 2
+        # 设置标题
+        ax.set_title('HSV Color Space')
+        lines = []
+        for cidx, color in enumerate(hsvColor):
+            # cidx channel 序号
+            # color r / g / b
+            cHist = cv2.calcHist([img], [cidx], None, [bin_num], [0, 256])
+            # 绘制折线图
+            line, = ax.plot(cHist, color=color, linewidth=8)
+            lines.append(line)
+
+            # 标签
+        labels = [cname + ' Channel' for cname in 'HSV']
+        # 添加channel
+        plt.legend(lines, labels, loc='upper right')
+        # 设定画布的范围
+        ax.set_xlim([0, bin_num])
+        # 设定x轴方向标注的位置
+        ax.set_xticks(np.arange(0, bin_num, xticks_win))
+        # 设定x轴方向标注的内容
+        ax.set_xticklabels(list(range(0, 256, bin_win * xticks_win)), rotation=45)
+
+        # 显示画面
+        plt.show()
+
+    def hsv_image_threshold(self):
+        '''
+            可视化颜色阈值调参软件
+            H 100
+            S 78
+            V 250
+
+        '''
+
+        import cv2
+        import numpy as np
+        import sys
+
+        # 更新MASK图像，并且刷新windows
+        def updateMask():
+            global img
+            global lowerb
+            global upperb
+            global mask
+            # 计算MASK
+            mask = cv2.inRange(img_hsv, lowerb, upperb)
+
+            cv2.imshow('mask', mask)
+
+        # 更新阈值
+        def updateThreshold(x):
+
+            global lowerb
+            global upperb
+
+            minH = cv2.getTrackbarPos('minH', 'image')
+            maxH = cv2.getTrackbarPos('maxH', 'image')
+            minS = cv2.getTrackbarPos('minS', 'image')
+            maxS = cv2.getTrackbarPos('maxS', 'image')
+            minV = cv2.getTrackbarPos('minV', 'image')
+            maxV = cv2.getTrackbarPos('maxV', 'image')
+
+            lowerb = np.int32([minH, minS, minV])
+            upperb = np.int32([maxH, maxS, maxV])
+
+            print('更新阈值')
+            print(lowerb)
+            print(upperb)
+            updateMask()
+
+        def main(img):
+            global img_hsv
+            global upperb
+            global lowerb
+            global mask
+            # 将图片转换为HSV格式
+            img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+            # 颜色阈值 Upper
+            upperb = None
+            # 颜色阈值 Lower
+            lowerb = None
+
+            mask = None
+
+            cv2.namedWindow('image', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
+            # cv2.namedWindow('image')
+            cv2.imshow('image', img)
+
+            # cv2.namedWindow('mask')
+            cv2.namedWindow('mask', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
+
+            # 红色阈值 Bar
+            ## 红色阈值下界
+            cv2.createTrackbar('minH', 'image', 0, 255, updateThreshold)
+            ## 红色阈值上界
+            cv2.createTrackbar('maxH', 'image', 0, 255, updateThreshold)
+            ## 设定红色阈值上界滑条的值为255
+            cv2.setTrackbarPos('maxH', 'image', 255)
+            cv2.setTrackbarPos('minH', 'image', 0)
+            # 绿色阈值 Bar
+            cv2.createTrackbar('minS', 'image', 0, 255, updateThreshold)
+            cv2.createTrackbar('maxS', 'image', 0, 255, updateThreshold)
+            cv2.setTrackbarPos('maxS', 'image', 255)
+            cv2.setTrackbarPos('minS', 'image', 0)
+            # 蓝色阈值 Bar
+            cv2.createTrackbar('minV', 'image', 0, 255, updateThreshold)
+            cv2.createTrackbar('maxV', 'image', 0, 255, updateThreshold)
+            cv2.setTrackbarPos('maxV', 'image', 255)
+            cv2.setTrackbarPos('minV', 'image', 0)
+
+            # 首次初始化窗口的色块
+            # 后面的更新 都是由getTrackbarPos产生变化而触发
+            updateThreshold(None)
+
+            print("调试棋子的颜色阈值, 键盘摁e退出程序")
+            while cv2.waitKey(0) != ord('e'):
+                continue
+
+            cv2.imwrite('tmp_bin.png', mask)
+            cv2.destroyAllWindows()
+
+
+        # image_path = sys.argv[1]
+        image_path = 'imgs/114_392697_30_559696_15.png'
+        # 样例图片 (在代码中填入)
+        img = cv2.imread(image_path)
+        if img is None:
+            print("Error: 文件路径错误，没有此图片 {}".format(image_path))
+            exit(1)
+        main(img)
 
 
 if __name__ == '__main__':
-    obj = BaiduMap([99.937205,45.161601],zoom=4)
+    obj = BaiduMap([114.393142,30.558981],zoom=14)
+    # obj = BaiduMap([114.718257,30.648004],zoom=14)
+    # obj = BaiduMap([114.566767,30.541689],zoom=14)
+    # obj = BaiduMap([114.565976,30.541317],zoom=15.113213)
     # obj.select_roi()
     # obj.analyse_hsv()
     # obj.hsv_image_threshold()
-    pool_cnt = obj.get_pool_pix(b_show=True)
+    pool_cnt,(pool_cx,pool_cy) = obj.get_pool_pix(b_show=True)
     pool_cnt = np.squeeze(pool_cnt)
 
     scan_cnt = obj.scan_pool(pool_cnt,pix_gap=40,b_show=True)
@@ -325,4 +593,9 @@ if __name__ == '__main__':
     # print(gps)
     # 请求指定位置图片
     # obj.draw_image()
+
+    #
+    # 求坐标点最大外围矩阵
+    (x, y, w, h) = cv2.boundingRect(pool_cnt)
+    print('(x, y, w, h)', (x, y, w, h))
 
