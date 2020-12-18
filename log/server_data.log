@@ -1,0 +1,142 @@
+2020-12-17 11:06:07,564 server_data.py[line:204] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 11:06:07,564 server_data.py[line:204] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 11:06:07,564 server_data.py[line:204] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 13:43:40,262 server_data.py[line:204] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 13:43:40,262 server_data.py[line:204] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 13:43:40,263 server_data.py[line:204] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 13:46:05,822 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 13:46:05,823 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 13:46:22,564 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 13:46:22,564 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 13:46:23,565 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 13:46:23,566 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 13:46:24,568 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 13:46:24,568 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 13:46:25,569 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 13:46:25,570 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:10:06,000 server_data.py[line:204] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:10:06,001 server_data.py[line:204] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:10:06,001 server_data.py[line:204] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:10:08,769 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:10:08,769 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:10:09,770 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:10:09,770 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:12:30,379 server_data.py[line:204] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:12:30,380 server_data.py[line:204] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:12:30,380 server_data.py[line:204] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:24:32,151 server_data.py[line:204] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:24:32,152 server_data.py[line:204] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:24:32,152 server_data.py[line:204] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:25:17,672 server_data.py[line:204] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:25:17,673 server_data.py[line:204] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:25:17,673 server_data.py[line:204] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:25:44,681 server_data.py[line:204] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:25:44,681 server_data.py[line:204] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:25:44,682 server_data.py[line:204] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:27:09,835 server_data.py[line:204] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:27:09,835 server_data.py[line:204] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:27:09,836 server_data.py[line:204] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-17 14:27:17,118 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:17,118 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:27:18,120 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:18,121 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:27:19,122 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:19,123 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:27:24,716 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:24,716 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:27:25,716 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:25,716 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:27:26,718 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:26,718 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:27:27,719 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:27,719 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:27:28,721 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:28,721 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:27:29,723 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:29,723 server_data.py[line:132] DEBUG {'move_direction': '270'}
+2020-12-17 14:27:30,724 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:30,725 server_data.py[line:132] DEBUG {'move_direction': '270'}
+2020-12-17 14:27:31,726 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:31,727 server_data.py[line:132] DEBUG {'move_direction': '270'}
+2020-12-17 14:27:33,881 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:33,882 server_data.py[line:132] DEBUG {'move_direction': '270'}
+2020-12-17 14:27:34,883 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:34,884 server_data.py[line:132] DEBUG {'move_direction': '270'}
+2020-12-17 14:27:35,886 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:35,887 server_data.py[line:132] DEBUG {'move_direction': '270'}
+2020-12-17 14:27:36,888 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:36,889 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:27:37,891 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:37,891 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:27:38,892 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:38,892 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:27:39,893 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:39,894 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:27:44,008 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:44,008 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:27:45,010 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:45,011 server_data.py[line:132] DEBUG {'move_direction': '180'}
+2020-12-17 14:27:46,012 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:46,012 server_data.py[line:132] DEBUG {'move_direction': '180'}
+2020-12-17 14:27:47,013 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:47,013 server_data.py[line:132] DEBUG {'move_direction': '180'}
+2020-12-17 14:27:55,664 server_data.py[line:125] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:27:55,664 server_data.py[line:160] INFO {'lng_lat': [[114.39352001719573, 30.57805011194814]], 'zoom': 17}
+2020-12-17 14:28:54,657 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:28:54,657 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:28:55,658 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:28:55,658 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:28:56,659 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:28:56,659 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:28:57,661 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:28:57,661 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:28:58,663 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:28:58,663 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:28:59,664 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:28:59,664 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:29:00,666 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:00,666 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:29:01,667 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:01,668 server_data.py[line:132] DEBUG {'move_direction': '0'}
+2020-12-17 14:29:04,332 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:04,332 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:29:05,333 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:05,333 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:29:06,334 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:06,334 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:29:07,337 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:07,337 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:29:08,339 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:08,339 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:29:09,340 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:09,340 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:29:10,342 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:10,342 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:29:11,343 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:11,343 server_data.py[line:132] DEBUG {'move_direction': '90'}
+2020-12-17 14:29:12,687 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:12,687 server_data.py[line:132] DEBUG {'move_direction': '180'}
+2020-12-17 14:29:13,689 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:13,689 server_data.py[line:132] DEBUG {'move_direction': '180'}
+2020-12-17 14:29:14,690 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:14,690 server_data.py[line:132] DEBUG {'move_direction': '180'}
+2020-12-17 14:29:15,691 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:15,691 server_data.py[line:132] DEBUG {'move_direction': '180'}
+2020-12-17 14:29:16,693 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:16,693 server_data.py[line:132] DEBUG {'move_direction': '180'}
+2020-12-17 14:29:17,695 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:17,695 server_data.py[line:132] DEBUG {'move_direction': '270'}
+2020-12-17 14:29:18,696 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:18,697 server_data.py[line:132] DEBUG {'move_direction': '270'}
+2020-12-17 14:29:19,698 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:19,698 server_data.py[line:132] DEBUG {'move_direction': '270'}
+2020-12-17 14:29:21,731 server_data.py[line:125] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:21,731 server_data.py[line:132] DEBUG {'move_direction': '270'}
+2020-12-17 14:29:31,767 server_data.py[line:125] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:29:31,767 server_data.py[line:160] INFO {'lng_lat': [[65.82288212971702, 20.295950066214875]], 'zoom': 5.484656131188253}
+2020-12-17 14:30:08,749 server_data.py[line:125] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:30:08,749 server_data.py[line:160] INFO {'lng_lat': [[114.39355594941613, 30.57944922540749]], 'zoom': 17}
+2020-12-17 14:30:50,161 server_data.py[line:125] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:30:50,162 server_data.py[line:160] INFO {'lng_lat': [[114.39580171319108, 30.577987928654466]], 'zoom': 17}
+2020-12-17 14:30:50,624 server_data.py[line:125] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-17 14:30:50,624 server_data.py[line:160] INFO {'lng_lat': [[114.39313604774509, 30.57858222278362]], 'zoom': 18.823558903895727}

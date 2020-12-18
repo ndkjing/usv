@@ -1,0 +1,8 @@
+2020-12-17 11:06:07,565 com_data.py[line:35] INFO {'串口连接异常：': SerialException("could not open port '/dev/ttyUSB0': FileNotFoundError(2, '系统找不到指定的路径。', None, 3)")}
+2020-12-17 13:43:40,271 com_data.py[line:35] INFO {'串口连接异常：': SerialException("could not open port '/dev/ttyUSB0': FileNotFoundError(2, '系统找不到指定的路径。', None, 3)")}
+2020-12-17 14:10:06,001 com_data.py[line:35] INFO {'串口连接异常：': SerialException("could not open port '/dev/ttyUSB0': FileNotFoundError(2, '系统找不到指定的路径。', None, 3)")}
+2020-12-17 14:12:30,380 com_data.py[line:35] INFO {'串口连接异常：': SerialException("could not open port '/dev/ttyUSB0': FileNotFoundError(2, '系统找不到指定的路径。', None, 3)")}
+2020-12-17 14:24:32,152 com_data.py[line:35] INFO {'串口连接异常：': SerialException("could not open port '/dev/ttyUSB0': FileNotFoundError(2, '系统找不到指定的路径。', None, 3)")}
+2020-12-17 14:25:17,673 com_data.py[line:35] INFO {'串口连接异常：': SerialException("could not open port '/dev/ttyUSB0': FileNotFoundError(2, '系统找不到指定的路径。', None, 3)")}
+2020-12-17 14:25:44,683 com_data.py[line:35] INFO {'串口连接异常：': SerialException("could not open port '/dev/ttyUSB0': FileNotFoundError(2, '系统找不到指定的路径。', None, 3)")}
+2020-12-17 14:27:09,836 com_data.py[line:35] INFO {'串口连接异常：': SerialException("could not open port '/dev/ttyUSB0': FileNotFoundError(2, '系统找不到指定的路径。', None, 3)")}
