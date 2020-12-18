@@ -232,23 +232,6 @@ class AStar:
             return math.hypot(goal[0] - s[0], goal[1] - s[1])
 
 
-def main():
-    # 检查最近五个点是否有障碍物遮挡
-
-    s_start = (5, 5)
-    s_goal = (45, 25)
-
-    # astar = AStar(s_start, s_goal, "euclidean")
-    # plot = plotting.Plotting(s_start, s_goal)
-
-    # path, visited = astar.searching()
-    # plot.animation(path, visited, "A*")  # animation
-
-    # path, visited = astar.searching_repeated_astar(2.5)               # initial weight e = 2.5
-    # plot.animation_ara_star(path, visited, "Repeated A*")
-
-
-
 def get_outpool_set(contour,safe_distance=0):
     """
     :param contour 湖泊轮廓
@@ -375,22 +358,20 @@ def measure_distance(scan_cnt,pool_cnt,outpool_set):
     return distance_matrix
 
 
-
-def main_1():
-
-    # obj = BaiduMap([114.566767,30.541689],zoom=14)
-    # obj = BaiduMap([89.063586,31.833626],zoom=11)
-    # obj = BaiduMap([114.546142,30.251307],zoom=13)
-    # obj = BaiduMap([120.182326,31.270878],zoom=11)
-    # obj = BaiduMap([117.543176,31.527813],zoom=12)
-    # obj = BaiduMap([115.121565,30.096002],zoom=14)
-    # obj = BaiduMap([114.784018,30.317414],zoom=15)
-
-    # obj = BaiduMap([114.393142,30.558981],zoom=14)
-    obj = BaiduMap([114.390129,30.559005],zoom=14)
-    # obj = BaiduMap([114.411257,30.58388],zoom=14)
-    # obj = BaiduMap([114.431954,30.562239],zoom=14)
-    # obj = BaiduMap([114.443596,30.545694],zoom=14)
+def get_path(baidu_map_obj=None,mode=0):
+    """
+    param mode 模式　
+    ０　到达目标点后停留
+    １　到达目标点后返回
+    ２　扫描整个湖泊
+    """
+    if baidu_map_obj==None:
+        obj = BaiduMap([114.390129,30.559005],zoom=14)
+        # obj = BaiduMap([114.411257,30.58388],zoom=14)
+        # obj = BaiduMap([114.431954,30.562239],zoom=14)
+        # obj = BaiduMap([114.443596,30.545694],zoom=14)
+    else:
+        obj = baidu_map_obj
     pool_cnt,(pool_cx,pool_cy) = obj.get_pool_pix(b_show=False)
     pool_cnt = np.squeeze(pool_cnt)
     print('pool_cnt.shape',pool_cnt.shape)
@@ -398,7 +379,20 @@ def main_1():
     print('len(scan_cnt)',len(scan_cnt))
     outpool_set = get_outpool_set(pool_cnt)
     map_connect = 1
-    if map_connect:
+    if mode==0:
+        s_index = 0
+        e_index = 10
+        print('s e ', scan_cnt[s_index], scan_cnt[e_index])
+        in_cnt = cv2.pointPolygonTest(pool_cnt, (483, 777), True)
+        print('in_cnt', in_cnt)
+        s_start = (scan_cnt[s_index][0], scan_cnt[s_index][1])
+        s_goal = (scan_cnt[e_index][0], scan_cnt[e_index][1])
+        astar = AStar(s_start, s_goal, "euclidean", outpool_set)
+        tsp_path, visited = astar.searching()
+        print('tsp_path', tsp_path)
+        show_img = cv2.polylines(obj.show_img, [np.array(tsp_path, dtype=np.int32)], False, (255, 0, 0), 1)
+
+    elif mode==1:
         distance_matrix = measure_distance(scan_cnt,pool_cnt,outpool_set)
         print(distance_matrix.shape)
         print('distance_matrix',np.array(distance_matrix))
@@ -417,21 +411,9 @@ def main_1():
                 else:
                     path_points.append(scan_cnt[val])
         show_img = cv2.polylines(obj.show_img, [np.array(path_points, dtype=np.int32)], False, (255, 0, 0), 1)
-    else:
-        s_index = 0
-        e_index = 10
-        print('s e ',scan_cnt[s_index],scan_cnt[e_index])
-        in_cnt = cv2.pointPolygonTest(pool_cnt, (483, 777), True)
-        print('in_cnt',in_cnt)
-        s_start = (scan_cnt[s_index][0], scan_cnt[s_index][1])
-        s_goal = (scan_cnt[e_index][0], scan_cnt[e_index][1])
-        astar = AStar(s_start, s_goal, "euclidean", outpool_set)
-        tsp_path, visited = astar.searching()
-        print('tsp_path',tsp_path)
-        show_img = cv2.polylines(obj.show_img, [np.array(tsp_path, dtype=np.int32)], False, (255, 0, 0), 1)
 
     cv2.imshow('scan', show_img)
     cv2.waitKey(0)
 
 if __name__ == '__main__':
-    main_1()
+    get_path()

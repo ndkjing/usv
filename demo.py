@@ -73,9 +73,7 @@ if __name__ == '__main__':
 #         print(type(i))
 #         print('A%sZ'%(i))
         # time.sleep(0.1)
-
 # from audios import audios_manager
-
 # audios_manager.play_audio('setup.mp3')
 
 import numpy as np
@@ -83,17 +81,23 @@ import numpy as np
 # m = np.full(shape=(10,10),fill_value=np.inf)
 # print(m.shape,m)
 
-
-import math
-
-def distance(p0, p1, digits=2):
-    a = map(lambda x: (x[0] - x[1]) ** 2, zip(p0, p1))
-    return round(math.sqrt(sum(a)), digits)
-
-
-print(distance([0,0],[3,4]))
-
-
-l=[1,2,3,4]
-print(l[::-1])
-
+#
+# import math
+#
+# def distance(p0, p1, digits=2):
+#     a = map(lambda x: (x[0] - x[1]) ** 2, zip(p0, p1))
+#     return round(math.sqrt(sum(a)), digits)
+#
+#
+# print(distance([0,0],[3,4]))
+#
+#
+# l=[1,2,3,4]
+# print(l[::-1])
+#
+# from audios import audios_manager
+#
+# audios_manager.play_audio('setup.mp3')
+a = [[[1,2]],[[1,2],[2,3],[1,3]]]
+s = [[0],[0,0,0]]
+print(len(a[0]))

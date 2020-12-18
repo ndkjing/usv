@@ -193,27 +193,10 @@ class DataDefine:
         self.pool_code = ''
         self.water = self.water_data()
         self.weather = self.weather_data()
-
-        self.status = {"dump_energy": None,
-                       "current_lng_lat": None,
-                       "liquid_level": None,
-                       "b_leakage": None,
-                       "direction": None,
-                       "speed": None,
-                       "attitude_angle": None,
-                       "b_online": True,
-                       "b_homing": None,
-                       "charge_energy": None,
-                       "sampling_depth": None,
-                       "ship_code": self.ship_code,
-                       "pool_code":None,
-                       "data_flow": None,
-                       "sampling_count": None,
-                       "capicity": None
-                       }
-
+        self.status = self.status_data()
         self.control = self.control_data()
         self.detect = self.detect_data()
+
 
     # 水质数据
     def water_data(self):
@@ -321,7 +304,7 @@ class DataDefine:
                        }
         return return_dict
 
-
+    # 统计数据
     def statistics_data(self):
         """
         解释　　　　　字典键名称　　    数据类型　　

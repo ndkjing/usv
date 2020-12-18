@@ -32,7 +32,7 @@ class SerialData:
             if not (self.uart.is_open):
                 self.logger.error('无法打开串口')
         except Exception as e:
-            self.logger.info({"串口连接异常：":e})
+            self.logger.error({"串口连接异常：":e})
 
     # 打印设备基本信息
     def print_info(self):

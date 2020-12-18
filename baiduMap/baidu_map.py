@@ -95,7 +95,7 @@ def is_in_contours(point,local_map_data):
         # 判断是否在轮廓内部
         for index,cnt in enumerate(local_map_data['mapList']):
             # 直接使用像素位置判断
-            in_cnt = cv2.pointPolygonTest(np.array(cnt['pool_cnt']), point, False)
+            in_cnt = cv2.pointPolygonTest(np.array(cnt['pool_cnt']), (point[0],point[1]), False)
             # 使用经纬度判断
             # new_cnt = []
             # for i in cnt['mapData']:
@@ -135,7 +135,20 @@ def get_degree(lonA, latA, lonB, latB):
 
 
 class BaiduMap(object):
-    def __init__(self,lng_lat,ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY',height=1024,width=1024,zoom=None):
+    def __init__(self,lng_lat,ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY',height=1024,width=1024,zoom=None,logger=None):
+        if logger == None:
+            import logging
+            logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
+                                level=logging.DEBUG)
+            self.logger = logging
+        else:
+            self.logger = logger
+
+        # 在湖泊中生产的轮廓经纬度和中心经纬度
+        self.pool_cnts = []
+        self.pool_lng_lat = []
+        self.center_lng_lat = []
+
         # 经纬度
         self.lng_lat=lng_lat
         # 访问秘钥
@@ -239,14 +252,14 @@ class BaiduMap(object):
         img = cv2.imread(self.save_img_path, cv2.IMREAD_COLOR)
         # 检查图片是否读取成功
         if img is None:
-            print("Error: 请检查图片文件路径")
-            exit(1)
+            self.logger.error("Error: 无法找到保存的地图图片,请检查图片文件路径")
+            return None, (-1, -1)
 
         # 识别色块 获取矩形区域数组
-        self.show_img,return_cnt,(contours_cx,contours_cy) = color_block_finder(img, lowerb, upperb)
+        self.show_img, return_cnt,(contours_cx,contours_cy) = color_block_finder(img, lowerb, upperb)
         center_pix =(contours_cx,contours_cy)
         if return_cnt is None:
-            print('无法在点击处找到湖')
+            self.logger.error('无法在点击处找到湖')
             return return_cnt,center_pix
 
         # 绘制色块的矩形区域
@@ -578,6 +591,7 @@ if __name__ == '__main__':
     # obj = BaiduMap([114.718257,30.648004],zoom=14)
     # obj = BaiduMap([114.566767,30.541689],zoom=14)
     # obj = BaiduMap([114.565976,30.541317],zoom=15.113213)
+    # obj = BaiduMap([114.393142,30.558981],zoom=14)
     # obj.select_roi()
     # obj.analyse_hsv()
     # obj.hsv_image_threshold()

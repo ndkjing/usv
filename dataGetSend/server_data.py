@@ -62,8 +62,6 @@ class HttpSendGet:
         """
         send_url = self.base_url+uri
         response = requests.post(send_url,data=data)
-
-
     def get_data(self,uri):
         """
         :param uri 发送接口uri
@@ -90,9 +88,11 @@ class MqttSendGet:
         ## 接收到的经纬度目标地点 和 点击是地图层次
         self.target_lng_lat = []
         self.zoom = []
-        # 记录经纬度是不是已经到达或者放弃到达（在去的过程中手动操作） 0 准备过去(自动) -1 放弃（手动）  1 已经到达的点
+        self.mode = []
+        # 记录经纬度是不是已经到达或者放弃到达（在去的过程中手动操作） 0准备过去(自动) -1放弃（手动）  1 已经到达的点  2:该点是陆地
         self.target_lng_lat_status=[]
-
+        # 当前航线和下一个航点索引
+        self.current_lng_lat_index = []
         # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　360为停止
         self.control_move_direction = str(360)
         # 测量控制位　0为不采样　1为采样
@@ -109,7 +109,7 @@ class MqttSendGet:
 
     # 建立连接时候回调
     def on_connect_callback(self,client, userdata, flags, rc):
-        print("Connected with result code " + str(rc))
+        self.logger.info('Connected with result code' + str(rc))
 
     # 发布消息回调
     def on_publish_callback(self,client, userdata, mid):
