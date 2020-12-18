@@ -8,7 +8,7 @@ battery：电池电量过低
 
 import os
 import sys
-from playsound import playsound
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 
@@ -26,9 +26,11 @@ def play_audio(audio_name=None,b_backend=False):
         # 开机音乐
         # path_list=[os.path.join(base_dir,i)for i in ['huan.mp3']]
     else:
-        path_list=os.path.join(base_dir, audio_name)
+        path_list=[os.path.join(base_dir, audio_name)]
     for i in path_list:
+        # print('i',i)
         try:
+            from playsound import playsound
             playsound(i)
         except Exception as e:
             if b_backend:

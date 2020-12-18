@@ -577,7 +577,8 @@ class BaiduMap(object):
 
 
 if __name__ == '__main__':
-    obj = BaiduMap([114.393142,30.558981],zoom=14)
+    # obj = BaiduMap([114.393142,30.558981],zoom=14)
+    obj = BaiduMap([114.393142,30.558981],zoom=18.823558903895727)
     # obj.select_roi()
     # obj.analyse_hsv()
     # obj.hsv_image_threshold()

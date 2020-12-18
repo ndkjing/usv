@@ -66,4 +66,14 @@ if __name__ == '__main__':
 # print(s.split('AAA'))
 # print('dsa,ds,asdsa,wq,3123'.count(','))
 
+# send_data=''
+# while True:
+#     i = input('direction:')
+#     if len(i)==1:
+#         print(type(i))
+#         print('A%sZ'%(i))
+        # time.sleep(0.1)
 
+from audios import audios_manager
+
+audios_manager.play_audio('setup.mp3')

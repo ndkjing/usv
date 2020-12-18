@@ -1,3 +1,0 @@
-2020-12-09 16:11:35,052 com_data.py[line:17] ERROR {'error': SerialException("could not open port 'com10': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)")}
-2020-12-09 17:05:59,790 com_data.py[line:17] ERROR {'error': SerialException("could not open port 'com10': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)")}
-2020-12-09 18:18:53,090 com_data.py[line:28] ERROR {'error': SerialException("could not open port 'com8': PermissionError(13, '拒绝访问。', None, 5)")}

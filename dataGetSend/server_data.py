@@ -109,7 +109,7 @@ class MqttSendGet:
 
     # 建立连接时候回调
     def on_connect_callback(self,client, userdata, flags, rc):
-        print("Connected with result code " + str(rc))
+        self.logger.info('Connected with result code' + str(rc))
 
     # 发布消息回调
     def on_publish_callback(self,client, userdata, mid):

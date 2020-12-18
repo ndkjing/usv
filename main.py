@@ -13,6 +13,7 @@ from utils import data_generate
 from baiduMap.baidu_map import BaiduMap
 from baiduMap import baidu_map
 from dataGetSend.data_manager import DataManager
+from audios import audios_manager
 import sys
 import os
 
@@ -33,7 +34,9 @@ sys.path.append(
         'utils'))
 
 
-def main(mod='auto'):
+def main(mod='auto',b_play_audio=False):
+    if b_play_audio:
+        audios_manager.play_audio('setup.mp3')
     logger = log.LogHandler('main_log')
 
     # 数据处理对象
@@ -44,8 +47,11 @@ def main(mod='auto'):
         binding_data = data_manager_obj.send(
             method='http', data="", url=config.http_binding, http_type='GET')
         if int(binding_data['flag']) != 1:
+            if b_play_audio:
+                audios_manager.play_audio('register.mp3')
             logger.error({'binding status': binding_data['flag']})
-            exit(-1)
+            # TODO 未注册暂时跳过
+            # exit(-1)
         logger.info({'binding status': binding_data['flag']})
     except Exception as e:
         logger.error({'binding_data error': e})
@@ -61,6 +67,10 @@ def main(mod='auto'):
         target=data_manager_obj.send_mqtt_data)
     send_com_data_thread = threading.Thread(
         target=data_manager_obj.send_com_data)
+
+    # get_com_data_thread.setDaemon(True)
+    # send_mqtt_data_thread.setDaemon(True)
+    # send_com_data_thread.setDaemon(True)
 
     get_com_data_thread.start()
     send_mqtt_data_thread.start()

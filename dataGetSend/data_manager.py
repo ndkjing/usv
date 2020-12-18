@@ -23,7 +23,7 @@ class DataManager:
         # mqtt服务器数据收发对象
         self.server_data_obj = ServerData(self.server_log,topics=self.data_define_obj.topics)
         # 串口数据收发对象
-        self.com_data_obj = SerialData('com8', 115200, timeout=1/config.com2pi_interval,logger=self.com_log)
+        self.com_data_obj = SerialData(config.port, config.baud, timeout=1/config.com2pi_interval,logger=self.com_log)
         # 船最终控制移动方向
         self.ship_move_direction=str(360)
         # 船当前朝向
@@ -59,7 +59,7 @@ class DataManager:
                               'water_temperature':self.data_define_obj.water['wt'],
                              'current_lng_lat': self.data_define_obj.status['current_lng_lat'],
                             'r_distance':r_distance,
-                            'l_distance':l_distance,})
+                            'l_distance':l_distance})
 
     # 发送函数会阻塞 必须使用线程
     def send_com_data(self):
@@ -80,7 +80,7 @@ class DataManager:
             # 手动模式使用用户给定角度
             if manul_or_auto==1:
                 self.com_data_obj.send_data('A%sZ'%(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
-                self.logger.info('control_move_direction: '+str(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
+                # self.logger.debug('control_move_direction: '+str(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
             # 自动模式计算角度
             elif manul_or_auto==0:
                 # 计算目标角度
@@ -143,7 +143,7 @@ class DataManager:
                 self.logger.info({"发送状态数据": status_data})
                 # http发送检测数据给服务器
                 self.send(method='http', data=detect_data,
-                                                    url='http://192.168.8.13:8009/admin/xxl/data/save',
+                                                    url=config.http_data_save,
                                                     http_type='POST')
             time.sleep(1/config.pi2mqtt_interval)
 
@@ -194,7 +194,7 @@ if __name__ == '__main__':
     obj = DataManager()
 
     while True:
-        move_direction = obj.server_data_obj.mqtt_send_get_obj.move_direction
+        move_direction = obj.server_data_obj.mqtt_send_get_obj.control_move_direction
         obj.send(method='com',data=move_direction)
         obj.logger.info('move_direction: %f'%(float(move_direction)))
         time.sleep(2)

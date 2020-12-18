@@ -30,7 +30,10 @@ port = '/dev/ttyUSB0'
 baud = 115200
 
 # http 接口
-# 查询船是否注册
-http_binding = 'http://192.168.8.13:8009/admin/xxl/device/binding/%s'%(ship_code)
+# 查询船是否注册  wuhanligong.xxlun.com/union
+http_binding = 'http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/%s'%(ship_code)
 # 注册新的湖泊ID
-http_save = 'http://192.168.8.13:8009/admin/xxl/map/save'
+http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
+# 发送检测数据
+http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
+
