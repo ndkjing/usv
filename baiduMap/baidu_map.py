@@ -11,10 +11,11 @@ import sys
 百度地图
 ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
 """
-
+method_0 = cv2.CHAIN_APPROX_NONE
+method_1 = cv2.CHAIN_APPROX_SIMPLE
 
 def color_block_finder(img, lowerb, upperb,
-                       min_w=0, max_w=None, min_h=0, max_h=None):
+                       min_w=0, max_w=None, min_h=0, max_h=None,):
     '''
     色块识别 返回矩形信息，若没有找到返回矩形框为None
     '''
@@ -24,12 +25,12 @@ def color_block_finder(img, lowerb, upperb,
     img_bin = cv2.inRange(img_hsv, lowerb, upperb)
 
     # 寻找轮廓（只寻找最外侧的色块）
-    contours, hier = cv2.findContours(img_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hier = cv2.findContours(img_bin, cv2.RETR_EXTERNAL, method=method_0)
     # 声明画布 拷贝自img
     show_img = np.copy(img)
     # 外接矩形区域集合
     rects = []
-
+    print('len(contours)',len(contours))
     if max_w is None:
         # 如果最大宽度没有设定，就设定为图像的宽度
         max_w = img.shape[1]
@@ -55,10 +56,10 @@ def color_block_finder(img, lowerb, upperb,
     return_cnt=None
     for index,cnt in enumerate(contours):
         # 判断是否在轮廓内部
-        in_cnt = cv2.pointPolygonTest(cnt,(512,512),False)
+        in_cnt = cv2.pointPolygonTest(cnt,(512,512),True)
         # print('in cnt',in_cnt)
-
-        if in_cnt>0:
+        if in_cnt>2:
+            print('index,cnt',index,cnt)
             # print('len(cnt)',len(cnt))
             # 计算轮廓的中心点
             M = cv2.moments(contours[index])  # 计算第一条轮廓的矩
@@ -66,11 +67,9 @@ def color_block_finder(img, lowerb, upperb,
             # 这两行是计算中心点坐标
             contours_cx = int(M['m10'] / M['m00'])
             contours_cy = int(M['m01'] / M['m00'])
-            return_cnt = cnt
             show_img = cv2.drawContours(show_img, cnt, -1, (0, 0, 255), 3)
-    return show_img,return_cnt,(contours_cx,contours_cy)
-
-    # return rects
+            return show_img,cnt,(contours_cx,contours_cy)
+    return None,None,(contours_cx,contours_cy)
 
 
 def draw_color_block_rect(img, rects, color=(0, 0, 255)):
@@ -96,7 +95,7 @@ def is_in_contours(point,local_map_data):
         # 判断是否在轮廓内部
         for index,cnt in enumerate(local_map_data['mapList']):
             # 直接使用像素位置判断
-            in_cnt = cv2.pointPolygonTest(np.array(cnt['pool_cnt']), point, False)
+            in_cnt = cv2.pointPolygonTest(np.array(cnt['pool_cnt']), (point[0],point[1]), False)
             # 使用经纬度判断
             # new_cnt = []
             # for i in cnt['mapData']:
@@ -136,7 +135,20 @@ def get_degree(lonA, latA, lonB, latB):
 
 
 class BaiduMap(object):
-    def __init__(self,lng_lat,ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY',height=1024,width=1024,zoom=9):
+    def __init__(self,lng_lat,ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY',height=1024,width=1024,zoom=None,logger=None):
+        if logger == None:
+            import logging
+            logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
+                                level=logging.DEBUG)
+            self.logger = logging
+        else:
+            self.logger = logger
+
+        # 在湖泊中生产的轮廓经纬度和中心经纬度
+        self.pool_cnts = []
+        self.pool_lng_lat = []
+        self.center_lng_lat = []
+
         # 经纬度
         self.lng_lat=lng_lat
         # 访问秘钥
@@ -226,6 +238,9 @@ class BaiduMap(object):
         :param b_show: True显示轮廓图像
         :return:
         """
+        print(self.save_img_path)
+        if not os.path.exists(self.save_img_path):
+            print('no image ')
         self.row_img = cv2.imread(self.save_img_path)
         # 图片路径
         # 颜色阈值下界(HSV) lower boudnary
@@ -237,28 +252,25 @@ class BaiduMap(object):
         img = cv2.imread(self.save_img_path, cv2.IMREAD_COLOR)
         # 检查图片是否读取成功
         if img is None:
-            print("Error: 请检查图片文件路径")
-            exit(1)
+            self.logger.error("Error: 无法找到保存的地图图片,请检查图片文件路径")
+            return None, (-1, -1)
 
         # 识别色块 获取矩形区域数组
-
-        show_img,return_cnt,(contours_cx,contours_cy) = color_block_finder(img, lowerb, upperb)
+        self.show_img, return_cnt,(contours_cx,contours_cy) = color_block_finder(img, lowerb, upperb)
         center_pix =(contours_cx,contours_cy)
         if return_cnt is None:
-            print('无法在点击处找到湖')
+            self.logger.error('无法在点击处找到湖')
             return return_cnt,center_pix
 
         # 绘制色块的矩形区域
         # canvas = draw_color_block_rect(img, rects)
         # 在HighGUI窗口 展示最终结果
+        cv2.circle(self.show_img, (contours_cx, contours_cy), 5, [255, 255, 0], -1)
         if b_show:
             cv2.namedWindow('result', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
-            cv2.circle(show_img,(contours_cx,contours_cy),5,[255,255,0],-1)
-            # cv2.imshow('result', canvas)
-            cv2.imshow('result', show_img)
-
+            cv2.imshow('result', self.show_img)
             # 等待任意按键按下
-            # cv2.waitKey(0)
+            cv2.waitKey(0)
             # 关闭其他窗口
             # cv2.destroyAllWindows()
         return return_cnt,center_pix
@@ -337,6 +349,7 @@ class BaiduMap(object):
         :param contour 轮廓点
         :param pix_gap 指定扫描间隔，单位像素
         """
+        # 求坐标点最大外围矩阵
         (x, y, w, h) = cv2.boundingRect(contour)
         print('(x, y, w, h)',(x, y, w, h))
         # 循环生成点同时判断点是否在湖泊范围在则添加到列表中
@@ -347,13 +360,13 @@ class BaiduMap(object):
         current_x,current_y = start_x,start_y
         # 判断x轴是递增的加还是减 True 为加
         b_add_or_sub = True
-
+        safe_distance=10
         while current_y<(y+h):
             while current_x<=(x+w) and current_x>=x:
                 point = (current_x,current_y )
-                in_cnt = cv2.pointPolygonTest(contour, point, False)
+                in_cnt = cv2.pointPolygonTest(contour, point, True)
                 # print('in cnt',in_cnt)
-                if in_cnt > 0:
+                if in_cnt > safe_distance:
                     scan_points.append(list(point))
                 if b_add_or_sub:
                     current_x+=pix_gap
@@ -366,12 +379,11 @@ class BaiduMap(object):
             else:
                 current_x += pix_gap
                 b_add_or_sub = True
-        show_img = np.copy(self.row_img)
+        for point in scan_points:
+            cv2.circle(self.show_img, tuple(point), 5, (0, 255, 255), -1)
         if b_show:
-            for point in scan_points:
-                cv2.circle(show_img,tuple(point), 3, (0,0,255), -1)
-            cv2.polylines(show_img,[np.array(scan_points,dtype=np.int32)],False,(255,0,0),2)
-            cv2.imshow('scan',show_img)
+            # cv2.polylines(self.show_img,[np.array(scan_points,dtype=np.int32)],False,(255,0,0),2)
+            cv2.imshow('scan',self.show_img)
             cv2.waitKey(0)
         return scan_points
 
@@ -571,14 +583,15 @@ class BaiduMap(object):
         if img is None:
             print("Error: 文件路径错误，没有此图片 {}".format(image_path))
             exit(1)
-
         main(img)
 
 
-
 if __name__ == '__main__':
+    obj = BaiduMap([114.393142,30.558981],zoom=14)
+    # obj = BaiduMap([114.718257,30.648004],zoom=14)
+    # obj = BaiduMap([114.566767,30.541689],zoom=14)
+    # obj = BaiduMap([114.565976,30.541317],zoom=15.113213)
     # obj = BaiduMap([114.393142,30.558981],zoom=14)
-    obj = BaiduMap([114.393142,30.558981],zoom=18.823558903895727)
     # obj.select_roi()
     # obj.analyse_hsv()
     # obj.hsv_image_threshold()
@@ -594,4 +607,9 @@ if __name__ == '__main__':
     # print(gps)
     # 请求指定位置图片
     # obj.draw_image()
+
+    #
+    # 求坐标点最大外围矩阵
+    (x, y, w, h) = cv2.boundingRect(pool_cnt)
+    print('(x, y, w, h)', (x, y, w, h))
 

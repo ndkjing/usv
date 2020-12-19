@@ -22,6 +22,12 @@ pi2mqtt_interval = 0.2
 # 接收服务器方向控制间隔
 mqtt_control_interval = 1
 
+# 检查船状态间隔 单位秒
+# 检查经纬度
+check_status_interval = 2
+# 检查网络连接状态间隔
+check_network_interval=10
+
 # 船编号
 ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380c'
 
@@ -36,4 +42,8 @@ http_binding = 'http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/%s'%
 http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
 # 发送检测数据
 http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
-
+# 手动模式和自动模式
+# mod in ['manual', 'auto']
+mod='auto'
+# 是否播放生硬
+b_play_audio=False
