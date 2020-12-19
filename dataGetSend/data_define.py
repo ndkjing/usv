@@ -38,20 +38,18 @@ name_mappings = {
         }
 }
 
+# 当前真实数据列表 不在该表中的值使用生成数据
+current_data =['COD','wt','current_lng_lat','direction','speed','attitude_angle','b_online','ship_code','pool_code']
 
 # 生成船号
 def get_ship_code():
     return str(uuid4())
 
 # 剩余电量
-
-
 def get_dump_energy():
-    return init_dump_energy - round((time.time() - init_time) / 60, 1)
+    return init_dump_energy - round((time.time() - init_time) / (60*2), 1)
 
 # 当前经纬度
-
-
 def get_current_lng_lat(init_lng_lat):
     if random.random() > 0.5:
         init_lng_lat = [
@@ -77,7 +75,6 @@ def get_current_lng_lat(init_lng_lat):
                     1) /
                 1000,
                 6)]
-
     return init_lng_lat
 
 
@@ -218,7 +215,7 @@ class DataDefine:
         数据定义对象
         """
         self.ship_code = config.ship_code
-
+        # 订阅话题
         self.topics = (('control_data_%s' % (self.ship_code), 0),
                        ('path_confirm_%s' % (self.ship_code), 0),
                        ('user_lng_lat_%s' % (self.ship_code), 0))
@@ -230,7 +227,6 @@ class DataDefine:
         self.detect = self.detect_data()
 
     # 水质数据
-
     def water_data(self):
         """
         :param value_from 数据来源
