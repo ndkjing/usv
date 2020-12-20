@@ -46,7 +46,7 @@ def distanceFromCoordinate(lon1, lat1, lon2, lat2):  # 经度1，纬度1，经�
         math.cos(lat2) * math.sin(dlon / 2) ** 2
     c = 2 * math.asin(math.sqrt(a))
     r = 6371  # 地球平均半径，单位为公里
-    return c * r * 1000 * 100
+    return c * r * 1000
 
 # 已知一点的经纬度和移动方向与距离，求终点的经纬度
 
@@ -54,7 +54,7 @@ def distanceFromCoordinate(lon1, lat1, lon2, lat2):  # 经度1，纬度1，经�
 def one_point_diatance_to_end(lng, lat, brng, d):
     R = 6378.1  # Radius of the Earth
     brng = math.radians(brng)  # Bearing is 90 degrees converted to radians.
-    d = d / 100000  # Distance in km
+    d = d / 1000 # Distance in km
 
     # lat2  52.20444 - the lat result I'm hoping for
     # lon2  0.36056 - the long result I'm hoping for.
@@ -70,9 +70,7 @@ def one_point_diatance_to_end(lng, lat, brng, d):
 
     lat2 = math.degrees(lat2)
     lon2 = math.degrees(lon2)
-
-    print(lon2)
-    print(lat2)
+    return [lon2, lat2]
 
 
 if __name__ == '__main__':
@@ -80,4 +78,5 @@ if __name__ == '__main__':
     print(temp)
     temp = distanceFromCoordinate(114.316966, 30.576768, 114.397346, 30.58709)
     print(temp)
-    one_point_diatance_to_end(114.316966, 30.576768, 78.7, 777974)
+    temp = one_point_diatance_to_end(114.316966, 30.576768, 78.7, 777974)
+    print(temp)

@@ -105,7 +105,7 @@ class MqttSendGet:
         # 测量控制位　0为不采样　1为采样
         self.b_sampling = 0
         # 抽水控制位  0为不抽水　1为抽水
-        self.b_draw = 0\
+        self.b_draw = 0
 
 
     # 连接MQTT服务器
@@ -157,13 +157,22 @@ class MqttSendGet:
             # 用户点击经纬度和图层 保存到指定路径
             try:
                 user_lng_lat_data = json.loads(msg.payload)
-                self.target_lng_lat.append(user_lng_lat_data.get('lng_lat')[0])
+                if not user_lng_lat_data.get('lng_lat'):
+                    self.logger.error('user_lng_lat have no lng lat')
+                    return
                 # 更新上一个点状态
-                if len(self.target_lng_lat_status) > 0:
-                    self.target_lng_lat_status[-1] = 1
+                if len(user_lng_lat_data)>0 and len(self.target_lng_lat_status) > 0:
+                    for i in range(len(self.target_lng_lat_status[-1])):
+                        if self.target_lng_lat_status[-1][i]==0:
+                            self.target_lng_lat_status[-1][i]=-1
+                self.target_lng_lat.append(user_lng_lat_data.get('lng_lat'))
                 # 添加新的点
-                self.target_lng_lat_status.append(0)
+                self.target_lng_lat_status.append([0]*len(user_lng_lat_data.get('lng_lat')))
                 self.zoom.append(user_lng_lat_data.get('zoom'))
+                if user_lng_lat_data.get('mode'):
+                    self.mode.append(int(user_lng_lat_data.get('mode')))
+                else:
+                    self.mode.append(0)
                 self.logger.info({'lng_lat': user_lng_lat_data.get(
                     'lng_lat'), 'zoom': user_lng_lat_data.get('zoom')})
             except Exception as e:
@@ -227,11 +236,11 @@ if __name__ == '__main__':
         mqtt_obj.publish_topic(
             topic='status_data_%s' %
             (config.ship_code),
-            data=data_define.status_data(),
+            data=data_define.init_ststus_data,
             qos=1)
         mqtt_obj.publish_topic(
             topic='detect_data_%s' %
             (config.ship_code),
-            data=data_define.detect_data(),
+            data=data_define.init_detect_data,
             qos=1)
         time.sleep(config.pi2mqtt_interval)

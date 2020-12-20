@@ -6,6 +6,9 @@ import numpy as np
 import math
 import os
 from math import radians,cos,sin,degrees,atan2
+import copy
+
+from utils import lng_lat_calculate
 import sys
 """
 百度地图
@@ -135,7 +138,7 @@ def get_degree(lonA, latA, lonB, latB):
 
 
 class BaiduMap(object):
-    def __init__(self,lng_lat,ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY',height=1024,width=1024,zoom=None,logger=None):
+    def __init__(self,lng_lat,ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY',zoom=None,logger=None,height=1024,width=1024):
         if logger == None:
             import logging
             logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
@@ -146,8 +149,15 @@ class BaiduMap(object):
 
         # 在湖泊中生产的轮廓经纬度和中心经纬度
         self.pool_cnts = []
-        self.pool_lng_lat = []
-        self.center_lng_lat = []
+        self.pool_lng_lats = []
+        self.pool_center_cnt = []
+        self.pool_center_lng_lat = []
+        self.scan_point_cnts = []
+        self.scan_point_lng_lats = []
+        self.path_planning_cnts=[]
+        self.path_planning_lng_lats=[]
+        self.outpool_cnts_set=None
+        self.outpool_lng_lats_set=[]
 
         # 经纬度
         self.lng_lat=lng_lat
@@ -238,9 +248,9 @@ class BaiduMap(object):
         :param b_show: True显示轮廓图像
         :return:
         """
-        print(self.save_img_path)
+        self.logger.info({'save_img_path':self.save_img_path})
         if not os.path.exists(self.save_img_path):
-            print('no image ')
+            self.logger.error('no image')
         self.row_img = cv2.imread(self.save_img_path)
         # 图片路径
         # 颜色阈值下界(HSV) lower boudnary
@@ -249,22 +259,19 @@ class BaiduMap(object):
         upperb = self.threshold_hsv[1]
 
         # 读入素材图片 BGR
-        img = cv2.imread(self.save_img_path, cv2.IMREAD_COLOR)
         # 检查图片是否读取成功
-        if img is None:
+        if self.row_img is None:
             self.logger.error("Error: 无法找到保存的地图图片,请检查图片文件路径")
             return None, (-1, -1)
 
         # 识别色块 获取矩形区域数组
-        self.show_img, return_cnt,(contours_cx,contours_cy) = color_block_finder(img, lowerb, upperb)
-        center_pix =(contours_cx,contours_cy)
-        if return_cnt is None:
-            self.logger.error('无法在点击处找到湖')
-            return return_cnt,center_pix
+        self.show_img, pool_cnts,(contours_cx,contours_cy) = color_block_finder(self.row_img, lowerb, upperb)
+        self.center_cnt =(contours_cx,contours_cy)
+        if pool_cnts is None:
+            self.logger.info('无法在点击处找到湖')
+            return pool_cnts,(-2,-2)
 
         # 绘制色块的矩形区域
-        # canvas = draw_color_block_rect(img, rects)
-        # 在HighGUI窗口 展示最终结果
         cv2.circle(self.show_img, (contours_cx, contours_cy), 5, [255, 255, 0], -1)
         if b_show:
             cv2.namedWindow('result', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
@@ -273,7 +280,9 @@ class BaiduMap(object):
             cv2.waitKey(0)
             # 关闭其他窗口
             # cv2.destroyAllWindows()
-        return return_cnt,center_pix
+        pool_cnts = np.squeeze(pool_cnts)
+        self.pool_cnts = pool_cnts
+        return self.pool_cnts,self.center_cnt
 
     # 区域像素点转换为经纬度坐标点
     def pix_to_gps(self,cnt):
@@ -292,13 +301,14 @@ class BaiduMap(object):
         for point in cnt:
             delta_pix_x = point[0]-center[0]
             delta_pix_y = point[1]-center[1]
-            # pix_2_meter = math.pow(2,18-self.zoom)
-            pix_2_meter = float(self.scale_map[self.zoom][0])/self.scale_map[self.zoom][1]
+            pix_2_meter = math.pow(2,18-self.zoom)
+            # pix_2_meter = float(self.scale_map[self.zoom][0])/self.scale_map[self.zoom][1]
             delta_meter_x = delta_pix_x*(pix_2_meter)
             delta_meter_y = delta_pix_y*(pix_2_meter)
+            distance = math.sqrt(math.pow(delta_meter_x,2)+math.pow(delta_meter_y,2))
             # 方法一：直接计算
             # 方法二：当做圆球计算
-            method=2
+            method=0
             if method==1:
                 L = 6381372 * math.pi * 2
                 W = L
@@ -337,17 +347,24 @@ class BaiduMap(object):
                 point_gps = [self.lng_lat[0] + delta_lng, self.lng_lat[1] + delta_lat]
                 return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
                 return_gps_list.append(point_gps)
-
+            else:
+                theta = round(math.degrees(math.atan2(delta_meter_x, -delta_meter_y)), 1)
+                theta = theta if theta > 0 else 360 + theta
+                point_gps = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],self.lng_lat[1],theta,distance)
+                return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
+                return_gps_list.append(point_gps)
         # print('len ',len(return_gps))
         with open('map.json','w') as f:
+            print()
             json.dump(return_gps,f)
         return return_gps,return_gps_list
 
-    def scan_pool(self,contour,pix_gap=20,b_show=False):
+    def scan_pool(self,contour,pix_gap=20,safe_distance=10,b_show=False):
         """
         传入湖泊像素轮廓返回活泼扫描点
         :param contour 轮廓点
         :param pix_gap 指定扫描间隔，单位像素
+        :param safe_distance
         """
         # 求坐标点最大外围矩阵
         (x, y, w, h) = cv2.boundingRect(contour)
@@ -360,12 +377,10 @@ class BaiduMap(object):
         current_x,current_y = start_x,start_y
         # 判断x轴是递增的加还是减 True 为加
         b_add_or_sub = True
-        safe_distance=10
         while current_y<(y+h):
             while current_x<=(x+w) and current_x>=x:
                 point = (current_x,current_y )
                 in_cnt = cv2.pointPolygonTest(contour, point, True)
-                # print('in cnt',in_cnt)
                 if in_cnt > safe_distance:
                     scan_points.append(list(point))
                 if b_add_or_sub:
@@ -385,7 +400,8 @@ class BaiduMap(object):
             # cv2.polylines(self.show_img,[np.array(scan_points,dtype=np.int32)],False,(255,0,0),2)
             cv2.imshow('scan',self.show_img)
             cv2.waitKey(0)
-        return scan_points
+        self.scan_point_cnts = scan_points
+        return self.scan_point_cnts
 
 
     def select_roi(self):
@@ -595,21 +611,18 @@ if __name__ == '__main__':
     # obj.select_roi()
     # obj.analyse_hsv()
     # obj.hsv_image_threshold()
-    pool_cnt,(pool_cx,pool_cy) = obj.get_pool_pix(b_show=True)
-    pool_cnt = np.squeeze(pool_cnt)
+    pool_cnts,(pool_cx,pool_cy) = obj.get_pool_pix(b_show=False)
 
-    scan_cnt = obj.scan_pool(pool_cnt,pix_gap=40,b_show=True)
+    scan_cnt = obj.scan_pool(pool_cnts,pix_gap=40,b_show=False)
 
     all_cnt = []
-    all_cnt.extend(list(pool_cnt))
+    all_cnt.extend(list(pool_cnts))
     all_cnt.extend(scan_cnt)
     gps = obj.pix_to_gps(all_cnt)
     # print(gps)
     # 请求指定位置图片
     # obj.draw_image()
-
-    #
     # 求坐标点最大外围矩阵
-    (x, y, w, h) = cv2.boundingRect(pool_cnt)
+    (x, y, w, h) = cv2.boundingRect(pool_cnts)
     print('(x, y, w, h)', (x, y, w, h))
 

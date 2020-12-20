@@ -146,7 +146,7 @@ def distanceFromCoordinate(lon1, lat1, lon2, lat2):  # 经度1，纬度1，经�
     a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
     c = 2 * math.asin(math.sqrt(a))
     r = 6371  # 地球平均半径，单位为公里
-    return c * r * 1000 * 100
+    return c * r * 1000
 
 # 已知一点的经纬度和移动方向与距离，求终点的经纬度
 def one_point_diatance_to_end(lng,lat,brng,d):
@@ -172,15 +172,28 @@ def one_point_diatance_to_end(lng,lat,brng,d):
     print(lon2)
     print(lat2)
 
+#
+#
+# temp = angleFromCoordinate(114.316966,30.576768, 114.397346,30.58709)
+# print(temp)
+# temp = distanceFromCoordinate(114.316966,30.576768, 114.397346,30.58709)
+# print(temp)
+# one_point_diatance_to_end(114.316966,30.576768,78.7,777974)
 
+# zoom = [7,15.321,14.3497808125]
+# for i in zoom:
+#         print(math.pow(2,18-i))
 
-temp = angleFromCoordinate(114.316966,30.576768, 114.397346,30.58709)
-print(temp)
-temp = distanceFromCoordinate(114.316966,30.576768, 114.397346,30.58709)
-print(temp)
-one_point_diatance_to_end(114.316966,30.576768,78.7,777974)
-
-
-
+# x=[math.sqrt(3),math.sqrt(3),-math.sqrt(3),-math.sqrt(3)]
+# y=[1,-1,1,-1]
+# for i,j in zip(x,y):
+#     print('i,j',i,j)
+#     theta = round(math.degrees(math.atan2(i,j)),1)
+#     theta = theta if theta>0 else 360+theta
+#     print('math.atan2(i,j)',theta)
+a = [1,3.321]
+b = tuple(a)
+print(b,type(b),b[0])
+b[0]=2
 
 
