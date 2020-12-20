@@ -15,6 +15,7 @@ from utils.log import LogHandler
 from baiduMap import baidu_map
 from audios import audios_manager
 from pathPlanning import a_star
+from obstacleAvoid import basic_obstacle_avoid
 import config
 
 class DataManager:
@@ -37,6 +38,9 @@ class DataManager:
         self.ship_move_direction = str(360)
         # 船当前朝向
         self.ship_current_direction = -1
+
+        self.l_distance=None
+        self.r_distance=None
 
     # 读取函数会阻塞 必须使用线程
     def get_com_data(self):
@@ -62,69 +66,80 @@ class DataManager:
             else:
                 self.data_define_obj.status['current_lng_lat'] = [float(com_data_list[3]), float(com_data_list[4])]
             # 左右侧的超声波检测距离
-            l_distance, r_distance = com_data_list[5], com_data_list[6]
+            self.l_distance, self.r_distance = com_data_list[5], com_data_list[6]
             self.logger.info({'ship_current_direction': self.ship_current_direction,
                               'TD': self.data_define_obj.water['TD'],
                               'water_temperature': self.data_define_obj.water['wt'],
                               'current_lng_lat': self.data_define_obj.status['current_lng_lat'],
-                              'r_distance': r_distance,
-                              'l_distance': l_distance})
+                              'r_distance': self.r_distance,
+                              'l_distance': self.l_distance})
 
     # 发送函数会阻塞 必须使用线程
     def send_com_data(self):
         # 0 自动  1手动
         manul_or_auto = 0
-        while True:
-            # 判断当前是手动控制还是自动控制
-            if len(self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status) == 0:
-                manul_or_auto = 1
-            elif self.data_define_obj.status['current_lng_lat'] == None:
-                manul_or_auto = 1
-            else:
-                for i in self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status:
-                    if i == 0:
-                        manul_or_auto = 0
-                        break
+        try:
+            while True:
+                # 判断当前是手动控制还是自动控制
+                if len(self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status) == 0:
                     manul_or_auto = 1
-            # 手动模式使用用户给定角度
-            if manul_or_auto == 1:
-                self.com_data_obj.send_data('A%sZ' % (self.server_data_obj.mqtt_send_get_obj.control_move_direction))
-                # self.logger.debug('control_move_direction: '+str(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
-            # 自动模式计算角度
-            elif manul_or_auto == 0:
-                # 计算目标角度
-                target_degree = baidu_map.get_degree(self.data_define_obj.status['current_lng_lat'][0],
-                                                     self.data_define_obj.status['current_lng_lat'][1],
-                                                     self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1][
-                                                         0],
-                                                     self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1][
-                                                         1])
-                # 偏差角度
-                delta_degree = target_degree - self.ship_current_direction
-                auto_move_direction = 360
-                # 判断移动方向
-                if delta_degree >= 0:
-                    if delta_degree < 45 or delta_degree >= 315:
-                        auto_move_direction = 0
-                    elif delta_degree >= 45 and delta_degree < 135:
-                        auto_move_direction = 90
-                    elif delta_degree >= 135 and delta_degree < 225:
-                        auto_move_direction = 180
-                    elif delta_degree >= 225 and delta_degree < 315:
-                        auto_move_direction = 270
+                elif self.data_define_obj.status['current_lng_lat'] == None:
+                    manul_or_auto = 1
                 else:
-                    if abs(delta_degree) < 45 or abs(delta_degree) >= 315:
-                        auto_move_direction = 0
-                    elif abs(delta_degree) >= 45 and abs(delta_degree) < 135:
-                        auto_move_direction = 270
-                    elif abs(delta_degree) >= 135 and abs(delta_degree) < 225:
-                        auto_move_direction = 180
-                    elif abs(delta_degree) >= 225 and abs(delta_degree) < 315:
-                        auto_move_direction = 90
-                self.com_data_obj.send_data('A%sZ' % (str(auto_move_direction)))
-                self.logger.info('auto_move_direction: ' + str(auto_move_direction))
+                    for i in self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status:
+                        if i == 0:
+                            manul_or_auto = 0
+                            break
+                        manul_or_auto = 1
+                # 手动模式使用用户给定角度
+                if manul_or_auto == 1:
+                    obstacle_direction = basic_obstacle_avoid.move(self.l_distance, self.r_distance)
+                    if obstacle_direction != int(self.server_data_obj.mqtt_send_get_obj.control_move_direction):
+                        self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
+                    else:
+                        self.com_data_obj.send_data('A%sZ' % (self.server_data_obj.mqtt_send_get_obj.control_move_direction))
+                    # self.logger.debug('control_move_direction: '+str(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
+                # 自动模式计算角度
+                elif manul_or_auto == 0:
+                    # 计算目标角度
+                    target_degree = baidu_map.get_degree(self.data_define_obj.status['current_lng_lat'][0],
+                                                         self.data_define_obj.status['current_lng_lat'][1],
+                                                         self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1][
+                                                             0],
+                                                         self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1][
+                                                             1])
+                    # 偏差角度
+                    delta_degree = target_degree - self.ship_current_direction
+                    auto_move_direction = 360
+                    # 判断移动方向
+                    if delta_degree >= 0:
+                        if delta_degree < 45 or delta_degree >= 315:
+                            auto_move_direction = 0
+                        elif delta_degree >= 45 and delta_degree < 135:
+                            auto_move_direction = 90
+                        elif delta_degree >= 135 and delta_degree < 225:
+                            auto_move_direction = 180
+                        elif delta_degree >= 225 and delta_degree < 315:
+                            auto_move_direction = 270
+                    else:
+                        if abs(delta_degree) < 45 or abs(delta_degree) >= 315:
+                            auto_move_direction = 0
+                        elif abs(delta_degree) >= 45 and abs(delta_degree) < 135:
+                            auto_move_direction = 270
+                        elif abs(delta_degree) >= 135 and abs(delta_degree) < 225:
+                            auto_move_direction = 180
+                        elif abs(delta_degree) >= 225 and abs(delta_degree) < 315:
+                            auto_move_direction = 90
+                    obstacle_direction = basic_obstacle_avoid.move(self.l_distance,self.r_distance)
+                    if obstacle_direction != int(auto_move_direction):
+                        self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
+                    else:
+                        self.com_data_obj.send_data('A%sZ' % (str(auto_move_direction)))
+                    self.logger.info('auto_move_direction: ' + str(auto_move_direction))
 
-            time.sleep(1 / config.pi2com_interval)
+                time.sleep(1 / config.pi2com_interval)
+        except KeyboardInterrupt:
+            self.com_data_obj.send_data('A360Z')
 
     # 读取函数会阻塞 必须使用线程
     # 发送mqtt状态数据和检测数据
