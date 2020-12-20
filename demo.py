@@ -196,3 +196,6 @@ b = tuple(a)
 print(b,type(b),b[0])
 
 
+a='3213'
+b=a
+c=2
