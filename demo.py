@@ -194,6 +194,5 @@ def one_point_diatance_to_end(lng,lat,brng,d):
 a = [1,3.321]
 b = tuple(a)
 print(b,type(b),b[0])
-b[0]=2
 
 

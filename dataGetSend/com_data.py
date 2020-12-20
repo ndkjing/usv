@@ -2,7 +2,6 @@
 串口数据收发
 """
 import serial
-# import serial.tools.list_ports
 import binascii
 import time
 import copy
@@ -12,13 +11,13 @@ from utils import log
 
 logger = log.LogHandler('test_com')
 
-
 class SerialData:
-    def __init__(self, com, baud, timeout,logger=None):
-        if logger ==None:
+    def __init__(self, com, baud, timeout, logger=None):
+        if logger is None:
             import logging
-            logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
-                                level=logging.DEBUG)
+            logging.basicConfig(
+                format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
+                level=logging.DEBUG)
             self.logger = logging
         else:
             self.logger = logger
@@ -27,12 +26,13 @@ class SerialData:
         self.timeout = timeout
         try:
             # 打开串口，并得到串口对象
-            self.uart = serial.Serial(self.port, self.baud, timeout=self.timeout)
+            self.uart = serial.Serial(
+                self.port, self.baud, timeout=self.timeout)
             # 判断是否打开成功
             if not (self.uart.is_open):
                 self.logger.error('无法打开串口')
         except Exception as e:
-            self.logger.error({"串口连接异常：":e})
+            self.logger.error({"串口连接异常：": e})
 
     # 打印设备基本信息
     def print_info(self):
@@ -80,13 +80,14 @@ class SerialData:
         data_read = self.uart.readline()
         # self.logger.info({'单片机读取数据':data_read})
         # 通过
-        if str(data_read).count(',')>2:
+        if str(data_read).count(',') > 2:
 
             # self.logger.info({'单片机读取数据处理后':str(data_read)[2:-5]})
             return str(data_read)[2:-5]
         else:
             return None
     # 发数据
+
     def send_data(self, data):
         self.uart.write(data.encode())
 
@@ -116,44 +117,31 @@ class SerialData:
                         for i in range(self.uart.in_waiting):
                             print("接收ascii数据：" + str(self.read_size(1)))
                             data1 = self.read_size(1).hex()  # 转为十六进制
-                            data2 = int(data1, 16)  # 转为十进制print("收到数据十六进制："+data1+"  收到数据十进制："+str(data2))
+                            data2 = int(
+                                data1, 16)  # 转为十进制print("收到数据十六进制："+data1+"  收到数据十进制："+str(data2))
                     if (way == 1):
                         # 整体接收
-                        # data = self.main_engine.read(self.main_engine.in_waiting).decode("utf-8")#方式一
+                        # data =
+                        # self.main_engine.read(self.main_engine.in_waiting).decode("utf-8")#方式一
                         data = self.uart.read_all()  # 方式二print("接收ascii数据：", data)
             except Exception as e:
                 print("异常报错：", e)
 
 
 if __name__ == '__main__':
-    import random
-    logger = log.LogHandler('test')
     import config
-    # from dataGetSend import data_define
-    # from dataGetSend.data_define import DataDefine
-    # from dataGetSend.server_data import MqttSendGet
-    # # obj = ServerData()
-    # # logger = log.LogHandler('server_data_test')
-    # mqtt_obj = MqttSendGet(logger)
-    # data_define_obj = DataDefine()
-    # # 启动后自动订阅话题
-    # for topic, qos in data_define_obj.topics:
-    #     logger.info(topic + '    ' + str(qos))
-    #     mqtt_obj.subscribe_topic(topic=topic, qos=qos)
-    # http发送检测数据给服务器
-    # while True:
-    #     mqtt_obj.publish_topic(topic='status_data_%s' % (data_define.ship_code), data=data_define.status_data(), qos=1)
-    #     mqtt_obj.publish_topic(topic='detect_data_%s' % (data_define.ship_code), data=data_define.detect_data(), qos=1)
-    #     time.sleep(config.pi2mqtt_interval)
-    # Engine1 = Communication("com12", 115200, 0.5)
-    # if (Ret):
-    #     Engine1.Recive_data(0)
 
-    serial_obj = SerialData('com8', 115200, timeout=1/config.com2pi_interval,logger=logger)
+    serial_obj = SerialData(
+        'com8',
+        115200,
+        timeout=1 /
+        config.com2pi_interval,
+        logger=logger)
+
     def get_com_data():
         while True:
             com_data_read = serial_obj.readline()
-            ## 解析串口发送过来的数据
+            # 解析串口发送过来的数据
             if com_data_read is None:
                 continue
             com_data_list = com_data_read.split(',')
@@ -161,35 +149,38 @@ if __name__ == '__main__':
             # 当前朝向
             ship_current_direction = com_data_list[0]
             # 经纬度
-            current_lng_lat = [float(com_data_list[3]), float(com_data_list[4])]
+            current_lng_lat = [
+                float(
+                    com_data_list[3]), float(
+                    com_data_list[4])]
             # 左右侧的超声波检测距离
             l_distance, r_distance = com_data_list[5], com_data_list[6]
-            ## 水质数据
+            # 水质数据
             # 水温
             water_temperature = com_data_list[2]
             # TDO
             TD = com_data_list[1]
-            print('TD',TD)
+            print('TD', TD)
 
     # 读取函数会阻塞 必须使用线程
     def send_com_data():
-        ship_move_direction = [0,90,180,270,360]
-        i=0
-        count=0
+        ship_move_direction = [0, 90, 180, 270, 360]
+        i = 0
+        count = 0
         # 切换秒数
         change_s = 5
-        change_count = config.pi2com_interval*change_s
+        change_count = config.pi2com_interval * change_s
         while True:
-            if count<change_count:
-                i=0
-            elif count>=change_count and count<change_count*2:
-                i=1
-            elif count>=2*change_count and count<3*change_count:
-                i=2
-            elif count>=3*change_count and count<4*change_count:
-                i=3
+            if count < change_count:
+                i = 0
+            elif count >= change_count and count < change_count * 2:
+                i = 1
+            elif count >= 2 * change_count and count < 3 * change_count:
+                i = 2
+            elif count >= 3 * change_count and count < 4 * change_count:
+                i = 3
             else:
-                count=0
+                count = 0
             # 间隔指定秒数控制
             data_send_com = 'A%sZ' % str(ship_move_direction[i])
             # 监听mqtt控制
@@ -198,9 +189,8 @@ if __name__ == '__main__':
             # 打印传输给单片机的控制数据
             logger.info('move_direction: ' + data_send_com)
             logger.info('i: ' + str(i))
-            count+=1
+            count += 1
             time.sleep(1 / config.pi2com_interval)
-
 
     t1 = Thread(target=get_com_data)
     t2 = Thread(target=send_com_data)

@@ -34,7 +34,7 @@ Ship = UASattitude()
 Port_online = 0
 baudrate = 115200
 port_list = list(serial.tools.list_ports.comports())
-
+print('port_list',port_list)
 if (len(port_list) == 0):
     print("无可用串口")
 else:
@@ -42,19 +42,20 @@ else:
     print("当前以下端口在线：")
     for port in port_list:
         print(port)
-    Port = input("请输入要打开的串口：")
-    ser = serial.Serial(Port, baudrate)
-    print("串口配置如下：:")
-    print(ser, '\n')
-    if not ser.isOpen:
-        ser.open()
-    print("串口已启动")
+port = 'COM4'
+ser = serial.Serial(port, baudrate)
+print("串口配置如下：:")
+print(ser, '\n')
+if not ser.isOpen:
+    ser.open()
+print("串口已启动")
 
-beta = input("请输入当前滤波器增益:")
+# beta = input("请输入当前滤波器增益:")
+beta = 'default'
 if (beta == ''):
     beta = 'default'
-timeSet = 10
-timeSet = input("请输入数据采集的时间（以秒为单位）：")
+timeSet = '10'
+# timeSet = input("请输入数据采集的时间（以秒为单位）：")
 if (timeSet.isdigit()):
     Start = 1
 elif timeSet == '':

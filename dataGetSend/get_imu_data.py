@@ -1,6 +1,6 @@
 # coding:UTF-8
 import serial
-
+import time
 ACCData = [0.0] * 8
 GYROData = [0.0] * 8
 AngleData = [0.0] * 8
@@ -11,6 +11,8 @@ CheckSum = 0  # 求和校验位
 a = [0.0] * 3
 w = [0.0] * 3
 Angle = [0.0] * 3
+count=0
+start_time = time.time()
 
 
 def DueData(inputdata):  # 新增的核心程序，对读取的数据进行划分，各自读到对应的数组里
@@ -20,6 +22,8 @@ def DueData(inputdata):  # 新增的核心程序，对读取的数据进行划�
     global a
     global w
     global Angle
+    global count
+    global start_time
     for data in inputdata:  # 在输入的数据进行遍历
         # data = ord(data)
         if FrameState == 0:  # 当未确定状态的时候，进入以下判断
@@ -73,8 +77,12 @@ def DueData(inputdata):  # 新增的核心程序，对读取的数据进行划�
                 if data == (CheckSum & 0xff):
                     Angle = get_angle(AngleData)
                     d = a + w + Angle
-                    print("a(g):%10.3f %10.3f %10.3f w(deg/s):%10.3f %10.3f %10.3f Angle(deg):%10.3f %10.3f %10.3f" % d)
 
+                    print("a(g):%10.3f %10.3f %10.3f w(deg/s):%10.3f %10.3f %10.3f Angle(deg):%10.3f %10.3f %10.3f" % d)
+                    count+=1
+                    if count%100==0:
+                        print('count 1 cost time',(time.time()-start_time)/count)
+                    return d
                 CheckSum = 0
                 Bytenum = 0
                 FrameState = 0
@@ -157,10 +165,19 @@ class GetImuData:
     def get_data(self):
         while True:
             datahex = self.serial_obj.read(33)
-            DueData(datahex)
+            d = DueData(datahex)
+
+
+def imu_integration(d):
+    """
+    imu积分计算
+    :param d: 当前检测到加速度与角速度
+    :return:
+    """
+    pass
 
 if __name__ == '__main__':
-    obj = GetImuData(port='com10',baud=9600)
+    obj = GetImuData(port='com8',baud=115200)
     # 打印数据
     obj.get_data()
 
