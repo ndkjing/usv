@@ -10,7 +10,7 @@ import numpy as np
 import cv2
 from tsp_solver.greedy import solve_tsp
 
-from baiduMap.baidu_map import BaiduMap
+from baiduMap import baidu_map
 
 class Env:
     """
@@ -256,7 +256,7 @@ def get_outpool_set(contour,safe_distance=0):
             point = (current_x, current_y)
             in_cnt = cv2.pointPolygonTest(contour, point, True)
             # print('in cnt',in_cnt)
-            if in_cnt < safe_distance:
+            if in_cnt < safe_distance+0.01:
                 # print(in_cnt,point)
                 outpool_cnts_set.append(list(point))
             if b_add_or_sub:
@@ -387,15 +387,13 @@ def get_path(baidu_map_obj=None,mode=1,b_show=False,map_connect = 1):
     point2 = [114.370186, 30.554962]
     point3 = [114.398213, 30.54501]
     if baidu_map_obj==None:
-
-        baidu_map_obj = BaiduMap([114.390129,30.559005],zoom=14)
-        # obj = BaiduMap([114.411257,30.58388],zoom=14)
+        baidu_map_obj = baidu_map.BaiduMap([114.431529, 30.524413], zoom=16, scale=1, map_type=baidu_map.MapType.gaode)        # obj = BaiduMap([114.411257,30.58388],zoom=14)
         # obj = BaiduMap([114.431954,30.562239],zoom=14)
         # obj = BaiduMap([114.443596,30.545694],zoom=14)
         pool_cnts,(pool_cx,pool_cy) = baidu_map_obj.get_pool_pix(b_show=False)
         if pool_cnts is None:
             return pool_cx
-    baidu_map_obj.scan_pool(baidu_map_obj.pool_cnts,pix_gap=50,b_show=False)
+    baidu_map_obj.scan_pool(baidu_map_obj.pool_cnts,pix_gap=20,b_show=False)
     print('len(scan_cnt)',len(baidu_map_obj.scan_point_cnts))
     baidu_map_obj.outpool_cnts_set = get_outpool_set(np.array(baidu_map_obj.scan_point_cnts))
 

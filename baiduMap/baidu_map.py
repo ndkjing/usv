@@ -8,7 +8,7 @@ import os
 from math import radians, cos, sin, degrees, atan2
 import copy
 import enum
-
+import config
 from utils import lng_lat_calculate
 import sys
 
@@ -21,7 +21,8 @@ method_1 = cv2.CHAIN_APPROX_SIMPLE
 
 
 def color_block_finder(img, lowerb, upperb,
-                       min_w=0, max_w=None, min_h=0, max_h=None,map_type=None):
+                       min_w=0, max_w=None, min_h=0, max_h=None, map_type=None,
+                       scale=1):
     '''
     色块识别 返回矩形信息，若没有找到返回矩形框为None
     '''
@@ -60,10 +61,12 @@ def color_block_finder(img, lowerb, upperb,
     return_cnt = None
     for index, cnt in enumerate(contours):
         # 判断是否在轮廓内部
-        if map_type==MapType.baidu:
-            in_cnt = cv2.pointPolygonTest(cnt, (512, 512), True)
+        if map_type == MapType.baidu:
+            center = 512 * scale
+            in_cnt = cv2.pointPolygonTest(cnt, (center, center), True)
         else:
-            in_cnt = cv2.pointPolygonTest(cnt, (1024, 1024), True)
+            center = 512 * scale
+            in_cnt = cv2.pointPolygonTest(cnt, (center, center), True)
         # print('in cnt',in_cnt)
         if in_cnt > 2:
             print('index,cnt', index, cnt)
@@ -153,6 +156,7 @@ class BaiduMap(object):
                  logger=None,
                  height=1024,
                  width=1024,
+                 scale=1,
                  map_type=MapType.baidu):
         if logger == None:
             import logging
@@ -184,7 +188,7 @@ class BaiduMap(object):
         self.width = width
         # 缩放比例
         self.zoom = zoom
-        self.scale = 2
+        self.scale = scale
         self.addr = str(round(100 * random.random(), 3))
         # ＨＳＶ阈值　［［低　ＨＳＶ］,　［高　ＨＳＶ］］
         self.threshold_hsv = [(84, 72, 245), (118, 97, 255)]
@@ -208,12 +212,14 @@ class BaiduMap(object):
             5: [500000, 76],
             4: [1000000, 76],
         }
-        if not os.path.exists('./imgs'):
-            os.mkdir('./imgs')
-        if self.map_type==MapType.baidu:
-            self.save_img_path = './imgs/baidu_%f_%f_%i.png' % (self.lng_lat[0], self.lng_lat[1], self.zoom)
-        elif self.map_type==MapType.gaode:
-            self.save_img_path = './imgs/gaode_%f_%f_%i.png' % (self.lng_lat[0], self.lng_lat[1], self.zoom)
+        save_img_dir = os.path.join(config.root_path, 'baiduMap/imgs')
+        if not os.path.exists(save_img_dir):
+            os.mkdir(save_img_dir)
+        if self.map_type == MapType.baidu:
+            self.save_img_path = os.path.join(save_img_dir, 'baidu_%f_%i_%i.png' % (self.lng_lat[0], self.lng_lat[1], self.zoom))
+        elif self.map_type == MapType.gaode:
+            self.save_img_path = os.path.join(save_img_dir, 'gaode_%f_%f_%i_%i.png' % (
+            self.lng_lat[0], self.lng_lat[1], self.zoom, self.scale))
         if not os.path.exists(self.save_img_path):
             self.draw_image()
 
@@ -246,13 +252,15 @@ class BaiduMap(object):
             最高查询次数30w/天，最大并发量160/秒
             http://api.map.baidu.com/staticimage/v2?ak=E4805d16520de693a3fe707cdc962045&mcode=666666&center=116.403874,39.914888&width=300&height=200&zoom=11
             '''
-        if self.map_type==MapType.baidu:
+        if self.map_type == MapType.baidu:
             return 'http://api.map.baidu.com/staticimage/v2?ak={myAk}&center={position}&width={width}&height={height}&zoom={zoom}'.format(
-                myAk=self.baidu_key, position='%f,%f' % (self.lng_lat[0], self.lng_lat[1]), width=self.width, height=self.height,
+                myAk=self.baidu_key, position='%f,%f' % (self.lng_lat[0], self.lng_lat[1]), width=self.width,
+                height=self.height,
                 zoom=self.zoom)
-        elif self.map_type==MapType.gaode:
-            return 'https://restapi.amap.com/v3/staticmap?location={position}&zoom={zoom}&size=1024*1024&scale=2&key={key}'.format(
-                position='%f,%f' % (self.lng_lat[0], self.lng_lat[1]), zoom=(self.zoom-2),
+        elif self.map_type == MapType.gaode:
+            return 'https://restapi.amap.com/v3/staticmap?location={position}&zoom={zoom}&size={h}*{w}&scale={scale}&key={key}'.format(
+                position='%f,%f' % (self.lng_lat[0], self.lng_lat[1]), zoom=(self.zoom), h=self.height, w=self.width,
+                scale=self.scale,
                 key=self.gaode_key)
 
     # 按照经纬度url获取静态图
@@ -277,6 +285,14 @@ class BaiduMap(object):
         if not os.path.exists(self.save_img_path):
             self.logger.error('no image')
         self.row_img = cv2.imread(self.save_img_path)
+        # add edge
+        h, w = self.row_img.shape[:2]
+        self.row_img[0, :, :] = [0, 0, 0]
+        self.row_img[h - 1, :, :] = [0, 0, 0]
+        self.row_img[:, 0, :] = [0, 0, 0]
+        self.row_img[:, w - 1, :] = [0, 0, 0]
+        # cv2.imshow('test',self.row_img)
+        # cv2.waitKey(0)
         # 图片路径
         # 颜色阈值下界(HSV) lower boudnary
         lowerb = self.threshold_hsv[0]
@@ -290,7 +306,9 @@ class BaiduMap(object):
             return None, (-1, -1)
 
         # 识别色块 获取矩形区域数组
-        self.show_img, pool_cnts, (contours_cx, contours_cy) = color_block_finder(self.row_img, lowerb, upperb,map_type=self.map_type)
+        self.show_img, pool_cnts, (contours_cx, contours_cy) = color_block_finder(self.row_img, lowerb, upperb,
+                                                                                  map_type=self.map_type,
+                                                                                  scale=self.scale)
         self.center_cnt = (contours_cx, contours_cy)
         if pool_cnts is None:
             self.logger.info('无法在点击处找到湖')
@@ -386,7 +404,7 @@ class BaiduMap(object):
             json.dump(return_gps, f)
         return return_gps, return_gps_list
 
-    def scan_pool(self, contour, pix_gap=20, safe_distance=10, b_show=False):
+    def scan_pool(self, contour, pix_gap=20, safe_distance=20, b_show=False):
         """
         传入湖泊像素轮廓返回活泼扫描点
         :param contour 轮廓点
@@ -522,6 +540,7 @@ class BaiduMap(object):
         # 显示画面
         plt.show()
 
+
     def hsv_image_threshold(self):
         '''
             可视化颜色阈值调参软件
@@ -630,8 +649,9 @@ class BaiduMap(object):
 
 
 if __name__ == '__main__':
-    obj = BaiduMap([114.393142, 30.558963], zoom=15,map_type=MapType.gaode)
-    obj = BaiduMap([114.393142, 30.558963], zoom=15,map_type=MapType.baidu)
+    # obj = BaiduMap([114.432092, 30.522893], zoom=16,map_type=MapType.gaode)
+    obj = BaiduMap([114.431529, 30.524413], zoom=15, scale=2,map_type=MapType.gaode)
+    # obj = BaiduMap([114.393142, 30.558963], zoom=15,map_type=MapType.baidu)
     # obj = BaiduMap([114.718257,30.648004],zoom=14)
     # obj = BaiduMap([114.566767,30.541689],zoom=14)
     # obj = BaiduMap([114.565976,30.541317],zoom=15.113213)
@@ -640,16 +660,18 @@ if __name__ == '__main__':
     # obj.analyse_hsv()
     # obj.hsv_image_threshold()
     pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=False)
-
-    scan_cnt = obj.scan_pool(pool_cnts, pix_gap=40, b_show=False)
-
-    all_cnt = []
-    all_cnt.extend(list(pool_cnts))
-    all_cnt.extend(scan_cnt)
-    gps = obj.pix_to_gps(all_cnt)
-    # print(gps)
-    # 请求指定位置图片
-    # obj.draw_image()
-    # 求坐标点最大外围矩阵
-    (x, y, w, h) = cv2.boundingRect(pool_cnts)
-    print('(x, y, w, h)', (x, y, w, h))
+    print('pool_cnts', len(pool_cnts))
+    scan_cnt = obj.scan_pool(pool_cnts, pix_gap=30, b_show=True)
+    if pool_cnts is None:
+        pass
+    else:
+        all_cnt = []
+        all_cnt.extend(list(pool_cnts))
+        all_cnt.extend(scan_cnt)
+        gps = obj.pix_to_gps(all_cnt)
+        # print(gps)
+        # 请求指定位置图片
+        # obj.draw_image()
+        # 求坐标点最大外围矩阵
+        (x, y, w, h) = cv2.boundingRect(pool_cnts)
+        print('(x, y, w, h)', (x, y, w, h))

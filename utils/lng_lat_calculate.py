@@ -53,8 +53,6 @@ def distanceFromCoordinate(lon1, lat1, lon2, lat2):  # 经度1，纬度1，经�
     return c * r * 1000
 
 # 已知一点的经纬度和移动方向与距离，求终点的经纬度
-
-
 def one_point_diatance_to_end(lng, lat, brng, d):
     R = 6378.1  # Radius of the Earth
     brng = math.radians(brng)  # Bearing is 90 degrees converted to radians.
