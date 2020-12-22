@@ -14,7 +14,7 @@ def DDD2DMS(number):
     return D + (M / 100) + (S / 10000)
 
 
-# 求连点的经纬度 返回0-360 顺时针为正
+# 求连点的经纬度 返回0-360 anti clock is >0
 def angleFromCoordinate(long1, lat1, long2, lat2):
     lat1 = math.radians(DDD2DMS(lat1))
     lat2 = math.radians(DDD2DMS(lat2))
@@ -27,7 +27,11 @@ def angleFromCoordinate(long1, lat1, long2, lat2):
     theta = math.atan2(y, x)
     theta = math.degrees(theta)
     theta = (theta + 360) % 360
-    return theta
+    return_brg = 360 - theta
+    if int(return_brg) == 360:
+        return 0
+    else:
+        return return_brg
 
 
 # 一直两点经纬度求两点的距离单位，返回单位米
@@ -49,8 +53,6 @@ def distanceFromCoordinate(lon1, lat1, lon2, lat2):  # 经度1，纬度1，经�
     return c * r * 1000
 
 # 已知一点的经纬度和移动方向与距离，求终点的经纬度
-
-
 def one_point_diatance_to_end(lng, lat, brng, d):
     R = 6378.1  # Radius of the Earth
     brng = math.radians(brng)  # Bearing is 90 degrees converted to radians.

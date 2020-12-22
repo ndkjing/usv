@@ -191,8 +191,34 @@ def one_point_diatance_to_end(lng,lat,brng,d):
 #     theta = round(math.degrees(math.atan2(i,j)),1)
 #     theta = theta if theta>0 else 360+theta
 #     print('math.atan2(i,j)',theta)
-a = [1,3.321]
-b = tuple(a)
-print(b,type(b),b[0])
+# a = [1,3.321]
+# b = tuple(a)
+# print(b,type(b),b[0])
 
 
+# a='3213'
+# b=a
+# c=2
+
+# import execjs
+#
+# print(execjs.eval("'red yellow blue'.split(' ')"))
+#
+# ctx = execjs.compile(
+#     """
+#     function add(x,y){
+#         return x+y;
+#     }
+#     """
+# )
+# print(ctx.call("add",2,3))
+a = np.array([
+    [1,2,3],
+    [4,5,6],
+    [7,8,9],
+])
+a[0,:]=-1
+a[:,0]=-1
+a[2,:]=-1
+a[:,2]=-1
+print(a)

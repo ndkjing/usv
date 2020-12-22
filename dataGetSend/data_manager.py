@@ -16,7 +16,9 @@ from baiduMap import baidu_map
 from audios import audios_manager
 from pathPlanning import a_star
 from obstacleAvoid import basic_obstacle_avoid
+from utils import lng_lat_calculate
 import config
+
 
 class DataManager:
     def __init__(self):
@@ -32,15 +34,15 @@ class DataManager:
         self.com_data_obj = SerialData(config.port, config.baud, timeout=1 / config.com2pi_interval,
                                        logger=self.com_log)
 
-        self.start=False
+        self.start = False
         self.baidu_map_obj = None
         # 船最终控制移动方向
         self.ship_move_direction = str(360)
         # 船当前朝向
         self.ship_current_direction = -1
 
-        self.l_distance=None
-        self.r_distance=None
+        self.l_distance = None
+        self.r_distance = None
 
     # 读取函数会阻塞 必须使用线程
     def get_com_data(self):
@@ -97,17 +99,35 @@ class DataManager:
                     if obstacle_direction != int(self.server_data_obj.mqtt_send_get_obj.control_move_direction):
                         self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
                     else:
-                        self.com_data_obj.send_data('A%sZ' % (self.server_data_obj.mqtt_send_get_obj.control_move_direction))
+                        self.com_data_obj.send_data(
+                            'A%sZ' % (self.server_data_obj.mqtt_send_get_obj.control_move_direction))
                     # self.logger.debug('control_move_direction: '+str(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
                 # 自动模式计算角度
                 elif manul_or_auto == 0:
                     # 计算目标角度
-                    target_degree = baidu_map.get_degree(self.data_define_obj.status['current_lng_lat'][0],
-                                                         self.data_define_obj.status['current_lng_lat'][1],
-                                                         self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1][
-                                                             0],
-                                                         self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1][
-                                                             1])
+                    # target_degree = baidu_map.get_degree(self.data_define_obj.status['current_lng_lat'][0],
+                    #                                      self.data_define_obj.status['current_lng_lat'][1],
+                    #                                      self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[
+                    #                                          -1][
+                    #                                          0],
+                    #                                      self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[
+                    #                                          -1][
+                    #                                          1])
+                    target_lng_lat_index = None
+                    for index, val in enumerate(self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1]):
+                        if val == 0:
+                            target_lng_lat_index = index
+                            break
+                    if target_lng_lat_index == None:
+                        self.logger.info('no lng lat status is 0')
+                        continue
+                    target_lng_lat = self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1][
+                        target_lng_lat_index]
+                    target_degree = lng_lat_calculate.angleFromCoordinate(
+                        self.data_define_obj.status['current_lng_lat'][0],
+                        self.data_define_obj.status['current_lng_lat'][1],
+                        target_lng_lat[0],
+                        target_lng_lat[1])
                     # 偏差角度
                     delta_degree = target_degree - self.ship_current_direction
                     auto_move_direction = 360
@@ -130,7 +150,7 @@ class DataManager:
                             auto_move_direction = 180
                         elif abs(delta_degree) >= 225 and abs(delta_degree) < 315:
                             auto_move_direction = 90
-                    obstacle_direction = basic_obstacle_avoid.move(self.l_distance,self.r_distance)
+                    obstacle_direction = basic_obstacle_avoid.move(self.l_distance, self.r_distance)
                     if obstacle_direction != int(auto_move_direction):
                         self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
                     else:
@@ -223,7 +243,7 @@ class DataManager:
         while True:
             # 检查当前状态
             if self.data_define_obj.status['current_lng_lat'] == None:
-                audios_manager.play_audio('gps.mp3',b_backend=False)
+                audios_manager.play_audio('gps.mp3', b_backend=False)
                 self.logger.error('当前GPS信号弱')
             if not check_network.check_network():
                 audios_manager.play_audio('network.mp3', b_backend=False)
@@ -268,13 +288,13 @@ class DataManager:
                 is_collision = [1]
                 index_i, index_j = self.server_data_obj.mqtt_send_get_obj.current_lng_lat_index
                 data = {
-                       'deviceId': config.ship_code,
-                       'lng_lat': self.server_data_obj.mqtt_send_get_obj.target_lng_lat[index_i],
-                       'is_collision': is_collision,
-                       'zoom':self.server_data_obj.mqtt_send_get_obj.zoom[index_i],
-                        'mode':self.server_data_obj.mqtt_send_get_obj.mode[index_i]
+                    'deviceId': config.ship_code,
+                    'lng_lat': self.server_data_obj.mqtt_send_get_obj.target_lng_lat[index_i],
+                    'is_collision': is_collision,
+                    'zoom': self.server_data_obj.mqtt_send_get_obj.zoom[index_i],
+                    'mode': self.server_data_obj.mqtt_send_get_obj.mode[index_i]
                 }
-                self.send(method='mqtt',topic='pool_info_%s' % (config.ship_code),data=data, qos = 1)
+                self.send(method='mqtt', topic='pool_info_%s' % (config.ship_code), data=data, qos=1)
                 continue
 
             # 获取湖泊轮廓与中心点经纬度位置 _位置为提供前端直接绘图使用
@@ -325,14 +345,14 @@ class DataManager:
             time.sleep(config.check_status_interval)
 
     # path planning
-    def path_planning(self,mode=0):
+    def path_planning(self, mode=0):
         """
         :param mode
         return path points
         """
-        if self.data_define_obj.pool_code=='' or self.data_define_obj.pool_code==None:
+        if self.data_define_obj.pool_code == '' or self.data_define_obj.pool_code == None:
             return -1
-        a_star.get_path(baidu_map_obj=self.baidu_map_obj,mode=mode)
+        a_star.get_path(baidu_map_obj=self.baidu_map_obj, mode=mode)
 
 
 if __name__ == '__main__':
