@@ -68,7 +68,7 @@ def color_block_finder(img, lowerb, upperb,
             center = 512 * scale
             in_cnt = cv2.pointPolygonTest(cnt, (center, center), True)
         # print('in cnt',in_cnt)
-        if in_cnt > 2:
+        if in_cnt > -5:
             print('index,cnt', index, cnt)
             # print('len(cnt)',len(cnt))
             # 计算轮廓的中心点
@@ -216,7 +216,7 @@ class BaiduMap(object):
         if not os.path.exists(save_img_dir):
             os.mkdir(save_img_dir)
         if self.map_type == MapType.baidu:
-            self.save_img_path = os.path.join(save_img_dir, 'baidu_%f_%i_%i.png' % (self.lng_lat[0], self.lng_lat[1], self.zoom))
+            self.save_img_path = os.path.join(save_img_dir, 'baidu_%f_%f_%i_%i.png' % (self.lng_lat[0], self.lng_lat[1], self.zoom,self.scale))
         elif self.map_type == MapType.gaode:
             self.save_img_path = os.path.join(save_img_dir, 'gaode_%f_%f_%i_%i.png' % (
             self.lng_lat[0], self.lng_lat[1], self.zoom, self.scale))
@@ -328,11 +328,12 @@ class BaiduMap(object):
         return self.pool_cnts, self.center_cnt
 
     # 区域像素点转换为经纬度坐标点
-    def pix_to_gps(self, cnt):
+    def pix_to_gps(self, cnts):
         """
         :param cnt:
         :return:
         """
+        print('len(cnts)',len(cnts))
         # 返回经纬度坐标集合
         return_gps = []
         # 给后端的返回
@@ -340,18 +341,21 @@ class BaiduMap(object):
         # 初始点（中心点）经纬度坐标
         # 初始点（中心点）像素坐标
         center = (self.width / 2, self.height / 2)
-
-        for point in cnt:
+        draw_gps = ''
+        for point in cnts:
             delta_pix_x = point[0] - center[0]
             delta_pix_y = point[1] - center[1]
+            # baidu
             pix_2_meter = math.pow(2, 18 - self.zoom)
-            # pix_2_meter = float(self.scale_map[self.zoom][0])/self.scale_map[self.zoom][1]
+            # gaode
+            pix_2_meter = 0.12859689044*math.pow(2, 19 - self.zoom)
             delta_meter_x = delta_pix_x * (pix_2_meter)
             delta_meter_y = delta_pix_y * (pix_2_meter)
             distance = math.sqrt(math.pow(delta_meter_x, 2) + math.pow(delta_meter_y, 2))
             # 方法一：直接计算
             # 方法二：当做圆球计算
             method = 0
+
             if method == 1:
                 L = 6381372 * math.pi * 2
                 W = L
@@ -397,11 +401,11 @@ class BaiduMap(object):
                 point_gps = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0], self.lng_lat[1], theta,
                                                                         distance)
                 return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
+                draw_gps=draw_gps+'%f,%f;'%(point_gps[0],point_gps[1])
                 return_gps_list.append(point_gps)
-        # print('len ',len(return_gps))
+        print('len return_gps',len(return_gps))
         with open('map.json', 'w') as f:
-            print()
-            json.dump(return_gps, f)
+            json.dump({'gps':draw_gps}, f)
         return return_gps, return_gps_list
 
     def scan_pool(self, contour, pix_gap=20, safe_distance=20, b_show=False):
@@ -445,6 +449,7 @@ class BaiduMap(object):
             # cv2.polylines(self.show_img,[np.array(scan_points,dtype=np.int32)],False,(255,0,0),2)
             cv2.imshow('scan', self.show_img)
             cv2.waitKey(0)
+            cv2.destroyAllWindows()
         self.scan_point_cnts = scan_points
         return self.scan_point_cnts
 
@@ -650,24 +655,19 @@ class BaiduMap(object):
 
 if __name__ == '__main__':
     # obj = BaiduMap([114.432092, 30.522893], zoom=16,map_type=MapType.gaode)
-    obj = BaiduMap([114.431529, 30.524413], zoom=15, scale=2,map_type=MapType.gaode)
-    # obj = BaiduMap([114.393142, 30.558963], zoom=15,map_type=MapType.baidu)
-    # obj = BaiduMap([114.718257,30.648004],zoom=14)
-    # obj = BaiduMap([114.566767,30.541689],zoom=14)
-    # obj = BaiduMap([114.565976,30.541317],zoom=15.113213)
-    # obj = BaiduMap([114.393142,30.558981],zoom=14)
-    # obj.select_roi()
-    # obj.analyse_hsv()
-    # obj.hsv_image_threshold()
+    # obj = BaiduMap([114.431529, 30.524413], zoom=15, scale=1, map_type=MapType.gaode)
+    # obj = BaiduMap([114.438009, 30.540082], zoom=14, scale=1, map_type=MapType.gaode)
+    obj = BaiduMap([114.373904, 30.540625], zoom=14, scale=1, map_type=MapType.gaode)
     pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=False)
     print('pool_cnts', len(pool_cnts))
-    scan_cnt = obj.scan_pool(pool_cnts, pix_gap=30, b_show=True)
+    scan_cnts = obj.scan_pool(pool_cnts, pix_gap=30, b_show=True)
+    obj.pix_to_gps(obj.pool_cnts)
     if pool_cnts is None:
         pass
     else:
         all_cnt = []
         all_cnt.extend(list(pool_cnts))
-        all_cnt.extend(scan_cnt)
+        all_cnt.extend(scan_cnts)
         gps = obj.pix_to_gps(all_cnt)
         # print(gps)
         # 请求指定位置图片

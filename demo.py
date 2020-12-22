@@ -212,13 +212,18 @@ def one_point_diatance_to_end(lng,lat,brng,d):
 #     """
 # )
 # print(ctx.call("add",2,3))
-a = np.array([
-    [1,2,3],
-    [4,5,6],
-    [7,8,9],
-])
-a[0,:]=-1
-a[:,0]=-1
-a[2,:]=-1
-a[:,2]=-1
+# a = np.array([
+#     [1,2,3],
+#     [4,5,6],
+#     [7,8,9],
+# ])
+# a[0,:]=-1
+# a[:,0]=-1
+# a[2,:]=-1
+# a[:,2]=-1
+# print(a)
+
+a = [1,23,4,321]
+print(a.sort())
 print(a)
+print(a.index(4))
