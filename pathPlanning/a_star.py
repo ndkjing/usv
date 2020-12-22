@@ -9,6 +9,7 @@ import heapq
 import numpy as np
 import cv2
 from tsp_solver.greedy import solve_tsp
+from tqdm import tqdm
 
 from baiduMap import baidu_map
 
@@ -312,7 +313,6 @@ def cross_outpool(point_i,point_j,pool_cnt):
             return False
     return True
 
-from tqdm import tqdm
 
 # path matrix
 path_matrix = {}
