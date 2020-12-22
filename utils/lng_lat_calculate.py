@@ -30,7 +30,7 @@ def angleFromCoordinate(long1, lat1, long2, lat2):
     return theta
 
 
-# 一直两点经纬度求两点的距离单位，返回单位厘米
+# 一直两点经纬度求两点的距离单位，返回单位米
 def distanceFromCoordinate(lon1, lat1, lon2, lat2):  # 经度1，纬度1，经度2，纬度2 （十进制度数）
     """
     Calculate the great circle distance between two points
