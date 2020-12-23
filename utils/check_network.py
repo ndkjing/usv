@@ -1,11 +1,11 @@
 import time
 from subprocess import run, PIPE
 import config
-
+cnt=0
 
 def check_network():
     global cnt
-    r = run('ping www.baidu1.com',
+    r = run('ping www.baidu.com',
             stdout=PIPE,
             stderr=PIPE,
             stdin=PIPE,
@@ -22,4 +22,4 @@ if __name__ == '__main__':
         start_time = time.time()
         print("network: ", check_network())
         print('cost time:',time.time()-start_time)
-        time.sleep(config.check_network_interval)
+        # time.sleep(config.check_network_interval)

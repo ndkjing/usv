@@ -34,9 +34,9 @@ class DataManager:
         self.com_data_obj = SerialData(config.port, config.baud, timeout=1 / config.com2pi_interval,
                                        logger=self.com_log)
 
-        #
-        self.plan_path=None
-        self.plan_path_status=None
+        # 规划路径和规划路径状态
+        self.plan_path=[]
+        self.plan_path_status=[]
         self.start = False
         self.baidu_map_obj = None
         # 船最终控制移动方向
@@ -98,13 +98,20 @@ class DataManager:
                         manul_or_auto = 1
                 # 手动模式使用用户给定角度
                 if manul_or_auto == 1:
-                    obstacle_direction = basic_obstacle_avoid.move(self.l_distance, self.r_distance)
-                    if obstacle_direction != int(self.server_data_obj.mqtt_send_get_obj.control_move_direction):
-                        self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
+                    if self.l_distance is not  None and  self.l_distance is not None:
+
+                        obstacle_direction = basic_obstacle_avoid.move(self.l_distance, self.r_distance)
+                        if obstacle_direction != int(self.server_data_obj.mqtt_send_get_obj.control_move_direction):
+                            self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
+                        else:
+                            self.com_data_obj.send_data(
+                                'A%sZ' % (self.server_data_obj.mqtt_send_get_obj.control_move_direction))
+                        self.logger.debug('control_move_direction: '+str(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
                     else:
                         self.com_data_obj.send_data(
                             'A%sZ' % (self.server_data_obj.mqtt_send_get_obj.control_move_direction))
-                    # self.logger.debug('control_move_direction: '+str(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
+                    self.logger.debug('control_move_direction: self.l_distance is None and  self.l_distance is None'+str(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
+
                 # 自动模式计算角度
                 elif manul_or_auto == 0:
                     mode=0
@@ -166,7 +173,8 @@ class DataManager:
                     if detect_data[k_all].get(old_key) == None:
                         continue
                     detect_data[k_all].update({new_key: detect_data[k_all].pop(old_key)})
-            # update fake data
+
+            # 更新模拟数据
             mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
             mqtt_send_status_data = data_define.fake_status_data(status_data)
 
@@ -174,7 +182,7 @@ class DataManager:
             if self.data_define_obj.pool_code == '':
                 self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
                           qos=1)
-                self.logger.info({"发送状态数据": status_data})
+                self.logger.info({"发送状态数据": mqtt_send_status_data})
             else:
                 self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
                           qos=1)
@@ -233,10 +241,10 @@ class DataManager:
         while True:
             # 检查当前状态
             if self.data_define_obj.status['current_lng_lat'] == None:
-                audios_manager.play_audio('gps.mp3', b_backend=False)
+                audios_manager.play_audio(5, b_backend=False)
                 self.logger.error('当前GPS信号弱')
             if not check_network.check_network():
-                audios_manager.play_audio('network.mp3', b_backend=False)
+                audios_manager.play_audio(2, b_backend=False)
                 self.logger.error('当前无网络信号')
 
             # 创建地图对象
@@ -256,84 +264,103 @@ class DataManager:
                         for index_j, status in enumerate(status_list):
                             if int(status) == 0:
                                 user_lng_lat = self.server_data_obj.mqtt_send_get_obj.target_lng_lat[index_i][index_j]
-                                zoom = self.server_data_obj.mqtt_send_get_obj.target_lng_lat.zoom[index_i]
+                                zoom = self.server_data_obj.mqtt_send_get_obj.zoom[index_i]
                                 self.server_data_obj.mqtt_send_get_obj.current_lng_lat_index = [index_i, index_j]
                                 break
                         break
+                    # 判断湖泊ID是否为空若为空直接取最后一次经纬度计算
+                    if len(self.data_define_obj.pool_code) <= 0:
+
+                        user_lng_lat = self.server_data_obj.mqtt_send_get_obj.target_lng_lat[-1][0]
+                        zoom = self.server_data_obj.mqtt_send_get_obj.zoom[-1]
                     if user_lng_lat == -1 or zoom == -1:
                         self.logger.error('user_lng_lat== -1 or zoom == -1')
                         continue
+                if isinstance(zoom,float):
+                    self.logger.warning({'zoom':zoom})
+                zoom = int(round(zoom,0))
+                self.logger.info({'init map user_lng_lat':user_lng_lat,'zoom':zoom})
                 self.baidu_map_obj = baidu_map.BaiduMap(lng_lat=user_lng_lat, zoom=zoom, logger=self.map_log)
                 if not self.start:
                     self.baidu_map_obj.init_ship_gps = user_lng_lat
             else:
                 user_lng_lat = [116.99868, 40.511224]
                 zoom = 12
-                # baidu_map_obj = BaiduMap([114.393142, 31.558981], zoom=14)
-                # baidu_map_obj = BaiduMap([114.710639,30.656827], zoom=13)
-                # baidu_map_obj = BaiduMap([117.574294,31.539694], zoom=11)
                 self.baidu_map_obj = baidu_map.BaiduMap(lng_lat=user_lng_lat, zoom=zoom, logger=self.map_log)
 
-            pool_cnts, (pool_cx, pool_cy) = self.baidu_map_obj.get_pool_pix()
-            if pool_cnts is None and pool_cx == -2:
-                # 若返回为None表示没找到湖 定义错误代码
-                is_collision = [1]
-                index_i, index_j = self.server_data_obj.mqtt_send_get_obj.current_lng_lat_index
-                data = {
-                    'deviceId': config.ship_code,
-                    'lng_lat': self.server_data_obj.mqtt_send_get_obj.target_lng_lat[index_i],
-                    'is_collision': is_collision,
-                    'zoom': self.server_data_obj.mqtt_send_get_obj.zoom[index_i],
-                    'mode': self.server_data_obj.mqtt_send_get_obj.mode[index_i]
-                }
-                self.send(method='mqtt', topic='pool_info_%s' % (config.ship_code), data=data, qos=1)
-                continue
+            # 查找湖泊id
+            if len(self.data_define_obj.pool_code)<=0:
+                pool_cnts, (pool_cx, pool_cy) = self.baidu_map_obj.get_pool_pix()
+                if pool_cnts is None and pool_cx == -2:
+                    # 若返回为None表示没找到湖 定义错误代码
+                    is_collision = [1]
+                    index_i, index_j = self.server_data_obj.mqtt_send_get_obj.current_lng_lat_index
+                    data = {
+                        'deviceId': config.ship_code,
+                        'lng_lat': self.server_data_obj.mqtt_send_get_obj.target_lng_lat[index_i],
+                        'is_collision': is_collision,
+                        'zoom': self.server_data_obj.mqtt_send_get_obj.zoom[index_i],
+                        'mode': self.server_data_obj.mqtt_send_get_obj.mode[index_i]
+                    }
+                    self.send(method='mqtt', topic='pool_info_%s' % (config.ship_code), data=data, qos=1)
+                    continue
 
-            # 获取湖泊轮廓与中心点经纬度位置 _位置为提供前端直接绘图使用
-            _, pool_lng_lat = self.baidu_map_obj.pix_to_gps(pool_cnts)
-            _, center_lng_lat = self.baidu_map_obj.pix_to_gps([[pool_cx, pool_cy]])
-            self.logger.info({'center_lng_lat': center_lng_lat})
-            self.baidu_map_obj.pool_lng_lat = pool_lng_lat
-            self.baidu_map_obj.pool_center_lng_lat = center_lng_lat
+                # 获取湖泊轮廓与中心点经纬度位置 _位置为提供前端直接绘图使用
+                _, self.baidu_map_obj.pool_lng_lats = self.baidu_map_obj.pix_to_gps(pool_cnts)
+                _, self.baidu_map_obj.pool_center_lng_lat = self.baidu_map_obj.pix_to_gps([[pool_cx, pool_cy]])
+                self.logger.info({'pool_center_lng_lat': self.baidu_map_obj.pool_center_lng_lat})
 
-            # 判断当前湖泊是否曾经出现，出现过则获取的ID 没出现过发送请求获取新ID
-            send_data = {"longitudeLatitude": str(self.baidu_map_obj.pool_center_lng_lat),
-                         "mapData": str(self.baidu_map_obj.pool_lng_lat),
-                         "deviceId": config.ship_code,
-                         "pixData": str(pool_cnts)}
-            if not os.path.exists(config.local_map_data_path):
-                with open(config.local_map_data_path, 'w') as f:
+                # 判断当前湖泊是否曾经出现，出现过则获取的ID 没出现过发送请求获取新ID
+                send_data = {"longitudeLatitude": str(self.baidu_map_obj.pool_center_lng_lat),
+                             "mapData": str(self.baidu_map_obj.pool_lng_lats),
+                             "deviceId": config.ship_code,
+                             "pixData": str(pool_cnts)}
+                # 本地保存经纬度信息，放大1000000倍 用来只保存整数
+                save_pool_lng_lats = [[int(i[0] * 1000000), int(i[1] * 1000000)] for i in self.baidu_map_obj.pool_lng_lats]
+                if not os.path.exists(config.local_map_data_path):
                     # 发送请求获取湖泊ID
+                    self.logger.debug({'send_data':send_data})
                     pool_id = self.send(
                         method='http', data=send_data, url=config.http_save, http_type='POST')
+
+                    if isinstance(self.baidu_map_obj.pool_cnts,np.ndarray):
+                        save_pool_cnts =self.baidu_map_obj.pool_cnts.tolist()
+                    else:
+                        save_pool_cnts = self.baidu_map_obj.pool_cnts
                     save_data = {"mapList": [{"id": pool_id,
-                                              "longitudeLatitude": self.baidu_map_obj.pool_center_lng_lat,
-                                              "mapData": self.baidu_map_obj.pool_lng_lat,
-                                              "pool_cnt": pool_cnts.tolist()}]}
+                                              "pool_center_lng_lat": self.baidu_map_obj.pool_center_lng_lat,
+                                              "pool_lng_lats": save_pool_lng_lats,
+                                              "pool_cnts": save_pool_cnts}]}
                     self.logger.info({'pool_id': pool_id})
-                    json.dump(save_data, f)
-            else:
-                with open(config.local_map_data_path, 'r') as f:
-                    local_map_data = json.load(f)
-
-                    # TODO 判断是否在曾经出现的湖泊中
-                    # pool_id = baidu_map.is_in_contours(pool_gps_center, local_map_data)
-                    pool_id = baidu_map.is_in_contours((pool_cx, pool_cy), local_map_data)
-
-                if pool_id is not None:
-                    self.logger.info({'在本地找到湖泊 poolid': pool_id})
-                # 不存在获取新的id
-                else:
-                    pool_id = self.send(
-                        method='http', data=send_data, url=config.http_save, http_type='POST')
-                    self.logger.info({'新的湖泊 poolid': pool_id})
                     with open(config.local_map_data_path, 'w') as f:
-                        local_map_data["mapList"].append({"id": pool_id,
-                                                          "longitudeLatitude": self.baidu_map_obj.pool_center_lng_lat,
-                                                          "mapData": self.baidu_map_obj.pool_lng_lat,
-                                                          "pool_cnt": pool_cnts.tolist()})
-                        json.dump(local_map_data, f)
-            self.data_define_obj.pool_code = pool_id
+                        json.dump(save_data, f)
+                else:
+                    with open(config.local_map_data_path, 'r') as f:
+                        local_map_data = json.load(f)
+                        # TODO 判断是否在曾经出现的湖泊中
+                        # pool_id = baidu_map.is_in_contours(pool_gps_center, local_map_data)
+                        pool_id = baidu_map.is_in_contours((self.baidu_map_obj.lng_lat[0], self.baidu_map_obj.lng_lat[1]), local_map_data)
+
+                    if pool_id is not None:
+                        self.logger.info({'在本地找到湖泊 poolid': pool_id})
+                    # 不存在获取新的id
+                    else:
+                        pool_id = self.send(
+                            method='http', data=send_data, url=config.http_save, http_type='POST')
+                        self.logger.info({'新的湖泊 poolid': pool_id})
+                        with open(config.local_map_data_path, 'w') as f:
+                            # local_map_data["mapList"].append({"id": pool_id,
+                            #                                   "longitudeLatitude": self.baidu_map_obj.pool_center_lng_lat,
+                            #                                   "mapData": self.baidu_map_obj.pool_lng_lat,
+                            #                                   "pool_cnt": pool_cnts.tolist()})
+                            if isinstance(self.baidu_map_obj.pool_cnts, np.ndarray):
+                                save_pool_cnts = self.baidu_map_obj.pool_cnts.tolist()
+                            local_map_data["mapList"].append({"id": pool_id,
+                                                              "pool_center_lng_lat": self.baidu_map_obj.pool_center_lng_lat,
+                                                              "pool_lng_lats": save_pool_lng_lats,
+                                                              "pool_cnts": save_pool_cnts})
+                            json.dump(local_map_data, f)
+                self.data_define_obj.pool_code = pool_id
 
             if len(self.server_data_obj.mqtt_send_get_obj.mode) > 0:
                 mode = self.server_data_obj.mqtt_send_get_obj.mode[-1]

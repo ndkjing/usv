@@ -38,7 +38,7 @@ def color_block_finder(img, lowerb, upperb,
     show_img = np.copy(img)
     # 外接矩形区域集合
     rects = []
-    print('len(contours)', len(contours))
+    # print('len(contours)', len(contours))
     if max_w is None:
         # 如果最大宽度没有设定，就设定为图像的宽度
         max_w = img.shape[1]
@@ -68,10 +68,7 @@ def color_block_finder(img, lowerb, upperb,
         else:
             center = 512 * scale
             in_cnt = cv2.pointPolygonTest(cnt, (center, center), True)
-        # print('in cnt',in_cnt)
         if in_cnt > -5:
-            print('index,cnt', index, cnt)
-            # print('len(cnt)',len(cnt))
             # 计算轮廓的中心点
             M = cv2.moments(contours[index])  # 计算第一条轮廓的矩
             # print(M)
@@ -108,17 +105,18 @@ def is_in_contours(point, local_map_data):
         return None
     else:
         # 判断是否在轮廓内部
+        # for index, cnt in enumerate(local_map_data['mapList']):
         for index, cnt in enumerate(local_map_data['mapList']):
             # 直接使用像素位置判断
             in_cnt = cv2.pointPolygonTest(
-                np.array(cnt['pool_cnt']), (point[0], point[1]), False)
+                np.array(cnt['pool_lng_lats']), (point[0], point[1]), False)
             # 使用经纬度判断
             # new_cnt = []
             # for i in cnt['mapData']:
             #     new_cnt.append([int(i[0]*1000000),int(i[1]*1000000)])
             # in_cnt = cv2.pointPolygonTest(np.array(new_cnt), (point[0][0],point[0][1]), False)
             # 大于0说明属于该轮廓
-            if in_cnt > 0:
+            if in_cnt >= 0:
                 return cnt['id']
         # 循环结束返回None
         return None
@@ -204,6 +202,8 @@ class BaiduMap(object):
         self.init_ship_gaode_lng_lat = None
         self.init_ship_pix = None
 
+        self.scale = scale
+
         # 请求地图位置经纬度
         self.lng_lat = lng_lat
         self.lng_lat_pix = (512 * self.scale,512 * self.scale)
@@ -212,7 +212,7 @@ class BaiduMap(object):
         self.width = width
         # 缩放比例
         self.zoom = zoom
-        self.scale = scale
+
         self.pix_to_meter = 0.12869689044 * math.pow(2, 19 - self.zoom)
         self.addr = str(round(100 * random.random(), 3))
         # ＨＳＶ阈值　［［低　ＨＳＶ］,　［高　ＨＳＶ］］
@@ -294,7 +294,7 @@ class BaiduMap(object):
     # 按照经纬度url获取静态图
     def draw_image(self, ):
         png_url = self.get_image_url()
-        print('png_url', png_url)
+        self.logger.info({'png_url': png_url})
         response = requests.get(png_url)
         # 获取的文本实际上是图片的二进制文本
         img = response.content
@@ -359,12 +359,11 @@ class BaiduMap(object):
 
     # gps模块转换为高德经纬度
     def gps_to_gaode_lng_lat(self, lng_lat):
-
         url = 'https://restapi.amap.com/v3/assistant/coordinate/convert?locations={lng_lat}&coordsys=gps&key={key}'.format(
             lng_lat="%f,%f" % (lng_lat[0], lng_lat[1]), key=self.gaode_key)
         response = requests.get(url=url)
         response = json.loads(response.content)
-        print('response', response)
+        self.logger.info({'response':response})
         gaode_lng_lat = [float(i) for i in response['locations'].split(',')]
         return gaode_lng_lat
 
@@ -392,7 +391,7 @@ class BaiduMap(object):
         :param cnt:
         :return:
         """
-        print('len(cnts)',len(cnts))
+        self.logger.debug({'pix_to_gps len(cnts)':len(cnts)})
         # 返回经纬度坐标集合
         return_gps = []
         # 给后端的返回
@@ -476,7 +475,6 @@ class BaiduMap(object):
                 return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
                 draw_gps=draw_gps+'%f,%f;'%(point_gps[0],point_gps[1])
                 return_gps_list.append(point_gps)
-        print('len return_gps',len(return_gps))
         with open('map.json', 'w') as f:
             json.dump({'gps':draw_gps}, f)
         return return_gps, return_gps_list
@@ -490,7 +488,7 @@ class BaiduMap(object):
         """
         # 求坐标点最大外围矩阵
         (x, y, w, h) = cv2.boundingRect(contour)
-        print('(x, y, w, h)', (x, y, w, h))
+        self.logger.debug({'(x, y, w, h)': (x, y, w, h)})
         # 循环生成点同时判断点是否在湖泊范围在则添加到列表中
         scan_points = []
         # 起始点

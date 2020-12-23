@@ -33,7 +33,7 @@ sys.path.append(
 
 def main():
     if config.b_play_audio:
-        audios_manager.play_audio('setup.mp3')
+        audios_manager.play_audio(0)
     logger = log.LogHandler('main_log')
 
     # 数据处理对象

@@ -101,18 +101,18 @@ import numpy as np
 # a = [[[1,2]],[[1,2],[2,3],[1,3]]]
 # s = [[0],[0,0,0]]
 # print(len(a[0]))
-from tsp_solver.greedy import solve_tsp
-a = np.array([
-    [0,2,3],
-    [1,0,2],
-    [3,1,0],
-])
-
-print(solve_tsp(a,endpoints=(0,2)))
-
-b = [1,2,3,5]
-b.insert(0,10)
-print(b)
+# from tsp_solver.greedy import solve_tsp
+# a = np.array([
+#     [0,2,3],
+#     [1,0,2],
+#     [3,1,0],
+# ])
+#
+# print(solve_tsp(a,endpoints=(0,2)))
+#
+# b = [1,2,3,5]
+# b.insert(0,10)
+# print(b)
 import math
 
 
@@ -237,3 +237,12 @@ import math
 # print(a.sort())
 # print(a)
 # print(a.index(4))
+# a = round(15.65,0)
+# print(a,type(a))
+
+a = np.array([[1,2],[3,4]])
+print(type(a))
+print(isinstance(a,np.ndarray))
+print(type(a.tolist()))
+print(type(a))
+

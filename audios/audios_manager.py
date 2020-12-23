@@ -12,17 +12,27 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 audios_base_dir = os.path.join(config.root_path, 'audios')
-path_list = [
-            os.path.join(
-                audios_base_dir,
-                i)for i in [
-                'huan.mp3',
-                'chunjie.mp3',
-                'gps.mp3',
-                'network.mp3',
-                'register.mp3',
-                'battery.mp3']]
 
+"""
+0 开机
+1 随机音乐库中音乐
+2 网络
+3 电量提醒
+4 漏水
+5 gps
+6 靠近提醒
+7 注册
+"""
+audio_dict={
+    0:'setup.mp3',
+    1:['chunjie.mp3','huan.mp3'],
+    2:'network.mp3',
+    3:'battery.mp3',
+    4:'',
+    5:'gps.mp3',
+    6:'',
+    7:'register.mp3',
+}
 
 def play_audio(audio_index=0, b_backend=False):
     """
@@ -31,16 +41,14 @@ def play_audio(audio_index=0, b_backend=False):
     :param b_backend: 是否后台播放
     :return:
     """
-    if audio_index>=len(path_list):
-        audio_index=-1
     try:
         from playsound import playsound
-        playsound(path_list[audio_index])
+        playsound(os.path.join(audios_base_dir,audio_dict[audio_index]))
     except Exception as e:
         if b_backend:
-            os.system('mpg321 %s &' % path_list[audio_index])
+            os.system('mpg321 %s &' % os.path.join(audios_base_dir,audio_dict[audio_index]))
         else:
-            os.system('mpg321 %s' % path_list[audio_index])
+            os.system('mpg321 %s' % os.path.join(audios_base_dir,audio_dict[audio_index]))
 
 
 if __name__ == '__main__':

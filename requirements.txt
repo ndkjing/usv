@@ -6,4 +6,5 @@ serial
 pyserial
 PyYAML
 requests
-
+tqdm
+tsp_solver

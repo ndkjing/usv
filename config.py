@@ -47,3 +47,7 @@ http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
 mod='auto'
 # 是否播放生硬
 b_play_audio=True
+
+# init_gps
+# init_gps=
+
