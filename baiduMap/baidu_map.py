@@ -32,7 +32,8 @@ def color_block_finder(img, lowerb, upperb,
     img_bin = cv2.inRange(img_hsv, lowerb, upperb)
 
     # 寻找轮廓（只寻找最外侧的色块）
-    contours, hier = cv2.findContours(img_bin, cv2.RETR_EXTERNAL, method=method_0)
+    contours, hier = cv2.findContours(
+        img_bin, cv2.RETR_EXTERNAL, method=method_0)
     # 声明画布 拷贝自img
     show_img = np.copy(img)
     # 外接矩形区域集合
@@ -92,7 +93,10 @@ def draw_color_block_rect(img, rects, color=(0, 0, 255)):
     for rect in rects:
         (x, y, w, h) = rect
         # 在画布上绘制矩形区域（红框）
-        cv2.rectangle(canvas, pt1=(x, y), pt2=(x + w, y + h), color=color, thickness=3)
+        cv2.rectangle(
+            canvas, pt1=(
+                x, y), pt2=(
+                x + w, y + h), color=color, thickness=3)
 
     return canvas
 
@@ -106,7 +110,8 @@ def is_in_contours(point, local_map_data):
         # 判断是否在轮廓内部
         for index, cnt in enumerate(local_map_data['mapList']):
             # 直接使用像素位置判断
-            in_cnt = cv2.pointPolygonTest(np.array(cnt['pool_cnt']), (point[0], point[1]), False)
+            in_cnt = cv2.pointPolygonTest(
+                np.array(cnt['pool_cnt']), (point[0], point[1]), False)
             # 使用经纬度判断
             # new_cnt = []
             # for i in cnt['mapData']:
@@ -157,11 +162,12 @@ class BaiduMap(object):
                  height=1024,
                  width=1024,
                  scale=1,
-                 map_type=MapType.baidu):
-        if logger == None:
+                 map_type=MapType.gaode):
+        if logger is None:
             import logging
-            logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
-                                level=logging.DEBUG)
+            logging.basicConfig(
+                format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
+                level=logging.DEBUG)
             self.logger = logging
         else:
             self.logger = logger
@@ -169,26 +175,45 @@ class BaiduMap(object):
         # 访问秘钥
         self.baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
         self.gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
-        # 在湖泊中生产的轮廓经纬度和中心经纬度
+        # 湖泊像素轮廓
         self.pool_cnts = []
+        # 湖泊经纬度轮廓
         self.pool_lng_lats = []
+        # 湖泊像素中心
         self.pool_center_cnt = []
+        # 湖泊经纬度中心
         self.pool_center_lng_lat = []
+        # 监测点像素
         self.scan_point_cnts = []
+        # 监测点经纬度
         self.scan_point_lng_lats = []
+        # 规划路径像素
         self.path_planning_cnts = []
+        # 规划路径经纬度
         self.path_planning_lng_lats = []
+        # 不在湖泊区域像素
         self.outpool_cnts_set = None
+        # 不在湖泊区域经纬度
         self.outpool_lng_lats_set = []
 
-        # 经纬度
+        self.ship_gps=None
+        self.ship_gaode_lng_lat=None
+        self.ship_pix=None
+
+        self.init_ship_gps=None
+        self.init_ship_gaode_lng_lat = None
+        self.init_ship_pix = None
+
+        # 请求地图位置经纬度
         self.lng_lat = lng_lat
+        self.lng_lat_pix = (512 * self.scale,512 * self.scale)
         # 图像高度和宽度
         self.height = height
         self.width = width
         # 缩放比例
         self.zoom = zoom
         self.scale = scale
+        self.pix_to_meter = 0.12869689044 * math.pow(2, 19 - self.zoom)
         self.addr = str(round(100 * random.random(), 3))
         # ＨＳＶ阈值　［［低　ＨＳＶ］,　［高　ＨＳＶ］］
         self.threshold_hsv = [(84, 72, 245), (118, 97, 255)]
@@ -216,10 +241,13 @@ class BaiduMap(object):
         if not os.path.exists(save_img_dir):
             os.mkdir(save_img_dir)
         if self.map_type == MapType.baidu:
-            self.save_img_path = os.path.join(save_img_dir, 'baidu_%f_%f_%i_%i.png' % (self.lng_lat[0], self.lng_lat[1], self.zoom,self.scale))
+            self.save_img_path = os.path.join(
+                save_img_dir, 'baidu_%f_%i_%i.png' %
+                (self.lng_lat[0], self.lng_lat[1], self.zoom))
         elif self.map_type == MapType.gaode:
-            self.save_img_path = os.path.join(save_img_dir, 'gaode_%f_%f_%i_%i.png' % (
-            self.lng_lat[0], self.lng_lat[1], self.zoom, self.scale))
+            self.save_img_path = os.path.join(
+                save_img_dir, 'gaode_%f_%f_%i_%i.png' %
+                (self.lng_lat[0], self.lng_lat[1], self.zoom, self.scale))
         if not os.path.exists(self.save_img_path):
             self.draw_image()
 
@@ -259,9 +287,9 @@ class BaiduMap(object):
                 zoom=self.zoom)
         elif self.map_type == MapType.gaode:
             return 'https://restapi.amap.com/v3/staticmap?location={position}&zoom={zoom}&size={h}*{w}&scale={scale}&key={key}'.format(
-                position='%f,%f' % (self.lng_lat[0], self.lng_lat[1]), zoom=(self.zoom), h=self.height, w=self.width,
-                scale=self.scale,
-                key=self.gaode_key)
+                position='%f,%f' %
+                (self.lng_lat[0], self.lng_lat[1]), zoom=(
+                    self.zoom), h=self.height, w=self.width, scale=self.scale, key=self.gaode_key)
 
     # 按照经纬度url获取静态图
     def draw_image(self, ):
@@ -306,18 +334,20 @@ class BaiduMap(object):
             return None, (-1, -1)
 
         # 识别色块 获取矩形区域数组
-        self.show_img, pool_cnts, (contours_cx, contours_cy) = color_block_finder(self.row_img, lowerb, upperb,
-                                                                                  map_type=self.map_type,
-                                                                                  scale=self.scale)
+        self.show_img, pool_cnts, (contours_cx, contours_cy) = color_block_finder(
+            self.row_img, lowerb, upperb, map_type=self.map_type, scale=self.scale)
         self.center_cnt = (contours_cx, contours_cy)
         if pool_cnts is None:
             self.logger.info('无法在点击处找到湖')
             return pool_cnts, (-2, -2)
 
         # 绘制色块的矩形区域
-        cv2.circle(self.show_img, (contours_cx, contours_cy), 5, [255, 255, 0], -1)
+        cv2.circle(
+            self.show_img, (contours_cx, contours_cy), 5, [
+                255, 255, 0], -1)
         if b_show:
-            cv2.namedWindow('result', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
+            cv2.namedWindow(
+                'result', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
             cv2.imshow('result', self.show_img)
             # 等待任意按键按下
             cv2.waitKey(0)
@@ -326,6 +356,35 @@ class BaiduMap(object):
         pool_cnts = np.squeeze(pool_cnts)
         self.pool_cnts = pool_cnts
         return self.pool_cnts, self.center_cnt
+
+    # gps模块转换为高德经纬度
+    def gps_to_gaode_lng_lat(self, lng_lat):
+
+        url = 'https://restapi.amap.com/v3/assistant/coordinate/convert?locations={lng_lat}&coordsys=gps&key={key}'.format(
+            lng_lat="%f,%f" % (lng_lat[0], lng_lat[1]), key=self.gaode_key)
+        response = requests.get(url=url)
+        response = json.loads(response.content)
+        print('response', response)
+        gaode_lng_lat = [float(i) for i in response['locations'].split(',')]
+        return gaode_lng_lat
+
+    # 高德经纬度转换转换为像素位置
+    def gaode_lng_lat_to_pix(self, gaode_lng_lat):
+        # 计算两点间距离和角度
+        theta = lng_lat_calculate.angleFromCoordinate(
+            self.lng_lat[0], self.lng_lat[1], gaode_lng_lat[0], gaode_lng_lat[1])
+        distance = lng_lat_calculate.distanceFromCoordinate(
+            self.lng_lat[0], self.lng_lat[1], gaode_lng_lat[0], gaode_lng_lat[1])
+        delta_x_distance = math.sin(theta) * distance
+        delta_y_distance = math.cos(theta) * distance
+
+        delta_x_pix = -delta_x_distance / self.pix_to_meter
+        delta_y_pix = delta_y_distance / self.pix_to_meter
+        print(self.scale / 2)
+        print(self.height * self.scale / 2)
+        pix = [int(self.height * self.scale / 2 + delta_x_pix),
+               int(self.width * self.scale / 2 + delta_y_pix)]
+        return pix
 
     # 区域像素点转换为经纬度坐标点
     def pix_to_gps(self, cnts):
@@ -351,7 +410,13 @@ class BaiduMap(object):
             pix_2_meter = 0.12859689044*math.pow(2, 19 - self.zoom)
             delta_meter_x = delta_pix_x * (pix_2_meter)
             delta_meter_y = delta_pix_y * (pix_2_meter)
-            distance = math.sqrt(math.pow(delta_meter_x, 2) + math.pow(delta_meter_y, 2))
+            distance = math.sqrt(
+                math.pow(
+                    delta_meter_x,
+                    2) +
+                math.pow(
+                    delta_meter_y,
+                    2))
             # 方法一：直接计算
             # 方法二：当做圆球计算
             method = 0
@@ -362,11 +427,13 @@ class BaiduMap(object):
                 H = L / 2
                 mill = 2.3
                 delta_lat = ((H / 2 - delta_meter_y) * 2 * mill) / (1.25 * H)
-                delta_lat = ((math.atan(math.exp(delta_lat)) - 0.25 * math.pi) * 180) / (0.4 * math.pi)
+                delta_lat = ((math.atan(math.exp(delta_lat)) -
+                              0.25 * math.pi) * 180) / (0.4 * math.pi)
                 delta_lon = (delta_meter_x - W / 2) * 360 / W
 
                 center_lat = ((H / 2 - 0) * 2 * mill) / (1.25 * H)
-                center_lat = ((math.atan(math.exp(center_lat)) - 0.25 * math.pi) * 180) / (0.4 * math.pi)
+                center_lat = ((math.atan(math.exp(center_lat)) -
+                               0.25 * math.pi) * 180) / (0.4 * math.pi)
                 center_lon = (0 - W / 2) * 360 / W
 
                 gpx_x = -(center_lon - delta_lon)
@@ -381,25 +448,31 @@ class BaiduMap(object):
                     地理中常用的数学计算，把地球简化成了一个标准球形，如果想要推广到任意星球可以改成类的写法，然后修改半径即可
                 """
                 earth_radius = (
-                                   6370.8560) * 1000  # 地球平均半径，单位km，最简单的模型往往把地球当做完美的球形，这个值就是常说的RE  平均半径　6370.856　　赤道半径6378.1370
+                    6370.8560) * 1000  # 地球平均半径，单位km，最简单的模型往往把地球当做完美的球形，这个值就是常说的RE  平均半径　6370.856　　赤道半径6378.1370
                 math_2pi = math.pi * 2
                 pis_per_degree = math_2pi / 360  # 角度一度所对应的弧度数，360对应2*pi
                 # 计算维度上圆面半径
-                real_radius = earth_radius * math.cos(self.lng_lat[1] * pis_per_degree)
+                real_radius = earth_radius * \
+                    math.cos(self.lng_lat[1] * pis_per_degree)
                 # 经度偏差
                 delta_lng = (delta_meter_x / real_radius) / pis_per_degree
                 # 纬度偏差
                 delta_lat = -(delta_meter_y / earth_radius) / pis_per_degree
                 # print(delta_lng,delta_lat)
                 # TODO 最终需要确认经纬度保留小数点后几位
-                point_gps = [self.lng_lat[0] + delta_lng, self.lng_lat[1] + delta_lat]
+                point_gps = [
+                    self.lng_lat[0] + delta_lng,
+                    self.lng_lat[1] + delta_lat]
                 return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
                 return_gps_list.append(point_gps)
             else:
-                theta = round(math.degrees(math.atan2(delta_meter_x, -delta_meter_y)), 1)
+                theta = round(
+                    math.degrees(
+                        math.atan2(
+                            delta_meter_x, -delta_meter_y)), 1)
                 theta = theta if theta > 0 else 360 + theta
-                point_gps = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0], self.lng_lat[1], theta,
-                                                                        distance)
+                point_gps = lng_lat_calculate.one_point_diatance_to_end(
+                    self.lng_lat[0], self.lng_lat[1], theta, distance)
                 return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
                 draw_gps=draw_gps+'%f,%f;'%(point_gps[0],point_gps[1])
                 return_gps_list.append(point_gps)
@@ -453,211 +526,24 @@ class BaiduMap(object):
         self.scan_point_cnts = scan_points
         return self.scan_point_cnts
 
-    def select_roi(self):
-        '''
-        选取ROI区域
-        回车或者空格确认选择
-        c键 撤销选择
-        '''
-        import numpy as np
-        import cv2
-        import sys
-
-        # 文件路径
-        img_path = 'imgs/114_392697_30_559696_15.png'
-        # 读入图片
-        img = cv2.imread(img_path)
-        # 创建一个窗口
-        cv2.namedWindow("image", flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
-        cv2.imshow("image", img)
-        # 是否显示网格
-        showCrosshair = True
-
-        # 如果为Ture的话 , 则鼠标的其实位置就作为了roi的中心
-        # False: 从左上角到右下角选中区域
-        fromCenter = False
-        # Select ROI
-        rect = cv2.selectROI("image", img, showCrosshair, fromCenter)
-
-        print("选中矩形区域")
-        (x, y, w, h) = rect
-
-        # Crop image
-        imCrop = img[y: y + h, x:x + w]
-
-        # Display cropped image
-        cv2.imshow("image_roi", imCrop)
-        cv2.imwrite("imgs/image_roi.png", imCrop)
-        cv2.waitKey(0)
-
-    '''
-    绘制彩图在HSV颜色空间下的统计直方图
-    '''
-
-    def analyse_hsv(self):
-        from matplotlib import pyplot as plt
-        import numpy as np
-        import cv2
-        import sys
-
-        # 读入图片
-        img_path = 'imgs/image_roi.png'
-        img = cv2.imread(img_path)
-        # img = cv2.imread('little_chess.png')
-        if img is None:
-            print("图片读入失败, 请检查图片路径及文件名")
-            exit()
-
-        # 将图片转换为HSV格式
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-        # 创建画布
-        fig, ax = plt.subplots()
-        # Matplotlib预设的颜色字符
-        hsvColor = ('y', 'g', 'k')
-        # 统计窗口间隔 , 设置小了锯齿状较为明显 最小为1 最好可以被256整除
-        bin_win = 3
-        # 设定统计窗口bins的总数
-        bin_num = int(256 / bin_win)
-        # 控制画布的窗口x坐标的稀疏程度. 最密集就设定xticks_win=1
-        xticks_win = 2
-        # 设置标题
-        ax.set_title('HSV Color Space')
-        lines = []
-        for cidx, color in enumerate(hsvColor):
-            # cidx channel 序号
-            # color r / g / b
-            cHist = cv2.calcHist([img], [cidx], None, [bin_num], [0, 256])
-            # 绘制折线图
-            line, = ax.plot(cHist, color=color, linewidth=8)
-            lines.append(line)
-
-            # 标签
-        labels = [cname + ' Channel' for cname in 'HSV']
-        # 添加channel
-        plt.legend(lines, labels, loc='upper right')
-        # 设定画布的范围
-        ax.set_xlim([0, bin_num])
-        # 设定x轴方向标注的位置
-        ax.set_xticks(np.arange(0, bin_num, xticks_win))
-        # 设定x轴方向标注的内容
-        ax.set_xticklabels(list(range(0, 256, bin_win * xticks_win)), rotation=45)
-
-        # 显示画面
-        plt.show()
-
-
-    def hsv_image_threshold(self):
-        '''
-            可视化颜色阈值调参软件
-            H 100
-            S 78
-            V 250
-
-        '''
-
-        import cv2
-        import numpy as np
-        import sys
-
-        # 更新MASK图像，并且刷新windows
-        def updateMask():
-            global img
-            global lowerb
-            global upperb
-            global mask
-            # 计算MASK
-            mask = cv2.inRange(img_hsv, lowerb, upperb)
-
-            cv2.imshow('mask', mask)
-
-        # 更新阈值
-        def updateThreshold(x):
-
-            global lowerb
-            global upperb
-
-            minH = cv2.getTrackbarPos('minH', 'image')
-            maxH = cv2.getTrackbarPos('maxH', 'image')
-            minS = cv2.getTrackbarPos('minS', 'image')
-            maxS = cv2.getTrackbarPos('maxS', 'image')
-            minV = cv2.getTrackbarPos('minV', 'image')
-            maxV = cv2.getTrackbarPos('maxV', 'image')
-
-            lowerb = np.int32([minH, minS, minV])
-            upperb = np.int32([maxH, maxS, maxV])
-
-            print('更新阈值')
-            print(lowerb)
-            print(upperb)
-            updateMask()
-
-        def main(img):
-            global img_hsv
-            global upperb
-            global lowerb
-            global mask
-            # 将图片转换为HSV格式
-            img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-
-            # 颜色阈值 Upper
-            upperb = None
-            # 颜色阈值 Lower
-            lowerb = None
-
-            mask = None
-
-            cv2.namedWindow('image', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
-            # cv2.namedWindow('image')
-            cv2.imshow('image', img)
-
-            # cv2.namedWindow('mask')
-            cv2.namedWindow('mask', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
-
-            # 红色阈值 Bar
-            ## 红色阈值下界
-            cv2.createTrackbar('minH', 'image', 0, 255, updateThreshold)
-            ## 红色阈值上界
-            cv2.createTrackbar('maxH', 'image', 0, 255, updateThreshold)
-            ## 设定红色阈值上界滑条的值为255
-            cv2.setTrackbarPos('maxH', 'image', 255)
-            cv2.setTrackbarPos('minH', 'image', 0)
-            # 绿色阈值 Bar
-            cv2.createTrackbar('minS', 'image', 0, 255, updateThreshold)
-            cv2.createTrackbar('maxS', 'image', 0, 255, updateThreshold)
-            cv2.setTrackbarPos('maxS', 'image', 255)
-            cv2.setTrackbarPos('minS', 'image', 0)
-            # 蓝色阈值 Bar
-            cv2.createTrackbar('minV', 'image', 0, 255, updateThreshold)
-            cv2.createTrackbar('maxV', 'image', 0, 255, updateThreshold)
-            cv2.setTrackbarPos('maxV', 'image', 255)
-            cv2.setTrackbarPos('minV', 'image', 0)
-
-            # 首次初始化窗口的色块
-            # 后面的更新 都是由getTrackbarPos产生变化而触发
-            updateThreshold(None)
-
-            print("调试棋子的颜色阈值, 键盘摁e退出程序")
-            while cv2.waitKey(0) != ord('e'):
-                continue
-
-            cv2.imwrite('tmp_bin.png', mask)
-            cv2.destroyAllWindows()
-
-        # image_path = sys.argv[1]
-        image_path = 'imgs/114_392697_30_559696_15.png'
-        # 样例图片 (在代码中填入)
-        img = cv2.imread(image_path)
-        if img is None:
-            print("Error: 文件路径错误，没有此图片 {}".format(image_path))
-            exit(1)
-        main(img)
 
 
 if __name__ == '__main__':
     # obj = BaiduMap([114.432092, 30.522893], zoom=16,map_type=MapType.gaode)
     # obj = BaiduMap([114.431529, 30.524413], zoom=15, scale=1, map_type=MapType.gaode)
     # obj = BaiduMap([114.438009, 30.540082], zoom=14, scale=1, map_type=MapType.gaode)
-    obj = BaiduMap([114.373904, 30.540625], zoom=14, scale=1, map_type=MapType.gaode)
+    # obj = BaiduMap([114.373904, 30.540625], zoom=14, scale=1, map_type=MapType.gaode)
+    obj = BaiduMap([114.431529, 30.524413], zoom=15,
+                   scale=1, map_type=MapType.gaode)
+    # obj = BaiduMap([114.393142, 30.558963], zoom=15,map_type=MapType.baidu)
+    # obj = BaiduMap([114.718257,30.648004],zoom=14)
+    # obj = BaiduMap([114.566767,30.541689],zoom=14)
+    # obj = BaiduMap([114.565976,30.541317],zoom=15.113213)
+    # obj = BaiduMap([114.393142,30.558981],zoom=14)
+    gaode_lng_lat = obj.gps_to_gaode_lng_lat([114.431529, 30.524413])
+    pix = obj.gaode_lng_lat_to_pix([114.431529, 30.525413])
+    print('pix',pix)
+    print(type(gaode_lng_lat), gaode_lng_lat)
     pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=False)
     print('pool_cnts', len(pool_cnts))
     scan_cnts = obj.scan_pool(pool_cnts, pix_gap=30, b_show=True)

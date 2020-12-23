@@ -46,4 +46,4 @@ http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
 # mod in ['manual', 'auto']
 mod='auto'
 # 是否播放生硬
-b_play_audio=False
+b_play_audio=True

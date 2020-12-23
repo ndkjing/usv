@@ -34,6 +34,9 @@ class DataManager:
         self.com_data_obj = SerialData(config.port, config.baud, timeout=1 / config.com2pi_interval,
                                        logger=self.com_log)
 
+        #
+        self.plan_path=None
+        self.plan_path_status=None
         self.start = False
         self.baidu_map_obj = None
         # 船最终控制移动方向
@@ -83,7 +86,7 @@ class DataManager:
         try:
             while True:
                 # 判断当前是手动控制还是自动控制
-                if len(self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status) == 0:
+                if len(self.plan_path) == 0:
                     manul_or_auto = 1
                 elif self.data_define_obj.status['current_lng_lat'] == None:
                     manul_or_auto = 1
@@ -104,58 +107,45 @@ class DataManager:
                     # self.logger.debug('control_move_direction: '+str(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
                 # 自动模式计算角度
                 elif manul_or_auto == 0:
+                    mode=0
                     # 计算目标角度
-                    # target_degree = baidu_map.get_degree(self.data_define_obj.status['current_lng_lat'][0],
-                    #                                      self.data_define_obj.status['current_lng_lat'][1],
-                    #                                      self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[
-                    #                                          -1][
-                    #                                          0],
-                    #                                      self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[
-                    #                                          -1][
-                    #                                          1])
-                    target_lng_lat_index = None
-                    for index, val in enumerate(self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1]):
-                        if val == 0:
-                            target_lng_lat_index = index
-                            break
-                    if target_lng_lat_index == None:
-                        self.logger.info('no lng lat status is 0')
-                        continue
-                    target_lng_lat = self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1][
-                        target_lng_lat_index]
-                    target_degree = lng_lat_calculate.angleFromCoordinate(
-                        self.data_define_obj.status['current_lng_lat'][0],
-                        self.data_define_obj.status['current_lng_lat'][1],
-                        target_lng_lat[0],
-                        target_lng_lat[1])
-                    # 偏差角度
-                    delta_degree = target_degree - self.ship_current_direction
-                    auto_move_direction = 360
-                    # 判断移动方向
-                    if delta_degree >= 0:
-                        if delta_degree < 45 or delta_degree >= 315:
-                            auto_move_direction = 0
-                        elif delta_degree >= 45 and delta_degree < 135:
-                            auto_move_direction = 90
-                        elif delta_degree >= 135 and delta_degree < 225:
-                            auto_move_direction = 180
-                        elif delta_degree >= 225 and delta_degree < 315:
-                            auto_move_direction = 270
-                    else:
-                        if abs(delta_degree) < 45 or abs(delta_degree) >= 315:
-                            auto_move_direction = 0
-                        elif abs(delta_degree) >= 45 and abs(delta_degree) < 135:
-                            auto_move_direction = 270
-                        elif abs(delta_degree) >= 135 and abs(delta_degree) < 225:
-                            auto_move_direction = 180
-                        elif abs(delta_degree) >= 225 and abs(delta_degree) < 315:
-                            auto_move_direction = 90
-                    obstacle_direction = basic_obstacle_avoid.move(self.l_distance, self.r_distance)
-                    if obstacle_direction != int(auto_move_direction):
-                        self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
-                    else:
-                        self.com_data_obj.send_data('A%sZ' % (str(auto_move_direction)))
-                    self.logger.info('auto_move_direction: ' + str(auto_move_direction))
+                    for index,value in enumerate(self.plan_path):
+                        if self.plan_path_status[index]==1:
+                            continue
+                        target_degree = lng_lat_calculate.angleFromCoordinate(
+                            self.data_define_obj.status['current_lng_lat'][0],
+                            self.data_define_obj.status['current_lng_lat'][1],
+                            self.plan_path[index][0],
+                            self.plan_path[index][1])
+                        # 偏差角度
+                        delta_degree = target_degree - self.ship_current_direction
+                        auto_move_direction = 360
+                        # 判断移动方向
+                        if delta_degree >= 0:
+                            if delta_degree < 45 or delta_degree >= 315:
+                                auto_move_direction = 0
+                            elif delta_degree >= 45 and delta_degree < 135:
+                                auto_move_direction = 90
+                            elif delta_degree >= 135 and delta_degree < 225:
+                                auto_move_direction = 180
+                            elif delta_degree >= 225 and delta_degree < 315:
+                                auto_move_direction = 270
+                        else:
+                            if abs(delta_degree) < 45 or abs(delta_degree) >= 315:
+                                auto_move_direction = 0
+                            elif abs(delta_degree) >= 45 and abs(delta_degree) < 135:
+                                auto_move_direction = 270
+                            elif abs(delta_degree) >= 135 and abs(delta_degree) < 225:
+                                auto_move_direction = 180
+                            elif abs(delta_degree) >= 225 and abs(delta_degree) < 315:
+                                auto_move_direction = 90
+                        obstacle_direction = basic_obstacle_avoid.move(self.l_distance, self.r_distance)
+                        if obstacle_direction != int(auto_move_direction):
+                            self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
+                        else:
+                            self.com_data_obj.send_data('A%sZ' % (str(auto_move_direction)))
+                        self.logger.info('auto_move_direction: ' + str(auto_move_direction))
+                        # judge point is ariver
 
                 time.sleep(1 / config.pi2com_interval)
         except KeyboardInterrupt:
@@ -274,6 +264,8 @@ class DataManager:
                         self.logger.error('user_lng_lat== -1 or zoom == -1')
                         continue
                 self.baidu_map_obj = baidu_map.BaiduMap(lng_lat=user_lng_lat, zoom=zoom, logger=self.map_log)
+                if not self.start:
+                    self.baidu_map_obj.init_ship_gps = user_lng_lat
             else:
                 user_lng_lat = [116.99868, 40.511224]
                 zoom = 12
@@ -342,17 +334,73 @@ class DataManager:
                                                           "pool_cnt": pool_cnts.tolist()})
                         json.dump(local_map_data, f)
             self.data_define_obj.pool_code = pool_id
+
+            if len(self.server_data_obj.mqtt_send_get_obj.mode) > 0:
+                mode = self.server_data_obj.mqtt_send_get_obj.mode[-1]
+            else:
+                self.logger.info('len(self.server_data_obj.mqtt_send_get_obj.mode) <= 0')
+                continue
+
+            if mode == 0:
+                target_lng_lat_index = None
+                for index, val in enumerate(self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1]):
+                    if val == 0:
+                        target_lng_lat_index = index
+                        break
+                if target_lng_lat_index == None:
+                    self.logger.info('no lng lat status is 0')
+                    continue
+                target_lng_lat = [self.server_data_obj.mqtt_send_get_obj.target_lng_lat[-1][
+                    target_lng_lat_index]]
+                self.path_planning(mode=mode, target_lng_lats=target_lng_lat)
+
+            elif mode == 1:
+                target_lng_lat = self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1]
+                self.path_planning(mode=mode, target_lng_lats=target_lng_lat)
+
+            elif mode == 2:
+                self.path_planning(mode=mode)
+
+            elif mode == 3:
+                pass
+
+            elif mode == 4:
+                self.path_planning(mode=mode)
+
             time.sleep(config.check_status_interval)
 
     # path planning
-    def path_planning(self, mode=0):
+    def path_planning(self,target_lng_lats=None, mode=5,pix_gap=None):
         """
         :param mode
         return path points
         """
         if self.data_define_obj.pool_code == '' or self.data_define_obj.pool_code == None:
+            self.logger.warning('data_define_obj.pool_code is none')
             return -1
-        a_star.get_path(baidu_map_obj=self.baidu_map_obj, mode=mode)
+        self.baidu_map_obj.ship_gps = self.data_define_obj.status['current_lng_lat']
+        if mode==2:
+            if pix_gap is None:
+                self.logger.error('mode=2 if pix_gap is None')
+            self.baidu_map_obj.scan_pool(self.baidu_map_obj.pool_cnts,pix_gap=pix_gap)
+        return_gaode_lng_lat_path = a_star.get_path(baidu_map_obj=self.baidu_map_obj,
+                                     mode=mode,
+                                     target_lng_lats=target_lng_lats,
+                                     b_show=False,
+                                     map_connect=1)
+        if isinstance(return_gaode_lng_lat_path,str):
+            self.logger.error(return_gaode_lng_lat_path)
+        self.plan_path = return_gaode_lng_lat_path
+        self.plan_path_status = [0]*len(self.plan_path)
+        mqtt_send_path_planning_data={
+            "deviceId":config.ship_code,
+            "mapId":self.data_define_obj.pool_code,
+            "sampling_points":target_lng_lats,
+            "path_points":self.plan_path
+        }
+        self.send(method='mqtt', topic='path_planning_%s' % (config.ship_code), data=mqtt_send_path_planning_data,
+                  qos=1)
+        return return_gaode_lng_lat_path
 
 
 if __name__ == '__main__':

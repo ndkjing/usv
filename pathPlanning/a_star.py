@@ -10,6 +10,8 @@ import numpy as np
 import cv2
 from tsp_solver.greedy import solve_tsp
 import copy
+from tqdm import tqdm
+
 from baiduMap import baidu_map
 
 class Env:
@@ -312,7 +314,6 @@ def cross_outpool(point_i,point_j,pool_cnt):
             return False
     return True
 
-from tqdm import tqdm
 
 # path matrix
 path_matrix = {}
@@ -436,15 +437,18 @@ def return_to_base(point1,point2,baidu_map_obj,b_show=False):
     print('astar_path', astar_path)
     return astar_path
 
-def get_path(baidu_map_obj=None,mode=1,b_show=False,map_connect = 1):
+def get_path(baidu_map_obj=None,
+             mode=1,
+             target_lng_lats=None,
+             target_pixs=None,
+             b_show=False,
+             map_connect = 1):
     """
     param mode 模式　
     ０　到达目标点后停留
     １　到达目标点后返回
     ２　扫描整个湖泊
     """
-
-
     point1 = [114.391098, 30.572314]
     point2 = [114.370186, 30.554962]
     point3 = [114.398213, 30.54501]
@@ -459,22 +463,72 @@ def get_path(baidu_map_obj=None,mode=1,b_show=False,map_connect = 1):
     baidu_map_obj.scan_pool(baidu_map_obj.pool_cnts,pix_gap=50,b_show=False)
     print('len(scan_cnt)',len(baidu_map_obj.scan_point_cnts))
     baidu_map_obj.outpool_cnts_set = get_outpool_set(np.array(baidu_map_obj.pool_cnts))
+    if baidu_map_obj.ship_gps is None:
+        return 'no ship gps'
 
     if mode==0:
-        s_index = 0
-        e_index = len(baidu_map_obj.scan_point_cnts)-13
-        print('s e ', baidu_map_obj.scan_point_cnts[s_index], baidu_map_obj.scan_point_cnts[e_index])
-        s_start = tuple(baidu_map_obj.scan_point_cnts[s_index])
-        s_goal = tuple(baidu_map_obj.scan_point_cnts[e_index])
+        if target_lng_lats is None:
+            return 'target_pixs is None'
+        elif len(target_lng_lats)>1:
+            return 'len(target_pixs) is >1 choose mode 1'
+        if baidu_map_obj.ship_pix is None :
+            if baidu_map_obj.ship_gaode_lng_lat is None :
+                baidu_map_obj.ship_gaode_lng_lat = baidu_map_obj.gps_to_gaode_lng_lat(baidu_map_obj.ship_gps)
+            baidu_map_obj.ship_pix = baidu_map_obj.gaode_lng_lat_to_pix(baidu_map_obj.ship_gaode_lng_lat)
+        s_start = tuple(baidu_map_obj.ship_pix)
+        s_goal = tuple(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lats[0]))
         astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.outpool_cnts_set)
         astar_path, visited = astar.searching()
         print('astar_path', astar_path)
         baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(astar_path, dtype=np.int32)], False, (255, 0, 0), 1)
-        return_pix_path = astar_path
-    else:
+        return_pix_path = astar_path[::-1]
+        if b_show:
+            cv2.imshow('scan', baidu_map_obj.show_img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+        _,return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
+        return return_gaode_lng_lat_path
+
+    elif mode == 1:
+        if target_lng_lats is None:
+            return 'target_pixs is None'
+        elif len(target_lng_lats) <= 1:
+            return 'len(target_pixs) is<=1 choose mode 0'
+        if baidu_map_obj.ship_pix is None:
+            if baidu_map_obj.ship_gaode_lng_lat is None:
+                baidu_map_obj.ship_gaode_lng_lat = baidu_map_obj.gps_to_gaode_lng_lat(baidu_map_obj.ship_gps)
+            baidu_map_obj.ship_pix = baidu_map_obj.gaode_lng_lat_to_pix(baidu_map_obj.ship_gaode_lng_lat)
+        target_pixs=[]
+        for target_lng_lat in target_lng_lats:
+            target_pixs.append(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lat))
+        target_pixs.insert(0,baidu_map_obj.ship_pix)
+        distance_matrix = measure_distance(target_pixs,baidu_map_obj.pool_cnts,baidu_map_obj.outpool_cnts_set)
+        tsp_path = solve_tsp(distance_matrix,endpoints=(0,len(target_pixs)-1))
+        path_points=[]
+        for index_i,val in enumerate(tsp_path):
+            if index_i < len(tsp_path) - 1:
+                if '%d_%d'%(val,tsp_path[index_i+1]) in path_matrix.keys():
+                    path_points.extend(path_matrix['%d_%d'%(val,tsp_path[index_i+1])])
+                elif '%d_%d'%(tsp_path[index_i+1],val) in path_matrix.keys():
+                    path_points.extend(path_matrix['%d_%d' % (tsp_path[index_i + 1],val)][::-1])
+                else:
+                    path_points.append(baidu_map_obj.scan_point_cnts[val])
+            elif index_i == len(tsp_path) - 1:
+                if '%d_%d'%(val,tsp_path[index_i-1]) in path_matrix.keys() or '%d_%d'%(val,tsp_path[index_i-1]) in path_matrix.keys():
+                    pass
+                else:
+                    path_points.append(baidu_map_obj.scan_point_cnts[val])
+        baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(path_points, dtype=np.int32)], False, (255, 0, 0), 1)
+        if b_show:
+            cv2.imshow('scan', baidu_map_obj.show_img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+        return_pix_path = path_points
+        _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
+        return return_gaode_lng_lat_path
+
+    elif mode == 2:
         distance_matrix = measure_distance(baidu_map_obj.scan_point_cnts,baidu_map_obj.pool_cnts,baidu_map_obj.outpool_cnts_set)
-        print(distance_matrix.shape)
-        print('distance_matrix',np.array(distance_matrix))
         tsp_path = solve_tsp(distance_matrix,endpoints=(0,0))
         print('tsp_path',tsp_path)
         path_points = []
@@ -494,21 +548,49 @@ def get_path(baidu_map_obj=None,mode=1,b_show=False,map_connect = 1):
                     pass
                 else:
                     path_points.append(baidu_map_obj.scan_point_cnts[val])
-        baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(path_points, dtype=np.int32)], False, (255, 0, 0), 1)
+        if b_show:
+            baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(path_points, dtype=np.int32)],
+                                                   False, (255, 0, 0), 1)
+            cv2.imshow('scan', baidu_map_obj.show_img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
         return_pix_path = path_points
+        _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
+        return return_gaode_lng_lat_path
 
-    return_to_base_path = return_to_base(point3, point2, baidu_map_obj)
-    print('return_to_base_path',return_to_base_path)
-    print('len(return_pix_path)', len(return_pix_path))
-    # return_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
-    # print('return_lng_lat_path', return_lng_lat_path)
+    elif mode == 3:
+        pass
 
-    if b_show:
-        cv2.imshow('scan', baidu_map_obj.show_img )
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-    # return return_lng_lat_path
+    elif mode == 4:
+    # back home
+        if baidu_map_obj.init_ship_gps is None:
+            return 'ship init gps is None'
+        if baidu_map_obj.init_ship_pix is None:
+            if baidu_map_obj.init_ship_gaode_lng_lat is None:
+                baidu_map_obj.init_ship_gaode_lng_lat= baidu_map_obj.gps_to_gaode_lng_lat(baidu_map_obj.init_ship_gps)
+            baidu_map_obj.init_ship_pix = baidu_map_obj.gaode_lng_lat_to_pix(baidu_map_obj.init_ship_gaode_lng_lat)
 
+        baidu_map_obj.ship_gaode_lng_lat = baidu_map_obj.gps_to_gaode_lng_lat(baidu_map_obj.ship_gps)
+        baidu_map_obj.ship_pix = baidu_map_obj.gaode_lng_lat_to_pix(baidu_map_obj.ship_gaode_lng_lat)
+
+        s_start = tuple(baidu_map_obj.ship_pix)
+        s_goal = tuple(baidu_map_obj.init_ship_pix)
+        astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.outpool_cnts_set)
+        astar_path, visited = astar.searching()
+        print('astar_path', astar_path)
+
+        return_pix_path = astar_path[::-1]
+        if b_show:
+            baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(astar_path, dtype=np.int32)],
+                                                   False,
+                                                   (255, 0, 0), 1)
+            cv2.imshow('scan', baidu_map_obj.show_img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+        _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
+        return return_gaode_lng_lat_path
+    else:
+        return 1
 
 if __name__ == '__main__':
     get_path(mode=0,b_show=True)

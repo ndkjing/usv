@@ -14,7 +14,7 @@ def DDD2DMS(number):
     return D + (M / 100) + (S / 10000)
 
 
-# 求连点的经纬度 返回0-360 anti clock is >0
+# 求连点的经纬度 返回0-360
 def angleFromCoordinate(long1, lat1, long2, lat2):
     lat1 = math.radians(DDD2DMS(lat1))
     lat2 = math.radians(DDD2DMS(lat2))
@@ -34,7 +34,7 @@ def angleFromCoordinate(long1, lat1, long2, lat2):
         return return_brg
 
 
-# 一直两点经纬度求两点的距离单位，返回单位厘米
+# 一直两点经纬度求两点的距离单位，返回单位米
 def distanceFromCoordinate(lon1, lat1, lon2, lat2):  # 经度1，纬度1，经度2，纬度2 （十进制度数）
     """
     Calculate the great circle distance between two points
