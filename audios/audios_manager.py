@@ -5,12 +5,14 @@ network：无法连接服务器
 register： 船还没有注册
 battery：电池电量过低
 """
-
+import os,sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
-import os
+
 import sys
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 audios_base_dir = os.path.join(config.root_path, 'audios')
 
 """
@@ -41,15 +43,22 @@ def play_audio(audio_index=0, b_backend=False):
     :param b_backend: 是否后台播放
     :return:
     """
+
     try:
         from playsound import playsound
         playsound(os.path.join(audios_base_dir,audio_dict[audio_index]))
     except Exception as e:
         if b_backend:
-            os.system('mpg321 %s &' % os.path.join(audios_base_dir,audio_dict[audio_index]))
+            if audio_index == 1:
+                os.system('mpg321 %s &' % os.path.join(audios_base_dir,audio_dict[audio_index][0]))
+            else:
+                os.system('mpg321 %s &' % os.path.join(audios_base_dir,audio_dict[audio_index]))
         else:
-            os.system('mpg321 %s' % os.path.join(audios_base_dir,audio_dict[audio_index]))
+            if audio_index == 1:
+                os.system('mpg321 %s' % os.path.join(audios_base_dir,audio_dict[audio_index][0]))
+            else:
+                os.system('mpg321 %s' % os.path.join(audios_base_dir,audio_dict[audio_index]))
 
 
 if __name__ == '__main__':
-    play_audio()
+    play_audio(1)

@@ -45,9 +45,10 @@ http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
 # 手动模式和自动模式
 # mod in ['manual', 'auto']
 mod='auto'
-# 是否播放生硬
+# 是否播放声音
 b_play_audio=True
 
-# init_gps
-# init_gps=
+# 在家调试模式
+home_debug = True
+init_gps = [114.431623, 30.523246]
 

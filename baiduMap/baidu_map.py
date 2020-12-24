@@ -237,7 +237,7 @@ class BaiduMap(object):
             5: [500000, 76],
             4: [1000000, 76],
         }
-        save_img_dir = os.path.join(config.root_path, 'baiduMap/imgs')
+        save_img_dir = os.path.join(config.root_path, 'baiduMap','imgs')
         if not os.path.exists(save_img_dir):
             os.mkdir(save_img_dir)
         if self.map_type == MapType.baidu:
@@ -374,13 +374,11 @@ class BaiduMap(object):
             self.lng_lat[0], self.lng_lat[1], gaode_lng_lat[0], gaode_lng_lat[1])
         distance = lng_lat_calculate.distanceFromCoordinate(
             self.lng_lat[0], self.lng_lat[1], gaode_lng_lat[0], gaode_lng_lat[1])
-        delta_x_distance = math.sin(theta) * distance
-        delta_y_distance = math.cos(theta) * distance
+        delta_x_distance = math.sin(math.radians(theta)) * distance
+        delta_y_distance = math.cos(math.radians(theta)) * distance
 
-        delta_x_pix = -delta_x_distance / self.pix_to_meter
-        delta_y_pix = delta_y_distance / self.pix_to_meter
-        print(self.scale / 2)
-        print(self.height * self.scale / 2)
+        delta_x_pix = -delta_x_distance / (self.pix_to_meter)
+        delta_y_pix = -delta_y_distance / (self.pix_to_meter)
         pix = [int(self.height * self.scale / 2 + delta_x_pix),
                int(self.width * self.scale / 2 + delta_y_pix)]
         return pix

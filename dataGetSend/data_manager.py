@@ -71,7 +71,11 @@ class DataManager:
             else:
                 self.data_define_obj.status['current_lng_lat'] = [float(com_data_list[3]), float(com_data_list[4])]
             # 左右侧的超声波检测距离
-            self.l_distance, self.r_distance = com_data_list[5], com_data_list[6]
+            self.l_distance, self.r_distance = float(com_data_list[5])/10, float(com_data_list[6])/10
+            if self.l_distance<26:
+                self.l_distance=None
+            if self.r_distance < 26:
+                self.r_distance = None
             self.logger.info({'ship_current_direction': self.ship_current_direction,
                               'TD': self.data_define_obj.water['TD'],
                               'water_temperature': self.data_define_obj.water['wt'],
@@ -98,19 +102,10 @@ class DataManager:
                         manul_or_auto = 1
                 # 手动模式使用用户给定角度
                 if manul_or_auto == 1:
-                    if self.l_distance is not  None and  self.l_distance is not None:
-
-                        obstacle_direction = basic_obstacle_avoid.move(self.l_distance, self.r_distance)
-                        if obstacle_direction != int(self.server_data_obj.mqtt_send_get_obj.control_move_direction):
-                            self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
-                        else:
-                            self.com_data_obj.send_data(
-                                'A%sZ' % (self.server_data_obj.mqtt_send_get_obj.control_move_direction))
-                        self.logger.debug('control_move_direction: '+str(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
-                    else:
-                        self.com_data_obj.send_data(
-                            'A%sZ' % (self.server_data_obj.mqtt_send_get_obj.control_move_direction))
-                    self.logger.debug('control_move_direction: self.l_distance is None and  self.l_distance is None'+str(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
+                    self.com_data_obj.send_data(
+                        'A%sZ' % (self.server_data_obj.mqtt_send_get_obj.control_move_direction))
+                    if not int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == 360:
+                        self.logger.debug('control_move_direction: self.l_distance is None and  self.l_distance is None'+str(self.server_data_obj.mqtt_send_get_obj.control_move_direction))
 
                 # 自动模式计算角度
                 elif manul_or_auto == 0:
@@ -147,6 +142,19 @@ class DataManager:
                             elif abs(delta_degree) >= 225 and abs(delta_degree) < 315:
                                 auto_move_direction = 90
                         obstacle_direction = basic_obstacle_avoid.move(self.l_distance, self.r_distance)
+                        if self.l_distance is not None and self.l_distance is not None:
+                            # 超声波避障
+                            obstacle_direction = basic_obstacle_avoid.move(self.l_distance, self.r_distance)
+                            if obstacle_direction != int(self.server_data_obj.mqtt_send_get_obj.control_move_direction):
+                                self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
+                            else:
+                                self.com_data_obj.send_data(
+                                    'A%sZ' % (self.server_data_obj.mqtt_send_get_obj.control_move_direction))
+                            if not int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == 360:
+                                self.logger.debug('control_move_direction: ' + str(
+                                    self.server_data_obj.mqtt_send_get_obj.control_move_direction))
+                        else:
+                            pass
                         if obstacle_direction != int(auto_move_direction):
                             self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
                         else:

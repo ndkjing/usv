@@ -240,9 +240,47 @@ import math
 # a = round(15.65,0)
 # print(a,type(a))
 
-a = np.array([[1,2],[3,4]])
-print(type(a))
-print(isinstance(a,np.ndarray))
-print(type(a.tolist()))
-print(type(a))
+# a = np.array([[1,2],[3,4]])
+# print(type(a))
+# print(isinstance(a,np.ndarray))
+# print(type(a.tolist()))
+# print(type(a))
+
+import math
+#points内的点处在同一条直线上吗？
+#points内至少有3个点。
+def on_one_line(points):
+    delta_x = points[1][0] - points[0][0]
+    delta_y = points[1][1] - points[0][1]
+    distance_square = delta_x **2 + delta_y **2
+    sin_times_cos = delta_x * delta_y/ distance_square
+    for j in range(2, len(points)):
+        dx = points[j][0] - points[0][0]
+        dy = points[j][1] - points[0][1]
+        if math.fabs(dx * dy / (dx * dx + dy * dy) - sin_times_cos) > 10 ** -9:
+            return False
+    return True
+
+points=[[1,2],[2,4],[4,8]]
+if on_one_line(points):
+    print("True")
+else:
+    print("False")
+
+print(math.sin(math.radians(30)),math.sin(math.radians(150)))
+print(math.cos(math.radians(60)),math.cos(math.radians(-60)))
+
+
+此时经度弧度模式=此时经度*PI/180;
+        此时纬度弧度模式=此时纬度*PI/180;
+        目标经度弧度模式=目标经度*PI/180;
+        目标纬度弧度模式=目标纬度*PI/180;
+        经度差=目标经度弧度模式-此时经度弧度模式;
+        纬度差=目标纬度弧度模式-此时纬度弧度模式;
+        东西距离=1000*2*sin(经度差/2)*cos(此时纬度弧度模式)*地球半径;//经纬度差与东西南北距离差同正负
+        南北距离=1000*2*sin(纬度差/2)*地球半径;
+        总距离=sqrt(pow(东西距离,2)+pow(南北距离,2));
+
+
+
 

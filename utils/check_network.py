@@ -11,10 +11,10 @@ def check_network():
             stdin=PIPE,
             shell=True)
     if r.returncode:
-        print('relogin 第{}次'.format(cnt))
+        # print('relogin 第{}次'.format(cnt))
         return False
     else:
-        print('正常联网')
+        # print('正常联网')
         return True
 
 if __name__ == '__main__':

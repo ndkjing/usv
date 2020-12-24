@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=de5cc78dd2de40444e77b4941356abd2"></script>
+  <style>
+    html,
+    body,
+    #container {
+      display: flex;
+      width: 1200px;
+      height: 800px;
+    }
+
+    input {
+      width: 100px;
+      height: 50px;
+    }
+
+    .text {
+      width: 100px;
+
+    }
+
+    button {
+      width: 100px;
+      height: 50px;
+    }
+
+    textarea {
+      width: 200px;
+      height: 200px;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <div id="container">
+
+  </div>
+  <input />
+
+  <textarea></textarea>
+  <button>绘制</button>
+  <div class="text">
+    116.368904, 39.913423;
+    116.382122, 39.901176;
+    116.387271,39.912501;
+    116.398258,39.904600
+  </div>
+
+
+
+  <script>
+    const input = document.getElementsByTagName("input")[0]
+    const button = document.getElementsByTagName("button")[0]
+    const textarea = document.getElementsByTagName("textarea")[0]
+    var map = new AMap.Map('container', {
+      zoom: 14,
+      center: [116.36890, 39.913423]
+    });
+
+
+    map.on('click', function (ev) {
+      // 触发事件的对象
+      var target = ev.target;
+
+      // 触发事件的地理坐标，AMap.LngLat 类型
+      var lnglat = ev.lnglat;
+
+      // 触发事件的像素坐标，AMap.Pixel 类型
+      var pixel = ev.pixel;
+      input.value = ev.target.getZoom()
+      // 触发事件类型 
+      var type = ev.type;
+      console.log("地理坐标", ev.lnglat)
+      console.log("像素坐标", ev.pixel)
+      console.log("zoom", ev.target.getZoom())
+      console.log("地图分辨率，单位：米/像素", ev.target.getResolution())
+      console.log("屏幕距离一米代表实际距离多少米", ev.target.getScale())//表示当前屏幕距离一米代表实际距离多少米
+    });
+    map.on('mousewheel', function (ev) {
+      // 触发事件的对象
+      var target = ev.target;
+
+      // 触发事件的地理坐标，AMap.LngLat 类型
+      var lnglat = ev.lnglat;
+
+      // 触发事件的像素坐标，AMap.Pixel 类型
+      var pixel = ev.pixel;
+
+      // 触发事件类型 
+      var type = ev.type;
+      input.value = ev.target.getZoom()
+      console.log("地理坐标", ev.lnglat)
+      console.log("像素坐标", ev.pixel)
+      console.log("zoom", ev.target.getZoom())
+      console.log("地图分辨率，单位：米/像素", ev.target.getResolution())
+      console.log("屏幕距离一米代表实际距离多少米", ev.target.getScale())//表示当前屏幕距离一米代表实际距离多少米
+    });
+    input.addEventListener("change", function (ev) {
+      map.setZoom(input.value)
+    })
+
+
+    // 覆盖物1
+    let arr = []
+    button.addEventListener("click", () => {
+      console.log(textarea.value.split(";"))
+      textarea.value.split(";").forEach(ele => {
+        console.log(ele.split(",")[0], (ele.split(",")[1]))
+        ele = new AMap.LngLat(ele.split(",")[0], (ele.split(",")[1]))
+        arr.push(ele)
+
+      })
+      var polyline1 = new AMap.Polyline({
+        path: arr
+      });
+
+
+
+
+      // 创建覆盖物群组，传入覆盖物组成的数组
+      var overlayGroup = new AMap.OverlayGroup([polyline1]);
+
+      // 对此覆盖物群组设置同一属性
+      overlayGroup.setOptions({
+        strokeColor: 'red',
+        strokeWeight: 5
+      });
+      map.add(overlayGroup);
+      map.setFitView();
+    })
+
+
+    // 同时引入工具条插件，比例尺插件和鹰眼插件
+    AMap.plugin([
+      'AMap.ToolBar',
+      'AMap.Scale',
+      'AMap.HawkEye',
+      'AMap.MapType',
+      'AMap.Geolocation',
+    ], function () {
+      // 在图面添加工具条控件，工具条控件集成了缩放、平移、定位等功能按钮在内的组合控件
+      map.addControl(new AMap.ToolBar());
+
+      // 在图面添加比例尺控件，展示地图在当前层级和纬度下的比例尺
+      map.addControl(new AMap.Scale());
+
+      // 在图面添加鹰眼控件，在地图右下角显示地图的缩略图
+      //map.addControl(new AMap.HawkEye({ isOpen: true }));
+
+      // 在图面添加类别切换控件，实现默认图层与卫星图、实施交通图层之间切换的控制
+      map.addControl(new AMap.MapType());
+
+      // 在图面添加定位控件，用来获取和展示用户主机所在的经纬度位置
+      //map.addControl(new AMap.Geolocation());
+    });
+  </script>
+</body>
+
+</html>
