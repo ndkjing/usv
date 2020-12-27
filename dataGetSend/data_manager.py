@@ -289,8 +289,12 @@ class DataManager:
                 zoom = int(round(zoom,0))
                 self.logger.info({'init map user_lng_lat':user_lng_lat,'zoom':zoom})
                 self.baidu_map_obj = baidu_map.BaiduMap(lng_lat=user_lng_lat, zoom=zoom, logger=self.map_log)
+
+                # 获取初始地点GPS
                 if not self.start:
-                    self.baidu_map_obj.init_ship_gps = user_lng_lat
+                    if self.data_define_obj.status['current_lng_lat'] is not None:
+                        self.baidu_map_obj.init_ship_gps = self.data_define_obj.status['current_lng_lat']
+                        self.start=True
             else:
                 user_lng_lat = [116.99868, 40.511224]
                 zoom = 12
@@ -345,7 +349,6 @@ class DataManager:
                 else:
                     with open(config.local_map_data_path, 'r') as f:
                         local_map_data = json.load(f)
-                        # TODO 判断是否在曾经出现的湖泊中
                         # pool_id = baidu_map.is_in_contours(pool_gps_center, local_map_data)
                         pool_id = baidu_map.is_in_contours((self.baidu_map_obj.lng_lat[0], self.baidu_map_obj.lng_lat[1]), local_map_data)
 
@@ -375,7 +378,8 @@ class DataManager:
             else:
                 self.logger.info('len(self.server_data_obj.mqtt_send_get_obj.mode) <= 0')
                 continue
-
+            ## 模式判断
+            # 单点航行模式
             if mode == 0:
                 target_lng_lat_index = None
                 for index, val in enumerate(self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1]):
@@ -388,17 +392,19 @@ class DataManager:
                 target_lng_lat = [self.server_data_obj.mqtt_send_get_obj.target_lng_lat[-1][
                     target_lng_lat_index]]
                 self.path_planning(mode=mode, target_lng_lats=target_lng_lat)
-
+            # 多点巡航模式
             elif mode == 1:
                 target_lng_lat = self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[-1]
                 self.path_planning(mode=mode, target_lng_lats=target_lng_lat)
 
+            #自动搜索模式
             elif mode == 2:
                 self.path_planning(mode=mode)
 
             elif mode == 3:
                 pass
 
+            # 返航模式
             elif mode == 4:
                 self.path_planning(mode=mode)
 

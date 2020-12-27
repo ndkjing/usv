@@ -24,7 +24,7 @@ mqtt_control_interval = 1
 
 # 检查船状态间隔 单位秒
 # 检查经纬度
-check_status_interval = 2
+check_status_interval = 1
 # 检查网络连接状态间隔
 check_network_interval=10
 

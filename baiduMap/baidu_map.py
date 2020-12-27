@@ -68,7 +68,12 @@ def color_block_finder(img, lowerb, upperb,
         else:
             center = 512 * scale
             in_cnt = cv2.pointPolygonTest(cnt, (center, center), True)
+        # -5 保留一定误差范围
         if in_cnt > -5:
+            # 通过面积排除一些特别小的干扰
+            (x, y, w, h) = cv2.boundingRect(cnt)
+            if (w*h)<1000:
+                continue
             # 计算轮廓的中心点
             M = cv2.moments(contours[index])  # 计算第一条轮廓的矩
             # print(M)
