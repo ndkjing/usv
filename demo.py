@@ -262,6 +262,9 @@ def on_one_line(points):
     return True
 
 points=[[1,2],[2,4],[4,8]]
+print(points[:2])
+print(points.pop(0))
+print(points)
 if on_one_line(points):
     print("True")
 else:
@@ -280,7 +283,6 @@ print(math.cos(math.radians(60)),math.cos(math.radians(-60)))
 #         东西距离=1000*2*sin(经度差/2)*cos(此时纬度弧度模式)*地球半径;//经纬度差与东西南北距离差同正负
 #         南北距离=1000*2*sin(纬度差/2)*地球半径;
 #         总距离=sqrt(pow(东西距离,2)+pow(南北距离,2));
-
 
 
 

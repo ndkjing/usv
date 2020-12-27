@@ -419,6 +419,40 @@ def return_to_base(point1,point2,baidu_map_obj,b_show=False):
     print('astar_path', astar_path)
     return astar_path
 
+#判断points内的点处在同一条直线上吗？
+#points内至少有3个点。
+def on_one_line(points):
+    delta_x = points[1][0] - points[0][0]
+    delta_y = points[1][1] - points[0][1]
+    distance_square = delta_x **2 + delta_y **2
+    sin_times_cos = delta_x * delta_y/ distance_square
+    for j in range(2, len(points)):
+        dx = points[j][0] - points[0][0]
+        dy = points[j][1] - points[0][1]
+        if math.fabs(dx * dy / (dx * dx + dy * dy) - sin_times_cos) > 10 ** -9:
+            return False
+    return True
+
+# 将直线上多个点合并为按直线最少的点
+def multi_points_to_simple_points(points):
+    if len(points)<=2:
+        return points
+    else:
+        return_points=[]
+        test_points = []
+        return_points.append(points[0])
+        test_points.append(points[0])
+        test_points.append(points[1])
+        test_points.append(points[2])
+        for index_i in range(3,len(points)):
+            test_points.pop(0)
+            test_points.append(points[index_i])
+            if on_one_line(test_points):
+                pass
+            else:
+                return_points.append(test_points[2])
+        return return_points
+
 def get_path(baidu_map_obj=None,
              mode=0,
              target_lng_lats=None,
@@ -477,6 +511,7 @@ def get_path(baidu_map_obj=None,
                 print('astar_path', astar_path)
                 baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(astar_path, dtype=np.int32)], False, (255, 0, 0), 1)
                 return_pix_path = astar_path[::-1]
+                return_pix_path = multi_points_to_simple_points(return_pix_path)
                 _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
                 if b_show:
                     cv2.circle(baidu_map_obj.show_img, s_start, 5, [255, 0,255], -1)
@@ -543,6 +578,7 @@ def get_path(baidu_map_obj=None,
             cv2.waitKey(0)
             cv2.destroyAllWindows()
         return_pix_path = path_points
+        return_pix_path = multi_points_to_simple_points(return_pix_path)
         _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
         return return_gaode_lng_lat_path
 
@@ -576,6 +612,7 @@ def get_path(baidu_map_obj=None,
             cv2.waitKey(0)
             cv2.destroyAllWindows()
         return_pix_path = path_points
+        return_pix_path = multi_points_to_simple_points(return_pix_path)
         _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
         return return_gaode_lng_lat_path
 
@@ -606,6 +643,7 @@ def get_path(baidu_map_obj=None,
                 baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(astar_path, dtype=np.int32)],
                                                        False, (255, 0, 0), 1)
                 return_pix_path = astar_path[::-1]
+                return_pix_path = multi_points_to_simple_points(return_pix_path)
                 _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
                 if b_show:
                     cv2.circle(baidu_map_obj.show_img, s_start, 5, [255, 0, 255], -1)
