@@ -61,26 +61,29 @@ def main():
         target=data_manager_obj.send_com_data)
     check_status_thread = threading.Thread(
         target=data_manager_obj.check_status)
+    send_com_heart_thread = threading.Thread(
+        target=data_manager_obj.send_com_heart_data)
 
     get_com_data_thread.setDaemon(True)
     send_mqtt_data_thread.setDaemon(True)
     send_com_data_thread.setDaemon(True)
     check_status_thread.setDaemon(True)
+    send_com_heart_thread.setDaemon(True)
 
     get_com_data_thread.start()
     send_mqtt_data_thread.start()
     send_com_data_thread.start()
     check_status_thread.start()
+    send_com_heart_thread.start()
 
     get_com_data_thread.join()
     send_mqtt_data_thread.join()
     send_com_data_thread.join()
     check_status_thread.join()
+    send_com_heart_thread.join()
 
-    #
     while True:
         pass
-
 
 if __name__ == '__main__':
     main()

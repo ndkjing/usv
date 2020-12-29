@@ -54,7 +54,16 @@ def distanceFromCoordinate(lon1, lat1, lon2, lat2):  # 经度1，纬度1，经�
 
 # 已知一点的经纬度和移动方向与距离，求终点的经纬度
 def one_point_diatance_to_end(lng, lat, brng, d):
+    """
+
+    :param lng:
+    :param lat:
+    :param brng: 右手坐标系角度
+    :param d:距离
+    :return:
+    """
     R = 6378.1  # Radius of the Earth
+    brng = 360-brng
     brng = math.radians(brng)  # Bearing is 90 degrees converted to radians.
     d = d / 1000 # Distance in km
 
@@ -72,13 +81,35 @@ def one_point_diatance_to_end(lng, lat, brng, d):
 
     lat2 = math.degrees(lat2)
     lon2 = math.degrees(lon2)
-    return [lon2, lat2]
+    return [round(lon2,6), round(lat2,6)]
+
+def gps_gaode_to_gps(gps,gps_gaode,gaode):
+        """
+        一个GPS和一个高德经纬度，计算高德经纬度的实际经纬度
+        :param gps:传入GPS
+        :param gps_gaode:传入GPS对应的高德经纬度
+        :param gaode: 目标点高德经纬度
+        :return: 目标点真实经纬度
+        """
+        distance = distanceFromCoordinate(gps_gaode[0],
+                                          gps_gaode[1],
+                                          gaode[1],
+                                          gaode[1])
+        theta = angleFromCoordinate(gps_gaode[0],
+                                          gps_gaode[1],
+                                          gaode[1],
+                                          gaode[1])
+        return one_point_diatance_to_end(gps[0],
+                                  gps[1],
+                                  theta,
+                                  distance)
 
 
 if __name__ == '__main__':
-    temp = angleFromCoordinate(114.316966, 30.576768, 114.397346, 30.58709)
+    theta = angleFromCoordinate(114.316966, 30.576768, 114.397346, 30.58709)
+    print('theta',theta)
+    distance = distanceFromCoordinate(114.316966, 30.576768, 114.397346, 30.58709)
+    print('distance',distance)
+    temp = one_point_diatance_to_end(114.316966, 30.576768, 90, 1)
     print(temp)
-    temp = distanceFromCoordinate(114.316966, 30.576768, 114.397346, 30.58709)
-    print(temp)
-    temp = one_point_diatance_to_end(114.316966, 30.576768, 78.7, 777974)
-    print(temp)
+

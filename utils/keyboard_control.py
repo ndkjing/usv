@@ -45,24 +45,31 @@ if __name__ == '__main__':
     serial_obj = com_data.SerialData(config.port, config.baud, timeout=1/config.com2pi_interval)
     # key_obj = Control()
     i = 0
-    send_data=str(360)
-    while True:
-        i+=1
-        # key_input = key_obj.getdir()
-        # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效
-        key_input = input('direction:')
-        if key_input=='w':
-            send_data = str(0)
-        elif key_input=='a':
-            send_data = str(90)
-        elif key_input=='s':
-            send_data = str(180)
-        elif key_input=='d':
-            send_data = str(270)
-        elif key_input=='q':
-            send_data = str(360)
-        logging.info('A%sZ' % (send_data))
-        serial_obj.send_data('A%sZ' % (send_data))
+    com_data_send = 'A5A5%d,0,0,0,0,0,0,0,0,0' % 5
+    try:
+        while True:
+            i+=1
+            # key_input = key_obj.getdir()
+            # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效
+            key_input = input('direction:')
+
+            if key_input=='w':
+                temp_com_data = 1
+            elif key_input=='a':
+                temp_com_data = 3
+            elif key_input=='s':
+                temp_com_data = 2
+            elif key_input=='d':
+                temp_com_data = 4
+            elif key_input=='q':
+                temp_com_data = 5
+            else:
+                temp_com_data = 5
+            com_data_send = 'A5A5%d,0,0,0,0,0,0,0,0,0' % temp_com_data
+            logging.info({'com_data_send':com_data_send})
+            serial_obj.send_data(com_data_send)
+    except:
+        serial_obj.send_data(com_data_send)
         # time.sleep(0.1)
         # if key_input:
         #     logging.info('A%sZ' % (key_input))

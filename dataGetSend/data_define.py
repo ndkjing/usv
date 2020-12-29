@@ -244,7 +244,8 @@ class DataDefine:
         # 订阅话题
         self.topics = (('control_data_%s' % (config.ship_code), 0),
                        ('path_confirm_%s' % (config.ship_code), 0),
-                       ('user_lng_lat_%s' % (config.ship_code), 0))
+                       ('user_lng_lat_%s' % (config.ship_code), 0),
+                       ('path_planning_confirm_%s' % (config.ship_code), 0))
         self.pool_code = ''
         self.water = self.water_data()
         self.weather = self.weather_data()

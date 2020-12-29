@@ -152,7 +152,6 @@ def get_degree(lonA, latA, lonB, latB):
     else:
         return return_brg
 
-
 class MapType(enum.Enum):
     baidu = 1
     gaode = 2

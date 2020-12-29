@@ -79,27 +79,31 @@ class MqttSendGet:
     def __init__(
             self,
             logger,
-            mqtt_host='116.62.44.118',
-            mqtt_port=1883,
-            client_id='jing'):
+            mqtt_host=config.mqtt_host,
+            mqtt_port=1884,
+            client_id=config.ship_code):
         self.logger = logger
         self.mqtt_host = mqtt_host
         self.mqtt_port = mqtt_port
+        self.mqtt_user = 'dk'
+        self.mqtt_passwd = 'public'
         self.mqtt_client = mqtt.Client(client_id=client_id)
+        self.mqtt_client.username_pw_set(self.mqtt_user, password=self.mqtt_passwd)
         self.mqtt_client.on_connect = self.on_connect_callback
         self.mqtt_client.on_publish = self.on_publish_callback
         # self.mqtt_client.on_subscribe = self.on_message_come
         self.mqtt_client.on_message = self.on_message_callback
         self.mqtt_connect()
 
-        # 接收到的经纬度目标地点 和 点击是地图层次
+        # 接收到的经纬度目标地点 和 点击是地图层次， 三维矩阵
         self.target_lng_lat = []
         self.zoom = []
         self.mode = []
         # 记录经纬度是不是已经到达或者放弃到达（在去的过程中手动操作） 0准备过去(自动) -1放弃（手动）  1 已经到达的点  2:该点是陆地
         self.target_lng_lat_status = []
-        # 当前航线和下一个航点索引
-        self.current_lng_lat_index = []
+        # 当前航线  -1是还没选择
+        self.current_lng_lat_index = -1
+        self.confirm_index = -1
         # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　360为停止
         self.control_move_direction = str(360)
         # 测量控制位　0为不采样　1为采样
@@ -116,7 +120,7 @@ class MqttSendGet:
 
     # 建立连接时候回调
     def on_connect_callback(self, client, userdata, flags, rc):
-        self.logger.info('Connected with result code' + str(rc))
+        self.logger.info('Connected with result code:  ' + str(rc))
 
     # 发布消息回调
     def on_publish_callback(self, client, userdata, mid):
@@ -135,8 +139,8 @@ class MqttSendGet:
             control_data = json.loads(msg.payload)
             assert isinstance(control_data, dict), 'please send dict data'
             if control_data.get('move_direction') is not None:
-                self.move_direction = str(control_data['move_direction'])
-                self.logger.debug({'move_direction': self.move_direction})
+                self.control_move_direction = str(control_data['move_direction'])
+                self.logger.debug({'move_direction': self.control_move_direction})
 
                 # 手动操作时取消所有目标地点
                 if len(self.target_lng_lat_status) > 0:
@@ -144,7 +148,7 @@ class MqttSendGet:
                         self.target_lng_lat_status[i] = -1
                 # 直接等待发送间隔后将船设置为停止
                 time.sleep(config.mqtt_control_interval)
-                self.move_direction = str(360)
+                self.control_move_direction = str(360)
 
             if control_data.get('b_sampling') is not None:
                 if int(control_data['b_sampling']) == 1:
@@ -161,13 +165,14 @@ class MqttSendGet:
                     self.logger.error('user_lng_lat have no lng lat')
                     return
                 # 更新上一个点状态
-                if len(user_lng_lat_data)>0 and len(self.target_lng_lat_status) > 0:
-                    for i in range(len(self.target_lng_lat_status[-1])):
-                        if self.target_lng_lat_status[-1][i]==0:
-                            self.target_lng_lat_status[-1][i]=-1
+                # if len(user_lng_lat_data)>0 and len(self.target_lng_lat_status) > 0:
+                #     for i in range(len(self.target_lng_lat_status[-1])):
+                #         if self.target_lng_lat_status[-1][i]==0:
+                #             self.target_lng_lat_status[-1][i]=-1
+
                 self.target_lng_lat.append(user_lng_lat_data.get('lng_lat'))
                 # 添加新的点
-                self.target_lng_lat_status.append([0]*len(user_lng_lat_data.get('lng_lat')))
+                self.target_lng_lat_status.append(0)
                 self.zoom.append(user_lng_lat_data.get('zoom'))
                 if user_lng_lat_data.get('mode'):
                     self.mode.append(int(user_lng_lat_data.get('mode')))
@@ -191,6 +196,15 @@ class MqttSendGet:
                     user_lng_lat_data.update({'confirm': True})
                 else:
                     user_lng_lat_data.update({'confirm': False})
+
+        elif topic == 'path_planning_confirm_%s' % (config.ship_code):
+            try:
+                path_planning_confirm_data = json.loads(msg.payload)
+                if not path_planning_confirm_data.get('path_id'):
+                    self.logger.error('path_planning_confirm_data have no lng lat')
+                self.confirm_index = path_planning_confirm_data.get('path_id')
+            except Exception as e :
+                self.logger.error({'path_planning_confirm_data error ':e})
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):
