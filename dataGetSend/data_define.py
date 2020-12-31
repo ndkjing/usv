@@ -88,7 +88,13 @@ def get_current_lng_lat(init_lng_lat):
                 1000,
                 6)]
     return init_lng_lat
+#获取当前时间
+def get_runtime(totle_time):
+    return totle_time - round((time.time() - init_time)/60, 1)
 
+# 获取当前行驶距离
+def get_run_distance(totle_distance):
+    return totle_distance - round((time.time() - init_time) , 1)
 
 # 船号
 # if ship_code == None:
@@ -180,11 +186,11 @@ init_fake_detect_data = {
 wind_direction = ['315', '0', '45', '90', '135', '180', '225', '270']
 
 
-# 返回状态数据
+
 def fake_status_data(status_data):
     """
     返回检测数据
-    :return: 检测数据字典
+    :return: 返回状态数据字典
     """
     return_dict = copy.deepcopy(status_data)
     return_dict.update({'dump_energy': get_dump_energy()})
@@ -196,6 +202,10 @@ def fake_status_data(status_data):
     return_dict.update({'data_flow': get_data_flow()})
     return_dict.update({'sampling_count': get_sampling_count()})
     return_dict.update({'capicity': get_capicity()})
+    return_dict.update({'totle_time': 36})
+    return_dict.update({'runtime': get_runtime(36)})
+    return_dict.update({'totle_distance': 10086})
+    return_dict.update({'run_distance': get_run_distance(10086)})
     return return_dict
 
 
@@ -235,17 +245,18 @@ def fake_detect_data(detect_data):
         {"EC": random.randint(480, 600) / 10.0})
     return return_dict
 
-
 class DataDefine:
     def __init__(self):
         """
         数据定义对象
         """
         # 订阅话题
-        self.topics = (('control_data_%s' % (config.ship_code), 0),
-                       ('path_confirm_%s' % (config.ship_code), 0),
-                       ('user_lng_lat_%s' % (config.ship_code), 0),
-                       ('path_planning_confirm_%s' % (config.ship_code), 0))
+        self.topics = (
+                        ('pool_click_%s' % (config.ship_code), 2),
+                        ('control_data_%s' % (config.ship_code), 2),
+                        ('path_confirm_%s' % (config.ship_code), 2),
+                        ('user_lng_lat_%s' % (config.ship_code), 2),
+                        ('path_planning_confirm_%s' % (config.ship_code), 2))
         self.pool_code = ''
         self.water = self.water_data()
         self.weather = self.weather_data()
@@ -324,7 +335,7 @@ class DataDefine:
         """
         解释　　　　　字典键名称　　数据类型　　
         剩余电量      dump_energy   浮点数（0.0--1.0 百分比率）
-        当前经纬度   current_lng_lat  列表［浮点数，浮点数］（［经度，纬度］）
+        当前真实经纬度   current_lng_lat  列表［浮点数，浮点数］（［经度，纬度］）
         液位        liquid_level    浮点数（采样深度液位）
         漏水　　　　　b_leakage      布尔值（船舱内部是否漏水）
         船头方向　　　direction      浮点数（０.0－３６０　单位度）
@@ -355,7 +366,11 @@ class DataDefine:
                        "pool_code": None,
                        "data_flow": None,
                        "sampling_count": None,
-                       "capicity": None
+                       "capicity": None,
+                       "totle_time":None,
+                       "runtime":None,
+                       "totle_distance":None,
+                       "run_distance":None
                        }
         return return_dict
 

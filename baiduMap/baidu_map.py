@@ -33,7 +33,7 @@ def color_block_finder(img, lowerb, upperb,
 
     # 寻找轮廓（只寻找最外侧的色块）
     contours, hier = cv2.findContours(
-        img_bin, cv2.RETR_EXTERNAL, method=method_0)
+        img_bin, cv2.RETR_EXTERNAL, method=method_1)
     # 声明画布 拷贝自img
     show_img = np.copy(img)
     # 外接矩形区域集合
@@ -155,7 +155,6 @@ def get_degree(lonA, latA, lonB, latB):
 class MapType(enum.Enum):
     baidu = 1
     gaode = 2
-
 
 class BaiduMap(object):
     def __init__(self, lng_lat,
@@ -378,6 +377,7 @@ class BaiduMap(object):
             self.lng_lat[0], self.lng_lat[1], gaode_lng_lat[0], gaode_lng_lat[1])
         distance = lng_lat_calculate.distanceFromCoordinate(
             self.lng_lat[0], self.lng_lat[1], gaode_lng_lat[0], gaode_lng_lat[1])
+        # theta = 360 - theta
         delta_x_distance = math.sin(math.radians(theta)) * distance
         delta_y_distance = math.cos(math.radians(theta)) * distance
 
@@ -440,7 +440,6 @@ class BaiduMap(object):
                 gpx_x = -(center_lon - delta_lon)
                 gpx_y = -(center_lat - delta_lat)
 
-                # TODO 最终需要确认经纬度保留小数点后几位
                 point_gps = [self.lng_lat[0] + gpx_x, self.lng_lat[1] + gpx_y]
                 return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
 
@@ -460,7 +459,6 @@ class BaiduMap(object):
                 # 纬度偏差
                 delta_lat = -(delta_meter_y / earth_radius) / pis_per_degree
                 # print(delta_lng,delta_lat)
-                # TODO 最终需要确认经纬度保留小数点后几位
                 point_gps = [
                     self.lng_lat[0] + delta_lng,
                     self.lng_lat[1] + delta_lat]
@@ -472,6 +470,7 @@ class BaiduMap(object):
                         math.atan2(
                             delta_meter_x, -delta_meter_y)), 1)
                 theta = theta if theta > 0 else 360 + theta
+                theta = 360-theta
                 point_gps = lng_lat_calculate.one_point_diatance_to_end(
                     self.lng_lat[0], self.lng_lat[1], theta, distance)
                 return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
@@ -481,11 +480,17 @@ class BaiduMap(object):
             json.dump({'gps':draw_gps}, f)
         return return_gps, return_gps_list
 
-    def scan_pool(self, contour, pix_gap=20, safe_distance=20, b_show=False):
+    def scan_pool(self,
+                  contour,
+                  pix_gap=20,
+                  col_pix_gap=None,
+                  safe_distance=20,
+                  b_show=False):
         """
         传入湖泊像素轮廓返回活泼扫描点
         :param contour 轮廓点
-        :param pix_gap 指定扫描间隔，单位像素
+        :param pix_gap 指定扫描间隔，单位像素 默认行
+        :param col_pix_gap 列像素间距 默认行列取同样的间距 传该值时列间距与行间距单独计算
         :param safe_distance
         """
         # 求坐标点最大外围矩阵

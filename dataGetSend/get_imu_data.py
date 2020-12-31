@@ -1,6 +1,10 @@
 # coding:UTF-8
+import queue
 import serial
 import time
+import threading
+
+
 ACCData = [0.0] * 8
 GYROData = [0.0] * 8
 AngleData = [0.0] * 8
@@ -13,9 +17,10 @@ w = [0.0] * 3
 Angle = [0.0] * 3
 count=0
 start_time = time.time()
+interval=0.01
 
 
-def DueData(inputdata):  # 新增的核心程序，对读取的数据进行划分，各自读到对应的数组里
+def DueData(inputdata,q):  # 新增的核心程序，对读取的数据进行划分，各自读到对应的数组里
     global FrameState  # 在局部修改全局变量，要进行global的定义
     global Bytenum
     global CheckSum
@@ -77,12 +82,15 @@ def DueData(inputdata):  # 新增的核心程序，对读取的数据进行划�
                 if data == (CheckSum & 0xff):
                     Angle = get_angle(AngleData)
                     d = a + w + Angle
-
-                    print("a(g):%10.3f %10.3f %10.3f w(deg/s):%10.3f %10.3f %10.3f Angle(deg):%10.3f %10.3f %10.3f" % d)
+                    # 元组类型
+                    # print("a(g):%10.3f %10.3f %10.3f w(deg/s):%10.3f %10.3f %10.3f Angle(deg):%10.3f %10.3f %10.3f" % d)
+                    q.put(d)
                     count+=1
-                    if count%100==0:
+                    if count%1000==0:
                         print('count 1 cost time',(time.time()-start_time)/count)
-                    return d
+                        if count>100000000:
+                            count=0
+                    # return d
                 CheckSum = 0
                 Bytenum = 0
                 FrameState = 0
@@ -153,9 +161,9 @@ def get_angle(datahex):
 
     return angle_x, angle_y, angle_z
 
-
 class GetImuData:
     def __init__(self, port, baud, timeout=0.5):
+        self.q = queue.Queue()
         try:
             self.serial_obj = serial.Serial(port, baud, timeout=timeout)
         except Exception as e:
@@ -165,19 +173,26 @@ class GetImuData:
     def get_data(self):
         while True:
             datahex = self.serial_obj.read(33)
-            d = DueData(datahex)
+            DueData(datahex,self.q)
 
+    def imu_integration(q):
+        """
+        imu积分计算
+        :param d: 当前检测到加速度与角速度
+        :return:
+        """
 
-def imu_integration(d):
-    """
-    imu积分计算
-    :param d: 当前检测到加速度与角速度
-    :return:
-    """
-    pass
 
 if __name__ == '__main__':
-    obj = GetImuData(port='com8',baud=115200)
-    # 打印数据
-    obj.get_data()
 
+
+    obj = GetImuData(port='com4',baud=115200)
+    # 打印数据
+    t1 = threading.Thread(target=obj.get_data)
+    t2 = threading.Thread(target=obj.imu_integration)
+
+    t1.start()
+    t2.start()
+
+    t1.join()
+    t2.join()

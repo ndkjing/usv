@@ -101,15 +101,15 @@ import numpy as np
 # a = [[[1,2]],[[1,2],[2,3],[1,3]]]
 # s = [[0],[0,0,0]]
 # print(len(a[0]))
-# from tsp_solver.greedy import solve_tsp
-# a = np.array([
-#     [0,2,3],
-#     [1,0,2],
-#     [3,1,0],
-# ])
-#
-# print(solve_tsp(a,endpoints=(0,2)))
-#
+from tsp_solver.greedy import solve_tsp
+a = np.array([
+    [0,2,3],
+    [1,0,2],
+    [3,1,0],
+])
+
+print(solve_tsp(a,endpoints=(0,0)))
+
 # b = [1,2,3,5]
 # b.insert(0,10)
 # print(b)
@@ -249,31 +249,30 @@ import math
 import math
 #points内的点处在同一条直线上吗？
 #points内至少有3个点。
-def on_one_line(points):
-    delta_x = points[1][0] - points[0][0]
-    delta_y = points[1][1] - points[0][1]
-    distance_square = delta_x **2 + delta_y **2
-    sin_times_cos = delta_x * delta_y/ distance_square
-    for j in range(2, len(points)):
-        dx = points[j][0] - points[0][0]
-        dy = points[j][1] - points[0][1]
-        if math.fabs(dx * dy / (dx * dx + dy * dy) - sin_times_cos) > 10 ** -9:
-            return False
-    return True
-
-points=[[1,2],[2,4],[4,8]]
-print(points[:2])
-print(points.pop(0))
-print(points)
-if on_one_line(points):
-    print("True")
-else:
-    print("False")
-
-print(math.sin(math.radians(30)),math.sin(math.radians(150)))
-print(math.cos(math.radians(60)),math.cos(math.radians(-60)))
-
+# def on_one_line(points):
+#     delta_x = points[1][0] - points[0][0]
+#     delta_y = points[1][1] - points[0][1]
+#     distance_square = delta_x **2 + delta_y **2
+#     sin_times_cos = delta_x * delta_y/ distance_square
+#     for j in range(2, len(points)):
+#         dx = points[j][0] - points[0][0]
+#         dy = points[j][1] - points[0][1]
+#         if math.fabs(dx * dy / (dx * dx + dy * dy) - sin_times_cos) > 10 ** -9:
+#             return False
+#     return True
 #
+# points=[[1,2],[2,4],[4,8]]
+# print(points[:2])
+# print(points.pop(0))
+# print(points)
+# if on_one_line(points):
+#     print("True")
+# else:
+#     print("False")
+#
+# print(math.sin(math.radians(30)),math.sin(math.radians(150)))
+# print(math.cos(math.radians(60)),math.cos(math.radians(-60)))
+
 # 此时经度弧度模式=此时经度*PI/180;
 #         此时纬度弧度模式=此时纬度*PI/180;
 #         目标经度弧度模式=目标经度*PI/180;
@@ -284,68 +283,69 @@ print(math.cos(math.radians(60)),math.cos(math.radians(-60)))
 #         南北距离=1000*2*sin(纬度差/2)*地球半径;
 #         总距离=sqrt(pow(东西距离,2)+pow(南北距离,2));
 
+
+# lng_lats = [[114.431193,30.525967],
+#             [114.432802,30.525247],
+#             [114.433382,30.523344],
+#             [114.433489,30.521866],
+#             [114.432802,30.520629],
+#             [114.433961,30.519594],
+#             [114.431686,30.518837],
+#             [114.430399,30.519446],
+#             [114.429712,30.520998],
+#             [114.429411,30.524434]]
+#
+# h,w = 600,800
+#
+# import queue
+# q = queue.Queue()
+#
+# q.put([1,2])
+# q.put([2,3])
+# print(type(q.get()))
+# print(q.get())
+# print(q.get())
+# a= {'1':1,2:2}
+# import json
+# b = json.dumps(a)
+# c = json.dumps(b)
+# print(type(a))
+# print(type(b),b)
+# print(c)
 """
-协议内容：
-A5A5（1）（2），（3），（4），（5），（6），（7），（8），（9），（10），（11），（12），（13），（14），（15），（16），（17）#
-除了第一位和第二位只有一个字符外，其他都可以传浮点数，有效位数15以内都行。
-（1）：命令（0到6，L，R，F，B，A）（0为自动巡航，1为前进，2为后退，3为左转，4为右转，5为停止，A为锚定）（其他是我的调试命令不用管）
-（2）：经纬度归属（0到3）
-（3）：经度（度格式）
-（4）：纬度（度格式）
-（5）：KP
-（6）：KI
-（7）：KD
-（8）：KP2
-（9）：KI2
-（10）：KD2
-（11）：KP3
-（12）：KI3
-（13）：KD3
-（14）：转向推力占总推力比重
-（15）：积分上限
-（16）：左电机PWM修改
-（17）：右电机PWM修改
+import asyncio
+import websockets
 
-正常数据
-A5A5（1），（2），（3），（4），（5），（6），（7），（8），（9），（10）#
-除了第一位和第二位只有一个字符外，其他都可以传浮点数，有效位数15以内都行。
-（1）：命令（0到6，L，R，F，B，A）（0为自动巡航，1为前进，2为后退，3为左转，4为右转，5为停止，
-6自定义（传（2）度数），7 改变配置（PID，积分上限，转向推力占比，速度）A为锚定）（其他是我的调试命令不用管）
-（2）：0--359度数，
-（3）：经度
-（4）：纬度
-（5）：KP
-（6）：KI
-（7）：KD
-（8） 速度（0--1000）
-（9）：转向推力占总推力比重
-（10）：积分上限
+# 向服务器端认证，用户名密码通过才能退出循环
+async def auth_system(websocket):
+    while True:
+        # cred_text = input("please enter your username and password: ")
+        await websocket.send('321321')
+        response_str = await websocket.recv()
+        if "congratulation" in response_str:
+            return True
 
+# 向服务器端发送认证后的消息
+async def send_msg(websocket):
+    while True:
+        # _text = input("please enter your context: ")
+        # if _text == "exit":
+        #     print(f'you have enter "exit", goodbye')
+        #     await websocket.close(reason="user exit")
+        #     return False
+        # await websocket.send(_text)
+        await websocket.send('123')
+        recv_text = await websocket.recv()
+        print(f"{recv_text}")
 
-A5A50,0，0,0,0,0,0,0,0,0,0,0,0,0
+# 客户端主逻辑
+async def main_logic():
+    async with websockets.connect('ws://101.37.119.148/') as websocket:
+        # await auth_system(websocket)
+        await send_msg(websocket)
 
-心跳数据
-B6B6，（1），（2）#
-（1）：经度
-（2）：纬度
+asyncio.get_event_loop().run_until_complete(main_logic())
 
-
- # 角度，TDS，温度，经度，纬度，距离1，距离2 距目标经纬度距离
- AAA（1），（2），（3），，，\r\n
- 
 """
-lng_lats = [[114.431193,30.525967],
-            [114.432802,30.525247],
-            [114.433382,30.523344],
-            [114.433489,30.521866],
-            [114.432802,30.520629],
-            [114.433961,30.519594],
-            [114.431686,30.518837],
-            [114.430399,30.519446],
-            [114.429712,30.520998],
-            [114.429411,30.524434]]
-
-h,w = 600,800
-
 
 

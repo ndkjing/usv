@@ -78,18 +78,21 @@ class SerialData:
     # 如果没有超时，readline会报异常。
     def readline(self):
         data_read = self.uart.readline()
+
         # self.logger.info({'单片机读取数据':data_read})
         # 通过
         if str(data_read).count(',') > 2:
-
             # self.logger.info({'单片机读取数据处理后':str(data_read)[2:-5]})
             return str(data_read)[2:-5]
         else:
-            return None
+            return data_read
     # 发数据
 
-    def send_data(self, data):
-        self.uart.write(data.encode())
+    def send_data(self, data,b_hex=False):
+        if b_hex:
+            self.uart.write(bytes.fromhex(data))
+        else:
+            self.uart.write(data.encode())
 
     # 更多示例
     # self.main_engine.write(chr(0x06).encode("utf-8"))  # 十六制发送一个数据
@@ -132,70 +135,24 @@ if __name__ == '__main__':
     import config
 
     serial_obj = SerialData(
-        'com8',
-        115200,
+        'com10',
+        9600,
         timeout=1 /
         config.com2pi_interval,
         logger=logger)
+    while True:
+        serial_obj.send_data('31',b_hex=True)
 
-    def get_com_data():
-        while True:
-            com_data_read = serial_obj.readline()
-            # 解析串口发送过来的数据
-            if com_data_read is None:
-                continue
-            com_data_list = com_data_read.split(',')
-            # 角度，TDS，温度，经度，纬度，距离1，距离2
-            # 当前朝向
-            ship_current_direction = com_data_list[0]
-            # 经纬度
-            current_lng_lat = [
-                float(
-                    com_data_list[3]), float(
-                    com_data_list[4])]
-            # 左右侧的超声波检测距离
-            l_distance, r_distance = com_data_list[5], com_data_list[6]
-            # 水质数据
-            # 水温
-            water_temperature = com_data_list[2]
-            # TDO
-            TD = com_data_list[1]
-            print('TD', TD)
-
-    # 读取函数会阻塞 必须使用线程
-    def send_com_data():
-        ship_move_direction = [0, 90, 180, 270, 360]
-        i = 0
-        count = 0
-        # 切换秒数
-        change_s = 5
-        change_count = config.pi2com_interval * change_s
-        while True:
-            if count < change_count:
-                i = 0
-            elif count >= change_count and count < change_count * 2:
-                i = 1
-            elif count >= 2 * change_count and count < 3 * change_count:
-                i = 2
-            elif count >= 3 * change_count and count < 4 * change_count:
-                i = 3
-            else:
-                count = 0
-            # 间隔指定秒数控制
-            data_send_com = 'A%sZ' % str(ship_move_direction[i])
-            # 监听mqtt控制
-            # data_send_com = 'A%sZ' % str(mqtt_obj.move_direction)
-            serial_obj.send_data(data_send_com)
-            # 打印传输给单片机的控制数据
-            logger.info('move_direction: ' + data_send_com)
-            logger.info('i: ' + str(i))
-            count += 1
-            time.sleep(1 / config.pi2com_interval)
-
-    t1 = Thread(target=get_com_data)
-    t2 = Thread(target=send_com_data)
-    t1.start()
-    t2.start()
-    t1.join()
-    t2.join()
+        data = serial_obj.readline()
+        print('data',data)
+        # 角度
+        data1 = data.decode('ascii')[:-1]
+        print('data1', data1)
+        time.sleep(1)
+    # t1 = Thread(target=get_com_data)
+    # t2 = Thread(target=send_com_data)
+    # t1.start()
+    # t2.start()
+    # t1.join()
+    # t2.join()
     # print(str(obj.Read_Line())[2:-5])

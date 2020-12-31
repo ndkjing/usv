@@ -350,16 +350,21 @@ def measure_distance(scan_cnt,pool_cnt,outpool_set,map_connect):
                 e_index = j
                 s_start = (scan_cnt[s_index][0], scan_cnt[s_index][1])
                 s_goal = (scan_cnt[e_index][0], scan_cnt[e_index][1])
-                astar = AStar(s_start, s_goal, "euclidean", outpool_set)
-                path, visited = astar.searching()
-
-                distance_i_j = 0
-                for index_i, value in enumerate(path):
-                    if index_i < len(path) - 1:
-                        distance_i_j += distance(value, path[index_i + 1])
-                distance_matrix[i, j] = distance_i_j
-                distance_matrix[j, i] = distance_i_j
-                path_matrix.update({'%d_%d'%(i,j):path[::-1]})
+                # 去不了会搜索报错
+                try:
+                    astar = AStar(s_start, s_goal, "euclidean", outpool_set)
+                    path, visited = astar.searching()
+                    distance_i_j = 0
+                    for index_i, value in enumerate(path):
+                        if index_i < len(path) - 1:
+                            distance_i_j += distance(value, path[index_i + 1])
+                    distance_matrix[i, j] = distance_i_j
+                    distance_matrix[j, i] = distance_i_j
+                    path_matrix.update({'%d_%d' % (i, j): path[::-1]})
+                except:
+                    print('error searching',i,'-->',j,'False')
+                    distance_matrix[i, j] = math.inf
+                    distance_matrix[j, i] = math.inf
             elif not cross_outpool(scan_cnt[i],scan_cnt[j],pool_cnt):
                 distance_matrix[i, j] = math.inf
                 distance_matrix[j, i] = math.inf
@@ -367,37 +372,6 @@ def measure_distance(scan_cnt,pool_cnt,outpool_set,map_connect):
                 d = distance(scan_cnt[i], scan_cnt[j], digits=2)
                 distance_matrix[i,j] =d
                 distance_matrix[j,i] =d
-    # for i in tqdm(range(l)):
-    #     c = min(len(scan_cnt), 7)
-    #     d = copy.deepcopy(distance_matrix[i,:])
-    #     sort_scan_cnt = list(d)
-    #     sort_scan_cnt.sort()
-    #     end_scan_index_list = [sort_scan_cnt.index(i) for i in sort_scan_cnt[1:1 + c]]
-    #     for j in end_scan_index_list:
-    #         if i == j:
-    #             continue
-    #         if not cross_outpool(scan_cnt[i], scan_cnt[j], pool_cnt):
-    #             print(i, '-->', j, 'False')
-    #             s_index = i
-    #             e_index = j
-    #             s_start = (scan_cnt[s_index][0], scan_cnt[s_index][1])
-    #             s_goal = (scan_cnt[e_index][0], scan_cnt[e_index][1])
-    #             astar = AStar(s_start, s_goal, "euclidean", outpool_set)
-    #             try:
-    #                 path, visited = astar.searching()
-    #             except KeyError:
-    #                 distance_matrix[i, j] = math.inf
-    #                 distance_matrix[j, i] = math.inf
-    #                 print('error key')
-    #                 continue
-    #             distance_i_j = 0
-    #             for index_i, value in enumerate(path):
-    #                 if index_i < len(path) - 1:
-    #                     distance_i_j += distance(value, path[index_i + 1])
-    #             # print('distance_i_j', distance_i_j)
-    #             distance_matrix[i, j] = distance_i_j
-    #             distance_matrix[j, i] = distance_i_j
-    #             path_matrix.update({'%d_%d' % (i, j): path[::-1]})
     return distance_matrix
 
 
@@ -458,6 +432,7 @@ def get_path(baidu_map_obj=None,
              target_lng_lats=None,
              target_pixs=None,
              b_show=False,
+             back_home=False,
              map_connect = 7,
              pix_gap=30):
     """
@@ -474,23 +449,20 @@ def get_path(baidu_map_obj=None,
     １　到达多个目标点
     ２　扫描整个湖泊
     4  返航
-
     """
     if baidu_map_obj==None:
-        baidu_map_obj = baidu_map.BaiduMap([114.431387, 30.523708], zoom=16, scale=1, map_type=baidu_map.MapType.gaode)
+        baidu_map_obj = baidu_map.BaiduMap(config.init_gaode_gps, zoom=16, scale=1, map_type=baidu_map.MapType.gaode)
         pool_cnts,(pool_cx,pool_cy) = baidu_map_obj.get_pool_pix(b_show=False)
         if pool_cnts is None:
-            return pool_cx
-
+            return 'pool_cx is None'
     baidu_map_obj.outpool_cnts_set = get_outpool_set(np.array(baidu_map_obj.pool_cnts))
 
     # 无GPS调试模式 以湖泊中心作为起点
     if config.home_debug:
-        baidu_map_obj.ship_gaode_lng_lat=baidu_map_obj.lng_lat
-        baidu_map_obj.ship_gps=baidu_map_obj.lng_lat
+        baidu_map_obj.ship_gaode_lng_lat=config.init_gaode_gps
+        baidu_map_obj.ship_gps=config.init_gaode_gps
     if baidu_map_obj.ship_gps is None:
         return 'no ship gps'
-
     if mode==0:
         if target_lng_lats is None:
             return 'target_pixs is None'
@@ -503,31 +475,40 @@ def get_path(baidu_map_obj=None,
         s_start = tuple(baidu_map_obj.ship_pix)
         s_goal = tuple(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lats[0]))
         print('s_start,s_goal',s_start,s_goal)
+
         # 判断是否能直线到达，不能则采用路径搜索
         if not cross_outpool(s_start,s_goal,baidu_map_obj.pool_cnts):
             astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.outpool_cnts_set)
             try:
                 astar_path, visited = astar.searching()
                 print('astar_path', astar_path)
-                baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(astar_path, dtype=np.int32)], False, (255, 0, 0), 1)
                 return_pix_path = astar_path[::-1]
+                # 返航时添加
+                if back_home:
+                    return_pix_path.append(astar_path)
                 return_pix_path = multi_points_to_simple_points(return_pix_path)
                 _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
                 if b_show:
+                    baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img,
+                                                           [np.array(astar_path, dtype=np.int32)], False, (255, 0, 0),
+                                                           1)
                     cv2.circle(baidu_map_obj.show_img, s_start, 5, [255, 0,255], -1)
                     cv2.circle(baidu_map_obj.show_img, s_goal, 5, [255, 0,255], -1)
+                    baidu_map_obj.show_img = cv2.drawContours(baidu_map_obj.show_img, [return_pix_path], -1,
+                                                              (0, 0, 255), 3)
                     cv2.imshow('scan', baidu_map_obj.show_img)
                     cv2.waitKey(0)
                     cv2.destroyAllWindows()
                 return return_gaode_lng_lat_path
-            except:
+            except Exception as e :
+                print('error ',e)
                 if b_show:
                     cv2.circle(baidu_map_obj.show_img, s_start, 5, [255, 255, 0], -1)
-                    cv2.circle(baidu_map_obj.show_img, s_goal, 5, [255, 255, 0], -1)
+                    cv2.circle(baidu_map_obj.show_img, s_goal, 5, [255, 0, 255], -1)
                     cv2.imshow('scan', baidu_map_obj.show_img)
                     cv2.waitKey(0)
                     cv2.destroyAllWindows()
-                    return -3
+                return 'can not fand path'
         # 直接可达模式
         else:
             return_pix_path = []
@@ -537,9 +518,18 @@ def get_path(baidu_map_obj=None,
             if b_show:
                 cv2.circle(baidu_map_obj.show_img, s_start, 5, [255, 255, 0], -1)
                 cv2.circle(baidu_map_obj.show_img, s_goal, 5, [255, 255, 0], -1)
+                baidu_map_obj.show_img = cv2.drawContours(baidu_map_obj.show_img, np.array([return_pix_path]), -1,
+                                                          (0, 0, 255), 3)
                 cv2.imshow('scan', baidu_map_obj.show_img)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
+
+            # 返航时添加家的经纬度
+            if back_home:
+                if config.home_debug:
+                    return_gaode_lng_lat_path.append(config.init_gaode_gps)
+                else:
+                    return_gaode_lng_lat_path.append(baidu_map_obj.init_ship_gaode_lng_lat)
             return return_gaode_lng_lat_path
 
     elif mode == 1:
@@ -551,12 +541,16 @@ def get_path(baidu_map_obj=None,
             if baidu_map_obj.ship_gaode_lng_lat is None:
                 baidu_map_obj.ship_gaode_lng_lat = baidu_map_obj.gps_to_gaode_lng_lat(baidu_map_obj.ship_gps)
             baidu_map_obj.ship_pix = baidu_map_obj.gaode_lng_lat_to_pix(baidu_map_obj.ship_gaode_lng_lat)
+
         target_pixs=[]
         for target_lng_lat in target_lng_lats:
             target_pixs.append(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lat))
         target_pixs.insert(0,baidu_map_obj.ship_pix)
         distance_matrix = measure_distance(target_pixs,baidu_map_obj.pool_cnts,baidu_map_obj.outpool_cnts_set,map_connect=map_connect)
-        tsp_path = solve_tsp(distance_matrix, endpoints=(0,(len(target_pixs)-1)))
+        if back_home:
+            tsp_path = solve_tsp(distance_matrix, endpoints=(0, 0))
+        else:
+            tsp_path = solve_tsp(distance_matrix, endpoints=(0, (len(target_pixs) - 1)))
         path_points=[]
         for index_i,val in enumerate(tsp_path):
             if index_i < len(tsp_path) - 1:
@@ -565,15 +559,18 @@ def get_path(baidu_map_obj=None,
                 elif '%d_%d'%(tsp_path[index_i+1],val) in path_matrix.keys():
                     path_points.extend(path_matrix['%d_%d' % (tsp_path[index_i + 1],val)][::-1])
                 else:
-                    path_points.append(baidu_map_obj.scan_point_cnts[val])
+                    pass
+                    # path_points.append(baidu_map_obj.scan_point_cnts[val])
             elif index_i == len(tsp_path) - 1:
                 if '%d_%d'%(val,tsp_path[index_i-1]) in path_matrix.keys() or '%d_%d'%(val,tsp_path[index_i-1]) in path_matrix.keys():
                     pass
                 else:
-                    path_points.append(baidu_map_obj.scan_point_cnts[val])
+                    pass
+                    # path_points.append(baidu_map_obj.scan_point_cnts[val])
 
-        baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(path_points, dtype=np.int32)], False, (255, 0, 0), 1)
         if b_show:
+            baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(path_points, dtype=np.int32)],
+                                                   False, (255, 0, 0), 1)
             cv2.imshow('scan', baidu_map_obj.show_img)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
@@ -637,29 +634,32 @@ def get_path(baidu_map_obj=None,
         # 判断是否能直线到达，不能则采用路径搜索
         if not cross_outpool(s_start, s_goal, baidu_map_obj.pool_cnts):
             astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.outpool_cnts_set)
-            try:
-                astar_path, visited = astar.searching()
-                print('astar_path', astar_path)
-                baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(astar_path, dtype=np.int32)],
-                                                       False, (255, 0, 0), 1)
-                return_pix_path = astar_path[::-1]
-                return_pix_path = multi_points_to_simple_points(return_pix_path)
-                _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
-                if b_show:
-                    cv2.circle(baidu_map_obj.show_img, s_start, 5, [255, 0, 255], -1)
-                    cv2.circle(baidu_map_obj.show_img, s_goal, 5, [255, 0, 255], -1)
-                    cv2.imshow('scan', baidu_map_obj.show_img)
-                    cv2.waitKey(0)
-                    cv2.destroyAllWindows()
-                return return_gaode_lng_lat_path
-            except:
-                if b_show:
-                    cv2.circle(baidu_map_obj.show_img, s_start, 5, [255, 255, 0], -1)
-                    cv2.circle(baidu_map_obj.show_img, s_goal, 5, [255, 255, 0], -1)
-                    cv2.imshow('scan', baidu_map_obj.show_img)
-                    cv2.waitKey(0)
-                    cv2.destroyAllWindows()
-                    return -3
+            # try:
+            astar_path, visited = astar.searching()
+            print('astar_path', astar_path)
+            baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(astar_path, dtype=np.int32)],
+                                                   False, (255, 0, 0), 1)
+            return_pix_path = astar_path[::-1]
+            return_pix_path = multi_points_to_simple_points(return_pix_path)
+            _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
+            if b_show:
+                cv2.circle(baidu_map_obj.show_img, s_start, 5, [255, 0, 255], -1)
+                cv2.circle(baidu_map_obj.show_img, s_goal, 5, [255, 0, 255], -1)
+                baidu_map_obj.show_img = cv2.drawContours(baidu_map_obj.show_img, [return_pix_path], -1, (0, 0, 255), 3)
+                cv2.imshow('scan', baidu_map_obj.show_img)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
+            return return_gaode_lng_lat_path
+            # except:
+            #     if b_show:
+            #         cv2.circle(baidu_map_obj.show_img, s_start, 5, [255, 255, 0], -1)
+            #         cv2.circle(baidu_map_obj.show_img, s_goal, 5, [255, 255, 0], -1)
+            #         baidu_map_obj.show_img = cv2.drawContours(baidu_map_obj.show_img, [return_pix_path], -1, (0, 0, 255), 3)
+            #
+            #         cv2.imshow('scan', baidu_map_obj.show_img)
+            #         cv2.waitKey(0)
+            #         cv2.destroyAllWindows()
+            #         return -3
         # 直接可达模式
         else:
             return_pix_path = []
@@ -678,6 +678,9 @@ def get_path(baidu_map_obj=None,
 
 if __name__ == '__main__':
     # 114.431387, 30.523708  114.433586,30.519395 114.431454, lat: 30.521549
-    # 114.428879, lat: 30.520329
-    # 114.42889, lat: 30.520347
-    r = get_path(mode=0,b_show=True,target_lng_lats=[[114.433183, 30.520177]])
+    # 114.431804, 30.524169
+    # 114.434854, 30.524169  114.431481, lat: 30.520225
+    r = get_path(mode=0,b_show=True,target_lng_lats=[[114.431299,30.521363]])
+    print('r',r)
+# baidu_map_obj.ship_pix [566, 565]
+# (x, y, w, h) (420, 249, 414, 653)

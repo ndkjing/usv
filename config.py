@@ -17,7 +17,7 @@ com2pi_interval = 1
 pi2com_interval = 2
 
 # 给服务器发送频率
-pi2mqtt_interval = 0.2
+pi2mqtt_interval = 0.1
 
 # 接收服务器方向控制间隔
 mqtt_control_interval = 1
@@ -60,7 +60,9 @@ b_play_audio=False
 
 # 在家调试模式
 home_debug = True
-init_gps = [114.431623, 30.523246]
+init_gaode_gps = [114.431804, 30.524169]
 
 # 到达点距离范围判断，单位米
 arrive_distance = 4
+
+

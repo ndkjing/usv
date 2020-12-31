@@ -2,6 +2,7 @@
 入口函数
 """
 import threading
+import time
 import config
 from utils import log
 from dataGetSend.data_manager import DataManager
@@ -76,14 +77,56 @@ def main():
     check_status_thread.start()
     send_com_heart_thread.start()
 
-    get_com_data_thread.join()
-    send_mqtt_data_thread.join()
-    send_com_data_thread.join()
-    check_status_thread.join()
-    send_com_heart_thread.join()
+    # get_com_data_thread.join()
+    # send_mqtt_data_thread.join()
+    # send_com_data_thread.join()
+    # check_status_thread.join()
+    # send_com_heart_thread.join()
 
     while True:
-        pass
+        #  判断线程是否死亡并重启线程
+        if not get_com_data_thread.is_alive():
+            if config.home_debug:
+                time.sleep(10)
+                pass
+            else:
+                logger.error('restart get_com_data_thread')
+                get_com_data_thread = threading.Thread(
+                    target=data_manager_obj.get_com_data)
+                get_com_data_thread.setDaemon(True)
+                get_com_data_thread.start()
+                time.sleep(10)
 
+        elif not send_mqtt_data_thread.is_alive():
+            logger.error('restart send_mqtt_data_thread')
+            send_mqtt_data_thread = threading.Thread(
+                target=data_manager_obj.send_mqtt_data)
+            send_mqtt_data_thread.setDaemon(True)
+            send_mqtt_data_thread.start()
+            time.sleep(10)
+
+        elif not send_com_data_thread.is_alive():
+            logger.error('restart send_com_data_thread')
+            send_com_data_thread = threading.Thread(
+                target=data_manager_obj.send_com_data)
+            send_com_data_thread.setDaemon(True)
+            send_com_data_thread.start()
+            time.sleep(10)
+
+        elif not check_status_thread.is_alive():
+            logger.error('restart check_status_thread')
+            check_status_thread = threading.Thread(
+                target=data_manager_obj.check_status)
+            check_status_thread.setDaemon(True)
+            check_status_thread.start()
+            time.sleep(10)
+
+        elif not send_com_heart_thread.is_alive():
+            logger.error('restart send_com_heart_thread')
+            send_com_heart_thread = threading.Thread(
+                target=data_manager_obj.send_com_heart_data)
+            send_com_heart_thread.setDaemon(True)
+            send_com_heart_thread.start()
+            time.sleep(10)
 if __name__ == '__main__':
     main()

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+    }
+
+    div {
+      margin: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <svg id="map" width="1000" height="600" style="border: 1px solid red;" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- <polygon points="220,100 300,210 170,250 123,234 0,0" style="fill:#cccccc;
+      stroke:#000000;stroke-width:1" /> -->
+
+    </svg>
+  </div>
+
+  <input id="input" />
+
+
+  <script>
+    const map = document.getElementById("map");
+    const input = document.getElementById("input")
+    //console.log(map)
+    map.addEventListener("click", (e) => {
+      input.value = `x:${e.offsetX} y:${e.offsetY}`
+      console.log(e.offsetX, e.offsetY)
+    })
+
+    function draw(parent, node, style) {
+      const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      polygon.setAttribute('points', node);
+      polygon.setAttribute('style', style);
+      parent.appendChild(polygon);
+
+    }
+
+    draw(map, "391, 599 745, 539 872, 379 896, 254 745, 150 999, 63 499, 0 217, 51  66, 181 0, 470", "fill:#4da6ff;stroke:#000000; stroke - width: 1")
+
+
+
+
+
+  </script>
+</body>
+
+</html>
