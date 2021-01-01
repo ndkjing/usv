@@ -24,6 +24,8 @@ class Env:
         self.y_range = 31
         self.motions = [(-1, 0), (-1, 1), (0, 1), (1, 1),
                         (1, 0), (1, -1), (0, -1), (-1, -1)]
+        # self.motions = [(-2, 0), (-2, 2), (0, 2), (2, 2),
+        #                 (2, 0), (2, -2), (0, -2), (-2, -2)]
         self.outpool_points = outpool_points
         self.obs = self.obs_map()
 
@@ -294,6 +296,8 @@ def cross_outpool(point_i,point_j,pool_cnts):
     else:
         steps = abs(dy)
     # 必有一个等于1，一个小于1
+    if steps==0:
+        return True
     delta_x = float(dx / steps)
     delta_y = float(dy / steps)
 
@@ -311,6 +315,7 @@ def cross_outpool(point_i,point_j,pool_cnts):
         if in_cnt < safe_distance:
             # 经过湖泊周围陆地
             return False
+    # 不经过陆地
     return True
 
 
@@ -399,6 +404,9 @@ def on_one_line(points):
     delta_x = points[1][0] - points[0][0]
     delta_y = points[1][1] - points[0][1]
     distance_square = delta_x **2 + delta_y **2
+    # 传入了相同的点 返回True
+    if distance_square==0:
+        return True
     sin_times_cos = delta_x * delta_y/ distance_square
     for j in range(2, len(points)):
         dx = points[j][0] - points[0][0]
@@ -409,7 +417,7 @@ def on_one_line(points):
 
 # 将直线上多个点合并为按直线最少的点
 def multi_points_to_simple_points(points):
-    if len(points)<=2:
+    if len(points)<=3:
         return points
     else:
         return_points=[]
@@ -417,14 +425,15 @@ def multi_points_to_simple_points(points):
         return_points.append(points[0])
         test_points.append(points[0])
         test_points.append(points[1])
-        test_points.append(points[2])
-        for index_i in range(3,len(points)):
-            test_points.pop(0)
+        # test_points.append(points[2])
+        for index_i in range(2,len(points)):
             test_points.append(points[index_i])
             if on_one_line(test_points):
                 pass
             else:
+                # if index_i == len(points) - 1:
                 return_points.append(test_points[2])
+            test_points.pop(0)
         return return_points
 
 def get_path(baidu_map_obj=None,
@@ -450,6 +459,7 @@ def get_path(baidu_map_obj=None,
     ２　扫描整个湖泊
     4  返航
     """
+    global path_matrix
     if baidu_map_obj==None:
         baidu_map_obj = baidu_map.BaiduMap(config.init_gaode_gps, zoom=16, scale=1, map_type=baidu_map.MapType.gaode)
         pool_cnts,(pool_cx,pool_cy) = baidu_map_obj.get_pool_pix(b_show=False)
@@ -475,7 +485,21 @@ def get_path(baidu_map_obj=None,
         s_start = tuple(baidu_map_obj.ship_pix)
         s_goal = tuple(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lats[0]))
         print('s_start,s_goal',s_start,s_goal)
-
+        # TODO 测试使用间隔两个像素搜索
+        # s_start = list(s_start)
+        # s_goal = list(s_goal)
+        #
+        # if s_start[0]%2!=0:
+        #     s_start[0] = s_start[0]+1
+        # if s_start[1]%2!=0:
+        #     s_start[1] = s_start[0]+1
+        # if s_goal[0]%2!=0:
+        #     s_goal[0] = s_goal[0]+1
+        # if s_goal[1]%2!=0:
+        #     s_goal[1] = s_goal[1]+1
+        # s_start = tuple(s_start)
+        # s_goal = tuple(s_goal)
+        # print('s_start,s_goal', s_start, s_goal)
         # 判断是否能直线到达，不能则采用路径搜索
         if not cross_outpool(s_start,s_goal,baidu_map_obj.pool_cnts):
             astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.outpool_cnts_set)
@@ -486,7 +510,9 @@ def get_path(baidu_map_obj=None,
                 # 返航时添加
                 if back_home:
                     return_pix_path.append(astar_path)
+                print('原始长度',len(return_pix_path))
                 return_pix_path = multi_points_to_simple_points(return_pix_path)
+                print('简化后长度', len(return_pix_path))
                 _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
                 if b_show:
                     baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img,
@@ -546,12 +572,13 @@ def get_path(baidu_map_obj=None,
         for target_lng_lat in target_lng_lats:
             target_pixs.append(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lat))
         target_pixs.insert(0,baidu_map_obj.ship_pix)
-        distance_matrix = measure_distance(target_pixs,baidu_map_obj.pool_cnts,baidu_map_obj.outpool_cnts_set,map_connect=map_connect)
+        distance_matrix = measure_distance(target_pixs,baidu_map_obj.pool_cnts,baidu_map_obj.outpool_cnts_set,map_connect=config.find_points_num)
         if back_home:
             tsp_path = solve_tsp(distance_matrix, endpoints=(0, 0))
         else:
             tsp_path = solve_tsp(distance_matrix, endpoints=(0, (len(target_pixs) - 1)))
         path_points=[]
+        print('path_matrix',path_matrix)
         for index_i,val in enumerate(tsp_path):
             if index_i < len(tsp_path) - 1:
                 if '%d_%d'%(val,tsp_path[index_i+1]) in path_matrix.keys():
@@ -559,24 +586,25 @@ def get_path(baidu_map_obj=None,
                 elif '%d_%d'%(tsp_path[index_i+1],val) in path_matrix.keys():
                     path_points.extend(path_matrix['%d_%d' % (tsp_path[index_i + 1],val)][::-1])
                 else:
-                    pass
-                    # path_points.append(baidu_map_obj.scan_point_cnts[val])
+                    path_points.append(target_pixs[val])
             elif index_i == len(tsp_path) - 1:
                 if '%d_%d'%(val,tsp_path[index_i-1]) in path_matrix.keys() or '%d_%d'%(val,tsp_path[index_i-1]) in path_matrix.keys():
                     pass
                 else:
-                    pass
-                    # path_points.append(baidu_map_obj.scan_point_cnts[val])
+                    path_points.append(target_pixs[val])
 
+        return_pix_path = path_points
+        print('原始长度', len(return_pix_path))
+        return_pix_path = multi_points_to_simple_points(return_pix_path)
+        print('简化后长度', len(return_pix_path))
+
+        _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
         if b_show:
             baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(path_points, dtype=np.int32)],
                                                    False, (255, 0, 0), 1)
             cv2.imshow('scan', baidu_map_obj.show_img)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
-        return_pix_path = path_points
-        return_pix_path = multi_points_to_simple_points(return_pix_path)
-        _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
         return return_gaode_lng_lat_path
 
     elif mode == 2:
@@ -680,7 +708,18 @@ if __name__ == '__main__':
     # 114.431387, 30.523708  114.433586,30.519395 114.431454, lat: 30.521549
     # 114.431804, 30.524169
     # 114.434854, 30.524169  114.431481, lat: 30.520225
-    r = get_path(mode=0,b_show=True,target_lng_lats=[[114.431299,30.521363]])
+    #
+    # a = multi_points_to_simple_points([[1,2],[2,4],[4,8],[3,7],[2,6],[-2,-4],[8,16]])
+    # print(a)
+    #114.431299,30.521363
+    # 114.433853,30.519553
+    # [114.431133,30.522252],[114.432464,30.521108],[114.430983,30.519953],[114.432625,30.52036],[114.430726,30.519158],[114.430726,30.519158],[114.433853,30.519553]
+    r = get_path(mode=1,b_show=False,target_lng_lats=[[114.431133,30.522252],[114.432464,30.521108],[114.430983,30.519953],[114.432625,30.52036],[114.430726,30.519158],[114.430726,30.519158],[114.433853,30.519553]])
     print('r',r)
+
+
+
 # baidu_map_obj.ship_pix [566, 565]
 # (x, y, w, h) (420, 249, 414, 653)
+
+

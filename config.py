@@ -65,4 +65,7 @@ init_gaode_gps = [114.431804, 30.524169]
 # 到达点距离范围判断，单位米
 arrive_distance = 4
 
+# 查找数量
+find_points_num=4
+
 
