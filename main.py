@@ -128,5 +128,6 @@ def main():
             send_com_heart_thread.setDaemon(True)
             send_com_heart_thread.start()
             time.sleep(10)
+
 if __name__ == '__main__':
     main()

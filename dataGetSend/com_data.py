@@ -2,6 +2,7 @@
 串口数据收发
 """
 import serial
+from serial.tools import list_ports
 import binascii
 import time
 import copy
@@ -64,8 +65,8 @@ class SerialData:
 
     # 打印可用串口列表
     @staticmethod
-    def Print_Used_Com():
-        port_list = list(serial.tools.list_ports.comports())
+    def print_ssed_com():
+        port_list = list(list_ports.comports())
         print(port_list)
 
     # 接收指定大小的数据
@@ -86,8 +87,8 @@ class SerialData:
             return str(data_read)[2:-5]
         else:
             return data_read
-    # 发数据
 
+    # 发数据
     def send_data(self, data,b_hex=False):
         if b_hex:
             self.uart.write(bytes.fromhex(data))

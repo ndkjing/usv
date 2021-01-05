@@ -276,8 +276,6 @@ def get_outpool_set(contour,safe_distance=0):
     return outpool_cnts_set
 
 
-import math
-
 def distance(p0, p1, digits=2):
     a = map(lambda x: (x[0] - x[1]) ** 2, zip(p0, p1))
     return round(math.sqrt(sum(a)), digits)
@@ -374,9 +372,14 @@ def measure_distance(scan_cnt,pool_cnt,outpool_set,map_connect):
                 distance_matrix[i, j] = math.inf
                 distance_matrix[j, i] = math.inf
             else:
-                d = distance(scan_cnt[i], scan_cnt[j], digits=2)
-                distance_matrix[i,j] =d
-                distance_matrix[j,i] =d
+                dis = distance(scan_cnt[i], scan_cnt[j], digits=2)
+                distance_matrix[i,j] =dis
+                distance_matrix[j,i] =dis
+            if not cross_outpool(scan_cnt[i],scan_cnt[j],pool_cnt):
+                print('i,j',i,j)
+                distance_matrix[i, j] = math.inf
+                distance_matrix[j, i] = math.inf
+
     return distance_matrix
 
 
@@ -629,7 +632,8 @@ def get_path(baidu_map_obj=None,
                 if '%d_%d'%(val,tsp_path[index_i-1]) in path_matrix.keys() or '%d_%d'%(val,tsp_path[index_i-1]) in path_matrix.keys():
                     pass
                 else:
-                    path_points.append(baidu_map_obj.scan_point_cnts[val])
+                    pass
+                    # path_points.append(baidu_map_obj.scan_point_cnts[val])
         if b_show:
             baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(path_points, dtype=np.int32)],
                                                    False, (255, 0, 0), 1)
@@ -637,15 +641,18 @@ def get_path(baidu_map_obj=None,
             cv2.waitKey(0)
             cv2.destroyAllWindows()
         return_pix_path = path_points
+        return_pix_path = path_points
+        print('原始长度', len(return_pix_path))
         return_pix_path = multi_points_to_simple_points(return_pix_path)
+        print('简化后长度', len(return_pix_path))
         _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
         return return_gaode_lng_lat_path
 
     elif mode == 3:
         pass
 
-    elif mode == 4:
     # back home
+    elif mode == 4:
         if baidu_map_obj.init_ship_gps is None:
             return 'ship init gps is None'
         if baidu_map_obj.init_ship_pix is None:
@@ -705,21 +712,12 @@ def get_path(baidu_map_obj=None,
         return 1
 
 if __name__ == '__main__':
-    # 114.431387, 30.523708  114.433586,30.519395 114.431454, lat: 30.521549
-    # 114.431804, 30.524169
-    # 114.434854, 30.524169  114.431481, lat: 30.520225
-    #
-    # a = multi_points_to_simple_points([[1,2],[2,4],[4,8],[3,7],[2,6],[-2,-4],[8,16]])
-    # print(a)
-    #114.431299,30.521363
+    # 114.431299,30.521363
     # 114.433853,30.519553
     # [114.431133,30.522252],[114.432464,30.521108],[114.430983,30.519953],[114.432625,30.52036],[114.430726,30.519158],[114.430726,30.519158],[114.433853,30.519553]
-    r = get_path(mode=1,b_show=False,target_lng_lats=[[114.431133,30.522252],[114.432464,30.521108],[114.430983,30.519953],[114.432625,30.52036],[114.430726,30.519158],[114.430726,30.519158],[114.433853,30.519553]])
+    r = get_path(mode=0,b_show=True,target_lng_lats=[[114.431299,30.521363]])
+    # r = get_path(mode=2,b_show=True,pix_gap=150)
     print('r',r)
-
-
 
 # baidu_map_obj.ship_pix [566, 565]
 # (x, y, w, h) (420, 249, 414, 653)
-
-

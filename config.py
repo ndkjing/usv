@@ -17,7 +17,7 @@ com2pi_interval = 1
 pi2com_interval = 2
 
 # 给服务器发送频率
-pi2mqtt_interval = 0.1
+pi2mqtt_interval = 1.0/100
 
 # 接收服务器方向控制间隔
 mqtt_control_interval = 1

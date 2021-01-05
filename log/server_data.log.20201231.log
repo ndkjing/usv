@@ -1,0 +1,607 @@
+2020-12-31 13:59:44,582 server_data.py[line:289] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 13:59:44,583 server_data.py[line:289] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 13:59:44,583 server_data.py[line:289] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 13:59:44,583 server_data.py[line:289] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 13:59:44,584 server_data.py[line:289] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 13:59:44,606 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 14:00:03,685 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:00:03,691 server_data.py[line:195] INFO {'lng_lat': [114.435528, 30.536054], 'zoom': 13}
+2020-12-31 14:02:01,422 server_data.py[line:289] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:02:01,423 server_data.py[line:289] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:02:01,423 server_data.py[line:289] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:02:01,423 server_data.py[line:289] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:02:01,423 server_data.py[line:289] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:02:01,442 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 14:02:11,952 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:02:11,958 server_data.py[line:195] INFO {'lng_lat': [114.409435, 30.524817], 'zoom': 13}
+2020-12-31 14:03:49,481 server_data.py[line:289] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:03:49,482 server_data.py[line:289] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:03:49,482 server_data.py[line:289] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:03:49,482 server_data.py[line:289] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:03:49,482 server_data.py[line:289] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:03:49,504 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 14:04:03,065 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:04:03,071 server_data.py[line:195] INFO {'lng_lat': [114.382485, 30.549065], 'zoom': 13}
+2020-12-31 14:04:29,164 server_data.py[line:289] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:04:29,164 server_data.py[line:289] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:04:29,165 server_data.py[line:289] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:04:29,165 server_data.py[line:289] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:04:29,165 server_data.py[line:289] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:04:29,188 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 14:04:57,794 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:04:57,799 server_data.py[line:195] INFO {'lng_lat': [114.383514, 30.548621], 'zoom': 13}
+2020-12-31 14:05:34,318 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:05:34,330 server_data.py[line:195] INFO {'lng_lat': [114.384544, 30.548621], 'zoom': 13}
+2020-12-31 14:06:55,354 server_data.py[line:289] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:06:55,355 server_data.py[line:289] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:06:55,355 server_data.py[line:289] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:06:55,355 server_data.py[line:289] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:06:55,356 server_data.py[line:289] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:06:55,375 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 14:07:06,566 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:07:06,572 server_data.py[line:195] INFO {'lng_lat': [114.387119, 30.553204], 'zoom': 13}
+2020-12-31 14:08:11,210 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:08:11,216 server_data.py[line:195] INFO {'lng_lat': [114.385403, 30.554682], 'zoom': 13}
+2020-12-31 14:09:16,226 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:09:16,231 server_data.py[line:195] INFO {'lng_lat': [114.382141, 30.548917], 'zoom': 13}
+2020-12-31 14:10:18,658 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:10:18,664 server_data.py[line:195] INFO {'lng_lat': [114.442223, 30.502634], 'zoom': 13}
+2020-12-31 14:12:00,838 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:12:00,838 server_data.py[line:195] INFO {'lng_lat': [114.381283, 30.546995], 'zoom': 13}
+2020-12-31 14:12:21,205 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:12:21,216 server_data.py[line:195] INFO {'lng_lat': [114.382828, 30.547438], 'zoom': 13}
+2020-12-31 14:13:06,215 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:13:06,221 server_data.py[line:195] INFO {'lng_lat': [114.382313, 30.547143], 'zoom': 13}
+2020-12-31 14:13:34,188 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:13:34,194 server_data.py[line:195] INFO {'lng_lat': [114.383514, 30.546404], 'zoom': 13}
+2020-12-31 14:18:07,261 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:18:07,261 server_data.py[line:195] INFO {'lng_lat': [114.383343, 30.54803], 'zoom': 13}
+2020-12-31 14:19:33,414 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:19:33,425 server_data.py[line:195] INFO {'lng_lat': [114.404629, 30.521564], 'zoom': 13}
+2020-12-31 14:21:32,652 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:21:32,658 server_data.py[line:195] INFO {'lng_lat': [114.465225, 30.503965], 'zoom': 13}
+2020-12-31 14:21:48,252 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:21:48,258 server_data.py[line:195] INFO {'lng_lat': [114.444454, 30.506627], 'zoom': 13}
+2020-12-31 14:25:32,281 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:25:32,287 server_data.py[line:195] INFO {'lng_lat': [114.383686, 30.54596], 'zoom': 13}
+2020-12-31 14:25:51,793 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:25:51,799 server_data.py[line:195] INFO {'lng_lat': [114.379051, 30.544482], 'zoom': 13}
+2020-12-31 14:26:09,690 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:26:09,696 server_data.py[line:195] INFO {'lng_lat': [114.415615, 30.513282], 'zoom': 13}
+2020-12-31 14:26:40,520 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:26:40,525 server_data.py[line:195] INFO {'lng_lat': [114.382485, 30.545517], 'zoom': 13}
+2020-12-31 14:26:45,456 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:26:45,463 server_data.py[line:195] INFO {'lng_lat': [114.442223, 30.536941], 'zoom': 13}
+2020-12-31 14:27:44,412 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:27:44,418 server_data.py[line:195] INFO {'lng_lat': [114.381455, 30.547291], 'zoom': 13}
+2020-12-31 14:28:06,556 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:28:06,568 server_data.py[line:195] INFO {'lng_lat': [114.379738, 30.547143], 'zoom': 13}
+2020-12-31 14:28:45,682 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:28:45,687 server_data.py[line:195] INFO {'lng_lat': [114.384373, 30.545664], 'zoom': 13}
+2020-12-31 14:31:36,002 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:31:36,007 server_data.py[line:195] INFO {'lng_lat': [114.406174, 30.518458], 'zoom': 13}
+2020-12-31 14:31:39,496 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:31:39,496 server_data.py[line:195] INFO {'lng_lat': [114.385403, 30.545221], 'zoom': 13}
+2020-12-31 14:32:17,846 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:32:17,851 server_data.py[line:195] INFO {'lng_lat': [114.403153, 30.519198], 'zoom': 13}
+2020-12-31 14:32:47,135 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:32:47,146 server_data.py[line:195] INFO {'lng_lat': [114.385986, 30.54936], 'zoom': 13}
+2020-12-31 14:33:32,816 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:33:32,816 server_data.py[line:195] INFO {'lng_lat': [114.415684, 30.503225], 'zoom': 13}
+2020-12-31 14:33:56,247 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:33:56,247 server_data.py[line:195] INFO {'lng_lat': [114.406929, 30.502486], 'zoom': 13}
+2020-12-31 14:34:19,875 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:34:19,875 server_data.py[line:195] INFO {'lng_lat': [114.493103, 30.523486], 'zoom': 13}
+2020-12-31 14:34:32,502 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:34:32,508 server_data.py[line:195] INFO {'lng_lat': [114.476795, 30.509733], 'zoom': 13}
+2020-12-31 14:34:55,328 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:34:55,333 server_data.py[line:195] INFO {'lng_lat': [114.498081, 30.532802], 'zoom': 13}
+2020-12-31 14:35:14,980 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:35:14,985 server_data.py[line:195] INFO {'lng_lat': [114.450188, 30.518015], 'zoom': 13}
+2020-12-31 14:35:27,416 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:35:27,416 server_data.py[line:195] INFO {'lng_lat': [114.385986, 30.546995], 'zoom': 13}
+2020-12-31 14:35:45,757 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:35:45,763 server_data.py[line:195] INFO {'lng_lat': [114.438858, 30.538716], 'zoom': 13}
+2020-12-31 14:36:02,524 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:36:02,524 server_data.py[line:195] INFO {'lng_lat': [114.483833, 30.548621], 'zoom': 13}
+2020-12-31 14:38:37,290 server_data.py[line:289] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:38:37,290 server_data.py[line:289] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:38:37,290 server_data.py[line:289] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:38:37,291 server_data.py[line:289] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:38:37,291 server_data.py[line:289] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:38:37,314 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 14:38:37,534 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:38:37,534 server_data.py[line:195] INFO {'lng_lat': [114.401024, 30.514317], 'zoom': 13}
+2020-12-31 14:38:49,693 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:38:49,699 server_data.py[line:195] INFO {'lng_lat': [114.381695, 30.546404], 'zoom': 13}
+2020-12-31 14:39:03,180 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:39:03,186 server_data.py[line:195] INFO {'lng_lat': [114.438515, 30.539159], 'zoom': 13}
+2020-12-31 14:39:43,555 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:39:43,561 server_data.py[line:195] INFO {'lng_lat': [114.384201, 30.544777], 'zoom': 13}
+2020-12-31 14:40:02,740 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:40:02,746 server_data.py[line:195] INFO {'lng_lat': [114.384888, 30.546108], 'zoom': 13}
+2020-12-31 14:46:49,429 server_data.py[line:289] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:46:49,429 server_data.py[line:289] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:46:49,429 server_data.py[line:289] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:46:49,429 server_data.py[line:289] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:46:49,429 server_data.py[line:289] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 14:46:49,451 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 14:49:30,979 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:49:30,985 server_data.py[line:195] INFO {'lng_lat': [91.579845, 25.242791], 'zoom': 2}
+2020-12-31 14:49:41,407 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:49:41,413 server_data.py[line:195] INFO {'lng_lat': [-71.896717, -13.156427], 'zoom': 2}
+2020-12-31 14:49:43,936 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:49:43,936 server_data.py[line:195] INFO {'lng_lat': [161.277111, 20.630813], 'zoom': 4}
+2020-12-31 14:50:12,531 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:50:12,537 server_data.py[line:195] INFO {'lng_lat': [114.791897, 30.456033], 'zoom': 11}
+2020-12-31 14:50:46,479 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:50:46,485 server_data.py[line:195] INFO {'lng_lat': [114.47913, 30.505148], 'zoom': 13}
+2020-12-31 14:51:03,643 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:51:03,655 server_data.py[line:195] INFO {'lng_lat': [114.441879, 30.519789], 'zoom': 13}
+2020-12-31 14:51:19,401 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:51:19,413 server_data.py[line:195] INFO {'lng_lat': [114.415958, 30.507219], 'zoom': 13}
+2020-12-31 14:54:07,060 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:54:07,078 server_data.py[line:195] INFO {'lng_lat': [114.438789, 30.537976], 'zoom': 13}
+2020-12-31 14:54:57,708 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:54:57,714 server_data.py[line:195] INFO {'lng_lat': [114.387119, 30.555421], 'zoom': 13}
+2020-12-31 14:56:22,855 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:56:22,861 server_data.py[line:195] INFO {'lng_lat': [114.431537, 30.523079], 'zoom': 15}
+2020-12-31 14:56:48,037 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:56:48,043 server_data.py[line:195] INFO {'lng_lat': [114.431365, 30.523005], 'zoom': 15}
+2020-12-31 14:57:07,095 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:57:07,100 server_data.py[line:195] INFO {'lng_lat': [114.431236, 30.521675], 'zoom': 15}
+2020-12-31 14:59:21,116 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:59:21,122 server_data.py[line:195] INFO {'lng_lat': [114.431382, 30.522562], 'zoom': 15}
+2020-12-31 14:59:47,137 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 14:59:47,143 server_data.py[line:195] INFO {'lng_lat': [114.44254, 30.522414], 'zoom': 15}
+2020-12-31 15:00:03,884 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:00:03,897 server_data.py[line:211] ERROR user_lng_lat_用户点击经纬度数据没有config字段
+2020-12-31 15:00:23,500 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:00:23,506 server_data.py[line:195] INFO {'lng_lat': [114.431123, 30.523809], 'zoom': 17}
+2020-12-31 15:01:21,205 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:01:21,211 server_data.py[line:195] INFO {'lng_lat': [114.431895, 30.520718], 'zoom': 17.46}
+2020-12-31 15:01:41,275 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:01:41,281 server_data.py[line:195] INFO {'lng_lat': [114.431419, 30.522169], 'zoom': 17.46}
+2020-12-31 15:02:08,747 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:02:08,753 server_data.py[line:195] INFO {'lng_lat': [114.43089, 30.524064], 'zoom': 15.46}
+2020-12-31 15:06:35,775 server_data.py[line:289] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 15:06:35,775 server_data.py[line:289] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 15:06:35,775 server_data.py[line:289] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 15:06:35,775 server_data.py[line:289] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 15:06:35,775 server_data.py[line:289] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 15:06:35,795 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 15:06:52,805 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:06:52,811 server_data.py[line:195] INFO {'lng_lat': [114.432198, 30.522155], 'zoom': 15}
+2020-12-31 15:07:01,849 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:07:01,855 server_data.py[line:195] INFO {'lng_lat': [114.431768, 30.521933], 'zoom': 15}
+2020-12-31 15:07:12,171 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:07:12,171 server_data.py[line:195] INFO {'lng_lat': [114.431382, 30.524965], 'zoom': 15}
+2020-12-31 15:07:21,450 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:07:21,456 server_data.py[line:195] INFO {'lng_lat': [114.431138, 30.524577], 'zoom': 16}
+2020-12-31 15:07:39,120 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:07:39,125 server_data.py[line:195] INFO {'lng_lat': [114.42646, 30.523856], 'zoom': 16}
+2020-12-31 15:08:38,445 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:08:38,457 server_data.py[line:195] INFO {'lng_lat': [114.424679, 30.530269], 'zoom': 16}
+2020-12-31 15:09:02,464 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:09:02,470 server_data.py[line:195] INFO {'lng_lat': [114.424529, 30.530195], 'zoom': 16}
+2020-12-31 15:09:22,182 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:09:22,188 server_data.py[line:195] INFO {'lng_lat': [114.415748, 30.526822], 'zoom': 17}
+2020-12-31 15:09:40,562 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:09:40,567 server_data.py[line:195] INFO {'lng_lat': [114.41632, 30.525732], 'zoom': 18}
+2020-12-31 15:09:58,626 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:09:58,626 server_data.py[line:195] INFO {'lng_lat': [114.416347, 30.525704], 'zoom': 18}
+2020-12-31 15:10:43,429 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:10:43,429 server_data.py[line:195] INFO {'lng_lat': [114.483456, 30.550765], 'zoom': 14}
+2020-12-31 15:10:56,747 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:10:56,753 server_data.py[line:195] INFO {'lng_lat': [114.483284, 30.555421], 'zoom': 14}
+2020-12-31 15:11:35,299 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:11:35,299 server_data.py[line:195] INFO {'lng_lat': [114.480623, 30.550913], 'zoom': 14}
+2020-12-31 15:12:35,518 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:12:35,523 server_data.py[line:211] ERROR user_lng_lat_用户点击经纬度数据没有config字段
+2020-12-31 15:13:52,304 server_data.py[line:289] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 15:13:52,304 server_data.py[line:289] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 15:13:52,304 server_data.py[line:289] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 15:13:52,304 server_data.py[line:289] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 15:13:52,304 server_data.py[line:289] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 15:13:52,326 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 15:13:57,305 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:13:57,306 server_data.py[line:195] INFO {'lng_lat': [114.387119, 30.552465], 'zoom': 13}
+2020-12-31 15:14:28,689 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:14:28,695 server_data.py[line:195] INFO {'lng_lat': [170.413462, 20.18202], 'zoom': 3.06}
+2020-12-31 15:14:35,201 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:14:35,212 server_data.py[line:195] INFO {'lng_lat': [170.413462, 20.18202], 'zoom': 3.06}
+2020-12-31 15:15:47,548 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:15:47,554 server_data.py[line:195] INFO {'lng_lat': [100.155605, 36.877923], 'zoom': 9.06}
+2020-12-31 15:16:04,304 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:16:04,316 server_data.py[line:195] INFO {'lng_lat': [100.187222, 36.873708], 'zoom': 9.06}
+2020-12-31 15:17:40,448 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:17:40,454 server_data.py[line:195] INFO {'lng_lat': [114.430927, 30.524817], 'zoom': 14}
+2020-12-31 15:18:11,937 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:18:11,937 server_data.py[line:195] INFO {'lng_lat': [114.383755, 30.554091], 'zoom': 13}
+2020-12-31 15:19:16,580 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:19:16,580 server_data.py[line:195] INFO {'lng_lat': [114.385128, 30.552317], 'zoom': 13}
+2020-12-31 15:19:48,619 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:19:48,625 server_data.py[line:195] INFO {'lng_lat': [114.484228, 30.572893], 'zoom': 14}
+2020-12-31 15:20:07,925 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:20:07,931 server_data.py[line:195] INFO {'lng_lat': [114.484314, 30.573558], 'zoom': 14}
+2020-12-31 15:21:11,168 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:21:11,174 server_data.py[line:195] INFO {'lng_lat': [114.495864, 30.566434], 'zoom': 16}
+2020-12-31 15:21:56,133 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:21:56,145 server_data.py[line:195] INFO {'lng_lat': [114.35172, 30.431683], 'zoom': 12}
+2020-12-31 15:22:04,947 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:22:04,953 server_data.py[line:195] INFO {'lng_lat': [114.350347, 30.426946], 'zoom': 12}
+2020-12-31 15:22:31,853 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:22:31,853 server_data.py[line:195] INFO {'lng_lat': [114.540702, 30.422728], 'zoom': 14}
+2020-12-31 15:22:46,379 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:22:46,385 server_data.py[line:195] INFO {'lng_lat': [114.541131, 30.422432], 'zoom': 14}
+2020-12-31 15:23:00,557 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:23:00,562 server_data.py[line:195] INFO {'lng_lat': [114.519785, 30.422543], 'zoom': 15}
+2020-12-31 15:23:25,920 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:23:25,926 server_data.py[line:195] INFO {'lng_lat': [114.426756, 30.523846], 'zoom': 17}
+2020-12-31 15:23:56,450 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:23:56,456 server_data.py[line:195] INFO {'lng_lat': [114.422361, 30.525637], 'zoom': 17.73}
+2020-12-31 15:24:12,559 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:24:12,565 server_data.py[line:195] INFO {'lng_lat': [114.4224, 30.525642], 'zoom': 17.73}
+2020-12-31 15:24:29,602 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:24:29,607 server_data.py[line:195] INFO {'lng_lat': [114.422536, 30.525988], 'zoom': 17.73}
+2020-12-31 15:24:57,236 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:24:57,236 server_data.py[line:195] INFO {'lng_lat': [114.431597, 30.522525], 'zoom': 15}
+2020-12-31 15:25:17,931 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:25:17,937 server_data.py[line:195] INFO {'lng_lat': [114.431254, 30.523967], 'zoom': 15}
+2020-12-31 15:25:42,823 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:25:42,829 server_data.py[line:195] INFO {'lng_lat': [114.431511, 30.524336], 'zoom': 15}
+2020-12-31 15:26:18,868 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:26:18,874 server_data.py[line:195] INFO {'lng_lat': [114.43164, 30.52271], 'zoom': 15}
+2020-12-31 15:26:54,852 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:26:54,858 server_data.py[line:211] ERROR user_lng_lat_用户点击经纬度数据没有config字段
+2020-12-31 15:27:14,978 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:27:14,985 server_data.py[line:211] ERROR user_lng_lat_用户点击经纬度数据没有config字段
+2020-12-31 15:27:39,240 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:27:39,252 server_data.py[line:211] ERROR user_lng_lat_用户点击经纬度数据没有config字段
+2020-12-31 15:28:41,874 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:28:41,880 server_data.py[line:195] INFO {'lng_lat': [114.385746, 30.550543], 'zoom': 13}
+2020-12-31 15:30:50,191 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:30:50,197 server_data.py[line:195] INFO {'lng_lat': [114.38355, 30.550746], 'zoom': 13.06}
+2020-12-31 15:31:18,874 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:31:18,880 server_data.py[line:195] INFO {'lng_lat': [114.384888, 30.554748], 'zoom': 13}
+2020-12-31 15:31:32,522 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:31:32,537 server_data.py[line:195] INFO {'lng_lat': [114.700127, 30.647452], 'zoom': 13}
+2020-12-31 15:31:48,252 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:31:48,258 server_data.py[line:195] INFO {'lng_lat': [114.482975, 30.550986], 'zoom': 13}
+2020-12-31 15:32:07,442 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:32:07,442 server_data.py[line:195] INFO {'lng_lat': [114.543743, 30.532802], 'zoom': 13}
+2020-12-31 15:32:57,046 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:32:57,046 server_data.py[line:195] INFO {'lng_lat': [114.273582, 30.520381], 'zoom': 15}
+2020-12-31 15:33:40,818 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:33:40,830 server_data.py[line:195] INFO {'lng_lat': [114.275162, 30.519345], 'zoom': 13}
+2020-12-31 15:34:22,201 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:34:22,207 server_data.py[line:211] ERROR user_lng_lat_用户点击经纬度数据没有config字段
+2020-12-31 15:42:16,582 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:42:16,588 server_data.py[line:195] INFO {'lng_lat': [114.380253, 30.526443], 'zoom': 13}
+2020-12-31 15:42:47,753 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:42:47,759 server_data.py[line:195] INFO {'lng_lat': [114.441261, 30.527922], 'zoom': 13}
+2020-12-31 15:47:20,201 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:47:20,201 server_data.py[line:195] INFO {'lng_lat': [114.43158, 30.523782], 'zoom': 13}
+2020-12-31 15:47:31,286 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:47:31,286 server_data.py[line:195] INFO {'lng_lat': [114.431494, 30.523153], 'zoom': 15}
+2020-12-31 15:48:32,548 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:48:32,554 server_data.py[line:195] INFO {'lng_lat': [114.431494, 30.523375], 'zoom': 15}
+2020-12-31 15:48:59,230 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:48:59,236 server_data.py[line:195] INFO {'lng_lat': [114.431623, 30.523005], 'zoom': 15}
+2020-12-31 15:49:26,724 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:49:26,729 server_data.py[line:195] INFO {'lng_lat': [114.431451, 30.523116], 'zoom': 15}
+2020-12-31 15:49:53,452 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:49:53,458 server_data.py[line:195] INFO {'lng_lat': [114.431193, 30.523042], 'zoom': 15}
+2020-12-31 15:49:53,469 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:49:53,474 server_data.py[line:195] INFO {'lng_lat': [114.431193, 30.522746], 'zoom': 15}
+2020-12-31 15:55:38,423 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:55:38,428 server_data.py[line:229] INFO {'lng_lat': [[114.431923, 30.525852]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 0, 'fix_point': None}
+2020-12-31 15:56:50,101 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:56:50,114 server_data.py[line:229] INFO {'lng_lat': [[114.383686, 30.544629]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 15:58:58,513 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:58:58,513 server_data.py[line:229] INFO {'lng_lat': [[114.436386, 30.529844]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 15:59:12,759 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:59:12,765 server_data.py[line:229] INFO {'lng_lat': [[114.379051, 30.54182]], 'zoom': 13, 'meter_pix': 16.461166316339405, 'back_home': 0, 'fix_point': None}
+2020-12-31 15:59:58,447 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 15:59:58,453 server_data.py[line:229] INFO {'lng_lat': [[114.399136, 30.540046]], 'zoom': 13, 'meter_pix': 16.461166316339405, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:01:49,634 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:01:49,634 server_data.py[line:229] INFO {'lng_lat': [[114.393128, 30.524077]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 16:03:37,092 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:03:37,097 server_data.py[line:229] INFO {'lng_lat': [[114.379395, 30.540786]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 16:04:01,307 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:04:01,307 server_data.py[line:229] INFO {'lng_lat': [[114.441193, 30.539307]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 16:04:17,327 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:04:17,333 server_data.py[line:229] INFO {'lng_lat': [[114.386948, 30.544038]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 16:05:46,996 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:05:47,002 server_data.py[line:229] INFO {'lng_lat': [[114.384029, 30.546404]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:05:54,036 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:05:54,036 server_data.py[line:229] INFO {'lng_lat': [[114.398277, 30.523042]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 16:06:03,849 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:06:03,849 server_data.py[line:229] INFO {'lng_lat': [[114.415787, 30.511508]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 16:08:50,018 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:08:50,024 server_data.py[line:229] INFO {'lng_lat': [[114.437931, 30.537829]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 16:08:58,502 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:08:58,508 server_data.py[line:229] INFO {'lng_lat': [[114.388664, 30.524225]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 16:09:17,803 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:09:17,809 server_data.py[line:229] INFO {'lng_lat': [[114.373043, 30.506331]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 16:09:34,338 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:09:34,338 server_data.py[line:229] INFO {'lng_lat': [[114.350727, 30.513874]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 16:14:14,213 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:14:14,237 server_data.py[line:229] INFO {'lng_lat': [[114.386948, 30.523042]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:17:46,283 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:17:46,295 server_data.py[line:229] INFO {'lng_lat': [[114.380596, 30.506183]], 'zoom': 13, 'meter_pix': 16.46111617661631, 'back_home': 1, 'fix_point': None}
+2020-12-31 16:17:54,551 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:17:54,568 server_data.py[line:229] INFO {'lng_lat': [[114.422482, 30.507071]], 'zoom': 13, 'meter_pix': 16.46109110659001, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:24:04,890 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:24:04,908 server_data.py[line:195] INFO {'lng_lat': [114.431236, 30.522747], 'zoom': 13}
+2020-12-31 16:24:22,396 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:24:22,401 server_data.py[line:195] INFO {'lng_lat': [114.381111, 30.525704], 'zoom': 13}
+2020-12-31 16:24:35,166 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:24:35,172 server_data.py[line:195] INFO {'lng_lat': [114.379945, 30.526709], 'zoom': 14}
+2020-12-31 16:24:54,294 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:24:54,312 server_data.py[line:229] INFO {'lng_lat': [[114.431731, 30.522585]], 'zoom': 14.49, 'meter_pix': 5.860370621671455, 'back_home': 1, 'fix_point': None}
+2020-12-31 16:25:16,439 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:25:16,445 server_data.py[line:195] INFO {'lng_lat': [114.431451, 30.524743], 'zoom': 15}
+2020-12-31 16:25:22,676 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:25:22,684 server_data.py[line:195] INFO {'lng_lat': [114.431751, 30.522118], 'zoom': 15}
+2020-12-31 16:25:30,774 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:25:30,775 server_data.py[line:229] INFO {'lng_lat': [[114.430752, 30.523444]], 'zoom': 15.78, 'meter_pix': 2.3965890851811, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:27:02,878 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:27:02,878 server_data.py[line:229] INFO {'lng_lat': [[114.434961, 30.519758], [114.431862, 30.524917], [114.431112, 30.528447], [114.4343, 30.520206], [114.435699, 30.520022], [114.436356, 30.51979], [114.431746, 30.52201], [114.429671, 30.521597], [114.429596, 30.523922], [114.430021, 30.524482], [114.430596, 30.520262]], 'zoom': 15.78, 'meter_pix': 2.396643784595722, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:28:26,226 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:28:26,233 server_data.py[line:229] INFO {'lng_lat': [[114.43317, 30.519853]], 'zoom': 15.78, 'meter_pix': 2.396643784595722, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:30:56,673 server_data.py[line:290] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:30:56,674 server_data.py[line:290] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:30:56,674 server_data.py[line:290] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:30:56,674 server_data.py[line:290] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:30:56,674 server_data.py[line:290] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:30:56,698 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 16:31:12,446 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:31:12,452 server_data.py[line:195] INFO {'lng_lat': [114.431494, 30.524336], 'zoom': 15}
+2020-12-31 16:31:28,079 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:31:28,079 server_data.py[line:195] INFO {'lng_lat': [114.431923, 30.522118], 'zoom': 15}
+2020-12-31 16:31:40,343 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:31:40,349 server_data.py[line:195] INFO {'lng_lat': [114.431623, 30.524928], 'zoom': 15}
+2020-12-31 16:31:47,606 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:31:47,618 server_data.py[line:195] INFO {'lng_lat': [114.432996, 30.523116], 'zoom': 15}
+2020-12-31 16:31:54,525 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:31:54,533 server_data.py[line:195] INFO {'lng_lat': [114.431665, 30.521804], 'zoom': 15}
+2020-12-31 16:32:01,422 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:32:01,422 server_data.py[line:230] INFO {'lng_lat': [[114.430967, 30.52411]], 'zoom': 15.78, 'meter_pix': 2.396589109843503, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:34:16,126 server_data.py[line:290] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:34:16,127 server_data.py[line:290] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:34:16,127 server_data.py[line:290] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:34:16,128 server_data.py[line:290] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:34:16,128 server_data.py[line:290] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:34:16,151 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 16:34:47,672 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:34:47,672 server_data.py[line:195] INFO {'lng_lat': [114.431494, 30.522784], 'zoom': 15}
+2020-12-31 16:34:59,034 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:34:59,040 server_data.py[line:195] INFO {'lng_lat': [114.43085, 30.524965], 'zoom': 15}
+2020-12-31 16:35:23,634 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:35:23,639 server_data.py[line:195] INFO {'lng_lat': [114.43188, 30.522414], 'zoom': 15}
+2020-12-31 16:35:25,738 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:35:25,738 server_data.py[line:195] INFO {'lng_lat': [114.432824, 30.523449], 'zoom': 15}
+2020-12-31 16:35:36,012 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:35:36,018 server_data.py[line:195] INFO {'lng_lat': [114.430528, 30.523985], 'zoom': 16}
+2020-12-31 16:35:50,804 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:35:50,810 server_data.py[line:195] INFO {'lng_lat': [114.432052, 30.522784], 'zoom': 15}
+2020-12-31 16:36:01,312 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:36:01,324 server_data.py[line:195] INFO {'lng_lat': [114.430121, 30.524484], 'zoom': 15}
+2020-12-31 16:36:12,862 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:36:12,868 server_data.py[line:195] INFO {'lng_lat': [114.432223, 30.523412], 'zoom': 15}
+2020-12-31 16:36:28,570 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:36:28,576 server_data.py[line:195] INFO {'lng_lat': [114.431365, 30.522506], 'zoom': 16}
+2020-12-31 16:36:40,907 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:36:40,913 server_data.py[line:195] INFO {'lng_lat': [114.43188, 30.522562], 'zoom': 15}
+2020-12-31 16:37:26,586 server_data.py[line:290] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:37:26,587 server_data.py[line:290] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:37:26,588 server_data.py[line:290] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:37:26,588 server_data.py[line:290] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:37:26,589 server_data.py[line:290] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:37:26,605 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 16:37:53,986 server_data.py[line:290] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:37:53,987 server_data.py[line:290] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:37:53,987 server_data.py[line:290] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:37:53,987 server_data.py[line:290] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:37:53,988 server_data.py[line:290] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:37:54,007 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 16:38:00,113 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:38:00,119 server_data.py[line:195] INFO {'lng_lat': [114.431537, 30.522747], 'zoom': 15}
+2020-12-31 16:38:29,278 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:38:29,290 server_data.py[line:195] INFO {'lng_lat': [114.431279, 30.524299], 'zoom': 15}
+2020-12-31 16:38:45,740 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:38:45,752 server_data.py[line:230] INFO {'lng_lat': [[114.431516, 30.523874]], 'zoom': 15.78, 'meter_pix': 2.396589109843503, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:39:54,295 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:39:54,312 server_data.py[line:230] INFO {'lng_lat': [[114.432266, 30.522884]], 'zoom': 15.78, 'meter_pix': 2.396589109843503, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:40:35,515 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:40:35,526 server_data.py[line:230] INFO {'lng_lat': [[114.430542, 30.523034]], 'zoom': 15.78, 'meter_pix': 2.396589109843503, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:41:12,392 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:41:12,398 server_data.py[line:195] INFO {'lng_lat': [114.384961, 30.554787], 'zoom': 13}
+2020-12-31 16:41:36,444 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:41:36,444 server_data.py[line:230] INFO {'lng_lat': [[114.431067, 30.522259]], 'zoom': 15.78, 'meter_pix': 2.396589109843503, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:49:31,930 server_data.py[line:295] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:49:31,945 server_data.py[line:295] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:49:31,945 server_data.py[line:295] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:49:31,945 server_data.py[line:295] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:49:31,946 server_data.py[line:295] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:49:31,953 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 16:50:04,039 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:50:04,045 server_data.py[line:197] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431193, 30.522562], 'zoom': 15}
+2020-12-31 16:50:22,440 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:50:22,446 server_data.py[line:197] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431365, 30.522636], 'zoom': 15}
+2020-12-31 16:50:47,717 server_data.py[line:151] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:50:47,723 server_data.py[line:197] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.430593, 30.524225], 'zoom': 15}
+2020-12-31 16:51:00,732 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:51:00,739 server_data.py[line:233] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [[114.431244, 30.520623]], 'zoom': 15.78, 'meter_pix': 2.396617791723893, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:53:47,141 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:53:47,155 server_data.py[line:233] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [[114.432243, 30.519546]], 'zoom': 15.78, 'meter_pix': 2.396617791723893, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:54:29,354 server_data.py[line:151] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c'}
+2020-12-31 16:54:29,372 server_data.py[line:233] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [[114.433443, 30.519826]], 'zoom': 15.78, 'meter_pix': 2.396617791723893, 'back_home': 0, 'fix_point': None}
+2020-12-31 16:59:01,906 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:59:01,907 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:59:01,907 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:59:01,907 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:59:01,908 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 16:59:01,932 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 16:59:18,877 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431623, 30.523745], 'zoom': 15}
+2020-12-31 16:59:30,286 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.430444, 30.523896]], 'zoom': 16, 'meter_pix': 2.3965890851811, 'back_home': 0, 'fix_point': None}
+2020-12-31 17:01:44,216 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:01:44,217 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:01:44,217 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:01:44,217 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:01:44,218 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:01:44,226 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 17:02:06,470 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:02:06,470 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:02:06,471 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:02:06,471 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:02:06,471 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:02:06,492 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 17:06:41,857 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:06:41,858 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:06:41,858 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:06:41,858 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:06:41,858 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:06:41,879 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 17:07:07,926 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431537, 30.522118], 'zoom': 15}
+2020-12-31 17:07:28,253 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431537, 30.522673], 'zoom': 15}
+2020-12-31 17:07:49,032 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.432318, 30.518686]], 'zoom': 18, 'meter_pix': 0.5991787258151406, 'back_home': 0, 'fix_point': None}
+2020-12-31 17:08:26,982 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.43364, 30.598689], 'zoom': 13}
+2020-12-31 17:08:47,470 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.429879, 30.532965], 'zoom': 16}
+2020-12-31 17:15:03,965 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:15:03,967 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:15:03,968 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:15:03,969 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:15:03,970 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:15:03,984 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 17:16:12,096 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431837, 30.522469], 'zoom': 15}
+2020-12-31 17:16:33,322 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431193, 30.522728], 'zoom': 15}
+2020-12-31 17:16:55,274 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.43218, 30.522358], 'zoom': 15}
+2020-12-31 17:17:10,316 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.430636, 30.525168], 'zoom': 15}
+2020-12-31 17:17:25,389 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.43162, 30.522453]], 'zoom': 16, 'meter_pix': 2.396589109843503, 'back_home': 0, 'fix_point': None}
+2020-12-31 17:37:43,760 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:37:43,778 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:37:43,778 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:37:43,778 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:37:43,778 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:37:43,782 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 17:37:46,452 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.430979, 30.522858], 'zoom': 15}
+2020-12-31 17:38:10,378 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.43158, 30.521952], 'zoom': 16}
+2020-12-31 17:38:14,857 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.430378, 30.522599], 'zoom': 15}
+2020-12-31 17:38:25,545 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.431562, 30.522011]], 'zoom': 15, 'meter_pix': 3.4605581866777957, 'back_home': 0, 'fix_point': None}
+2020-12-31 17:38:29,688 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.364783, 30.533487], 'zoom': 13}
+2020-12-31 17:38:29,706 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.43814, 30.536907], 'zoom': 13}
+2020-12-31 17:40:03,649 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:40:03,650 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:40:03,650 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:40:03,650 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:40:03,650 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 17:40:03,670 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 17:40:21,179 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431494, 30.524114], 'zoom': 15}
+2020-12-31 17:40:52,778 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431322, 30.525297], 'zoom': 15}
+2020-12-31 17:41:20,274 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431494, 30.522192], 'zoom': 15}
+2020-12-31 17:41:22,284 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431794, 30.522525], 'zoom': 15}
+2020-12-31 17:41:31,109 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431451, 30.522007], 'zoom': 14}
+2020-12-31 17:41:47,905 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.431493, 30.522714]], 'zoom': 15, 'meter_pix': 2.930192547454685, 'back_home': 0, 'fix_point': None}
+2020-12-31 17:42:14,402 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.434854, 30.519819]], 'zoom': 15, 'meter_pix': 2.930192547454685, 'back_home': 0, 'fix_point': None}
+2020-12-31 18:13:33,728 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:13:33,740 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:13:33,740 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:13:33,740 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:13:33,740 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:13:33,748 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 18:14:50,924 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431537, 30.522839], 'zoom': 16}
+2020-12-31 18:15:08,104 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.431782, 30.523519]], 'zoom': 17, 'meter_pix': 0.9401762808237984, 'back_home': 0, 'fix_point': None}
+2020-12-31 18:17:04,058 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:17:04,060 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:17:04,062 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:17:04,063 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:17:04,063 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:17:04,082 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 18:17:52,255 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:17:52,255 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:17:52,255 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:17:52,255 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:17:52,255 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2020-12-31 18:17:52,281 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 18:18:21,404 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431708, 30.522784], 'zoom': 15}
+2020-12-31 18:18:31,544 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.431668, 30.523595]], 'zoom': 17, 'meter_pix': 1.1982966635518273, 'back_home': 0, 'fix_point': None}
+2020-12-31 18:48:37,793 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:48:37,794 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:48:37,794 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:48:37,794 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:48:37,794 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:48:37,813 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 18:48:47,889 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431537, 30.52441], 'zoom': 15}
+2020-12-31 18:49:26,152 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.431744, 30.522927]], 'zoom': 15, 'meter_pix': 4.793178219687006, 'back_home': 0, 'fix_point': None}
+2020-12-31 18:51:59,894 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:51:59,894 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:51:59,894 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:51:59,894 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:51:59,894 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:51:59,916 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 18:52:09,904 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.430936, 30.524558], 'zoom': 15}
+2020-12-31 18:52:28,959 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.431766, 30.522604]], 'zoom': 16, 'meter_pix': 2.396589109843503, 'back_home': 0, 'fix_point': None}
+2020-12-31 18:53:05,801 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.380768, 30.550012], 'zoom': 13}
+2020-12-31 18:54:07,576 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431065, 30.521578], 'zoom': 15.46}
+2020-12-31 18:54:30,458 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.430168, 30.524247], [114.432992, 30.523203], [114.43188, 30.522568], [114.43278, 30.522277], [114.430718, 30.522988]], 'zoom': 17, 'meter_pix': 1.1982945919153523, 'back_home': 0, 'fix_point': None}
+2020-12-31 18:55:59,389 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:55:59,389 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:55:59,389 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:55:59,390 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:55:59,390 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 18:55:59,414 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 18:56:08,866 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431151, 30.524262], 'zoom': 15}
+2020-12-31 18:56:34,930 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.430043, 30.524843], [114.432918, 30.523293], [114.430968, 30.522109]], 'zoom': 16, 'meter_pix': 2.3965890851811, 'back_home': 0, 'fix_point': None}
+2020-12-31 19:02:08,549 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:02:08,549 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:02:08,549 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:02:08,550 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:02:08,550 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:02:08,571 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 19:02:39,128 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431322, 30.522155], 'zoom': 15}
+2020-12-31 19:03:00,826 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.430593, 30.523271], [114.432442, 30.521958], [114.430868, 30.521183], [114.432167, 30.520408]], 'zoom': 16, 'meter_pix': 2.3965901703261356, 'back_home': 0, 'fix_point': None}
+2020-12-31 19:08:55,577 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:08:55,577 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:08:55,577 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:08:55,578 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:08:55,578 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:08:55,600 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 19:09:06,671 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431236, 30.522968], 'zoom': 15}
+2020-12-31 19:09:23,292 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.430067, 30.523336], [114.432941, 30.522604], [114.430742, 30.52185]], 'zoom': 16, 'meter_pix': 2.396589627753795, 'back_home': 0, 'fix_point': None}
+2020-12-31 19:12:02,548 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:12:02,549 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:12:02,549 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:12:02,550 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:12:02,550 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:12:02,570 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 19:12:08,630 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431322, 30.524041], 'zoom': 15}
+2020-12-31 19:12:28,868 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.430495, 30.523186], [114.432819, 30.52282], [114.431125, 30.525958]], 'zoom': 16, 'meter_pix': 2.396594510892144, 'back_home': 0, 'fix_point': None}
+2020-12-31 19:12:52,047 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:12:52,052 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:12:52,052 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:12:52,052 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:12:52,053 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:12:52,068 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 19:13:04,282 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.432223, 30.522562], 'zoom': 15}
+2020-12-31 19:13:18,629 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.430732, 30.524036], [114.432706, 30.52339]], 'zoom': 17, 'meter_pix': 1.1982945425905487, 'back_home': 0, 'fix_point': None}
+2020-12-31 19:13:47,491 server_data.py[line:293] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:13:47,491 server_data.py[line:293] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:13:47,491 server_data.py[line:293] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:13:47,491 server_data.py[line:293] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:13:47,492 server_data.py[line:293] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
+2020-12-31 19:13:47,514 server_data.py[line:138] INFO Connected with result code:  0
+2020-12-31 19:13:56,379 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.387119, 30.554386], 'zoom': 13}
+2020-12-31 19:14:23,642 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.484623, 30.573965], 'zoom': 13}
+2020-12-31 19:14:55,722 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.468787, 30.57281], 'zoom': 15}
+2020-12-31 19:20:26,907 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431414, 30.522917], 'zoom': 15}
+2020-12-31 19:20:39,134 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431329, 30.52251], 'zoom': 15}
+2020-12-31 19:21:22,153 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.432009, 30.52197], 'zoom': 15}
+2020-12-31 19:21:42,544 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.404947, 30.58173], 'zoom': 14}
+2020-12-31 19:22:11,974 server_data.py[line:231] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'target_lng_lat': [[114.403824, 30.587878], [114.410554, 30.586213], [114.40189, 30.58548], [114.408582, 30.583016]], 'zoom': 15, 'meter_pix': 3.706581094587755, 'back_home': 0, 'fix_point': None}
+2020-12-31 19:25:23,844 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [115.036471, 30.741279], 'zoom': 13}
+2020-12-31 19:26:17,251 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [115.036471, 30.743197], 'zoom': 13}
+2020-12-31 19:26:45,447 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [115.077069, 30.744968], 'zoom': 15}
+2020-12-31 19:41:11,229 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.430861, 30.523597], 'zoom': 17}
+2020-12-31 19:41:30,142 server_data.py[line:195] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'lng_lat': [114.431279, 30.522858], 'zoom': 15}

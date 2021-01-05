@@ -33,7 +33,7 @@ def color_block_finder(img, lowerb, upperb,
 
     # 寻找轮廓（只寻找最外侧的色块）
     contours, hier = cv2.findContours(
-        img_bin, cv2.RETR_EXTERNAL, method=method_1)
+        img_bin, cv2.RETR_EXTERNAL, method=method_0)
     # 声明画布 拷贝自img
     show_img = np.copy(img)
     # 外接矩形区域集合
@@ -99,7 +99,6 @@ def draw_color_block_rect(img, rects, color=(0, 0, 255)):
             canvas, pt1=(
                 x, y), pt2=(
                 x + w, y + h), color=color, thickness=3)
-
     return canvas
 
 
@@ -115,12 +114,7 @@ def is_in_contours(point, local_map_data):
             # 直接使用像素位置判断
             in_cnt = cv2.pointPolygonTest(
                 np.array(cnt['pool_lng_lats']), (point[0], point[1]), False)
-            # 使用经纬度判断
-            # new_cnt = []
-            # for i in cnt['mapData']:
-            #     new_cnt.append([int(i[0]*1000000),int(i[1]*1000000)])
-            # in_cnt = cv2.pointPolygonTest(np.array(new_cnt), (point[0][0],point[0][1]), False)
-            # 大于0说明属于该轮廓
+            # 使用经纬度判断 大于0说明属于该轮廓
             if in_cnt >= 0:
                 return cnt['id']
         # 循环结束返回None
