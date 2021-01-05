@@ -259,6 +259,8 @@ class DataManager:
                 self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
                           qos=1)
                 self.logger.info({"发送状态数据": mqtt_send_status_data})
+                # TODO
+                time.sleep(10)
             else:
                 self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
                           qos=1)
@@ -270,7 +272,7 @@ class DataManager:
                 self.send(method='http', data=mqtt_send_detect_data,
                           url=config.http_data_save,
                           http_type='POST')
-            time.sleep(1 / config.pi2mqtt_interval)
+                time.sleep(1 / config.pi2mqtt_interval)
 
     def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):
         """
@@ -333,7 +335,7 @@ class DataManager:
                 self.logger.info('没有点击湖，等待用户执行操作')
                 continue
 
-            self.logger.info({'init map user_lng_lat': self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat, 'zoom': self.server_data_obj.mqtt_send_get_obj.pool_click_zoom})
+            # self.logger.debug({'init map user_lng_lat': self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat, 'zoom': self.server_data_obj.mqtt_send_get_obj.pool_click_zoom})
             # 查找与更新湖泊id
             save_img_dir = os.path.join(config.root_path, 'baiduMap', 'imgs')
             if not os.path.exists(save_img_dir):
@@ -448,14 +450,12 @@ class DataManager:
 
             ## 配置判断
             len_target_lng_lat = len(self.server_data_obj.mqtt_send_get_obj.target_lng_lat)
-            self.logger.debug({'target_lng_lat':self.server_data_obj.mqtt_send_get_obj.target_lng_lat})
 
             if len_target_lng_lat<=0:
                 pass
-            # 等待确认就不执行检测
-            elif self.plan_path_status.count(0)>0:
-                pass
+
             else:
+                self.logger.debug({'target_lng_lat': self.server_data_obj.mqtt_send_get_obj.target_lng_lat})
                 # 单点航行模式
                 if len_target_lng_lat==1:
                     target_lng_lats = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.target_lng_lat)
@@ -468,7 +468,6 @@ class DataManager:
                             if self.baidu_map_obj is not None and current_lng_lat is not None:
                                 current_gaode_lng_lat = self.baidu_map_obj.gps_to_gaode_lng_lat(current_lng_lat)
                                 target_lng_lats.append(current_gaode_lng_lat)
-                    self.logger.debug({'path_planning': target_lng_lats})
 
                     self.path_planning(mode=0, target_lng_lats=target_lng_lats)
 
@@ -536,23 +535,27 @@ class DataManager:
         else:
             self.baidu_map_obj.ship_gps = self.data_define_obj.status['current_lng_lat']
         self.logger.debug({'path_planning mode':mode})
-        return_gaode_lng_lat_path = a_star.get_path(baidu_map_obj=self.baidu_map_obj,
-                                                    mode=mode,
-                                                    target_lng_lats=target_lng_lats,
-                                                    b_show=False,
-                                                    back_home=back_home,
-                                                    map_connect=1)
-        print('return_gaode_lng_lat_path',return_gaode_lng_lat_path)
-        if isinstance(return_gaode_lng_lat_path, str):
-            self.logger.error(return_gaode_lng_lat_path)
-            return
-        path_id = len(self.plan_path)
-        # 路径点
-        self.plan_path.append(return_gaode_lng_lat_path)
-        # 路径点状态
-        self.plan_path_points_status.append([0] * len(self.plan_path))
-        # 路径确认与取消状态
-        self.plan_path_status.append(0)
+        # 等待确认就不执行检测
+        if self.plan_path_status.count(0)>0:
+            pass
+        else:
+            return_gaode_lng_lat_path = a_star.get_path(baidu_map_obj=self.baidu_map_obj,
+                                                        mode=mode,
+                                                        target_lng_lats=target_lng_lats,
+                                                        b_show=False,
+                                                        back_home=back_home,
+                                                        map_connect=1)
+            print('return_gaode_lng_lat_path',return_gaode_lng_lat_path)
+            if isinstance(return_gaode_lng_lat_path, str):
+                self.logger.error(return_gaode_lng_lat_path)
+                return
+            path_id = len(self.plan_path)
+            # 路径点
+            self.plan_path = return_gaode_lng_lat_path
+            # 路径点状态
+            self.plan_path_points_status.append([0] * len(self.plan_path))
+            # 路径确认与取消状态
+            self.plan_path_status.append(0)
 
         mqtt_send_path_planning_data = {
             "deviceId": config.ship_code,
@@ -565,8 +568,6 @@ class DataManager:
         self.send(method='mqtt', topic='path_planning_%s' % (config.ship_code), data=mqtt_send_path_planning_data,
                   qos=2)
         self.logger.debug({'mqtt_send_path_planning_data':mqtt_send_path_planning_data})
-
-
 
     # 定时发送给单片机数据
     def send_com_heart_data(self):
