@@ -10,6 +10,7 @@ from audios import audios_manager
 import sys
 import os
 
+
 sys.path.append(
     os.path.join(
         os.path.dirname(
@@ -31,11 +32,10 @@ sys.path.append(
             os.path.abspath(__file__)),
         'pathPlanning'))
 
-
+logger = log.LogHandler('main_log')
 def main():
     if config.b_play_audio:
         audios_manager.play_audio(0)
-    logger = log.LogHandler('main_log')
 
     # 数据处理对象
     data_manager_obj = DataManager()
@@ -54,28 +54,38 @@ def main():
         logger.error({'binding_data error': e})
 
     # 启动串口数据收发和mqtt数据收发
-    get_com_data_thread = threading.Thread(
-        target=data_manager_obj.get_com_data)
-    send_mqtt_data_thread = threading.Thread(
-        target=data_manager_obj.send_mqtt_data)
-    send_com_data_thread = threading.Thread(
-        target=data_manager_obj.send_com_data)
+    if (config.sysstr == "Linux"):
+        get_com_data_thread = threading.Thread(
+            target=data_manager_obj.get_com_data)
+        send_com_data_thread = threading.Thread(
+            target=data_manager_obj.send_com_data)
+    else:
+        pass
     check_status_thread = threading.Thread(
         target=data_manager_obj.check_status)
-    send_com_heart_thread = threading.Thread(
-        target=data_manager_obj.send_com_heart_data)
 
-    get_com_data_thread.setDaemon(True)
-    send_mqtt_data_thread.setDaemon(True)
-    send_com_data_thread.setDaemon(True)
+    send_mqtt_data_thread = threading.Thread(
+        target=data_manager_obj.send_mqtt_data)
+
+
+    # send_com_heart_thread = threading.Thread(
+    #     target=data_manager_obj.send_com_heart_data)
+
     check_status_thread.setDaemon(True)
-    send_com_heart_thread.setDaemon(True)
+    if (config.sysstr == "Linux"):
+        get_com_data_thread.setDaemon(True)
+        send_com_data_thread.setDaemon(True)
+    send_mqtt_data_thread.setDaemon(True)
 
-    get_com_data_thread.start()
-    send_mqtt_data_thread.start()
-    send_com_data_thread.start()
+    # send_com_heart_thread.setDaemon(True)
+
     check_status_thread.start()
-    send_com_heart_thread.start()
+    if (config.sysstr == "Linux"):
+        get_com_data_thread.start()
+        send_com_data_thread.start()
+    send_mqtt_data_thread.start()
+
+    # send_com_heart_thread.start()
 
     # get_com_data_thread.join()
     # send_mqtt_data_thread.join()
@@ -85,32 +95,37 @@ def main():
 
     while True:
         #  判断线程是否死亡并重启线程
-        if not get_com_data_thread.is_alive():
-            if config.home_debug:
-                time.sleep(10)
-                pass
-            else:
-                logger.error('restart get_com_data_thread')
-                get_com_data_thread = threading.Thread(
-                    target=data_manager_obj.get_com_data)
-                get_com_data_thread.setDaemon(True)
-                get_com_data_thread.start()
-                time.sleep(10)
+        if (config.sysstr == "Linux"):
+            if not get_com_data_thread.is_alive():
+                if config.home_debug:
+                    time.sleep(10)
+                    pass
+                else:
+                    logger.error('restart get_com_data_thread')
+                    try:
+                        data_manager_obj.com_data_obj.uart.close()
+                        data_manager_obj.com_data_obj =data_manager_obj.get_serial_obj()
+                    except Exception as e:
+                        logger.error({'串口关闭失败':111, 'error': e})
+                    get_com_data_thread = threading.Thread(
+                        target=data_manager_obj.get_com_data)
+                    get_com_data_thread.setDaemon(True)
+                    get_com_data_thread.start()
+                    time.sleep(10)
+                if not send_com_data_thread.is_alive():
+                    logger.error('restart send_com_data_thread')
+                    send_com_data_thread = threading.Thread(
+                        target=data_manager_obj.send_com_data)
+                    send_com_data_thread.setDaemon(True)
+                    send_com_data_thread.start()
+                    time.sleep(10)
 
-        elif not send_mqtt_data_thread.is_alive():
+        if not send_mqtt_data_thread.is_alive():
             logger.error('restart send_mqtt_data_thread')
             send_mqtt_data_thread = threading.Thread(
                 target=data_manager_obj.send_mqtt_data)
             send_mqtt_data_thread.setDaemon(True)
             send_mqtt_data_thread.start()
-            time.sleep(10)
-
-        elif not send_com_data_thread.is_alive():
-            logger.error('restart send_com_data_thread')
-            send_com_data_thread = threading.Thread(
-                target=data_manager_obj.send_com_data)
-            send_com_data_thread.setDaemon(True)
-            send_com_data_thread.start()
             time.sleep(10)
 
         elif not check_status_thread.is_alive():
@@ -121,13 +136,25 @@ def main():
             check_status_thread.start()
             time.sleep(10)
 
-        elif not send_com_heart_thread.is_alive():
-            logger.error('restart send_com_heart_thread')
-            send_com_heart_thread = threading.Thread(
-                target=data_manager_obj.send_com_heart_data)
-            send_com_heart_thread.setDaemon(True)
-            send_com_heart_thread.start()
-            time.sleep(10)
+        # elif not send_com_heart_thread.is_alive():
+        #     logger.error('restart send_com_heart_thread')
+        #     send_com_heart_thread = threading.Thread(
+        #         target=data_manager_obj.send_com_heart_data)
+        #     send_com_heart_thread.setDaemon(True)
+        #     send_com_heart_thread.start()
+        #     time.sleep(10)
+        else:
+            # print('get_com_data_thread',get_com_data_thread.is_alive())
+            # print('send_mqtt_data_thread',send_mqtt_data_thread.is_alive())
+            # print('send_mqtt_data_thread',send_com_data_thread.is_alive())
+            # print('send_mqtt_data_thread',check_status_thread.is_alive())
+            # print('send_mqtt_data_thread',send_com_heart_thread.is_alive())
+            time.sleep(1)
 
 if __name__ == '__main__':
-    main()
+    while True:
+        try:
+            main()
+        except Exception as e:
+            time.sleep(5)
+            logger.error({'main error':e})

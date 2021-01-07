@@ -15,8 +15,7 @@ name_mappings = {
     # 'pool_id':'mapId',
     # 'ship_code':'deviceId',
     'water':
-        {
-            'pH': 'ph',
+        {'pH': 'ph',
             'DO': 'doDo',
             'COD': 'cod',
             'EC': 'ec',

@@ -32,8 +32,13 @@ def color_block_finder(img, lowerb, upperb,
     img_bin = cv2.inRange(img_hsv, lowerb, upperb)
 
     # 寻找轮廓（只寻找最外侧的色块）
-    contours, hier = cv2.findContours(
-        img_bin, cv2.RETR_EXTERNAL, method=method_0)
+    if (config.sysstr == "Linux"):
+        _,contours, hier = cv2.findContours(
+            img_bin, cv2.RETR_EXTERNAL, method=method_0)
+    else:
+        contours, hier = cv2.findContours(
+            img_bin, cv2.RETR_EXTERNAL, method=method_0)
+
     # 声明画布 拷贝自img
     show_img = np.copy(img)
     # 外接矩形区域集合
@@ -113,8 +118,9 @@ def is_in_contours(point, local_map_data):
         for index, cnt in enumerate(local_map_data['mapList']):
             # 直接使用像素位置判断
             in_cnt = cv2.pointPolygonTest(
-                np.array(cnt['pool_lng_lats']), (point[0], point[1]), False)
+                np.array(cnt['pool_lng_lats']), (point[0], point[1]), True)
             # 使用经纬度判断 大于0说明属于该轮廓
+            print('in_cnt',in_cnt)
             if in_cnt >= 0:
                 return cnt['id']
         # 循环结束返回None
@@ -355,12 +361,12 @@ class BaiduMap(object):
         return self.pool_cnts, self.center_cnt
 
     # gps模块转换为高德经纬度
-    def gps_to_gaode_lng_lat(self, lng_lat):
+    @staticmethod
+    def gps_to_gaode_lng_lat(lng_lat):
         url = 'https://restapi.amap.com/v3/assistant/coordinate/convert?locations={lng_lat}&coordsys=gps&key={key}'.format(
-            lng_lat="%f,%f" % (lng_lat[0], lng_lat[1]), key=self.gaode_key)
+            lng_lat="%f,%f" % (lng_lat[0], lng_lat[1]), key=config.gaode_key)
         response = requests.get(url=url)
         response = json.loads(response.content)
-        self.logger.info({'response':response})
         gaode_lng_lat = [float(i) for i in response['locations'].split(',')]
         return gaode_lng_lat
 
@@ -372,13 +378,21 @@ class BaiduMap(object):
         distance = lng_lat_calculate.distanceFromCoordinate(
             self.lng_lat[0], self.lng_lat[1], gaode_lng_lat[0], gaode_lng_lat[1])
         # theta = 360 - theta
-        delta_x_distance = math.sin(math.radians(theta)) * distance
-        delta_y_distance = math.cos(math.radians(theta)) * distance
-
-        delta_x_pix = -delta_x_distance / (self.pix_to_meter)
-        delta_y_pix = -delta_y_distance / (self.pix_to_meter)
-        pix = [int(self.height * self.scale / 2 + delta_x_pix),
-               int(self.width * self.scale / 2 + delta_y_pix)]
+        print('theta',theta)
+        if theta>=180 and theta<=270:
+            delta_x_distance = math.sin(math.radians(theta-180)) * distance
+            delta_y_distance = math.cos(math.radians(theta-180)) * distance
+            delta_x_pix = delta_x_distance / (self.pix_to_meter)
+            delta_y_pix = delta_y_distance / (self.pix_to_meter)
+            pix = [int(self.width * self.scale / 2 + delta_x_pix),
+                   int(self.height * self.scale / 2 + delta_y_pix)]
+        else:
+            delta_x_distance = math.sin(math.radians(theta)) * distance
+            delta_y_distance = math.cos(math.radians(theta)) * distance
+            delta_x_pix = -delta_x_distance / (self.pix_to_meter)
+            delta_y_pix = -delta_y_distance / (self.pix_to_meter)
+            pix = [int(self.width * self.scale / 2 + delta_x_pix),
+                   int(self.height * self.scale / 2 + delta_y_pix)]
         return pix
 
     # 区域像素点转换为经纬度坐标点
@@ -470,8 +484,8 @@ class BaiduMap(object):
                 return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
                 draw_gps=draw_gps+'%f,%f;'%(point_gps[0],point_gps[1])
                 return_gps_list.append(point_gps)
-        with open('map.json', 'w') as f:
-            json.dump({'gps':draw_gps}, f)
+        # with open('map.json', 'w') as f:
+        #     json.dump({'gps':draw_gps}, f)
         return return_gps, return_gps_list
 
     def scan_pool(self,
@@ -539,7 +553,18 @@ if __name__ == '__main__':
     # obj = BaiduMap([114.566767,30.541689],zoom=14)
     # obj = BaiduMap([114.565976,30.541317],zoom=15.113213)
     # obj = BaiduMap([114.393142,30.558981],zoom=14)
-    gaode_lng_lat = obj.gps_to_gaode_lng_lat([114.431529, 30.524413])
+
+    # 计算目标真实经纬度
+    current_lng_lat = [114.432018, 30.521631]
+    gaode_lng_lat = obj.gps_to_gaode_lng_lat(current_lng_lat)
+    target_lng_lat_gps = lng_lat_calculate.gps_gaode_to_gps(current_lng_lat,
+                                                            gaode_lng_lat,
+                                                            [114.442018, 30.521631])
+
+    print('current_lng_lat',current_lng_lat)
+    print('gaode_lng_lat',gaode_lng_lat)
+    print('target_lng_lat_gps',target_lng_lat_gps)
+
     pix = obj.gaode_lng_lat_to_pix([114.431529, 30.525413])
     print('pix',pix)
     print(type(gaode_lng_lat), gaode_lng_lat)

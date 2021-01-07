@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 
 import sys
-
+import random
 
 # sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 audios_base_dir = os.path.join(config.root_path, 'audios')
@@ -27,7 +27,7 @@ audios_base_dir = os.path.join(config.root_path, 'audios')
 """
 audio_dict={
     0:'setup.mp3',
-    1:['chunjie.mp3','huan.mp3'],
+    1:['chunjie.mp3','huan.mp3','music1.mp3','music2.mp3'],
     2:'network.mp3',
     3:'battery.mp3',
     4:'',
@@ -39,23 +39,27 @@ audio_dict={
 def play_audio(audio_index=0, b_backend=False):
     """
 
-    :param audio_name: 播放音乐名称
+    :param audio_name: 类型索引
     :param b_backend: 是否后台播放
     :return:
     """
-
     try:
         from playsound import playsound
-        playsound(os.path.join(audios_base_dir,audio_dict[audio_index]))
+        if audio_index == 1:
+            playsound(os.path.join(audios_base_dir,audio_dict[audio_index][random.randint(0,len(audio_dict[1])-1)]))
+        else:
+            playsound(os.path.join(audios_base_dir,audio_dict[audio_index]))
     except Exception as e:
+        print('e',e)
         if b_backend:
             if audio_index == 1:
-                os.system('mpg321 %s &' % os.path.join(audios_base_dir,audio_dict[audio_index][0]))
+                pass
+                # os.system('mpg321 %s &' % os.path.join(audios_base_dir,audio_dict[audio_index][random.randint(0,len(audio_dict[1])))
             else:
                 os.system('mpg321 %s &' % os.path.join(audios_base_dir,audio_dict[audio_index]))
         else:
             if audio_index == 1:
-                os.system('mpg321 %s' % os.path.join(audios_base_dir,audio_dict[audio_index][0]))
+                os.system('mpg321 %s' % os.path.join(audios_base_dir,audio_dict[audio_index][random.randint(0,len(audio_dict[1])-1)]))
             else:
                 os.system('mpg321 %s' % os.path.join(audios_base_dir,audio_dict[audio_index]))
 

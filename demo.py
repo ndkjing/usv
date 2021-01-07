@@ -312,40 +312,112 @@ import math
 # print(type(a))
 # print(type(b),b)
 # print(c)
-"""
-import asyncio
-import websockets
 
-# 向服务器端认证，用户名密码通过才能退出循环
-async def auth_system(websocket):
-    while True:
-        # cred_text = input("please enter your username and password: ")
-        await websocket.send('321321')
-        response_str = await websocket.recv()
-        if "congratulation" in response_str:
-            return True
+# import asyncio
+# import websockets
+#
+# # 向服务器端认证，用户名密码通过才能退出循环
+# async def auth_system(websocket):
+#     while True:
+#         # cred_text = input("please enter your username and password: ")
+#         await websocket.send('321321')
+#         response_str = await websocket.recv()
+#         if "congratulation" in response_str:
+#             return True
+# import json
+# # 向服务器端发送认证后的消息
+# async def send_msg(websocket):
+#     while True:
+#         # _text = input("please enter your context: ")
+#         # if _text == "exit":
+#         #     print(f'you have enter "exit", goodbye')
+#         #     await websocket.close(reason="user exit")
+#         #     return False
+#         # await websocket.send(_text)
+#         a = {'123':[1]*3000}
+#         await websocket.send(json.dumps(a))
+#         recv_text = await websocket.recv()
+#         print(f"{recv_text}")
+#
+# # 客户端主逻辑
+# async def main_logic():
+#     async with websockets.connect('ws://101.37.119.148/') as websocket:
+#         # await auth_system(websocket)
+#         await send_msg(websocket)
+#
+# asyncio.get_event_loop().run_until_complete(main_logic())
 
-# 向服务器端发送认证后的消息
-async def send_msg(websocket):
-    while True:
-        # _text = input("please enter your context: ")
-        # if _text == "exit":
-        #     print(f'you have enter "exit", goodbye')
-        #     await websocket.close(reason="user exit")
-        #     return False
-        # await websocket.send(_text)
-        await websocket.send('123')
-        recv_text = await websocket.recv()
-        print(f"{recv_text}")
+# import random
+#
+# print(random.randint(0,1))
+# import math
+#
+#
+# print(math.sin(math.radians(60)))
+# print(math.sin(math.radians(150)))
+# print(math.sin(math.radians(240)))
+# print(math.sin(math.radians(330)))
+#
+# print(math.cos(math.radians(60)))
+# print(math.cos(math.radians(150)))
+# print(math.cos(math.radians(240)))
+# print(math.cos(math.radians(330)))
+# print(math.sin(math.radians()))
+# print(math.sin(math.radians()))
+# print(math.sin(math.radians()))
+# print(math.sin(math.radians()))
+# print(math.sin(math.radians()))
+# while True:
+#     print(time.time()%60==0)
+#     time.sleep(1)
 
-# 客户端主逻辑
-async def main_logic():
-    async with websockets.connect('ws://101.37.119.148/') as websocket:
-        # await auth_system(websocket)
-        await send_msg(websocket)
+import platform
 
-asyncio.get_event_loop().run_until_complete(main_logic())
+def TestPlatform( ):
+    print ("----------Operation System--------------------------")
+    #  获取Python版本
+    print(platform.python_version())
 
-"""
+    #   获取操作系统可执行程序的结构，，(’32bit’, ‘WindowsPE’)
+    print(platform.architecture())
+
+    #   计算机的网络名称，’acer-PC’
+    print(platform.node())
+
+    #获取操作系统名称及版本号，’Windows-7-6.1.7601-SP1′
+    print(platform.platform()  )
+
+    #计算机处理器信息，’Intel64 Family 6 Model 42 Stepping 7, GenuineIntel’
+    print(platform.processor())
+
+    # 获取操作系统中Python的构建日期
+    print(platform.python_build())
+
+    #  获取系统中python解释器的信息
+    print(platform.python_compiler())
+
+    if platform.python_branch()=="":
+        print(platform.python_implementation())
+        print(platform.python_revision())
+    print(platform.release())
+    print(platform.system())
+
+    #print platform.system_alias()
+    #  获取操作系统的版本
+    print(platform.version())
+
+    #  包含上面所有的信息汇总
+    print(platform.uname())
 
 
+import platform
+sysstr = platform.system()
+if (sysstr == "Windows"):
+    print("Call Windows tasks")
+elif (sysstr == "Linux"):   # 树莓派上也是Linux
+    print("Call Linux tasks")
+else:
+    print("other System tasks")
+import json
+print([[114.431465, 30.524369]])
+print(json.dumps([[114.431465, 30.524369]]))

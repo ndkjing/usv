@@ -85,7 +85,12 @@ class MqttSendGet:
         self.logger = logger
         self.mqtt_host = mqtt_host
         self.mqtt_port = mqtt_port
-        self.mqtt_user = 'dk'
+        if (config.sysstr == "Linux"):
+            self.mqtt_user = 'dk_linux'
+            client_id = client_id+'dk_linux'
+        else:
+            client_id = client_id + 'dk_linux'
+            self.mqtt_user = 'dk_windwos'
         self.mqtt_passwd = 'public'
         self.mqtt_client = mqtt.Client(client_id=client_id)
         self.mqtt_client.username_pw_set(self.mqtt_user, password=self.mqtt_passwd)
@@ -161,9 +166,6 @@ class MqttSendGet:
             if len(self.target_lng_lat_status) > 0:
                 for i in range(len(self.target_lng_lat_status)):
                     self.target_lng_lat_status[i] = -1
-            # 直接等待发送间隔后将船设置为停止
-            time.sleep(config.mqtt_control_interval)
-            self.control_move_direction = str(360)
 
             if control_data.get('b_sampling') is not None:
                 if int(control_data['b_sampling']) == 1:

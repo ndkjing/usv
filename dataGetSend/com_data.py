@@ -79,14 +79,11 @@ class SerialData:
     # 如果没有超时，readline会报异常。
     def readline(self):
         data_read = self.uart.readline()
-
-        # self.logger.info({'单片机读取数据':data_read})
-        # 通过
-        if str(data_read).count(',') > 2:
-            # self.logger.info({'单片机读取数据处理后':str(data_read)[2:-5]})
-            return str(data_read)[2:-5]
-        else:
-            return data_read
+        return data_read
+        # if str(data_read).count(',') > 2:
+        #     return str(data_read)[2:-5]
+        # else:
+        #     return data_read
 
     # 发数据
     def send_data(self, data,b_hex=False):

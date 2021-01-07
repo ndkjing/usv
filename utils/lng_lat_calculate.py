@@ -93,11 +93,11 @@ def gps_gaode_to_gps(gps,gps_gaode,gaode):
         """
         distance = distanceFromCoordinate(gps_gaode[0],
                                           gps_gaode[1],
-                                          gaode[1],
+                                          gaode[0],
                                           gaode[1])
         theta = angleFromCoordinate(gps_gaode[0],
                                           gps_gaode[1],
-                                          gaode[1],
+                                          gaode[0],
                                           gaode[1])
         return one_point_diatance_to_end(gps[0],
                                   gps[1],
@@ -106,10 +106,10 @@ def gps_gaode_to_gps(gps,gps_gaode,gaode):
 
 
 if __name__ == '__main__':
-    theta = angleFromCoordinate(114.316966, 30.576768, 114.397346, 30.58709)
+    theta = angleFromCoordinate(114.431804, 30.524169, 114.461804, 30.424169)
     print('theta',theta)
     distance = distanceFromCoordinate(114.316966, 30.576768, 114.397346, 30.58709)
     print('distance',distance)
     temp = one_point_diatance_to_end(114.316966, 30.576768, 90, 1)
     print(temp)
-
+    # current 114.432112, 30.522414 target 114.432112, 30.522414

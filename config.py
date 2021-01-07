@@ -11,20 +11,23 @@ local_map_data_path = os.path.join(maps_dir, 'local_map.json')
 # 保存当前用户点击位置相关信息
 usr_lng_lat_path = os.path.join(maps_dir, 'usr_lng_lat_path.json')
 
+# 高德秘钥
+gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
 # 单片机发送给树莓派频率
 com2pi_interval = 1
 # 给单片机发送频率
-pi2com_interval = 2
+pi2com_interval = 0.1
 
 # 给服务器发送频率
-pi2mqtt_interval = 1.0/100
+pi2mqtt_interval = 1.0/10
 
 # 接收服务器方向控制间隔
 mqtt_control_interval = 1
 
 # 检查船状态间隔 单位秒
 # 检查经纬度
-check_status_interval = 1
+check_status_interval = 2
+
 # 检查网络连接状态间隔
 check_network_interval=10
 
@@ -46,10 +49,11 @@ imu_baud = 115200
 # 查询船是否注册  wuhanligong.xxlun.com/union
 http_binding = 'http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/%s'%(ship_code)
 # 注册新的湖泊ID
-# http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
-http_save = 'http://192.168.8.13:8009/union/admin/xxl/map/save'
+http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
+# http_save = 'http://192.168.8.13:8009/union/admin/xxl/map/save'
 # 发送检测数据
 http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
+# http_data_save = 'http://192.168.8.13:8009/union/admin/xxl/data/save'
 
 mqtt_host='47.97.183.24'
 # 手动模式和自动模式
@@ -59,8 +63,11 @@ mod='auto'
 b_play_audio=False
 
 # 在家调试模式
-home_debug = True
+home_debug = False
 init_gaode_gps = [114.431804, 30.524169]
+
+# 直达模式
+b_direct= True
 
 # 到达点距离范围判断，单位米
 arrive_distance = 4
@@ -69,3 +76,11 @@ arrive_distance = 4
 find_points_num=4
 
 
+import platform
+sysstr = platform.system()
+if (sysstr == "Windows"):
+    print("Call Windows tasks")
+elif (sysstr == "Linux"):   # 树莓派上也是Linux
+    print("Call Linux tasks")
+else:
+    print("other System tasks")

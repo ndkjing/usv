@@ -468,7 +468,6 @@ def get_path(baidu_map_obj=None,
         pool_cnts,(pool_cx,pool_cy) = baidu_map_obj.get_pool_pix(b_show=False)
         if pool_cnts is None:
             return 'pool_cx is None'
-    baidu_map_obj.outpool_cnts_set = get_outpool_set(np.array(baidu_map_obj.pool_cnts))
 
     # 无GPS调试模式 以湖泊中心作为起点
     if config.home_debug:
@@ -488,6 +487,12 @@ def get_path(baidu_map_obj=None,
         s_start = tuple(baidu_map_obj.ship_pix)
         s_goal = tuple(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lats[0]))
         print('s_start,s_goal',s_start,s_goal)
+        if config.b_direct:
+            return_pix_path = []
+            return_pix_path.append(s_start)
+            return_pix_path.append(s_goal)
+            _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
+            return return_gaode_lng_lat_path
         # TODO 测试使用间隔两个像素搜索
         # s_start = list(s_start)
         # s_goal = list(s_goal)
@@ -505,6 +510,8 @@ def get_path(baidu_map_obj=None,
         # print('s_start,s_goal', s_start, s_goal)
         # 判断是否能直线到达，不能则采用路径搜索
         if not cross_outpool(s_start,s_goal,baidu_map_obj.pool_cnts):
+            baidu_map_obj.outpool_cnts_set = get_outpool_set(np.array(baidu_map_obj.pool_cnts))
+
             astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.outpool_cnts_set)
             try:
                 astar_path, visited = astar.searching()
@@ -562,6 +569,8 @@ def get_path(baidu_map_obj=None,
             return return_gaode_lng_lat_path
 
     elif mode == 1:
+        baidu_map_obj.outpool_cnts_set = get_outpool_set(np.array(baidu_map_obj.pool_cnts))
+
         if target_lng_lats is None:
             return 'target_pixs is None'
         elif len(target_lng_lats) <= 1:
@@ -611,6 +620,8 @@ def get_path(baidu_map_obj=None,
         return return_gaode_lng_lat_path
 
     elif mode == 2:
+        baidu_map_obj.outpool_cnts_set = get_outpool_set(np.array(baidu_map_obj.pool_cnts))
+
         baidu_map_obj.scan_pool(baidu_map_obj.pool_cnts, pix_gap=pix_gap, b_show=False)
         print('len(scan_cnt)', len(baidu_map_obj.scan_point_cnts))
         distance_matrix = measure_distance(baidu_map_obj.scan_point_cnts,baidu_map_obj.pool_cnts,baidu_map_obj.outpool_cnts_set,map_connect=map_connect)
@@ -653,6 +664,7 @@ def get_path(baidu_map_obj=None,
 
     # back home
     elif mode == 4:
+
         if baidu_map_obj.init_ship_gps is None:
             return 'ship init gps is None'
         if baidu_map_obj.init_ship_pix is None:
@@ -668,6 +680,8 @@ def get_path(baidu_map_obj=None,
         print('s_start,s_goal', s_start, s_goal)
         # 判断是否能直线到达，不能则采用路径搜索
         if not cross_outpool(s_start, s_goal, baidu_map_obj.pool_cnts):
+            baidu_map_obj.outpool_cnts_set = get_outpool_set(np.array(baidu_map_obj.pool_cnts))
+
             astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.outpool_cnts_set)
             # try:
             astar_path, visited = astar.searching()
