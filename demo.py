@@ -335,11 +335,23 @@ import math
 #         #     return False
 #         # await websocket.send(_text)
 #         a = {'123':[1]*3000}
-#         await websocket.send(json.dumps(a))
+#         # await websocket.send(json.dumps(a))
 #         recv_text = await websocket.recv()
-#         print(f"{recv_text}")
+#         json_data = json.loads(recv_text)
+#         print(f"{recv_text}",type(recv_text))
+#         if json_data['deviceId']=='3c50f4c3-a9c1-4872-9f18-883af014380c':
+#             retutn_daya = {
+#                 # 设备号
+#                 "deviceId": "asd2312",
+#             # 湖泊编号（正确找到湖才返回）
+#             "mapId": "1347114972149161986",
+#             # 用户点击经纬度一维数组 先经度 后纬度 保留6位小数
+#             "lng_lat": [114.123269, 30.321129],
+#             }
 #
-# # 客户端主逻辑
+#             await websocket.send(json.dumps(retutn_daya))
+#             # 客户端主逻辑
+#
 # async def main_logic():
 #     async with websockets.connect('ws://101.37.119.148/') as websocket:
 #         # await auth_system(websocket)
@@ -409,15 +421,92 @@ def TestPlatform( ):
     #  包含上面所有的信息汇总
     print(platform.uname())
 
+#
+# import platform
+# sysstr = platform.system()
+# if (sysstr == "Windows"):
+#     print("Call Windows tasks")
+# elif (sysstr == "Linux"):   # 树莓派上也是Linux
+#     print("Call Linux tasks")
+# else:
+#     print("other System tasks")
+# import json
+# print([[114.431465, 30.524369]])
+# print(json.dumps([[114.431465, 30.524369]]))
+#
+# print((100-300)//abs((100-300)))
+# print((300-100)//abs((300-100)))
+# print((100-300)//(100-300)*100+100)
+# print((300-100)//(300-100)*100+100)
 
-import platform
-sysstr = platform.system()
-if (sysstr == "Windows"):
-    print("Call Windows tasks")
-elif (sysstr == "Linux"):   # 树莓派上也是Linux
-    print("Call Linux tasks")
-else:
-    print("other System tasks")
-import json
-print([[114.431465, 30.524369]])
-print(json.dumps([[114.431465, 30.524369]]))
+
+# print({'1':100,'2':200}=={'1':100,'2':200})
+# print({'1':100,'2':200}=={'1':100,'2':300})
+
+try:
+    while True:
+        # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效
+        key_input = input('please input:')
+        # 前 后 左 右 停止  1为右侧电机是反桨叶  3位左侧电机是正桨叶
+        if key_input=='w':
+            print('key_input',key_input)
+        elif key_input=='a':
+            print('key_input', key_input)
+        elif key_input=='s':
+            print('key_input',key_input)
+        elif key_input=='d':
+            print('key_input',key_input)
+        elif key_input=='q':
+            print('key_input',key_input)
+
+        #arm
+        elif key_input == 'z':
+            print('key_input',key_input)
+        # disarm
+        elif key_input == 'x':
+            print('key_input',key_input)
+
+        # manual模式
+        elif key_input == 'm':
+            print('key_input',key_input)
+        # guide模式
+        elif key_input == 'g':
+            print('key_input',key_input)
+        # b 回家
+        elif key_input == 'b':
+            print('key_input',key_input)
+
+        # 角度控制
+        elif key_input.startswith('r'):
+            try:
+                theta = int(key_input[1:])
+                print(theta)
+            except Exception as e:
+                print({'error': e})
+
+        # 运动方向速度控制
+        elif key_input.startswith('n'):
+            speed_x = None
+            speed_y = None
+            try:
+                str_x,str_y = key_input[1:].split(',')
+                speed_x = int(str_x)
+                speed_y = int(str_y)
+                print(speed_x,speed_y)
+            except Exception as e:
+                print({'error': e})
+
+        # 到达目标点控制
+        elif key_input.startswith('t'):
+            point_x=None
+            point_y=None
+            try:
+                str_x, str_y = key_input[1:].split(',')
+                point_x = int(str_x)
+                point_y = int(str_y)
+                print(point_x,point_y)
+            except Exception as e:
+                print({'error':e})
+
+except:
+    pass

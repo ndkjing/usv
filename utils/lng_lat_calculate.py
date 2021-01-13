@@ -104,6 +104,18 @@ def gps_gaode_to_gps(gps,gps_gaode,gaode):
                                   theta,
                                   distance)
 
+def get_x_y_distance(lon_lat0, lon_lat1):
+    """
+    计算两点之间的x和y轴距离
+    :return:
+    """
+    distance = distanceFromCoordinate(lon_lat0[0], lon_lat0[0], lon_lat1[1], lon_lat1[1])
+    theta = angleFromCoordinate(lon_lat0[0], lon_lat0[0], lon_lat1[1], lon_lat1[1])
+    # NED 坐标系下距离
+    theta = ((360-theta)%360+90)%360
+    x = distance*math.sin(theta)
+    y = distance*math.cos(theta)
+    return x,y
 
 if __name__ == '__main__':
     theta = angleFromCoordinate(114.431804, 30.524169, 114.461804, 30.424169)

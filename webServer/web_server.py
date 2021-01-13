@@ -1,6 +1,7 @@
 """
-管理数据收发
+寻找地图上湖泊，路径规划
 """
+
 import time
 import json
 import numpy as np
@@ -22,7 +23,7 @@ from obstacleAvoid import basic_obstacle_avoid
 from utils import lng_lat_calculate
 import config
 
-class DataManager:
+class WebServer:
     def __init__(self):
         self.data_define_obj = DataDefine()
         # 日志对象

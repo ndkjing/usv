@@ -80,7 +80,7 @@ class MqttSendGet:
             self,
             logger,
             mqtt_host=config.mqtt_host,
-            mqtt_port=1884,
+            mqtt_port=config.mqtt_port,
             client_id=config.ship_code):
         self.logger = logger
         self.mqtt_host = mqtt_host
@@ -89,7 +89,7 @@ class MqttSendGet:
             self.mqtt_user = 'dk_linux'
             client_id = client_id+'dk_linux'
         else:
-            client_id = client_id + 'dk_linux'
+            client_id = client_id + 'dk_windwos'
             self.mqtt_user = 'dk_windwos'
         self.mqtt_passwd = 'public'
         self.mqtt_client = mqtt.Client(client_id=client_id)
