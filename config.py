@@ -8,8 +8,6 @@ if not os.path.exists(maps_dir):
 map_data_path = os.path.join(maps_dir, 'map.json')
 local_map_data_path = os.path.join(maps_dir, 'local_map.json')
 
-
-
 # 保存当前用户点击位置相关信息
 usr_lng_lat_path = os.path.join(maps_dir, 'usr_lng_lat_path.json')
 

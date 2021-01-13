@@ -15,6 +15,7 @@ logging.basicConfig(
     format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
     level=logging.DEBUG)
 b_test = False
+b_stop = False
 
 
 def get_location_metres(original_location, dNorth, dEast):
@@ -371,7 +372,7 @@ class DroneKitControl:
         print("Close vehicle object")
         self.vehicle.close()
 
-    def point_control(self, dNorth, dEast, gotoFunction=None, arrive_distance=4):
+    def point_control(self, dNorth, dEast, b_stop=False,gotoFunction=None, arrive_distance=4):
         """
         Moves the vehicle to a position dNorth metres North and dEast metres East of the current position.
 
@@ -388,21 +389,21 @@ class DroneKitControl:
         targetDistance = get_distance_metres(currentLocation, targetLocation)
         gotoFunction(targetLocation)
 
-        # print "DEBUG: targetLocation: %s" % targetLocation
-        # print "DEBUG: targetLocation: %s" % targetDistance
-
-        # Stop action if we are no longer in guided mode.
-        while self.vehicle.mode.name == "GUIDED":
-            # print "DEBUG: mode: %s" % vehicle.mode.name
-            remainingDistance = get_distance_metres(
-                self.vehicle.location.global_relative_frame, targetLocation)
-            self.logger.info({"Distance to target: ":remainingDistance})
-            # Just below target, in case of undershoot.
-            if remainingDistance <= arrive_distance:
-                print("Reached target")
+        # # Stop action if we are no longer in guided mode.
+        while self.vehicle.mode.name == "GUIDED" and not b_stop:
+            try:
+                # print "DEBUG: mode: %s" % vehicle.mode.name
+                remainingDistance = get_distance_metres(
+                    self.vehicle.location.global_relative_frame, targetLocation)
+                self.logger.info({"Distance to target: ":remainingDistance})
+                # Just below target, in case of undershoot.
+                if remainingDistance <= arrive_distance:
+                    print("Reached target")
+                    break
+                time.sleep(1)
+            except Exception as e:
+                self.logger.error({'error':e})
                 break
-            time.sleep(1)
-
     # 控制速度
     def send_ned_velocity(self, velocity_x, velocity_y, velocity_z, duration):
         """
@@ -553,10 +554,6 @@ class DroneKitControl:
             print(" Channel overrides: %s" % self.vehicle.channels.overrides)
             time.sleep(4)
 
-        # if target_1==1500:
-        #     target_1=0
-        # if target_3==1500:
-        #     target_3=0
         overrides_pwd = {'1': current_1, '3': current_3}
         self.vehicle.channels.overrides = overrides_pwd
         print(" Channel overrides: %s" % self.vehicle.channels.overrides)
@@ -604,7 +601,7 @@ class DroneKitControl:
                 self.arm_control(False)
             while drone_obj.vehicle.mode != mode:
                 drone_obj.vehicle.mode = VehicleMode(mode)
-                print('wait switch mode')
+                print('wait switch mode:%s'%(mode))
                 time.sleep(1)
             self.arm_control(True)
 
@@ -649,8 +646,8 @@ if __name__ == '__main__':
     # simple_point()
     # multi_points()
 
-    try:
-        while True:
+    while True:
+        try:
             print("Channel values from RC Tx:", drone_obj.vehicle.channels)
             # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效
             key_input = input('please input:')
@@ -759,12 +756,37 @@ if __name__ == '__main__':
                     print(point_x,point_y)
                     # 控制点需要guided模式、
                     drone_obj.mode_control('GUIDED')
-                    drone_obj.point_control(point_x, point_y)
+                    import threading
+                    drone_obj.point_control(point_x, point_y,False)
+
+                    # p_thread= threading.Thread(target=drone_obj.point_control,args=(point_x, point_y,b_stop))
+                    # p_thread.start()
+                    # while not b_stop:
+                    #     try:
+                    #         currentLocation = drone_obj.vehicle.location.global_relative_frame
+                    #         targetLocation = get_location_metres(currentLocation, point_x, point_x)
+                    #         remainingDistance = get_distance_metres(
+                    #         drone_obj.vehicle.location.global_relative_frame, targetLocation)
+                    #         print({"Distance to target: ":remainingDistance})
+                    #         # Just below target, in case of undershoot.
+                    #         if remainingDistance <= 4:
+                    #             print("Reached target")
+                    #             break
+                    #         print('wait to arriver point...')
+                    #         # key_input = input('please input:')
+                    #         # if int(key_input)==0:
+                    #         #     break
+                    #         time.sleep(1)
+                    #     except Exception as e:
+                    #         print({'error':e})
+                    #         b_stop=True
+                    #         break
+                    # b_stop=True
                 except Exception as e:
                     print({'error':e})
-
-
-    except:
-        drone_obj.channel_control({'1':1500,'2':1500})
-        drone_obj.vehicle.close()
-
+        except Exception as e:
+            print({'error': e})
+            drone_obj.mode_control('MANUAL')
+            drone_obj.arm_control(armed=False)
+            # drone_obj.vehicle.close()
+            continue
