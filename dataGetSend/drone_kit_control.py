@@ -7,6 +7,7 @@ from pymavlink import mavutil
 import logging
 import sys
 import os
+import threading
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
@@ -372,6 +373,55 @@ class DroneKitControl:
         print("Close vehicle object")
         self.vehicle.close()
 
+    def move_square(self,harf_w):
+        """
+        移动一个正方形区域
+        :param harf_w:
+        :return:
+        """
+        # 清除之前任务
+        self.download_mission(clear=True)
+        # 任务航行模式
+        print('Create a new mission (for current location)')
+        #初始经纬度 -35.363261,149.165230
+        current_point = self.vehicle.location.global_frame
+        print('vehicle.location.global_frame',current_point)
+        self.adds_square_mission(current_point, harf_w)
+        # Reset mission set to first (0) waypoint
+        self.vehicle.commands.next = 0
+
+        # Set mode to AUTO to start mission
+        # self.vehicle.mode = VehicleMode("AUTO")
+        self.mode_control("AUTO")
+        # vehicle.c
+        # Monitor mission.
+        # Demonstrates getting and setting the command number
+        # Uses distance_to_current_waypoint(), a convenience function for finding the
+        #   distance to the next waypoint.
+        print("Starting mission")
+
+        while True:
+            try:
+                nextwaypoint = self.vehicle.commands.next
+                print('Distance to waypoint (%s): %s' %(nextwaypoint, self.distance_to_current_waypoint()))
+                # if nextwaypoint == 3:  # Skip to next waypoint
+                #     print('Skipping to Waypoint 5 when reach waypoint 3')
+                #     self.vehicle.commands.next = 5
+                # Dummy waypoint - as soon as we reach waypoint 4 this is true and
+                # we exit.
+                if nextwaypoint == 5:
+                    print("Exit 'standard' mission when start heading to final waypoint (5)")
+                    break
+                time.sleep(1)
+            except KeyboardInterrupt:
+                print({'error':e})
+                break
+        # print('Return to launch')
+        # self.vehicle.mode = VehicleMode("RTL")
+        # Close vehicle object before exiting script
+        # print("Close vehicle object")
+        # self.vehicle.close()
+
     def point_control(self, dNorth, dEast, b_stop=False,gotoFunction=None, arrive_distance=4):
         """
         Moves the vehicle to a position dNorth metres North and dEast metres East of the current position.
@@ -585,10 +635,11 @@ class DroneKitControl:
                 time.sleep(1)
             print('target vehicle armed', drone_obj.vehicle.armed)
 
+
     def mode_control(self,mode):
         """
         控制arm与disarm,控制模式切换
-        :param mode: 模式  'MANUAL'  'GUIDED'  'RTL'
+        :param mode: 模式  'MANUAL'  'GUIDED'  'RTL'  "AUTO"
         :return:
         """
         print('current vehicle mode', drone_obj.vehicle.mode)
@@ -649,6 +700,7 @@ if __name__ == '__main__':
     while True:
         try:
             print("Channel values from RC Tx:", drone_obj.vehicle.channels)
+
             # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效
             key_input = input('please input:')
             # 前 后 左 右 停止  1为右侧电机是反桨叶  3位左侧电机是正桨叶
@@ -703,9 +755,10 @@ if __name__ == '__main__':
             elif key_input == 'c':
                 drone_obj.download_mission(clear=True)
 
-            # 获取当前GPS位置
+            # 获取当前GPS位置和船头朝向
             elif key_input == 'l':
                 drone_obj.get_current_location()
+                print("船头方向: %s" % drone_obj.vehicle.heading)
 
             # 设置返航点h114.110000,30.120000
             elif key_input.startswith('h'):
@@ -756,9 +809,7 @@ if __name__ == '__main__':
                     print(point_x,point_y)
                     # 控制点需要guided模式、
                     drone_obj.mode_control('GUIDED')
-                    import threading
                     drone_obj.point_control(point_x, point_y,False)
-
                     # p_thread= threading.Thread(target=drone_obj.point_control,args=(point_x, point_y,b_stop))
                     # p_thread.start()
                     # while not b_stop:
@@ -784,9 +835,16 @@ if __name__ == '__main__':
                     # b_stop=True
                 except Exception as e:
                     print({'error':e})
+
+            # 简单走矩形区域
+            elif key_input.startswith('p'):
+                # 半边长
+                half_w = int(key_input[1:])
+                drone_obj.move_square(half_w)
+
         except Exception as e:
-            print({'error': e})
-            drone_obj.mode_control('MANUAL')
-            drone_obj.arm_control(armed=False)
-            # drone_obj.vehicle.close()
-            continue
+                print({'error': e})
+                drone_obj.mode_control('MANUAL')
+                drone_obj.arm_control(armed=False)
+                # drone_obj.vehicle.close()
+                continue

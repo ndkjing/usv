@@ -5,9 +5,34 @@
 import time
 import json
 import numpy as np
-import os
+import os,sys
 import copy
 import random
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(
+    os.path.join(
+        os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__))),
+        'baiduMap'))
+sys.path.append(
+    os.path.join(
+        os.path.dirname(
+os.path.dirname(
+            os.path.abspath(__file__))),
+        'dataGetSend'))
+sys.path.append(
+    os.path.join(
+        os.path.dirname(
+os.path.dirname(
+            os.path.abspath(__file__))),
+        'utils'))
+sys.path.append(
+    os.path.join(
+        os.path.dirname(
+os.path.dirname(
+            os.path.abspath(__file__))),
+        'pathPlanning'))
 
 from dataGetSend.data_define import DataDefine
 from dataGetSend import data_define
@@ -194,6 +219,7 @@ class WebServer:
                 self.send(method='mqtt', topic='pool_info_%s' % (config.ship_code), data=pool_info_data, qos=2)
                 self.logger.info({'pool_info_data':pool_info_data})
 
+            continue
             ## 配置判断
             len_target_lng_lat = len(self.server_data_obj.mqtt_send_get_obj.target_lng_lat)
 
@@ -261,14 +287,14 @@ class WebServer:
             #         self.logger.error({'非法的航线确认ID':self.server_data_obj.mqtt_send_get_obj.path_id})
 
             # 获取初始地点GPS
-            if not self.start:
-                pass
-            else:
-                if config.home_debug:
-                    self.baidu_map_obj.init_ship_gps = config.init_gaode_gps
-                    self.baidu_map_obj.init_ship_gaode_lng_lat = config.init_gaode_gps
-                else:
-                    self.baidu_map_obj.init_ship_gps = self.data_define_obj.status['current_lng_lat']
+            # if not self.start:
+            #     pass
+            # else:
+            #     if config.home_debug:
+            #         self.baidu_map_obj.init_ship_gps = config.init_gaode_gps
+            #         self.baidu_map_obj.init_ship_gaode_lng_lat = config.init_gaode_gps
+            #     else:
+            #         self.baidu_map_obj.init_ship_gps = self.data_define_obj.status['current_lng_lat']
 
     # 路径规划
     def path_planning(self, target_lng_lats=None, mode=5,back_home=False):
@@ -323,10 +349,5 @@ class WebServer:
 
 if __name__ == '__main__':
     web_server_obj = WebServer()
+    web_server_obj.check_status()
 
-    while True:
-        move_direction = obj.server_data_obj.mqtt_send_get_obj.control_move_direction
-        obj.send(method='com', data=move_direction)
-        obj.logger.info('move_direction: %f' % (float(move_direction)))
-        time.sleep(2)
-        # 等待一段时间后归位

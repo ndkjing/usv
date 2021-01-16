@@ -1,6 +1,22 @@
 """
 串口数据收发
 """
+import sys
+import os
+
+root_dir =  os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(root_dir)
+
+sys.path.append(
+    os.path.join(
+        root_dir,
+        'dataGetSend'))
+
+sys.path.append(
+    os.path.join(
+        os.path.dirname(
+            os.path.abspath(__file__)),
+        'utils'))
 import serial
 from serial.tools import list_ports
 import binascii
@@ -133,20 +149,40 @@ if __name__ == '__main__':
     import config
 
     serial_obj = SerialData(
-        'com10',
+        '/dev/ttyUSB1',
         9600,
-        timeout=1 /
-        config.com2pi_interval,
+        # timeout=1 /config.com2pi_interval,
+        timeout=0.7,
         logger=logger)
     while True:
-        serial_obj.send_data('31',b_hex=True)
+        key_input = input('input:')
+        serial_obj.send_data(key_input,b_hex=True)
+        print(serial_obj.readline())
+        print(serial_obj.readline())
+        print(serial_obj.readline())
+        print(serial_obj.readline())
+    # while True:
+    #     # serial_obj.send_data('31',b_hex=True)
+    #
+    #     data = serial_obj.readline()
+    #     str_data = data.decode('ascii')
+    #     if str_data.startswith('$GNGGA'):
+    #         data_list = str_data.split(',')
+    #         print(data_list)
+    #         lng,lat = float(data_list[4][:3])+float(data_list[4][3:])/60,float(data_list[2][:2])+float(data_list[2][2:])/60
+    #         print('经纬度',lng,lat)
+    #         print('误差',data_list[8])
+    #     # 角度
 
-        data = serial_obj.readline()
-        print('data',data)
-        # 角度
-        data1 = data.decode('ascii')[:-1]
-        print('data1', data1)
-        time.sleep(1)
+        # str_data = data.decode('ascii')[:-3]
+        # # print('str_data',str_data,type(str_data))
+        # if len(str_data)<2:
+        #     continue
+        # # str_data = str_data.encode('utf8')
+        # # print(str_data.split('.'))
+        # float_data = float(str_data)
+        # print(time.time(),'float_data', float_data,type(float_data))
+        # time.sleep(0.1)
     # t1 = Thread(target=get_com_data)
     # t2 = Thread(target=send_com_data)
     # t1.start()

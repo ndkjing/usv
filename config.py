@@ -19,7 +19,11 @@ if (sysstr == "Windows"):
     current_platform='w'
 elif (sysstr == "Linux"):   # 树莓派上也是Linux
     print("Call Linux tasks")
-    current_platform='l'
+    # 公司Linux电脑名称
+    if platform.node()=='jing':
+        current_platform = 'l_j'
+    else:
+        current_platform = 'l'
 else:
     print("other System tasks")
     current_platform = 'o'
@@ -63,7 +67,14 @@ if current_platform=='l':
 else:
     pix_port = 'com22'
 pix_baud=115200
-b_use_pix=True
+b_use_pix=False
+
+# GPS
+gps_port = '/dev/ttyUSB0'
+gps_baud = 115200
+# 罗盘
+compass_port = '/dev/ttyUSB1'
+compass_baud = 9600
 
 # http 接口
 # 查询船是否注册  wuhanligong.xxlun.com/union
@@ -91,21 +102,12 @@ init_gaode_gps = [114.431804, 30.524169]
 b_direct= True
 
 # 到达点距离范围判断，单位米
-arrive_distance = 4
+arrive_distance = 3
 
 # 查找数量
 find_points_num=4
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+max_pwm = 2000
+min_pwm = 1000
+# pid间隔
+pid_interval=0.1

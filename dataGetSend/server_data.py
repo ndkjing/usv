@@ -87,7 +87,7 @@ class MqttSendGet:
         self.mqtt_port = mqtt_port
         if (config.sysstr == "Linux"):
             self.mqtt_user = 'dk_linux'
-            client_id = client_id+'dk_linux'
+            client_id = client_id+'dk_linux2'
         else:
             client_id = client_id + 'dk_windwos'
             self.mqtt_user = 'dk_windwos'

@@ -118,9 +118,9 @@ def get_x_y_distance(lon_lat0, lon_lat1):
     return x,y
 
 if __name__ == '__main__':
-    theta = angleFromCoordinate(114.431804, 30.524169, 114.461804, 30.424169)
+    theta = angleFromCoordinate(114.431804, 30.524169, 114.431804, 30.534169)
     print('theta',theta)
-    distance = distanceFromCoordinate(114.316966, 30.576768, 114.397346, 30.58709)
+    distance = distanceFromCoordinate(114.316966, 30.576768, 114.316966, 30.576778)
     print('distance',distance)
     temp = one_point_diatance_to_end(114.316966, 30.576768, 90, 1)
     print(temp)

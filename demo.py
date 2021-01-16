@@ -442,71 +442,82 @@ def TestPlatform( ):
 
 # print({'1':100,'2':200}=={'1':100,'2':200})
 # print({'1':100,'2':200}=={'1':100,'2':300})
+#
+# try:
+#     while True:
+#         # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效
+#         key_input = input('please input:')
+#         # 前 后 左 右 停止  1为右侧电机是反桨叶  3位左侧电机是正桨叶
+#         if key_input=='w':
+#             print('key_input',key_input)
+#         elif key_input=='a':
+#             print('key_input', key_input)
+#         elif key_input=='s':
+#             print('key_input',key_input)
+#         elif key_input=='d':
+#             print('key_input',key_input)
+#         elif key_input=='q':
+#             print('key_input',key_input)
+#
+#         #arm
+#         elif key_input == 'z':
+#             print('key_input',key_input)
+#         # disarm
+#         elif key_input == 'x':
+#             print('key_input',key_input)
+#
+#         # manual模式
+#         elif key_input == 'm':
+#             print('key_input',key_input)
+#         # guide模式
+#         elif key_input == 'g':
+#             print('key_input',key_input)
+#         # b 回家
+#         elif key_input == 'b':
+#             print('key_input',key_input)
+#
+#         # 角度控制
+#         elif key_input.startswith('r'):
+#             try:
+#                 theta = int(key_input[1:])
+#                 print(theta)
+#             except Exception as e:
+#                 print({'error': e})
+#
+#         # 运动方向速度控制
+#         elif key_input.startswith('n'):
+#             speed_x = None
+#             speed_y = None
+#             try:
+#                 str_x,str_y = key_input[1:].split(',')
+#                 speed_x = int(str_x)
+#                 speed_y = int(str_y)
+#                 print(speed_x,speed_y)
+#             except Exception as e:
+#                 print({'error': e})
+#
+#         # 到达目标点控制
+#         elif key_input.startswith('t'):
+#             point_x=None
+#             point_y=None
+#             try:
+#                 str_x, str_y = key_input[1:].split(',')
+#                 point_x = int(str_x)
+#                 point_y = int(str_y)
+#                 print(point_x,point_y)
+#             except Exception as e:
+#                 print({'error':e})
+#
+# except:
+#     pass
+import math
+print(math.degrees(math.atan2(2,2)))
+print(math.degrees(math.atan2(2,-2)))
+print(math.degrees(math.atan2(-2,2)))
+print(math.degrees( math.atan2(-2,-2)))
+print(math.sqrt(math.pow(-2,2)))
+print(float('123.321'))
 
-try:
-    while True:
-        # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效
-        key_input = input('please input:')
-        # 前 后 左 右 停止  1为右侧电机是反桨叶  3位左侧电机是正桨叶
-        if key_input=='w':
-            print('key_input',key_input)
-        elif key_input=='a':
-            print('key_input', key_input)
-        elif key_input=='s':
-            print('key_input',key_input)
-        elif key_input=='d':
-            print('key_input',key_input)
-        elif key_input=='q':
-            print('key_input',key_input)
+print(int(time.time()) % 2 == 0)
 
-        #arm
-        elif key_input == 'z':
-            print('key_input',key_input)
-        # disarm
-        elif key_input == 'x':
-            print('key_input',key_input)
 
-        # manual模式
-        elif key_input == 'm':
-            print('key_input',key_input)
-        # guide模式
-        elif key_input == 'g':
-            print('key_input',key_input)
-        # b 回家
-        elif key_input == 'b':
-            print('key_input',key_input)
-
-        # 角度控制
-        elif key_input.startswith('r'):
-            try:
-                theta = int(key_input[1:])
-                print(theta)
-            except Exception as e:
-                print({'error': e})
-
-        # 运动方向速度控制
-        elif key_input.startswith('n'):
-            speed_x = None
-            speed_y = None
-            try:
-                str_x,str_y = key_input[1:].split(',')
-                speed_x = int(str_x)
-                speed_y = int(str_y)
-                print(speed_x,speed_y)
-            except Exception as e:
-                print({'error': e})
-
-        # 到达目标点控制
-        elif key_input.startswith('t'):
-            point_x=None
-            point_y=None
-            try:
-                str_x, str_y = key_input[1:].split(',')
-                point_x = int(str_x)
-                point_y = int(str_y)
-                print(point_x,point_y)
-            except Exception as e:
-                print({'error':e})
-
-except:
-    pass

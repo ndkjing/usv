@@ -33,8 +33,12 @@ def color_block_finder(img, lowerb, upperb,
 
     # 寻找轮廓（只寻找最外侧的色块）
     if (config.sysstr == "Linux"):
-        _,contours, hier = cv2.findContours(
-            img_bin, cv2.RETR_EXTERNAL, method=method_0)
+        try:
+            _,contours, hier = cv2.findContours(
+                img_bin, cv2.RETR_EXTERNAL, method=method_0)
+        except ValueError:
+            contours, hier = cv2.findContours(
+                img_bin, cv2.RETR_EXTERNAL, method=method_0)
     else:
         contours, hier = cv2.findContours(
             img_bin, cv2.RETR_EXTERNAL, method=method_0)
