@@ -85,9 +85,9 @@ class MqttSendGet:
         self.logger = logger
         self.mqtt_host = mqtt_host
         self.mqtt_port = mqtt_port
-        if (config.sysstr == "Linux"):
+        if (config.current_platform == "l"):
             self.mqtt_user = 'dk_linux'
-            client_id = client_id+'dk_linux2'
+            client_id = client_id+'dk_linux3'
         else:
             client_id = client_id + 'dk_windwos'
             self.mqtt_user = 'dk_windwos'
@@ -103,7 +103,7 @@ class MqttSendGet:
         # 湖泊初始点击点信息
         self.pool_click_lng_lat = None
         self.pool_click_zoom = None
-        # 接收到的经纬度目标地点 和 点击是地图层次， 三维矩阵
+        # 接收到的经纬度目标地点 和 点击是地图层次， 三维矩阵 改为二维矩阵
         self.target_lng_lat = []
         self.zoom = []
         self.meter_pix = {}
@@ -130,7 +130,8 @@ class MqttSendGet:
         self.b_sampling = 0
         # 抽水控制位  0为不抽水　1为抽水
         self.b_draw = 0
-
+        # 启动还是停止
+        self.b_start=0
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -215,7 +216,6 @@ class MqttSendGet:
 
             # 添加新的点
             lng_lat = user_lng_lat_data.get('lng_lat')
-
             self.target_lng_lat = lng_lat
             self.target_lng_lat_status=[0]*len(lng_lat)
             zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
@@ -265,6 +265,15 @@ class MqttSendGet:
                 'path_id': path_planning_confirm_data.get('path_id'),
                               'path_id_confirm': path_planning_confirm_data.get('confirm'),
                               })
+
+        # 启动设备
+        elif topic == 'start_%s' % (config.ship_code):
+            start_data = json.loads(msg.payload)
+            if not start_data.get('start'):
+                self.logger.error('start_设置启动消息没有start字段')
+                return
+            self.b_start = int(start_data.get('start'))
+            self.logger.info({'topic':topic,'b_start': start_data.get('start')})
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):

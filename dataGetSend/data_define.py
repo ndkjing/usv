@@ -253,8 +253,9 @@ class DataDefine:
         self.topics = (
                         ('pool_click_%s' % (config.ship_code), 2),
                         ('control_data_%s' % (config.ship_code), 2),
-                        ('path_confirm_%s' % (config.ship_code), 2),
-                        ('user_lng_lat_%s' % (config.ship_code), 2),
+                        ('path_confirm_%s' % (config.ship_code), 0),
+                        ('user_lng_lat_%s' % (config.ship_code), 0),
+                        ('start_%s' % (config.ship_code), 2),
                         ('path_planning_confirm_%s' % (config.ship_code), 2))
         self.pool_code = ''
         self.water = self.water_data()

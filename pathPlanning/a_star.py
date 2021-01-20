@@ -12,6 +12,25 @@ from tsp_solver.greedy import solve_tsp
 import copy
 from tqdm import tqdm
 
+root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(root_path)
+sys.path.append(
+    os.path.join(
+        root_path,
+        'baiduMap'))
+sys.path.append(
+    os.path.join(
+        root_path,
+        'dataGetSend'))
+sys.path.append(
+    os.path.join(
+        root_path,
+        'utils'))
+sys.path.append(
+    os.path.join(
+        root_path,
+        'pathPlanning'))
+
 import config
 from baiduMap import baidu_map
 
@@ -20,12 +39,10 @@ class Env:
     Env 2D
     """
     def __init__(self,outpool_points):
-        self.x_range = 51  # size of background
-        self.y_range = 31
-        self.motions = [(-1, 0), (-1, 1), (0, 1), (1, 1),
-                        (1, 0), (1, -1), (0, -1), (-1, -1)]
-        # self.motions = [(-2, 0), (-2, 2), (0, 2), (2, 2),
-        #                 (2, 0), (2, -2), (0, -2), (-2, -2)]
+        # self.x_range = 51  # size of background
+        # self.y_range = 31
+        self.motions = [(-config.pix_interval, 0), (-config.pix_interval, config.pix_interval), (0, config.pix_interval), (config.pix_interval, config.pix_interval),
+                        (config.pix_interval, 0), (config.pix_interval, -config.pix_interval), (0, -config.pix_interval), (-config.pix_interval, -config.pix_interval)]
         self.outpool_points = outpool_points
         self.obs = self.obs_map()
 
@@ -47,15 +64,15 @@ class Env:
 class AStar:
     """AStar set the cost + heuristics as the priority
     """
-    def __init__(self, s_start, s_goal, heuristic_type,outpool_points):
+    def __init__(self, s_start, s_goal, heuristic_type,pool_cnts):
         self.s_start = s_start
         self.s_goal = s_goal
         self.heuristic_type = heuristic_type
 
-        self.Env = Env(outpool_points)  # class Env
+        self.env = Env(pool_cnts)  # class Env
 
-        self.u_set = self.Env.motions  # feasible input set
-        self.obs = self.Env.obs  # position of obstacles
+        self.u_set = self.env.motions  # feasible input set
+        self.obs = self.env.obs  # position of obstacles
 
         self.OPEN = []  # priority queue / OPEN set
         self.CLOSED = []  # CLOSED set / VISITED order
@@ -77,16 +94,14 @@ class AStar:
         while self.OPEN:
             _, s = heapq.heappop(self.OPEN)
             self.CLOSED.append(s)
-
+            print('s',s)
             if s == self.s_goal:  # stop condition
                 break
 
             for s_n in self.get_neighbor(s):
-                new_cost = self.g[s] + self.cost(s, s_n)
-
                 if s_n not in self.g:
                     self.g[s_n] = math.inf
-
+                new_cost = self.g[s] + self.cost(s, s_n)
                 if new_cost < self.g[s_n]:  # conditions for updating Cost
                     self.g[s_n] = new_cost
                     self.PARENT[s_n] = s
@@ -177,22 +192,32 @@ class AStar:
         :param s_end: end node
         :return: True: is collision / False: not collision
         """
-
-        if s_start in self.obs or s_end in self.obs:
+        
+        point1 = (s_start[0], s_start[1])
+        point2 = (s_end[0], s_end[1])
+        in_cnt1 = cv2.pointPolygonTest(np.asarray([self.env.outpool_points]), point1, True)
+        in_cnt2 = cv2.pointPolygonTest(np.asarray([self.env.outpool_points]), point2, True)
+        if in_cnt1< config.path_search_safe_distance or in_cnt2 < config.path_search_safe_distance:
             return True
+        else:
+            return False
+        # if s_start in self.obs or s_end in self.obs:
+        #     return True
+        # if s_start[0] != s_end[0] and s_start[1] != s_end[1]:
+        #     if s_end[0] - s_start[0] == s_start[1] - s_end[1]:
+        #         s1 = (min(s_start[0], s_end[0]), min(s_start[1], s_end[1]))
+        #         s2 = (max(s_start[0], s_end[0]), max(s_start[1], s_end[1]))
+        #     else:
+        #         s1 = (min(s_start[0], s_end[0]), max(s_start[1], s_end[1]))
+        #         s2 = (max(s_start[0], s_end[0]), min(s_start[1], s_end[1]))
+        #     if cv2.pointPolygonTest(np.asarray([self.env.outpool_points]), s1, True)>0:
+        #         return True
+        #     if cv2.pointPolygonTest(np.asarray([self.env.outpool_points]), s2, True)>0:
+        #         return True
+        #     # if s1 in self.obs or s2 in self.obs:
+        #     #     return True
 
-        if s_start[0] != s_end[0] and s_start[1] != s_end[1]:
-            if s_end[0] - s_start[0] == s_start[1] - s_end[1]:
-                s1 = (min(s_start[0], s_end[0]), min(s_start[1], s_end[1]))
-                s2 = (max(s_start[0], s_end[0]), max(s_start[1], s_end[1]))
-            else:
-                s1 = (min(s_start[0], s_end[0]), max(s_start[1], s_end[1]))
-                s2 = (max(s_start[0], s_end[0]), min(s_start[1], s_end[1]))
 
-            if s1 in self.obs or s2 in self.obs:
-                return True
-
-        return False
 
     def f_value(self, s):
         """
@@ -244,15 +269,15 @@ def get_outpool_set(contour,safe_distance=0):
     """
     # 求坐标点最大外围矩阵
     (x, y, w, h) = cv2.boundingRect(contour)
-    print('(x, y, w, h)', (x, y, w, h))
+    # print('(x, y, w, h)', (x, y, w, h))
     # 循环判断点是否在湖泊范围外
     outpool_cnts_set = []
     # 间距
     pix_gap = 1
     # 起始点
-    start_x, start_y = x, y + pix_gap
+    start_x, start_y = x, y
     # 当前点
-    current_x, current_y = start_x, start_y
+    current_x, current_y = start_x, start_y+config.pix_interval
     # 判断x轴是递增的加还是减 True 为加
     b_add_or_sub = True
 
@@ -263,15 +288,15 @@ def get_outpool_set(contour,safe_distance=0):
             if in_cnt <= safe_distance:
                 outpool_cnts_set.append(list(point))
             if b_add_or_sub:
-                current_x += pix_gap
+                current_x += config.pix_interval
             else:
-                current_x -= pix_gap
-        current_y += pix_gap
+                current_x -= config.pix_interval
+        current_y += config.pix_interval
         if b_add_or_sub:
-            current_x -= pix_gap
+            current_x -= config.pix_interval
             b_add_or_sub = False
         else:
-            current_x += pix_gap
+            current_x += config.pix_interval
             b_add_or_sub = True
     return outpool_cnts_set
 
@@ -353,9 +378,11 @@ def measure_distance(scan_cnt,pool_cnt,outpool_set,map_connect):
                 e_index = j
                 s_start = (scan_cnt[s_index][0], scan_cnt[s_index][1])
                 s_goal = (scan_cnt[e_index][0], scan_cnt[e_index][1])
+                s_start = mod_point(s_start)
+                s_goal = mod_point(s_goal)
                 # 去不了会搜索报错
                 try:
-                    astar = AStar(s_start, s_goal, "euclidean", outpool_set)
+                    astar = AStar(s_start, s_goal, "euclidean", pool_cnt)
                     path, visited = astar.searching()
                     distance_i_j = 0
                     for index_i, value in enumerate(path):
@@ -439,6 +466,16 @@ def multi_points_to_simple_points(points):
             test_points.pop(0)
         return return_points
 
+# 将点转换为符合模数的数
+def mod_point(point):
+    point = list(point)
+    if point[0] % config.pix_interval != 0:
+        point[0] = point[0] + config.pix_interval - point[0] % config.pix_interval
+    if point[1] % config.pix_interval != 0:
+        point[1] = point[1] + +config.pix_interval - point[1] % config.pix_interval
+    point = tuple(point)
+    return point
+
 def get_path(baidu_map_obj=None,
              mode=0,
              target_lng_lats=None,
@@ -472,8 +509,9 @@ def get_path(baidu_map_obj=None,
     # 无GPS调试模式 以湖泊中心作为起点
     if config.home_debug:
         baidu_map_obj.ship_gaode_lng_lat=config.init_gaode_gps
-        baidu_map_obj.ship_gps=config.init_gaode_gps
-    if baidu_map_obj.ship_gps is None:
+        # baidu_map_obj.ship_gps=config.init_gaode_gps
+
+    if baidu_map_obj.ship_gaode_lng_lat is None:
         return 'no ship gps'
     if mode==0:
         if target_lng_lats is None:
@@ -487,32 +525,20 @@ def get_path(baidu_map_obj=None,
         s_start = tuple(baidu_map_obj.ship_pix)
         s_goal = tuple(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lats[0]))
         print('s_start,s_goal',s_start,s_goal)
-        if config.b_direct:
+        if config.b_direct :
             return_pix_path = []
             return_pix_path.append(s_start)
             return_pix_path.append(s_goal)
             _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
             return return_gaode_lng_lat_path
-        # TODO 测试使用间隔两个像素搜索
-        # s_start = list(s_start)
-        # s_goal = list(s_goal)
-        #
-        # if s_start[0]%2!=0:
-        #     s_start[0] = s_start[0]+1
-        # if s_start[1]%2!=0:
-        #     s_start[1] = s_start[0]+1
-        # if s_goal[0]%2!=0:
-        #     s_goal[0] = s_goal[0]+1
-        # if s_goal[1]%2!=0:
-        #     s_goal[1] = s_goal[1]+1
-        # s_start = tuple(s_start)
-        # s_goal = tuple(s_goal)
-        # print('s_start,s_goal', s_start, s_goal)
+
+        s_start =mod_point(s_start)
+        s_goal = mod_point(s_goal)
+        print('s_start,s_goal', s_start, s_goal)
         # 判断是否能直线到达，不能则采用路径搜索
         if not cross_outpool(s_start,s_goal,baidu_map_obj.pool_cnts):
             baidu_map_obj.outpool_cnts_set = get_outpool_set(np.array(baidu_map_obj.pool_cnts))
-
-            astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.outpool_cnts_set)
+            astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.pool_cnts)
             try:
                 astar_path, visited = astar.searching()
                 print('astar_path', astar_path)
@@ -556,7 +582,7 @@ def get_path(baidu_map_obj=None,
                 cv2.circle(baidu_map_obj.show_img, s_goal, 5, [255, 255, 0], -1)
                 baidu_map_obj.show_img = cv2.drawContours(baidu_map_obj.show_img, np.array([return_pix_path]), -1,
                                                           (0, 0, 255), 3)
-                cv2.imshow('scan', baidu_map_obj.show_img)
+                cv2.imshow('scan', cv2.resize(baidu_map_obj.show_img,(512,512)))
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
 
@@ -583,7 +609,17 @@ def get_path(baidu_map_obj=None,
         target_pixs=[]
         for target_lng_lat in target_lng_lats:
             target_pixs.append(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lat))
-        target_pixs.insert(0,baidu_map_obj.ship_pix)
+        # target_pixs.insert(0,baidu_map_obj.ship_pix)
+        # 如果是直接到达模式
+        if config.b_direct and not config.home_debug:
+            _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(target_pixs)
+            return return_gaode_lng_lat_path
+        # if b_show:
+        #     for i in target_pixs:
+        #         cv2.circle(baidu_map_obj.show_img, tuple(i), 5, [0, 255, 0], -1)
+        #     cv2.imshow('scan', cv2.resize(baidu_map_obj.show_img, (512, 512)))
+        #     cv2.waitKey(0)
+        # 测量距离
         distance_matrix = measure_distance(target_pixs,baidu_map_obj.pool_cnts,baidu_map_obj.outpool_cnts_set,map_connect=config.find_points_num)
         if back_home:
             tsp_path = solve_tsp(distance_matrix, endpoints=(0, 0))
@@ -728,10 +764,17 @@ def get_path(baidu_map_obj=None,
 if __name__ == '__main__':
     # 114.431299,30.521363
     # 114.433853,30.519553
+    # 114.432477, 30.521501
     # [114.431133,30.522252],[114.432464,30.521108],[114.430983,30.519953],[114.432625,30.52036],[114.430726,30.519158],[114.430726,30.519158],[114.433853,30.519553]
-    r = get_path(mode=0,b_show=True,target_lng_lats=[[114.431299,30.521363]])
-    # r = get_path(mode=2,b_show=True,pix_gap=150)
-    print('r',r)
+    # r1 = get_path(mode=0,b_show=True,target_lng_lats=[[114.347533,30.465757]])
+    # print('r1', r1)
+    r2 = get_path(mode=1,b_show=False,target_lng_lats=[[114.347533,30.465757],
+                                                      [114.346803,30.46401],
+                                                      [114.347189,30.462891],
+                                                      [114.348927,30.463168],
+                                                      [114.349957,30.462946]])
+    print('r2', r2)
 
 # baidu_map_obj.ship_pix [566, 565]
 # (x, y, w, h) (420, 249, 414, 653)
+

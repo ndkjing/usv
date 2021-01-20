@@ -26,13 +26,19 @@ def angleFromCoordinate(long1, lat1, long2, lat2):
     deltaLon = long2 - long1
     theta = math.atan2(y, x)
     theta = math.degrees(theta)
-    theta = (theta + 360) % 360
-    return_brg = 360 - theta
-    if int(return_brg) == 360:
-        return 0
+    print('row_theta',theta,'y, x',y, x)
+    if theta>0:
+        theta = 360-theta
     else:
-        return return_brg
+        theta = abs(theta)
+    # theta = (theta + 360) % 360
+    # return_brg = 360 - theta
+    # if int(return_brg) == 360:
+    #     return 0
+    # else:
+    #     return return_brg
 
+    return theta
 
 # 一直两点经纬度求两点的距离单位，返回单位米
 def distanceFromCoordinate(lon1, lat1, lon2, lat2):  # 经度1，纬度1，经度2，纬度2 （十进制度数）
@@ -52,10 +58,9 @@ def distanceFromCoordinate(lon1, lat1, lon2, lat2):  # 经度1，纬度1，经�
     r = 6371  # 地球平均半径，单位为公里
     return c * r * 1000
 
-# 已知一点的经纬度和移动方向与距离，求终点的经纬度
 def one_point_diatance_to_end(lng, lat, brng, d):
     """
-
+    已知一点的经纬度和移动方向与距离，求终点的经纬度
     :param lng:
     :param lat:
     :param brng: 右手坐标系角度
@@ -118,9 +123,23 @@ def get_x_y_distance(lon_lat0, lon_lat1):
     return x,y
 
 if __name__ == '__main__':
-    theta = angleFromCoordinate(114.431804, 30.524169, 114.431804, 30.534169)
-    print('theta',theta)
-    distance = distanceFromCoordinate(114.316966, 30.576768, 114.316966, 30.576778)
+    theta = angleFromCoordinate(114.348469,30.464598,114.348669,30.464598)
+    print('theta1 0',theta)
+    theta = angleFromCoordinate(114.348469,30.464598,114.348669,30.464698)
+    print('theta1 1', theta)
+    theta = angleFromCoordinate(114.348469,30.464598,114.348469,30.464698)
+    print('theta0 1', theta)
+    theta = angleFromCoordinate(114.348469,30.464598,114.348369,30.464698)
+    print('theta-1 1', theta)
+    theta = angleFromCoordinate(114.348469,30.464598,114.348369,30.464598)
+    print('theta-1 0', theta)
+    theta = angleFromCoordinate(114.348469,30.464598,114.348369,30.464498)
+    print('theta-1 -1', theta)
+    theta = angleFromCoordinate(114.348469,30.464598,114.348469,30.4644988)
+    print('theta0 -1', theta)
+    theta = angleFromCoordinate(114.348469,30.464598,114.348569,30.464498)
+    print('theta1 -1', theta)
+    distance = distanceFromCoordinate(114.348469,30.464598,114.348669,30.464598)
     print('distance',distance)
     temp = one_point_diatance_to_end(114.316966, 30.576768, 90, 1)
     print(temp)

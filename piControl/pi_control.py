@@ -36,38 +36,38 @@ class PiControl:
         self.right_pwm = 150
         self.pi = pigpio.pi()
         # gpio脚的编号顺序依照Broadcom number顺序，请自行参照gpio引脚图里面的“BCM编码”，
-        self.pi.set_PWM_frequency(14, 50)  # 设定14号引脚产生的pwm波形的频率为50Hz
-        self.pi.set_PWM_frequency(15, 50)  # 设定14号引脚产生的pwm波形的频率为50Hz
-        self.pi.set_PWM_range(14, 2000)
-        self.pi.set_PWM_range(15, 2000)
+        self.pi.set_PWM_frequency(config.left_pwm_pin, 50)  # 设定14号引脚产生的pwm波形的频率为50Hz
+        self.pi.set_PWM_frequency(config.right_pwm_pin, 50)  # 设定14号引脚产生的pwm波形的频率为50Hz
+        self.pi.set_PWM_range(config.left_pwm_pin, 2000)
+        self.pi.set_PWM_range(config.right_pwm_pin, 2000)
         self.init_motor()
 
     def forward(self,left_pwm=None,right_pwm=None):
         if left_pwm is None:
-            left_pwm = 1700
+                left_pwm = 1700
         if right_pwm is None:
-            right_pwm = 1300
+            right_pwm = 1700
         self.set_pwm(left_pwm,right_pwm)
 
     def backword(self,left_pwm=None,right_pwm=None):
         if left_pwm is None:
             left_pwm = 1350
         if right_pwm is None:
-            right_pwm = 1650
+            right_pwm = 1350
         self.set_pwm(left_pwm, right_pwm)
 
     def left(self,left_pwm=None,right_pwm=None):
         if left_pwm is None:
             left_pwm = 1350
         if right_pwm is None:
-            right_pwm = 1350
+            right_pwm = 1650
         self.set_pwm(left_pwm, right_pwm)
 
     def right(self,left_pwm=None,right_pwm=None):
         if left_pwm is None:
             left_pwm = 1650
         if right_pwm is None:
-            right_pwm = 1650
+            right_pwm = 1350
         self.set_pwm(left_pwm, right_pwm)
 
     def stop(self):
@@ -93,28 +93,32 @@ class PiControl:
             right_pwm = config.max_pwm
         if right_pwm <= config.min_pwm:
             right_pwm = config.min_pwm
+        # 如果有反桨叶反转电机pwm值
+        if config.left_motor_cw == 1:
+            left_pwm = 1500 - (left_pwm - 1500)
+        if config.right_motor_cw == 1:
+            right_pwm = 1500 - (right_pwm - 1500)
 
         left_pwm = int(left_pwm/10)
         right_pwm = int(right_pwm/10)
-        sleep_time=0.01
-        delta_time = 0.13/50.0
+        sleep_time=0.001
+        delta_time = 0.03/50.0
         # while self.left_pwm!=left_pwm or self.right_pwm!=right_pwm:
-        while abs(self.left_pwm-left_pwm)>2 or abs(self.right_pwm!=right_pwm)>2:
-            self.pi.set_PWM_dutycycle(14, self.left_pwm)  # 1000=2000*50%
-            self.pi.set_PWM_dutycycle(15, self.right_pwm)  # 1000=2000*50%
-            if abs(left_pwm - self.left_pwm)<=2:
+        while abs(self.left_pwm-left_pwm)!=0 or abs(self.right_pwm!=right_pwm)!=0:
+            if abs(left_pwm - self.left_pwm)==0:
                 pass
             else:
-                self.left_pwm = self.left_pwm + (left_pwm - self.left_pwm) // abs(left_pwm - self.left_pwm) * 1.1
-
-            if abs(right_pwm - self.right_pwm)<=2:
+                self.left_pwm = self.left_pwm + (left_pwm - self.left_pwm) // abs(left_pwm - self.left_pwm) * 1
+            if abs(right_pwm - self.right_pwm)==0:
                 pass
             else:
-                self.right_pwm = self.right_pwm + (right_pwm - self.right_pwm) // abs(right_pwm - self.right_pwm) * 1.1
-            sleep_time = sleep_time+delta_time
+                self.right_pwm = self.right_pwm + (right_pwm - self.right_pwm) // abs(right_pwm - self.right_pwm) * 1
+            self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
+            self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
             time.sleep(sleep_time)
-        self.pi.set_PWM_dutycycle(14, self.left_pwm)  # 1000=2000*50%
-        self.pi.set_PWM_dutycycle(15, self.right_pwm)  # 1000=2000*50%
+            sleep_time = sleep_time + delta_time
+        self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
+        self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
         print('left_pwm:',self.left_pwm,'right_pwm:',self.right_pwm)
 
 if __name__ == '__main__':

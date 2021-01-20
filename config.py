@@ -30,6 +30,13 @@ else:
 
 # 高德秘钥
 gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
+# 腾讯地图key
+tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
+# 检测像素间隔
+pix_interval=4
+
+# 罗盘等待时间间隔
+compass_timeout = 0.2
 # 单片机发送给树莓派频率
 com2pi_interval = 1
 # 给单片机发送频率
@@ -70,10 +77,11 @@ pix_baud=115200
 b_use_pix=False
 
 # GPS
-gps_port = '/dev/ttyUSB0'
+gps_port = '/dev/gps'
 gps_baud = 115200
+
 # 罗盘
-compass_port = '/dev/ttyUSB1'
+compass_port = '/dev/compass'
 compass_baud = 9600
 
 # http 接口
@@ -96,10 +104,13 @@ b_play_audio=False
 
 # 在家调试模式
 home_debug = False
-init_gaode_gps = [114.431804, 30.524169]
+init_gaode_gps = [114.348713,30.464501]
 
 # 直达模式
 b_direct= True
+
+# 路径搜索像素安全距离
+path_search_safe_distance = 10
 
 # 到达点距离范围判断，单位米
 arrive_distance = 3
@@ -111,3 +122,36 @@ max_pwm = 2000
 min_pwm = 1000
 # pid间隔
 pid_interval=0.1
+
+# 保存返航点地址路径
+home_location_path = os.path.join(root_path, 'home_location.json')
+
+# 使用路径规划和避免湖泊轮廓
+b_use_path_planning=False
+# 检查路径规划
+b_check_path_planning = False
+
+# 是否使用启动按钮
+b_use_start=False
+
+########### 树莓派相关设置
+# 使用树莓派控制电机
+b_use_pi=True
+
+# 正反桨页设置  0 正桨叶   1 反桨叶
+left_motor_cw = 0
+right_motor_cw = 0
+# 电机前进分量
+motor_forward = 200
+# 电机转弯分量
+motor_steer = 150
+kp = 1.0
+ki = 0.6
+kd = 0.1
+
+# 左侧电机信号输出控制口
+left_pwm_pin = 18
+# 右侧电机信号输出控制口
+right_pwm_pin = 23
+
+

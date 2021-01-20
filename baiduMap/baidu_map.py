@@ -81,7 +81,7 @@ def color_block_finder(img, lowerb, upperb,
         if in_cnt > -5:
             # 通过面积排除一些特别小的干扰
             (x, y, w, h) = cv2.boundingRect(cnt)
-            if (w*h)<1000:
+            if (w*h)<100:
                 continue
             # 计算轮廓的中心点
             M = cv2.moments(contours[index])  # 计算第一条轮廓的矩
@@ -159,6 +159,7 @@ def get_degree(lonA, latA, lonB, latB):
 class MapType(enum.Enum):
     baidu = 1
     gaode = 2
+    tecent=3
 
 class BaiduMap(object):
     def __init__(self, lng_lat,
@@ -179,7 +180,8 @@ class BaiduMap(object):
         self.map_type = map_type
         # 访问秘钥
         self.baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
-        self.gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
+        self.gaode_key = config.gaode_key
+        self.tecent_key = config.tencent_key
         # 湖泊像素轮廓
         self.pool_cnts = []
         # 湖泊经纬度轮廓
@@ -223,7 +225,8 @@ class BaiduMap(object):
         self.pix_to_meter = 0.12869689044 * math.pow(2, 19 - self.zoom)
         self.addr = str(round(100 * random.random(), 3))
         # ＨＳＶ阈值　［［低　ＨＳＶ］,　［高　ＨＳＶ］］
-        self.threshold_hsv = [(84, 72, 245), (118, 97, 255)]
+        self.gaode_threshold_hsv = [(84, 72, 245), (118, 97, 255)]
+        self.tecent_threshold_hsv = [(84, 72, 245), (118, 130, 255)]
         # 百度不同缩放比例下比例尺对应的实际距离　　缩放尺寸　长度（米）　像素距离
         self.scale_map = {
             # {zoom: 19, length: 20, Pixels: 48},
@@ -254,6 +257,10 @@ class BaiduMap(object):
         elif self.map_type == MapType.gaode:
             self.save_img_path = os.path.join(
                 save_img_dir, 'gaode_%f_%f_%i_%i.png' %
+                (self.lng_lat[0], self.lng_lat[1], self.zoom, self.scale))
+        elif self.map_type == MapType.tecent:
+            self.save_img_path = os.path.join(
+                save_img_dir, 'tecent_%f_%f_%i_%i.png' %
                 (self.lng_lat[0], self.lng_lat[1], self.zoom, self.scale))
         if not os.path.exists(self.save_img_path):
             self.draw_image()
@@ -298,9 +305,16 @@ class BaiduMap(object):
                 (self.lng_lat[0], self.lng_lat[1]), zoom=(
                     self.zoom), h=self.height, w=self.width, scale=self.scale, key=self.gaode_key)
 
+        elif self.map_type == MapType.tecent:
+            return 'https://apis.map.qq.com/ws/staticmap/v2/?center={position}&zoom={zoom}&size={h}*{w}&scale={scale}&maptype=roadmap&key={key}'.format(
+                position='%f,%f' %
+                (self.lng_lat[1],self.lng_lat[0]), zoom=(
+                    self.zoom), h=self.height, w=self.width, scale=self.scale, key=self.tecent_key)
+
     # 按照经纬度url获取静态图
     def draw_image(self, ):
         png_url = self.get_image_url()
+        print('png_url',png_url)
         self.logger.info({'png_url': png_url})
         response = requests.get(png_url)
         # 获取的文本实际上是图片的二进制文本
@@ -330,9 +344,14 @@ class BaiduMap(object):
         # cv2.waitKey(0)
         # 图片路径
         # 颜色阈值下界(HSV) lower boudnary
-        lowerb = self.threshold_hsv[0]
-        # 颜色阈值上界(HSV) upper boundary
-        upperb = self.threshold_hsv[1]
+        if self.map_type==MapType.tecent:
+            lowerb = self.tecent_threshold_hsv[0]
+            # 颜色阈值上界(HSV) upper boundary
+            upperb = self.tecent_threshold_hsv[1]
+        else:
+            lowerb = self.gaode_threshold_hsv[0]
+            # 颜色阈值上界(HSV) upper boundary
+            upperb = self.gaode_threshold_hsv[1]
 
         # 读入素材图片 BGR
         # 检查图片是否读取成功
@@ -383,20 +402,38 @@ class BaiduMap(object):
             self.lng_lat[0], self.lng_lat[1], gaode_lng_lat[0], gaode_lng_lat[1])
         # theta = 360 - theta
         print('theta',theta)
-        if theta>=180 and theta<=270:
-            delta_x_distance = math.sin(math.radians(theta-180)) * distance
-            delta_y_distance = math.cos(math.radians(theta-180)) * distance
-            delta_x_pix = delta_x_distance / (self.pix_to_meter)
-            delta_y_pix = delta_y_distance / (self.pix_to_meter)
-            pix = [int(self.width * self.scale / 2 + delta_x_pix),
-                   int(self.height * self.scale / 2 + delta_y_pix)]
-        else:
+        if theta>=0 and  theta<90:
             delta_x_distance = math.sin(math.radians(theta)) * distance
             delta_y_distance = math.cos(math.radians(theta)) * distance
             delta_x_pix = -delta_x_distance / (self.pix_to_meter)
             delta_y_pix = -delta_y_distance / (self.pix_to_meter)
             pix = [int(self.width * self.scale / 2 + delta_x_pix),
                    int(self.height * self.scale / 2 + delta_y_pix)]
+        elif theta>=90 and  theta<180:
+            t2_theta = 180-theta
+            delta_x_distance = math.sin(math.radians(t2_theta)) * distance
+            delta_y_distance = math.cos(math.radians(t2_theta)) * distance
+            delta_x_pix = -delta_x_distance / (self.pix_to_meter)
+            delta_y_pix = delta_y_distance / (self.pix_to_meter)
+            pix = [int(self.width * self.scale / 2 + delta_x_pix),
+                   int(self.height * self.scale / 2 + delta_y_pix)]
+        elif theta>=180 and theta<270:
+            t3_theta = 270 - theta
+            delta_x_distance = math.cos(math.radians(t3_theta)) * distance
+            delta_y_distance = math.sin(math.radians(t3_theta)) * distance
+            delta_x_pix = delta_x_distance / (self.pix_to_meter)
+            delta_y_pix = delta_y_distance / (self.pix_to_meter)
+            pix = [int(self.width * self.scale / 2 + delta_x_pix),
+                   int(self.height * self.scale / 2 + delta_y_pix)]
+        elif theta>=270 and theta<=360:
+            t4_theta = 360 - theta
+            delta_x_distance = math.sin(math.radians(t4_theta)) * distance
+            delta_y_distance = math.cos(math.radians(t4_theta)) * distance
+            delta_x_pix = delta_x_distance / (self.pix_to_meter)
+            delta_y_pix = -delta_y_distance / (self.pix_to_meter)
+            pix = [int(self.width * self.scale / 2 + delta_x_pix),
+                   int(self.height * self.scale / 2 + delta_y_pix)]
+
         return pix
 
     # 区域像素点转换为经纬度坐标点
@@ -550,8 +587,9 @@ if __name__ == '__main__':
     # obj = BaiduMap([114.431529, 30.524413], zoom=15, scale=1, map_type=MapType.gaode)
     # obj = BaiduMap([114.438009, 30.540082], zoom=14, scale=1, map_type=MapType.gaode)
     # obj = BaiduMap([114.373904, 30.540625], zoom=14, scale=1, map_type=MapType.gaode)
-    obj = BaiduMap([114.431529, 30.524413], zoom=15,
-                   scale=1, map_type=MapType.gaode)
+    obj = BaiduMap([114.524145,30.505586], zoom=17,
+                   scale=1, map_type=MapType.tecent)
+    pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=True)
     # obj = BaiduMap([114.393142, 30.558963], zoom=15,map_type=MapType.baidu)
     # obj = BaiduMap([114.718257,30.648004],zoom=14)
     # obj = BaiduMap([114.566767,30.541689],zoom=14)

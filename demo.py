@@ -365,15 +365,15 @@ import math
 # import math
 #
 #
-# print(math.sin(math.radians(60)))
-# print(math.sin(math.radians(150)))
-# print(math.sin(math.radians(240)))
-# print(math.sin(math.radians(330)))
-#
-# print(math.cos(math.radians(60)))
-# print(math.cos(math.radians(150)))
-# print(math.cos(math.radians(240)))
-# print(math.cos(math.radians(330)))
+print(math.sin(math.radians(60)))
+print(math.sin(math.radians(150)))
+print(math.sin(math.radians(240)))
+print(math.sin(math.radians(330)))
+
+print(math.cos(math.radians(60)))
+print(math.cos(math.radians(150)))
+print(math.cos(math.radians(240)))
+print(math.cos(math.radians(330)))
 # print(math.sin(math.radians()))
 # print(math.sin(math.radians()))
 # print(math.sin(math.radians()))

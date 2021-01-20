@@ -2,7 +2,7 @@ import copy
 import threading
 import math
 import time
-
+import json
 import os
 import sys
 
@@ -55,9 +55,9 @@ class PiMain:
         # 返航点
         self.home_lng_lat = None
 
-        self.kp = 0.6
-        self.ki = 0.2
-        self.kd = 0.1
+        self.kp = config.kp
+        self.ki = config.ki
+        self.kd = config.kd
 
         self.errorSum = 0
         self.currentError = 0
@@ -65,8 +65,8 @@ class PiMain:
 
     def distance_p(self, distance):
         pwm = int((distance * 30))
-        if pwm >= 200:
-            pwm = 200
+        if pwm >= config.motor_forward:
+            pwm = config.motor_forward
         return pwm
 
     def update_steer_pid(self, theta_error):
@@ -75,14 +75,14 @@ class PiMain:
             self.kd * (theta_error - self.previousError)
         self.previousError = theta_error
         # 控制量归一化
-        pwm = int((control / 180.0) * 150)
+        pwm = int((control / 180.0) * config.motor_steer)
         return pwm
 
     def pid_pwm(self, distance, theta_error):
         forward_pwm = self.distance_p(distance)
         steer_pwm = self.update_steer_pid(theta_error)
         left_pwm = 1500 + forward_pwm - steer_pwm
-        right_pwm = 1500 - forward_pwm - steer_pwm
+        right_pwm = 1500 + forward_pwm + steer_pwm
         return left_pwm, right_pwm
 
     def get_gps_data(self):
@@ -131,9 +131,14 @@ class PiMain:
     def set_home_location(self):
         if self.lng_lat is None:
             logger.error('当前无GPS信号，无法设置返航点')
+        # gps为靠近0
+        elif abs(self.lng_lat[0])<10:
+            logger.error('当前无GPS信号弱，无法设置返航点')
         else:
             self.home_lng_lat = copy.deepcopy(self.lng_lat)
-            print('返航点：', self.home_lng_lat)
+            print({'保存路径':config.home_location_path})
+            with open(config.home_location_path,'w') as f:
+                json.dump({'home_lng_lat':self.home_lng_lat},f)
 
     def yaw_control(self, yaw):
         """
@@ -176,6 +181,9 @@ if __name__ == '__main__':
     compass_thread = threading.Thread(target=pi_main_obj.get_compass_data)
     gps_thread = threading.Thread(target=pi_main_obj.get_gps_data)
 
+    compass_thread.setDaemon(True)
+    gps_thread.setDaemon(True)
+
     compass_thread.start()
     gps_thread.start()
 
@@ -198,7 +206,7 @@ if __name__ == '__main__':
                     if gear >= 4:
                         gear = 4
                     pi_main_obj.pi_obj.forward(
-                        1600 + 100 * gear, 1400 - 100 * gear)
+                        1600 + 100 * gear, 1600 + 100 * gear)
                 else:
                     pi_main_obj.pi_obj.forward()
             elif key_input.startswith('a'):
@@ -206,7 +214,7 @@ if __name__ == '__main__':
                     if gear >= 4:
                         gear = 4
                     pi_main_obj.pi_obj.left(
-                        1400 - 100 * gear, 1400 - 100 * gear)
+                        1400 - 100 * gear, 1600 + 100 * gear)
                 else:
                     pi_main_obj.pi_obj.left()
             elif key_input.startswith('s'):
@@ -214,7 +222,7 @@ if __name__ == '__main__':
                     if gear >= 4:
                         gear = 4
                     pi_main_obj.pi_obj.backword(
-                        1400 - 100 * gear, 1600 + 100 * gear)
+                        1400 - 100 * gear, 1400 - 100 * gear)
                 else:
                     pi_main_obj.pi_obj.backword()
             elif key_input.startswith('d'):
@@ -222,7 +230,7 @@ if __name__ == '__main__':
                     if gear >= 4:
                         gear = 4
                     pi_main_obj.pi_obj.right(
-                        1600 + 100 * gear, 1600 + 100 * gear)
+                        1600 + 100 * gear, 1400 - 100 * gear)
                 else:
                     pi_main_obj.pi_obj.right()
             elif key_input == 'q':
@@ -238,6 +246,14 @@ if __name__ == '__main__':
 
             # 返航
             elif key_input.startswith('b'):
+                if not os.path.exists(config.home_location_path):
+                    print('不存在home点')
+                    continue
+                with open(config.home_location_path,'r') as f:
+                    home_lng_lat_json = json.load(f)
+                home_lng_lat = home_lng_lat_json['home_lng_lat']
+                print('home_lng_lat',home_lng_lat)
+                pi_main_obj.home_lng_lat = home_lng_lat
                 print('目标地点', pi_main_obj.home_lng_lat)
                 home_distance = lng_lat_calculate.distanceFromCoordinate(
                     pi_main_obj.lng_lat[0],
@@ -310,6 +326,11 @@ if __name__ == '__main__':
                     target_lng_lat[0],
                     target_lng_lat[1])
                 while distance > config.arrive_distance:
+                    distance = lng_lat_calculate.distanceFromCoordinate(
+                        pi_main_obj.lng_lat[0],
+                        pi_main_obj.lng_lat[1],
+                        target_lng_lat[0],
+                        target_lng_lat[1])
                     if int(time.time()) % 2 == 0:
                         print('距离目标点距离: ', distance)
                     left_pwm, right_pwm = pi_main_obj.point_control(
@@ -340,6 +361,11 @@ if __name__ == '__main__':
                         point_list[index][0],
                         point_list[index][1])
                     while distance > config.arrive_distance:
+                        distance = lng_lat_calculate.distanceFromCoordinate(
+                            pi_main_obj.lng_lat[0],
+                            pi_main_obj.lng_lat[1],
+                            point_list[index][0],
+                            point_list[index][1])
                         left_pwm, right_pwm = pi_main_obj.point_control(point_list[index])
                         if int(time.time()) % 2 == 0:
                             print('距离目标点距离: ', distance)
@@ -348,7 +374,11 @@ if __name__ == '__main__':
                         time.sleep(config.pid_interval)
                     point_list_status[index]=1
                 pi_main_obj.pi_obj.stop()
-
+            # m 退出
+            elif key_input.startswith('m'):
+                break
+        except KeyboardInterrupt:
+            continue
         except Exception as e:
             print({'error': e})
             continue

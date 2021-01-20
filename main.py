@@ -59,6 +59,9 @@ def main():
             target=data_manager_obj.get_com_data)
         send_com_data_thread = threading.Thread(
             target=data_manager_obj.send_com_data)
+        compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
+        gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
+
     else:
         pass
     check_status_thread = threading.Thread(
@@ -75,6 +78,8 @@ def main():
     if (config.sysstr == "Linux"):
         get_com_data_thread.setDaemon(True)
         send_com_data_thread.setDaemon(True)
+        compass_thread.setDaemon(True)
+        gps_thread.setDaemon(True)
     send_mqtt_data_thread.setDaemon(True)
 
     # send_com_heart_thread.setDaemon(True)
@@ -83,6 +88,8 @@ def main():
     if (config.sysstr == "Linux"):
         get_com_data_thread.start()
         send_com_data_thread.start()
+        compass_thread.start()
+        gps_thread.start()
     send_mqtt_data_thread.start()
 
     # send_com_heart_thread.start()
@@ -119,7 +126,21 @@ def main():
                     send_com_data_thread.setDaemon(True)
                     send_com_data_thread.start()
                     time.sleep(10)
+            if not compass_thread.is_alive():
+                logger.error('restart send_mqtt_data_thread')
+                compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
+                compass_thread.setDaemon(True)
+                compass_thread.start()
+                time.sleep(10)
 
+            if not gps_thread.is_alive():
+                logger.error('restart send_mqtt_data_thread')
+                gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
+                gps_thread.setDaemon(True)
+                gps_thread.start()
+                time.sleep(10)
+
+        # gps_thread.setDaemon(True)
         if not send_mqtt_data_thread.is_alive():
             logger.error('restart send_mqtt_data_thread')
             send_mqtt_data_thread = threading.Thread(

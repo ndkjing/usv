@@ -75,15 +75,14 @@ class Utils:
             shot = Node((o[0] + t * d[0], o[1] + t * d[1]))
             if self.get_dist(shot, Node(a)) <= r + delta:
                 return True
-
         return False
 
     def is_collision(self, start, end):
-        print()
+        # print()
         in_cnt1 = cv2.pointPolygonTest(np.array(self.pool_cnts), (int(start.x), int(start.y)), False)
         in_cnt2 = cv2.pointPolygonTest(np.array(self.pool_cnts), (int(end.x), int(end.y)), False)
         # 使用经纬度判断 大于0说明属于该轮廓
-        if in_cnt1 >= 0 or in_cnt2>=0:
+        if in_cnt1 >= 0 or in_cnt2 >= 0:
             return True
 
         o, d = self.get_ray(start, end)
@@ -120,7 +119,6 @@ class Utils:
             if 0 <= node.x - (x - delta) <= w + 2 * delta \
                     and 0 <= node.y - (y - delta) <= h + 2 * delta:
                 return True
-
         return False
 
     @staticmethod
@@ -135,10 +133,10 @@ class Utils:
 
 class Env:
     def __init__(self,pool_cnts):
-        self.x_range = (0, 50)
-        self.y_range = (0, 30)
+        (x, y, w, h) = cv2.boundingRect(np.asarray(pool_cnts))
+        self.x_range = (0, w)
+        self.y_range = (0, h)
         self.pool_cnts = pool_cnts
-
 
 class Node:
     def __init__(self, n):
@@ -219,9 +217,8 @@ class RrtConnect:
         delta = self.utils.delta
 
         if np.random.random() > goal_sample_rate:
-            return Node((np.random.uniform(self.x_range[0] + delta, self.x_range[1] - delta),
-                         np.random.uniform(self.y_range[0] + delta, self.y_range[1] - delta)))
-
+            return Node((int(np.random.uniform(self.x_range[0] + delta, self.x_range[1] - delta)),
+                         int(np.random.uniform(self.y_range[0] + delta, self.y_range[1] - delta))))
         return sample_goal
 
     @staticmethod
@@ -231,12 +228,10 @@ class RrtConnect:
 
     def new_state(self, node_start, node_end):
         dist, theta = self.get_distance_and_angle(node_start, node_end)
-
         dist = min(self.step_len, dist)
-        node_new = Node((node_start.x + dist * math.cos(theta),
-                         node_start.y + dist * math.sin(theta)))
+        node_new = Node((int(node_start.x + dist * math.cos(theta)),
+                         int(node_start.y + dist * math.sin(theta))))
         node_new.parent = node_start
-
         return node_new
 
     @staticmethod
@@ -262,6 +257,7 @@ class RrtConnect:
         dx = node_end.x - node_start.x
         dy = node_end.y - node_start.y
         return math.hypot(dx, dy), math.atan2(dy, dx)
+
 def get_outpool_set(contour,safe_distance=0):
     """
     :param contour 湖泊轮廓
@@ -503,6 +499,7 @@ def get_path(baidu_map_obj=None,
     if config.home_debug:
         baidu_map_obj.ship_gaode_lng_lat=config.init_gaode_gps
         baidu_map_obj.ship_gps=config.init_gaode_gps
+
     if baidu_map_obj.ship_gps is None:
         return 'no ship gps'
     if mode==0:
@@ -517,27 +514,12 @@ def get_path(baidu_map_obj=None,
         s_start = tuple(baidu_map_obj.ship_pix)
         s_goal = tuple(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lats[0]))
         print('s_start,s_goal',s_start,s_goal)
-        # TODO 测试使用间隔两个像素搜索
-        # s_start = list(s_start)
-        # s_goal = list(s_goal)
-        #
-        # if s_start[0]%2!=0:
-        #     s_start[0] = s_start[0]+1
-        # if s_start[1]%2!=0:
-        #     s_start[1] = s_start[0]+1
-        # if s_goal[0]%2!=0:
-        #     s_goal[0] = s_goal[0]+1
-        # if s_goal[1]%2!=0:
-        #     s_goal[1] = s_goal[1]+1
-        # s_start = tuple(s_start)
-        # s_goal = tuple(s_goal)
-        # print('s_start,s_goal', s_start, s_goal)
         # 判断是否能直线到达，不能则采用路径搜索
         if not cross_outpool(s_start,s_goal,baidu_map_obj.pool_cnts):
             try:
                 # astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.outpool_cnts_set)
                 # astar_path, visited = astar.searching()
-                rrt_conn = RrtConnect(s_start, s_goal, 1, 0.05, 5000,baidu_map_obj.pool_cnts)
+                rrt_conn = RrtConnect(s_start, s_goal, 1, 0.1, 10000,baidu_map_obj.pool_cnts)
                 astar_path = rrt_conn.planning()
                 print('astar_path', astar_path)
                 return_pix_path = astar_path[::-1]
@@ -563,8 +545,8 @@ def get_path(baidu_map_obj=None,
             except Exception as e :
                 print('error ',e)
                 if b_show:
-                    cv2.circle(baidu_map_obj.show_img, s_start, 5, [255, 255, 0], -1)
-                    cv2.circle(baidu_map_obj.show_img, s_goal, 5, [255, 0, 255], -1)
+                    cv2.circle(baidu_map_obj.show_img, s_start, 5, [0, 255, 0], -1)
+                    cv2.circle(baidu_map_obj.show_img, s_goal, 5, [0, 0, 255], -1)
                     cv2.imshow('scan', baidu_map_obj.show_img)
                     cv2.waitKey(0)
                     cv2.destroyAllWindows()
@@ -699,10 +681,7 @@ def get_path(baidu_map_obj=None,
         print('s_start,s_goal', s_start, s_goal)
         # 判断是否能直线到达，不能则采用路径搜索
         if not cross_outpool(s_start, s_goal, baidu_map_obj.pool_cnts):
-            # astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.outpool_cnts_set)
-            # # try:
-            # astar_path, visited = astar.searching()
-            rrt_conn = RrtConnect(s_start, s_goal, 1, 0.05, 5000)
+            rrt_conn = RrtConnect(s_start, s_goal, 1, 0.05, 100000,baidu_map_obj.pool_cnts)
             astar_path = rrt_conn.planning()
             print('astar_path', astar_path)
             baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img, [np.array(astar_path, dtype=np.int32)],
@@ -712,7 +691,7 @@ def get_path(baidu_map_obj=None,
             _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
             if b_show:
                 cv2.circle(baidu_map_obj.show_img, s_start, 5, [255, 0, 255], -1)
-                cv2.circle(baidu_map_obj.show_img, s_goal, 5, [255, 0, 255], -1)
+                cv2.circle(baidu_map_obj.show_img, s_goal, 5, [0, 0, 255], -1)
                 baidu_map_obj.show_img = cv2.drawContours(baidu_map_obj.show_img, [return_pix_path], -1, (0, 0, 255), 3)
                 cv2.imshow('scan', baidu_map_obj.show_img)
                 cv2.waitKey(0)
