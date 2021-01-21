@@ -87,7 +87,10 @@ class MqttSendGet:
         self.mqtt_port = mqtt_port
         if (config.current_platform == "l"):
             self.mqtt_user = 'dk_linux'
-            client_id = client_id+'dk_linux3'
+            client_id = client_id+'dk_linux10'
+        if (config.current_platform == "l_j"):
+            self.mqtt_user = 'dk_linux_j'
+            client_id = client_id + 'dk_linux_j'
         else:
             client_id = client_id + 'dk_windwos'
             self.mqtt_user = 'dk_windwos'
@@ -108,6 +111,7 @@ class MqttSendGet:
         self.zoom = []
         self.meter_pix = {}
         self.mode = []
+        self.pool_id=None
         # 记录经纬度是不是已经到达或者放弃到达（在去的过程中手动操作） 0准备过去(自动) -1放弃（手动）  1 已经到达的点  2:该点是陆地
         self.target_lng_lat_status = []
         # 当前航线  -1是还没选择
@@ -156,7 +160,6 @@ class MqttSendGet:
         topic = msg.topic
         # 处理控制数据
         if topic == 'control_data_%s' % (config.ship_code):
-
             control_data = json.loads(msg.payload)
             if control_data.get('move_direction') is  None:
                 self.logger.error('control_data_处理控制数据没有move_direction字段')
@@ -274,6 +277,15 @@ class MqttSendGet:
                 return
             self.b_start = int(start_data.get('start'))
             self.logger.info({'topic':topic,'b_start': start_data.get('start')})
+
+        # 湖泊id
+        elif topic == 'pool_info_%s' % (config.ship_code):
+            pool_info_data = json.loads(msg.payload)
+            if not pool_info_data.get('mapId'):
+                self.logger.error('pool_info_data设置启动消息没有mapId字段')
+                return
+            self.pool_id = str(pool_info_data.get('mapId'))
+            self.logger.info({'topic': topic, 'mapId': pool_info_data.get('mapId')})
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):

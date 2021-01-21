@@ -78,6 +78,9 @@ class DataManager:
         # 记录手动与自动
         self.b_manul = 1
 
+        # 路径跟踪是否被终止
+        self.b_stop_path_track = False
+
     def get_serial_obj(self,port,baud,time_out,log):
         return SerialData(config.port, config.baud, timeout=1 / config.com2pi_interval,
                                        logger=self.com_data_read_logger)
@@ -86,7 +89,7 @@ class DataManager:
     def get_com_data(self):
         while True:
             row_com_data_read = self.com_data_obj.readline()
-            self.com_data_read_logger.info({'row_com_data_read': row_com_data_read})
+            self.com_data_read_logger.debug({'row_com_data_read': row_com_data_read})
             com_data_read = str(row_com_data_read)[2:-5]
             self.com_data_read_logger.debug({'str com_data_read': com_data_read})
             ## 解析串口发送过来的数据
@@ -134,7 +137,7 @@ class DataManager:
                     else:
                         self.plan_path_status[self.current_ststus_index] = 1
 
-                self.com_data_read_logger.info({'ship_current_direction': self.ship_current_direction,
+                self.com_data_read_logger.debug({'ship_current_direction': self.ship_current_direction,
                                   'TD': self.data_define_obj.water['TD'],
                                   'water_temperature': self.data_define_obj.water['wt'],
                                   'current_lng_lat': self.data_define_obj.status['current_lng_lat'],
@@ -153,17 +156,24 @@ class DataManager:
         count=1
         try:
             while True:
+                time.sleep(config.pi2com_interval)
                 # 判断当前是手动控制还是自动控制
+                d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
+                if d in [-1, 0, 90, 180, 270]:
+                    manul_or_auto = 1
+                # 收到停止终止所有路径规划点
+                if d==-1:
+                    self.server_data_obj.mqtt_send_get_obj.target_lng_lat=[]
+                    self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status=[]
+                # 使用路径规划但是没有路径
                 if config.b_use_path_planning:
                     if len(self.plan_path) == 0 :
                         manul_or_auto = 1
+                    else:
+                        manul_or_auto = 0
                 else:
                     if len(self.server_data_obj.mqtt_send_get_obj.target_lng_lat)>0:
                         manul_or_auto = 0
-
-                d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
-                if d in [0,-1,90,180,270]:
-                    manul_or_auto = 1
 
                 # 手动模式使用用户给定角度
                 self.logger.debug({'d':d,'self.manul':self.b_manul,'count':count})
@@ -180,7 +190,7 @@ class DataManager:
                     elif d == 270:
                         temp_com_data = 4
                         pwm_data = {'1': 1100, '3': 1900}
-                    elif d == -1 or d == 1 or d == 2:
+                    elif d == -1 :
                         temp_com_data = 5
                         pwm_data = {'1': 1500, '3': 1500}
                     else:
@@ -203,11 +213,10 @@ class DataManager:
                             self.pi_main_obj.pi_obj.backword()
                         elif d == 270:
                             self.pi_main_obj.pi_obj.right()
-                        elif d == -1 or d == 1 or d == 2:
+                        elif d == -1 :
                             self.pi_main_obj.pi_obj.stop()
-                        else:
-                            self.pi_main_obj.pi_obj.stop()
-                        # 改变状态
+
+                        # 改变状态不再重复发送指令
                         self.server_data_obj.mqtt_send_get_obj.control_move_direction=-2
                     # 使用单片机
                     else:
@@ -223,19 +232,21 @@ class DataManager:
                     # 使用树莓派
                     if config.b_use_pi:
                         if self.pi_main_obj.lng_lat is None:
-                            self.logger.error('自身经纬度还没有，不能自主巡航')
-                            return
-                        # else:
-                        #     self.pi_main_obj.set_home_location()
+                            self.logger.error('无当前GPS，不能自主巡航')
+                            continue
+                        elif self.pi_main_obj.home_lng_lat is None:
+                            self.pi_main_obj.set_home_location()
                         #将目标经纬度转换为真实经纬度
-                        home_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.pi_main_obj.home_lng_lat)
+                        pi_current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.pi_main_obj.lng_lat)
+                        # 设置自动路径搜索为False
+                        self.b_stop_path_track=False
                         for index,gaode_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.target_lng_lat):
                             # 判断该点是否已经到达
                             if self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[index]==1:
                                 continue
                             # 计算目标真实经纬度
-                            target_lng_lat_gps = lng_lat_calculate.gps_gaode_to_gps(self.pi_main_obj.home_lng_lat,
-                                                                                    home_gaode_lng_lat,
+                            target_lng_lat_gps = lng_lat_calculate.gps_gaode_to_gps(self.pi_main_obj.lng_lat,
+                                                                                    pi_current_gaode_lng_lat,
                                                                                     gaode_lng_lat)
                             self.logger.info({'目标地点': target_lng_lat_gps})
                             distance = lng_lat_calculate.distanceFromCoordinate(
@@ -256,13 +267,18 @@ class DataManager:
                                 print('left_pwm, right_pwm', left_pwm, right_pwm)
                                 self.pi_main_obj.pi_obj.forward(left_pwm, right_pwm)
                                 # 按了暂停按钮 清空规划点
-                                if int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) in [1, -1]:
+                                if int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == -1:
                                     self.pi_main_obj.pi_obj.stop()
                                     self.server_data_obj.mqtt_send_get_obj.target_lng_lat = []
                                     self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status = []
-                                    return
+                                    self.b_stop_path_track=True
+                                    break
                                 time.sleep(config.pid_interval)
+                            if self.b_stop_path_track:
+                                break
                             self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[index] = 1
+                        # 全部结束后停止
+                        self.pi_main_obj.pi_obj.stop()
                     # 计算发送给单片机数据
                     elif config.b_use_pix:
                         pass
@@ -366,15 +382,15 @@ class DataManager:
                     self.logger.info('auto_move_direction: ' + str(auto_move_direction))
                     """
 
-                if count%300==0:
-                    if self.baidu_map_obj is not None:
-                        if  self.baidu_map_obj.init_ship_gps is not None:
-                            self.com_data_obj.send_data(
-                                'B6B6,%f,%f#' % (self.baidu_map_obj.init_ship_gps[0], self.baidu_map_obj.init_ship_gps[1]))
-                    if count>10000000:
-                        count=1
-                count += 1
-                time.sleep(1 / config.pi2com_interval)
+                # if count%300==0:
+                #     if self.baidu_map_obj is not None:
+                #         if  self.baidu_map_obj.init_ship_gps is not None:
+                #             self.com_data_obj.send_data(
+                #                 'B6B6,%f,%f#' % (self.baidu_map_obj.init_ship_gps[0], self.baidu_map_obj.init_ship_gps[1]))
+                #     if count>10000000:
+                #         count=1
+                # count += 1
+
 
         except KeyboardInterrupt:
             self.com_data_obj.send_data('A5A55,0,0,0,0,0,0,0,0,0#')
@@ -383,6 +399,9 @@ class DataManager:
     # 发送mqtt状态数据和检测数据
     def send_mqtt_data(self):
         while True:
+            time.sleep(config.pi2mqtt_interval)
+            if self.server_data_obj.mqtt_send_get_obj.pool_id is not None:
+                self.data_define_obj.pool_code = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.pool_id)
             status_data = copy.deepcopy(self.data_define_obj.status)
             status_data.update({'mapId': self.data_define_obj.pool_code})
             detect_data = copy.deepcopy(self.data_define_obj.detect)
@@ -413,31 +432,19 @@ class DataManager:
                 self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
                           qos=1)
                 self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
-                # TODO
-                time.sleep(1 / config.pi2mqtt_interval)
 
-            # elif count%7==0:
-            #     # http发送检测数据给服务器
-            #     self.send(method='http', data=mqtt_send_detect_data,
-            #               url=config.http_data_save,
-            #               http_type='POST')
-            #     self.logger.debug({'send http':mqtt_send_detect_data})
-            #     if count>100000:
-            #         count=1
-            #     time.sleep(1)
             else:
                 self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
                           qos=1)
                 self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
                 #TODO 暂时随机 以后改为到目标点发送
-                if random.random()>0.3:
+                if random.random()>0.7:
                     self.send(method='http', data=mqtt_send_detect_data,
                               url=config.http_data_save,
                               http_type='POST')
                     self.send(method='mqtt', topic='detect_data_%s' % (config.ship_code), data=mqtt_send_detect_data,
                               qos=1)
                     self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
-                time.sleep(1 / config.pi2mqtt_interval)
                 count+=1
 
     def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):

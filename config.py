@@ -4,6 +4,7 @@ root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'mapsData')
 if not os.path.exists(maps_dir):
     os.mkdir(maps_dir)
+
 # 保存所有地图湖泊信息位置
 map_data_path = os.path.join(maps_dir, 'map.json')
 local_map_data_path = os.path.join(maps_dir, 'local_map.json')
@@ -13,7 +14,6 @@ usr_lng_lat_path = os.path.join(maps_dir, 'usr_lng_lat_path.json')
 
 import platform
 sysstr = platform.system()
-
 if (sysstr == "Windows"):
     print("Call Windows tasks")
     current_platform='w'
@@ -32,18 +32,23 @@ else:
 gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
 # 腾讯地图key
 tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
+# 百度地图key
+baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
+
 # 检测像素间隔
 pix_interval=4
 
 # 罗盘等待时间间隔
 compass_timeout = 0.2
-# 单片机发送给树莓派频率
-com2pi_interval = 1
-# 给单片机发送频率
-pi2com_interval = 0.1
 
-# 给服务器发送频率
-pi2mqtt_interval = 1.0/10
+# 单片机发送给树莓派等待时间
+com2pi_interval = 1
+
+# 给单片机发送等待时间
+pi2com_interval = 0.05
+
+# 给服务器发送时间间隔
+pi2mqtt_interval = 3
 
 # 接收服务器方向控制间隔
 mqtt_control_interval = 1
@@ -139,7 +144,7 @@ b_use_start=False
 b_use_pi=True
 
 # 正反桨页设置  0 正桨叶   1 反桨叶
-left_motor_cw = 0
+left_motor_cw = 1
 right_motor_cw = 0
 # 电机前进分量
 motor_forward = 200

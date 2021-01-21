@@ -101,14 +101,14 @@ import numpy as np
 # a = [[[1,2]],[[1,2],[2,3],[1,3]]]
 # s = [[0],[0,0,0]]
 # print(len(a[0]))
-from tsp_solver.greedy import solve_tsp
-a = np.array([
-    [0,2,3],
-    [1,0,2],
-    [3,1,0],
-])
-
-print(solve_tsp(a,endpoints=(0,0)))
+# from tsp_solver.greedy import solve_tsp
+# a = np.array([
+#     [0,2,3],
+#     [1,0,2],
+#     [3,1,0],
+# ])
+#
+# print(solve_tsp(a,endpoints=(0,0)))
 
 # b = [1,2,3,5]
 # b.insert(0,10)
@@ -365,15 +365,15 @@ import math
 # import math
 #
 #
-print(math.sin(math.radians(60)))
-print(math.sin(math.radians(150)))
-print(math.sin(math.radians(240)))
-print(math.sin(math.radians(330)))
-
-print(math.cos(math.radians(60)))
-print(math.cos(math.radians(150)))
-print(math.cos(math.radians(240)))
-print(math.cos(math.radians(330)))
+# print(math.sin(math.radians(60)))
+# print(math.sin(math.radians(150)))
+# print(math.sin(math.radians(240)))
+# print(math.sin(math.radians(330)))
+#
+# print(math.cos(math.radians(60)))
+# print(math.cos(math.radians(150)))
+# print(math.cos(math.radians(240)))
+# print(math.cos(math.radians(330)))
 # print(math.sin(math.radians()))
 # print(math.sin(math.radians()))
 # print(math.sin(math.radians()))
@@ -383,43 +383,43 @@ print(math.cos(math.radians(330)))
 #     print(time.time()%60==0)
 #     time.sleep(1)
 
-import platform
-
-def TestPlatform( ):
-    print ("----------Operation System--------------------------")
-    #  获取Python版本
-    print(platform.python_version())
-
-    #   获取操作系统可执行程序的结构，，(’32bit’, ‘WindowsPE’)
-    print(platform.architecture())
-
-    #   计算机的网络名称，’acer-PC’
-    print(platform.node())
-
-    #获取操作系统名称及版本号，’Windows-7-6.1.7601-SP1′
-    print(platform.platform()  )
-
-    #计算机处理器信息，’Intel64 Family 6 Model 42 Stepping 7, GenuineIntel’
-    print(platform.processor())
-
-    # 获取操作系统中Python的构建日期
-    print(platform.python_build())
-
-    #  获取系统中python解释器的信息
-    print(platform.python_compiler())
-
-    if platform.python_branch()=="":
-        print(platform.python_implementation())
-        print(platform.python_revision())
-    print(platform.release())
-    print(platform.system())
-
-    #print platform.system_alias()
-    #  获取操作系统的版本
-    print(platform.version())
-
-    #  包含上面所有的信息汇总
-    print(platform.uname())
+# import platform
+#
+# def TestPlatform( ):
+#     print ("----------Operation System--------------------------")
+#     #  获取Python版本
+#     print(platform.python_version())
+#
+#     #   获取操作系统可执行程序的结构，，(’32bit’, ‘WindowsPE’)
+#     print(platform.architecture())
+#
+#     #   计算机的网络名称，’acer-PC’
+#     print(platform.node())
+#
+#     #获取操作系统名称及版本号，’Windows-7-6.1.7601-SP1′
+#     print(platform.platform()  )
+#
+#     #计算机处理器信息，’Intel64 Family 6 Model 42 Stepping 7, GenuineIntel’
+#     print(platform.processor())
+#
+#     # 获取操作系统中Python的构建日期
+#     print(platform.python_build())
+#
+#     #  获取系统中python解释器的信息
+#     print(platform.python_compiler())
+#
+#     if platform.python_branch()=="":
+#         print(platform.python_implementation())
+#         print(platform.python_revision())
+#     print(platform.release())
+#     print(platform.system())
+#
+#     #print platform.system_alias()
+#     #  获取操作系统的版本
+#     print(platform.version())
+#
+#     #  包含上面所有的信息汇总
+#     print(platform.uname())
 
 #
 # import platform
@@ -510,14 +510,87 @@ def TestPlatform( ):
 #
 # except:
 #     pass
-import math
-print(math.degrees(math.atan2(2,2)))
-print(math.degrees(math.atan2(2,-2)))
-print(math.degrees(math.atan2(-2,2)))
-print(math.degrees( math.atan2(-2,-2)))
-print(math.sqrt(math.pow(-2,2)))
-print(float('123.321'))
+# import math
+# print(math.degrees(math.atan2(2,2)))
+# print(math.degrees(math.atan2(2,-2)))
+# print(math.degrees(math.atan2(-2,2)))
+# print(math.degrees( math.atan2(-2,-2)))
+# print(math.sqrt(math.pow(-2,2)))
+# print(float('123.321'))
+#
+# print(int(time.time()) % 2 == 0)
+#
+# print((383.213146851/372.0/2))
+# import os
+# # if (os.path.exists('test.txt.py')):
+# print(os.remove('test.txt.py'))
 
-print(int(time.time()) % 2 == 0)
 
+# 多边形周长
+# shape of polygon: [N, 2]
+def Perimeter(polygon: np.array):
+    N, d = polygon.shape
+    if N < 3 or d != 2:
+        raise ValueError
+
+    permeter = 0.
+    for i in range(N):
+        permeter += np.linalg.norm(polygon[i-1] - polygon[i])
+    return permeter
+
+
+# 面积
+def Area(polygon: np.array):
+    N, d = polygon.shape
+    if N < 3 or d != 2:
+        raise ValueError
+
+    area = 0.
+    vector_1 = polygon[1] - polygon[0]
+    for i in range(2, N):
+        vector_2 = polygon[i] - polygon[0]
+        area += np.abs(np.cross(vector_1, vector_2))
+        vector_1 = vector_2
+    return area / 2
+
+# |r| < 1
+# r > 0, 内缩
+# r < 0, 外扩
+def calc_shrink_width(polygon: np.array, r):
+    area = Area(polygon)
+    perimeter = Perimeter(polygon)
+    L = area * (1 - r ** 2) / perimeter
+    return L if r > 0 else -L
+
+
+def shrink_polygon(polygon: np.array, r):
+    N, d = polygon.shape
+    if N < 3 or d != 2:
+        raise ValueError
+
+    shrinked_polygon = []
+    L = calc_shrink_width(polygon, r)
+    for i in range(N):
+        Pi = polygon[i]
+        v1 = polygon[i-1] - Pi
+        v2 = polygon[(i+1)%N] - Pi
+
+        normalize_v1 = v1 / np.linalg.norm(v1)
+        normalize_v2 = v2 / np.linalg.norm(v2)
+
+        sin_theta = np.abs(np.cross(normalize_v1, normalize_v2))
+
+        Qi = Pi + L / sin_theta * (normalize_v1 + normalize_v2)
+        shrinked_polygon.append(Qi)
+    return np.asarray(shrinked_polygon)
+
+
+if __name__ == "__main__":
+    poly = np.array([[0, 0], [0, 1], [0.5, 2], [1, 1], [1, 0]])
+    perimeter = Perimeter(poly)
+    area = Area(poly)
+
+    shrink_poly = shrink_polygon(poly, 0.5)
+    expansion_poly = shrink_polygon(shrink_poly, -0.5)
+    print(perimeter, area, shrink_poly, expansion_poly)
 

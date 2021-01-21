@@ -149,7 +149,7 @@ if __name__ == '__main__':
     import config
 
     serial_obj = SerialData(
-        '/dev/ttyUSB1',
+        '/dev/compass',
         9600,
         # timeout=1 /config.com2pi_interval,
         timeout=0.7,

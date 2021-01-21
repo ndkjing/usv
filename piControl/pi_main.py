@@ -158,9 +158,9 @@ class PiMain:
         :return:
         """
         distance = lng_lat_calculate.distanceFromCoordinate(
-            pi_main_obj.lng_lat[0], pi_main_obj.lng_lat[1], lng_lat[0], lng_lat[1])
-        theta = lng_lat_calculate.angleFromCoordinate(pi_main_obj.lng_lat[0],
-                                                      pi_main_obj.lng_lat[1],
+            self.lng_lat[0], self.lng_lat[1], lng_lat[0], lng_lat[1])
+        theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
+                                                      self.lng_lat[1],
                                                       lng_lat[0],
                                                       lng_lat[1])
         # 求船头与目标角度偏差角度

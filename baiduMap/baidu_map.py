@@ -11,14 +11,10 @@ import enum
 import config
 from utils import lng_lat_calculate
 import sys
-
-"""
-百度地图
-ak='wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
-"""
+# 方法一：找所有点
 method_0 = cv2.CHAIN_APPROX_NONE
+# 方法二：找最简单包围的点，多点共线就省略点
 method_1 = cv2.CHAIN_APPROX_SIMPLE
-
 
 def color_block_finder(img, lowerb, upperb,
                        min_w=0, max_w=None, min_h=0, max_h=None, map_type=None,
@@ -31,7 +27,7 @@ def color_block_finder(img, lowerb, upperb,
     # 根据颜色阈值转换为二值化图像
     img_bin = cv2.inRange(img_hsv, lowerb, upperb)
 
-    # 寻找轮廓（只寻找最外侧的色块）
+    # 寻找轮廓（只寻找最外侧的色块）版本不同返回不同
     if (config.sysstr == "Linux"):
         try:
             _,contours, hier = cv2.findContours(
@@ -55,16 +51,6 @@ def color_block_finder(img, lowerb, upperb,
         # 如果最大高度没有设定，就设定为图像的高度
         max_h = img.shape[0]
 
-    # 遍历所有的边缘轮廓集合
-    # for cidx, cnt in enumerate(contours):
-    #     # 获取联通域的外界矩形
-    #     (x, y, w, h) = cv2.boundingRect(cnt)
-    #
-    #     if w >= min_w and w <= max_w and h >= min_h and h <= max_h:
-    #         # 将矩形的信息(tuple)添加到rects中
-    #         rects.append((x, y, w, h))
-    # 绘制轮廓
-    # show_img = cv2.drawContours(show_img, contours, -1, (0, 255, 0), 2)
     contours_cx = -1
     contours_cy = -1
     # 找到中心点所在的轮廓
@@ -131,31 +117,31 @@ def is_in_contours(point, local_map_data):
         return None
 
 
-def get_degree(lonA, latA, lonB, latB):
-    """
-    两点经纬度计算角度　以第一点为中心　第一点（经度，纬度），第二点（经度，纬度）
-    Args:
-        point p1(latA, lonA)
-        point p2(latB, lonB)
-    Returns:
-        bearing between the two GPS points,
-        default: the basis of heading direction is north
-    """
-    radLatA = radians(latA)
-    radLonA = radians(lonA)
-    radLatB = radians(latB)
-    radLonB = radians(lonB)
-    dLon = radLonB - radLonA
-    y = sin(dLon) * cos(radLatB)
-    x = cos(radLatA) * sin(radLatB) - sin(radLatA) * cos(radLatB) * cos(dLon)
-    brng = degrees(atan2(y, x))
-    brng = (brng + 360) % 360
-    return_brg = 360 - brng
-    if int(return_brg) == 360:
-        return 0
-    else:
-        return return_brg
-
+# def get_degree(lonA, latA, lonB, latB):
+#     """
+#     两点经纬度计算角度　以第一点为中心　第一点（经度，纬度），第二点（经度，纬度）
+#     Args:
+#         point p1(latA, lonA)
+#         point p2(latB, lonB)
+#     Returns:
+#         bearing between the two GPS points,
+#         default: the basis of heading direction is north
+#     """
+#     radLatA = radians(latA)
+#     radLonA = radians(lonA)
+#     radLatB = radians(latB)
+#     radLonB = radians(lonB)
+#     dLon = radLonB - radLonA
+#     y = sin(dLon) * cos(radLatB)
+#     x = cos(radLatA) * sin(radLatB) - sin(radLatA) * cos(radLatB) * cos(dLon)
+#     brng = degrees(atan2(y, x))
+#     brng = (brng + 360) % 360
+#     return_brg = 360 - brng
+#     if int(return_brg) == 360:
+#         return 0
+#     else:
+#         return return_brg
+# 枚举地图类型
 class MapType(enum.Enum):
     baidu = 1
     gaode = 2
@@ -179,7 +165,7 @@ class BaiduMap(object):
             self.logger = logger
         self.map_type = map_type
         # 访问秘钥
-        self.baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
+        self.baidu_key = config.baidu_key
         self.gaode_key = config.gaode_key
         self.tecent_key = config.tencent_key
         # 湖泊像素轮廓
@@ -222,7 +208,15 @@ class BaiduMap(object):
         # 缩放比例
         self.zoom = zoom
 
-        self.pix_to_meter = 0.12869689044 * math.pow(2, 19 - self.zoom)
+        # gaode
+        if self.map_type == MapType.gaode:
+            self.pix_2_meter = 0.12859689044 * math.pow(2, 19 - self.zoom)
+        elif self.map_type == MapType.tecent:
+            self.pix_2_meter = 0.515071433939516 * math.pow(2, 18 - self.zoom)
+        elif self.map_type == MapType.baidu:
+            # baidu
+            self.pix_2_meter = 1 * math.pow(2, 18 - self.zoom)
+
         self.addr = str(round(100 * random.random(), 3))
         # ＨＳＶ阈值　［［低　ＨＳＶ］,　［高　ＨＳＶ］］
         self.gaode_threshold_hsv = [(84, 72, 245), (118, 97, 255)]
@@ -262,9 +256,15 @@ class BaiduMap(object):
             self.save_img_path = os.path.join(
                 save_img_dir, 'tecent_%f_%f_%i_%i.png' %
                 (self.lng_lat[0], self.lng_lat[1], self.zoom, self.scale))
+        # 不存在图片则保存图片
         if not os.path.exists(self.save_img_path):
-            self.draw_image()
-
+            try:
+                self.draw_image()
+            # 下载出错则删除可能出错的图片
+            except Exception as e:
+                self.logger.error({'error':e})
+                if os.path.exists(self.save_img_path):
+                    os.remove(self.save_img_path)
     # 获取地址的url
     def get_url(self, addr):
         self.addr = addr
@@ -291,9 +291,7 @@ class BaiduMap(object):
     def get_image_url(self):
         '''
             调用地图API获取待查询地址专属url
-            最高查询次数30w/天，最大并发量160/秒
-            http://api.map.baidu.com/staticimage/v2?ak=E4805d16520de693a3fe707cdc962045&mcode=666666&center=116.403874,39.914888&width=300&height=200&zoom=11
-            '''
+        '''
         if self.map_type == MapType.baidu:
             return 'http://api.map.baidu.com/staticimage/v2?ak={myAk}&center={position}&width={width}&height={height}&zoom={zoom}'.format(
                 myAk=self.baidu_key, position='%f,%f' % (self.lng_lat[0], self.lng_lat[1]), width=self.width,
@@ -314,7 +312,6 @@ class BaiduMap(object):
     # 按照经纬度url获取静态图
     def draw_image(self, ):
         png_url = self.get_image_url()
-        print('png_url',png_url)
         self.logger.info({'png_url': png_url})
         response = requests.get(png_url)
         # 获取的文本实际上是图片的二进制文本
@@ -331,33 +328,31 @@ class BaiduMap(object):
         :return:
         """
         self.logger.info({'save_img_path': self.save_img_path})
+        # 图片路径
         if not os.path.exists(self.save_img_path):
             self.logger.error('no image')
+            return None,(1003,1003)
         self.row_img = cv2.imread(self.save_img_path)
-        # add edge
+
+        # 检查图片是否读取成功
+        if self.row_img is None:
+            self.logger.error("Error: 无法找到保存的地图图片,请检查图片文件路径")
+            return None, (1004, 1004)
+
+        # 为了点击位置层次过大没有找到全部湖轮廓或报错，手动给图片边缘添加一个边框
         h, w = self.row_img.shape[:2]
         self.row_img[0, :, :] = [0, 0, 0]
         self.row_img[h - 1, :, :] = [0, 0, 0]
         self.row_img[:, 0, :] = [0, 0, 0]
         self.row_img[:, w - 1, :] = [0, 0, 0]
-        # cv2.imshow('test',self.row_img)
-        # cv2.waitKey(0)
-        # 图片路径
-        # 颜色阈值下界(HSV) lower boudnary
+
+        # 颜色阈值下界(HSV)不同地图类型 lower boudnary # 颜色阈值上界(HSV) upper boundary
         if self.map_type==MapType.tecent:
             lowerb = self.tecent_threshold_hsv[0]
-            # 颜色阈值上界(HSV) upper boundary
             upperb = self.tecent_threshold_hsv[1]
         else:
             lowerb = self.gaode_threshold_hsv[0]
-            # 颜色阈值上界(HSV) upper boundary
             upperb = self.gaode_threshold_hsv[1]
-
-        # 读入素材图片 BGR
-        # 检查图片是否读取成功
-        if self.row_img is None:
-            self.logger.error("Error: 无法找到保存的地图图片,请检查图片文件路径")
-            return None, (-1, -1)
 
         # 识别色块 获取矩形区域数组
         self.show_img, pool_cnts, (contours_cx, contours_cy) = color_block_finder(
@@ -365,7 +360,7 @@ class BaiduMap(object):
         self.center_cnt = (contours_cx, contours_cy)
         if pool_cnts is None:
             self.logger.info('无法在点击处找到湖')
-            return pool_cnts, (-2, -2)
+            return None, (1001, 1001)
 
         # 绘制色块的矩形区域
         cv2.circle(
@@ -378,14 +373,18 @@ class BaiduMap(object):
             # 等待任意按键按下
             cv2.waitKey(0)
             # 关闭其他窗口
-            # cv2.destroyAllWindows()
+            cv2.destroyAllWindows()
         pool_cnts = np.squeeze(pool_cnts)
         self.pool_cnts = pool_cnts
         return self.pool_cnts, self.center_cnt
 
-    # gps模块转换为高德经纬度
     @staticmethod
     def gps_to_gaode_lng_lat(lng_lat):
+        """
+        gps模块经纬度转换为高德经纬度
+        :param lng_lat: 真实gps 列表，[经度，纬度]
+        :return:高德经纬度 列表，[经度，纬度]
+        """
         url = 'https://restapi.amap.com/v3/assistant/coordinate/convert?locations={lng_lat}&coordsys=gps&key={key}'.format(
             lng_lat="%f,%f" % (lng_lat[0], lng_lat[1]), key=config.gaode_key)
         response = requests.get(url=url)
@@ -393,8 +392,13 @@ class BaiduMap(object):
         gaode_lng_lat = [float(i) for i in response['locations'].split(',')]
         return gaode_lng_lat
 
-    # 高德经纬度转换转换为像素位置
+
     def gaode_lng_lat_to_pix(self, gaode_lng_lat):
+        """
+        高德经纬度转换转换为像素位置
+        :param gaode_lng_lat: 高德经纬度 列表，[经度，纬度]
+        :return: 经纬度在当前地图对象图像上的像素位置
+        """
         # 计算两点间距离和角度
         theta = lng_lat_calculate.angleFromCoordinate(
             self.lng_lat[0], self.lng_lat[1], gaode_lng_lat[0], gaode_lng_lat[1])
@@ -405,35 +409,34 @@ class BaiduMap(object):
         if theta>=0 and  theta<90:
             delta_x_distance = math.sin(math.radians(theta)) * distance
             delta_y_distance = math.cos(math.radians(theta)) * distance
-            delta_x_pix = -delta_x_distance / (self.pix_to_meter)
-            delta_y_pix = -delta_y_distance / (self.pix_to_meter)
+            delta_x_pix = -delta_x_distance / (self.pix_2_meter)
+            delta_y_pix = -delta_y_distance / (self.pix_2_meter)
             pix = [int(self.width * self.scale / 2 + delta_x_pix),
                    int(self.height * self.scale / 2 + delta_y_pix)]
         elif theta>=90 and  theta<180:
             t2_theta = 180-theta
             delta_x_distance = math.sin(math.radians(t2_theta)) * distance
             delta_y_distance = math.cos(math.radians(t2_theta)) * distance
-            delta_x_pix = -delta_x_distance / (self.pix_to_meter)
-            delta_y_pix = delta_y_distance / (self.pix_to_meter)
+            delta_x_pix = -delta_x_distance / (self.pix_2_meter)
+            delta_y_pix = delta_y_distance / (self.pix_2_meter)
             pix = [int(self.width * self.scale / 2 + delta_x_pix),
                    int(self.height * self.scale / 2 + delta_y_pix)]
         elif theta>=180 and theta<270:
             t3_theta = 270 - theta
             delta_x_distance = math.cos(math.radians(t3_theta)) * distance
             delta_y_distance = math.sin(math.radians(t3_theta)) * distance
-            delta_x_pix = delta_x_distance / (self.pix_to_meter)
-            delta_y_pix = delta_y_distance / (self.pix_to_meter)
+            delta_x_pix = delta_x_distance / (self.pix_2_meter)
+            delta_y_pix = delta_y_distance / (self.pix_2_meter)
             pix = [int(self.width * self.scale / 2 + delta_x_pix),
                    int(self.height * self.scale / 2 + delta_y_pix)]
         elif theta>=270 and theta<=360:
             t4_theta = 360 - theta
             delta_x_distance = math.sin(math.radians(t4_theta)) * distance
             delta_y_distance = math.cos(math.radians(t4_theta)) * distance
-            delta_x_pix = delta_x_distance / (self.pix_to_meter)
-            delta_y_pix = -delta_y_distance / (self.pix_to_meter)
+            delta_x_pix = delta_x_distance / (self.pix_2_meter)
+            delta_y_pix = -delta_y_distance / (self.pix_2_meter)
             pix = [int(self.width * self.scale / 2 + delta_x_pix),
                    int(self.height * self.scale / 2 + delta_y_pix)]
-
         return pix
 
     # 区域像素点转换为经纬度坐标点
@@ -454,12 +457,10 @@ class BaiduMap(object):
         for point in cnts:
             delta_pix_x = point[0] - center[0]
             delta_pix_y = point[1] - center[1]
-            # baidu
-            pix_2_meter = math.pow(2, 18 - self.zoom)
-            # gaode
-            pix_2_meter = 0.12859689044*math.pow(2, 19 - self.zoom)
-            delta_meter_x = delta_pix_x * (pix_2_meter)
-            delta_meter_y = delta_pix_y * (pix_2_meter)
+
+
+            delta_meter_x = delta_pix_x * (self.pix_2_meter)
+            delta_meter_y = delta_pix_y * (self.pix_2_meter)
             distance = math.sqrt(
                 math.pow(
                     delta_meter_x,
@@ -530,23 +531,24 @@ class BaiduMap(object):
         return return_gps, return_gps_list
 
     def scan_pool(self,
-                  contour,
-                  pix_gap=20,
+                  meter_gap=20,
                   col_pix_gap=None,
-                  safe_distance=20,
+                  safe_meter_distance=20,
                   b_show=False):
         """
-        传入湖泊像素轮廓返回活泼扫描点
+        传入湖泊像素轮廓和采样间隔返回采样扫描点
         :param contour 轮廓点
         :param pix_gap 指定扫描间隔，单位像素 默认行
         :param col_pix_gap 列像素间距 默认行列取同样的间距 传该值时列间距与行间距单独计算
         :param safe_distance
         """
         # 求坐标点最大外围矩阵
-        (x, y, w, h) = cv2.boundingRect(contour)
+        (x, y, w, h) = cv2.boundingRect(self.pool_cnts)
         self.logger.debug({'(x, y, w, h)': (x, y, w, h)})
         # 循环生成点同时判断点是否在湖泊范围在则添加到列表中
         scan_points = []
+        pix_gap = int(meter_gap/self.pix_2_meter)
+        pix_safe_distance = int(safe_meter_distance/self.pix_2_meter)
         # 起始点
         start_x, start_y = x, y + pix_gap
         # 当前点
@@ -556,8 +558,8 @@ class BaiduMap(object):
         while current_y < (y + h):
             while current_x <= (x + w) and current_x >= x:
                 point = (current_x, current_y)
-                in_cnt = cv2.pointPolygonTest(contour, point, True)
-                if in_cnt > safe_distance:
+                in_cnt = cv2.pointPolygonTest(self.pool_cnts, point, True)
+                if in_cnt > pix_safe_distance:
                     scan_points.append(list(point))
                 if b_add_or_sub:
                     current_x += pix_gap
@@ -570,26 +572,42 @@ class BaiduMap(object):
             else:
                 current_x += pix_gap
                 b_add_or_sub = True
-        for point in scan_points:
-            cv2.circle(self.show_img, tuple(point), 5, (0, 255, 255), -1)
+
         if b_show:
-            # cv2.polylines(self.show_img,[np.array(scan_points,dtype=np.int32)],False,(255,0,0),2)
+            for point in scan_points:
+                cv2.circle(self.show_img, tuple(point), 5, (0, 255, 255), -1)
             cv2.imshow('scan', self.show_img)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
         self.scan_point_cnts = scan_points
         return self.scan_point_cnts
 
-
+    def surround_pool(self,safe_distance = 20,pool_center_distance=None, b_show=False):
+        """
+        环绕湖泊
+        :param safe_distance: 离岸边距离
+        :param pool_center_distance: 离湖中心距离
+        :param b_show: 是否显示
+        :return: 环湖高德地图经纬度点
+        """
+        from utils import line_calculate
+        shrink_pool_cnts = line_calculate.shrink_polygon(np.asarray(self.pool_cnts), r=0.7)
+        if b_show:
+            shrink_img = cv2.drawContours(self.show_img, shrink_pool_cnts, -1, (0, 0, 255), 3)
+            cv2.imshow('shrink_img',shrink_img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     # obj = BaiduMap([114.432092, 30.522893], zoom=16,map_type=MapType.gaode)
     # obj = BaiduMap([114.431529, 30.524413], zoom=15, scale=1, map_type=MapType.gaode)
     # obj = BaiduMap([114.438009, 30.540082], zoom=14, scale=1, map_type=MapType.gaode)
     # obj = BaiduMap([114.373904, 30.540625], zoom=14, scale=1, map_type=MapType.gaode)
-    obj = BaiduMap([114.524145,30.505586], zoom=17,
-                   scale=1, map_type=MapType.tecent)
-    pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=True)
+    obj = BaiduMap([114.431689,30.523207], zoom=15,
+                   scale=1, map_type=MapType.gaode)
+    pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=False)
+    # scan_cnts = obj.scan_pool(meter_gap=50, safe_meter_distance=5,b_show=True)
+    obj.surround_pool(b_show=True)
     # obj = BaiduMap([114.393142, 30.558963], zoom=15,map_type=MapType.baidu)
     # obj = BaiduMap([114.718257,30.648004],zoom=14)
     # obj = BaiduMap([114.566767,30.541689],zoom=14)
@@ -612,7 +630,7 @@ if __name__ == '__main__':
     print(type(gaode_lng_lat), gaode_lng_lat)
     pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=False)
     print('pool_cnts', len(pool_cnts))
-    scan_cnts = obj.scan_pool(pool_cnts, pix_gap=30, b_show=True)
+
     obj.pix_to_gps(obj.pool_cnts)
     if pool_cnts is None:
         pass

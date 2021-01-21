@@ -9,7 +9,7 @@ from dataGetSend.data_manager import DataManager
 from audios import audios_manager
 import sys
 import os
-
+time.sleep(10)
 
 sys.path.append(
     os.path.join(
@@ -54,7 +54,7 @@ def main():
         logger.error({'binding_data error': e})
 
     # 启动串口数据收发和mqtt数据收发
-    if (config.sysstr == "Linux"):
+    if (config.current_platform == "l"):
         get_com_data_thread = threading.Thread(
             target=data_manager_obj.get_com_data)
         send_com_data_thread = threading.Thread(
@@ -75,7 +75,7 @@ def main():
     #     target=data_manager_obj.send_com_heart_data)
 
     check_status_thread.setDaemon(True)
-    if (config.sysstr == "Linux"):
+    if (config.current_platform == "l"):
         get_com_data_thread.setDaemon(True)
         send_com_data_thread.setDaemon(True)
         compass_thread.setDaemon(True)
@@ -85,7 +85,7 @@ def main():
     # send_com_heart_thread.setDaemon(True)
 
     check_status_thread.start()
-    if (config.sysstr == "Linux"):
+    if (config.current_platform == "l"):
         get_com_data_thread.start()
         send_com_data_thread.start()
         compass_thread.start()
@@ -102,7 +102,7 @@ def main():
 
     while True:
         #  判断线程是否死亡并重启线程
-        if (config.sysstr == "Linux"):
+        if (config.current_platform == "l"):
             if not get_com_data_thread.is_alive():
                 if config.home_debug:
                     time.sleep(10)

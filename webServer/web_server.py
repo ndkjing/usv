@@ -53,6 +53,7 @@ class WebServer:
         self.current_target_gaode_lng_lats=None
         # 记录路径规划地点
         self.plan_path = None
+        self.current_map_type = baidu_map.MapType.gaode
 
     def send(
             self,
@@ -120,48 +121,68 @@ class WebServer:
             save_img_dir = os.path.join(config.root_path, 'baiduMap', 'imgs')
             if not os.path.exists(save_img_dir):
                 os.mkdir(save_img_dir)
-            save_img_path = os.path.join(
-                save_img_dir, 'gaode_%f_%f_%i_%i.png' %
-                (self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[0],
-                 self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[1],
-                 self.server_data_obj.mqtt_send_get_obj.pool_click_zoom,
-                 1))
-
+            if self.current_map_type==baidu_map.MapType.gaode:
+                save_img_path = os.path.join(
+                    save_img_dir, 'gaode_%f_%f_%i_%i.png' %
+                    (self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[0],
+                     self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[1],
+                     self.server_data_obj.mqtt_send_get_obj.pool_click_zoom,
+                     1))
+            elif self.current_map_type==baidu_map.MapType.tecent:
+                save_img_path = os.path.join(
+                    save_img_dir, 'tecent_%f_%f_%i_%i.png' %
+                                  (self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[0],
+                                   self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[1],
+                                   self.server_data_obj.mqtt_send_get_obj.pool_click_zoom,
+                                   1))
+            elif self.current_map_type==baidu_map.MapType.baidu:
+                save_img_path = os.path.join(
+                    save_img_dir, 'baidu_%f_%f_%i_%i.png' %
+                                  (self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[0],
+                                   self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[1],
+                                   self.server_data_obj.mqtt_send_get_obj.pool_click_zoom,
+                                   1))
             # 创建于查找湖泊
-            if len(self.data_define_obj.pool_code) <= 0 or not os.path.exists(
-                    save_img_path):
+            if len(self.data_define_obj.pool_code) <= 0 or not os.path.exists(save_img_path):
                 # 创建地图对象
                 self.baidu_map_obj = baidu_map.BaiduMap(
                     lng_lat=self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat,
                     zoom=self.server_data_obj.mqtt_send_get_obj.pool_click_zoom,
-                    logger=self.map_log)
+                    logger=self.map_log,
+                    map_type=self.current_map_type)
 
                 pool_cnts, (pool_cx, pool_cy) = self.baidu_map_obj.get_pool_pix()
-                if pool_cnts is None or pool_cx == -2:
-                    # 若返回为None表示没找到湖 定义错误代码
-                    is_collision = 1
-                    pool_info_data = {
-                        'deviceId': config.ship_code,
-                        'lng_lat': self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat,
-                        'is_collision': is_collision,
-                        'zoom': self.server_data_obj.mqtt_send_get_obj.pool_click_zoom,
-                    }
-                    self.send(
-                        method='mqtt',
-                        topic='pool_info_%s' %
-                        (config.ship_code),
-                        data=pool_info_data,
-                        qos=1)
-                    self.logger.debug({'pool_info_data': pool_info_data})
-                    continue
+                # 为NOne表示没有找到湖泊 继续换地图找
+                if pool_cnts is None:
+                    if self.current_map_type == baidu_map.MapType.gaode:
+                        self.current_map_type = baidu_map.MapType.tecent
+                        continue
+                    if self.current_map_type == baidu_map.MapType.tecent:
+                        self.current_map_type = baidu_map.MapType.baidu
+                        continue
+                    if self.current_map_type == baidu_map.MapType.baidu:
+                        self.current_map_type = baidu_map.MapType.gaode
+                        # 若返回为None表示没找到湖 定义错误代码
+                        is_collision = 1
+                        pool_info_data = {
+                            'deviceId': config.ship_code,
+                            'lng_lat': self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat,
+                            'is_collision': is_collision,
+                            'zoom': self.server_data_obj.mqtt_send_get_obj.pool_click_zoom,
+                        }
+                        self.send(
+                            method='mqtt',
+                            topic='pool_info_%s' %
+                            (config.ship_code),
+                            data=pool_info_data,
+                            qos=1)
+                        self.logger.debug({'pool_info_data': pool_info_data})
+                        continue
                 # 获取湖泊轮廓与中心点经纬度位置 _位置为提供前端直接绘图使用
-                _, self.baidu_map_obj.pool_lng_lats = self.baidu_map_obj.pix_to_gps(
-                    pool_cnts)
-                _, self.baidu_map_obj.pool_center_lng_lat = self.baidu_map_obj.pix_to_gps([
-                                                                                          [pool_cx, pool_cy]])
-                self.logger.info(
-                    {'pool_center_lng_lat': self.baidu_map_obj.pool_center_lng_lat})
 
+                _, self.baidu_map_obj.pool_lng_lats = self.baidu_map_obj.pix_to_gps(pool_cnts)
+                _, self.baidu_map_obj.pool_center_lng_lat = self.baidu_map_obj.pix_to_gps([[pool_cx, pool_cy]])
+                self.logger.info({'pool_center_lng_lat': self.baidu_map_obj.pool_center_lng_lat})
                 # 判断当前湖泊是否曾经出现，出现过则获取的ID 没出现过发送请求获取新ID
                 if isinstance(self.baidu_map_obj.pool_cnts, np.ndarray):
                     save_pool_cnts = self.baidu_map_obj.pool_cnts.tolist()
@@ -218,15 +239,11 @@ class WebServer:
 
                     # 不存在获取新的id
                     else:
-                        if config.home_debug:
-                            pool_id = '123123213'
-                        else:
-                            pool_id = self.send(
-                                method='http',
-                                data=send_data,
-                                url=config.http_save,
-                                http_type='POST')
-
+                        pool_id = self.send(
+                            method='http',
+                            data=send_data,
+                            url=config.http_save,
+                            http_type='POST')
                         self.logger.info({'新的湖泊 poolid': pool_id})
                         with open(config.local_map_data_path, 'w') as f:
                             # 以前存储键值
@@ -359,6 +376,8 @@ class WebServer:
             #         self.baidu_map_obj.init_ship_gaode_lng_lat = config.init_gaode_gps
             #     else:
             #         self.baidu_map_obj.init_ship_gps = self.data_define_obj.status['current_lng_lat']
+
+
 
     # 路径规划
     def path_planning(self, target_lng_lats=None, mode=5, back_home=False):
