@@ -283,7 +283,7 @@ class WebServer:
 
     def get_plan_path(self):
         while True:
-            time.sleep(0.5)
+            time.sleep(0.2)
             # 配置判断
             len_target_lng_lat = len(self.server_data_obj.mqtt_send_get_obj.target_lng_lat)
 
@@ -304,8 +304,7 @@ class WebServer:
                     if self.current_target_gaode_lng_lats is not None and self.current_target_gaode_lng_lats == target_lng_lats:
                         pass
                     else:
-                        self.logger.info(
-                            {'target_lng_lats': target_lng_latss})
+                        self.logger.info({'target_lng_lats': target_lng_lats})
                         self.current_target_gaode_lng_lats = copy.deepcopy(target_lng_lats)
                         self.path_planning(mode=0, target_lng_lats=target_lng_lats)
 
@@ -356,6 +355,7 @@ class WebServer:
         :param mode
         return path points
         """
+        b_plan_path=False
         if config.home_debug:
             self.baidu_map_obj.ship_pix = self.baidu_map_obj.gaode_lng_lat_to_pix(
                 config.init_gaode_gps)
@@ -365,18 +365,18 @@ class WebServer:
             self.baidu_map_obj.init_ship_gaode_lng_lat = config.init_gaode_gps
         else:
             # 在服务器上运行不考虑船的位置
-            if self.baidu_map_obj is not None:
-                self.baidu_map_obj.ship_gps = self.server_data_obj.mqtt_send_get_obj.current_lng_lat
+            if self.baidu_map_obj is not None and self.server_data_obj.mqtt_send_get_obj.current_lng_lat is not None:
                 self.baidu_map_obj.ship_gaode_lng_lat = self.server_data_obj.mqtt_send_get_obj.current_lng_lat
+                b_plan_path=True
 
         # 进行路径规划
-        if config.b_use_path_planning:
+        if config.b_use_path_planning and b_plan_path:
             return_gaode_lng_lat_path = a_star.get_path(
                 baidu_map_obj=self.baidu_map_obj,
                 mode=mode,
                 target_lng_lats=target_lng_lats,
                 b_show=False,
-                back_home=back_home)
+               )
             self.logger.info(
                 {'return_gaode_lng_lat_path': return_gaode_lng_lat_path})
             if isinstance(return_gaode_lng_lat_path, str):
@@ -418,6 +418,7 @@ class WebServer:
             {'mqtt_send_path_planning_data': mqtt_send_path_planning_data})
 
 if __name__ == '__main__':
+    config.b_use_path_planning=True
     web_server_obj = WebServer()
     find_pool_thread = threading.Thread(target= web_server_obj.find_pool)
     get_plan_path_thread = threading.Thread(target= web_server_obj.get_plan_path)

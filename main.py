@@ -55,12 +55,15 @@ def main():
 
     # 启动串口数据收发和mqtt数据收发
     if (config.current_platform == "l"):
-        get_com_data_thread = threading.Thread(
-            target=data_manager_obj.get_com_data)
+        if os.path.exists(config.port):
+            get_com_data_thread = threading.Thread(
+                target=data_manager_obj.get_com_data)
         send_com_data_thread = threading.Thread(
             target=data_manager_obj.send_com_data)
-        compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
-        gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
+        if os.path.exists(config.compass_port):
+            compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
+        if os.path.exists(config.gps_port):
+            gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
         if config.b_use_remote_control:
             remote_control_thread = threading.Thread(target=data_manager_obj.pi_main_obj.remote_control)
     else:
@@ -71,13 +74,13 @@ def main():
     send_mqtt_data_thread = threading.Thread(
         target=data_manager_obj.send_mqtt_data)
 
-
     # send_com_heart_thread = threading.Thread(
     #     target=data_manager_obj.send_com_heart_data)
 
     check_status_thread.setDaemon(True)
     if (config.current_platform == "l"):
-        get_com_data_thread.setDaemon(True)
+        if os.path.exists(config.port):
+            get_com_data_thread.setDaemon(True)
         send_com_data_thread.setDaemon(True)
         compass_thread.setDaemon(True)
         gps_thread.setDaemon(True)
@@ -89,7 +92,8 @@ def main():
 
     check_status_thread.start()
     if (config.current_platform == "l"):
-        get_com_data_thread.start()
+        if os.path.exists(config.port):
+            get_com_data_thread.start()
         send_com_data_thread.start()
         compass_thread.start()
         gps_thread.start()
@@ -108,7 +112,7 @@ def main():
     while True:
         #  判断线程是否死亡并重启线程
         if (config.current_platform == "l"):
-            if not get_com_data_thread.is_alive():
+            if not get_com_data_thread.is_alive() and  os.path.exists(config.port):
                 if config.home_debug:
                     time.sleep(10)
                     pass

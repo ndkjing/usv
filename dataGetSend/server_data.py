@@ -117,7 +117,7 @@ class MqttSendGet:
         self.path_planning_points_status=[]
 
         # 船当前经纬度 给服务器路径规划使用
-        self.current_lng_lat = []
+        self.current_lng_lat = None
         # 船返航点经纬度 给服务器路径规划使用
         self.home_lng_lat = []
 

@@ -107,21 +107,23 @@ class PiMain:
                                                    float(data_list[2][2:]) /
                                                    60, 6)
                     self.lng_lat = [lng, lat]
-                    if last_read_lng_lat is None:
-                        last_read_lng_lat = copy.deepcopy(self.lng_lat)
-                        last_read_time = time.time()
-                    else:
-                        speed_distance = lng_lat_calculate.distanceFromCoordinate(last_read_lng_lat[0],
-                                                                 last_read_lng_lat[1],
-                                                                 self.lng_lat[0],
-                                                                 self.lng_lat[1])
-                        # 计算当前行驶里程
-                        self.run_distance += speed_distance
-                        # 计算速度
-                        self.speed = round(speed_distance/(time.time()-last_read_time),1)
-                        last_read_lng_lat = copy.deepcopy(self.lng_lat)
-                        last_read_time = time.time()
                     self.lng_lat_error = float(data_list[8])
+                    if self.lng_lat_error < 2:
+                        if last_read_lng_lat is None:
+                            last_read_lng_lat = copy.deepcopy(self.lng_lat)
+                            last_read_time = time.time()
+                        else:
+                            # 计算当前行驶里程
+                            speed_distance = lng_lat_calculate.distanceFromCoordinate(last_read_lng_lat[0],
+                                                                                      last_read_lng_lat[1],
+                                                                                      self.lng_lat[0],
+                                                                                      self.lng_lat[1])
+                            self.run_distance += speed_distance
+                            # 计算速度
+                            self.speed = round(speed_distance/(time.time()-last_read_time),1)
+                            last_read_lng_lat = copy.deepcopy(self.lng_lat)
+                            last_read_time = time.time()
+
             except Exception as e:
                 logger.error({'error': e})
 
@@ -341,7 +343,7 @@ if __name__ == '__main__':
                     left_pwm, right_pwm = pi_main_obj.point_control(
                         pi_main_obj.home_lng_lat)
                     print('left_pwm, right_pwm',left_pwm, right_pwm)
-                    pi_main_obj.pi_obj.forward(left_pwm, right_pwm)
+                    pi_main_obj.pi_obj.set_pwm(left_pwm, right_pwm)
                     time.sleep(config.pid_interval)
                 pi_main_obj.pi_obj.stop()
 
