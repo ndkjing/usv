@@ -22,6 +22,8 @@ elif (sysstr == "Linux"):   # 树莓派上也是Linux
     # 公司Linux电脑名称
     if platform.node()=='jing':
         current_platform = 'l_j'
+    elif platform.node()=='xxl':
+        current_platform = 'l_x'
     else:
         current_platform = 'l'
 else:
@@ -48,7 +50,7 @@ com2pi_interval = 1
 pi2com_interval = 0.05
 
 # 给服务器发送时间间隔
-pi2mqtt_interval = 3
+pi2mqtt_interval = 1
 
 # 接收服务器方向控制间隔
 mqtt_control_interval = 1
@@ -118,7 +120,7 @@ b_direct= True
 path_search_safe_distance = 10
 
 # 到达点距离范围判断，单位米
-arrive_distance = 3
+arrive_distance = 2
 
 # 查找数量
 find_points_num=4
@@ -147,9 +149,9 @@ b_use_pi=True
 left_motor_cw = 1
 right_motor_cw = 0
 # 电机前进分量
-motor_forward = 200
+motor_forward = 300
 # 电机转弯分量
-motor_steer = 150
+motor_steer = 250
 kp = 1.0
 ki = 0.6
 kd = 0.1
@@ -159,4 +161,10 @@ left_pwm_pin = 18
 # 右侧电机信号输出控制口
 right_pwm_pin = 23
 
+# 是否使用遥控器
+b_use_remote_control=False
+#1 通道
+channel_1_pin = 12
+#3 通道
+channel_3_pin = 16
 

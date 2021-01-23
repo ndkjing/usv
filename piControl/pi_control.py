@@ -26,7 +26,6 @@ sys.path.append(
 from utils import log
 logger = log.LogHandler('main_log')
 import config
-# if config.current_platform == 'l':
 import pigpio
 import time
 
@@ -39,12 +38,72 @@ class PiControl:
         self.hz = 50
 
         self.pi = pigpio.pi()
+
         # gpio脚的编号顺序依照Broadcom number顺序，请自行参照gpio引脚图里面的“BCM编码”，
         self.pi.set_PWM_frequency(config.left_pwm_pin, self.hz)  # 设定14号引脚产生的pwm波形的频率为50Hz
         self.pi.set_PWM_frequency(config.right_pwm_pin, self.hz)  # 设定14号引脚产生的pwm波形的频率为50Hz
         self.pi.set_PWM_range(config.left_pwm_pin, self.pice)
         self.pi.set_PWM_range(config.right_pwm_pin, self.pice)
         self.init_motor()
+
+        self.save = [1, 161, 150, 157, 152, 142, 101]
+        self.set = 1
+        self.tick_0 = [None, None, None, None, None, None, None]
+        self.tick_1 = [None, None, None, None, None, None, None]
+        self.temp_read = [[150 for col in range(21)] for row in range(7)]
+        self.count = [1, 0, 0, 0, 0, 0, 0]
+
+        self.channel1_input_pwm = 0
+        self.channel3_input_pwm = 0
+        # 当前是否是遥控器控制 True 为遥控器控制 False 为网页控制
+        self.b_remote_control=True
+
+        self.cb1 = self.pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, self.mycallback)
+        self.cb2 = self.pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, self.mycallback)
+
+    def in_callback(self,argu, gpio, level, tick):
+        if level == 0:
+            self.tick_0[argu] = tick
+            if self.tick_1[argu] is not None:
+                diff = pigpio.tickDiff(self.tick_1[argu], tick)
+                self.temp_read[argu][self.count[argu]] = diff
+                # count[argu]+=1
+                # if  count[argu]==20:
+                #     sum_temp_read=0
+                #     a=0
+                #     for i in range(20):
+                #         sum_temp_read+=temp_read[argu][a]
+                #         a+=1
+                #     save[argu]=sum_temp_read/20
+                #     count[argu]=0
+                self.save[argu] = self.temp_read[argu][self.count[argu]]
+        else:
+            self.tick_1[argu] = tick
+
+    def mycallback(self,gpio, level, tick):
+        # print('level',level,gpio)
+        if level == 0:
+            if int(gpio) == int(config.channel_1_pin):
+                # print('channel1', diff)
+                self.tick_0[0] = tick
+                if self.tick_1[0] is not None:
+                    diff = pigpio.tickDiff(self.tick_1[0], tick)
+                    self.channel1_input_pwm = int(diff)
+                    self.temp_read[0][self.count[0]] = diff
+                    self.save[0] = int(self.temp_read[0][self.count[0]])
+            if int(gpio) == int(config.channel_3_pin):
+                self.tick_0[1] = tick
+                if self.tick_1[1] is not None:
+                    diff = pigpio.tickDiff(self.tick_1[1], tick)
+                    self.channel3_input_pwm = int(diff)
+                    self.temp_read[1][self.count[1]] = diff
+                    self.save[1] = int(self.temp_read[1][self.count[1]])
+                    # print('channel3', diff)
+        else:
+            if gpio == int(config.channel_1_pin):
+                self.tick_1[0] = tick
+            if gpio == int(config.channel_3_pin):
+                self.tick_1[1] = tick
 
     def forward(self,left_pwm=None,right_pwm=None):
         if left_pwm is None:
@@ -108,9 +167,9 @@ class PiControl:
         sleep_time=0.001
         delta_time = 0.001/500.0
         # while self.left_pwm!=left_pwm or self.right_pwm!=right_pwm:
-        print('left_pwm:', left_pwm, 'right_pwm:',right_pwm)
+        # print('left_pwm:', left_pwm, 'right_pwm:',right_pwm)
         while abs(self.left_pwm-left_pwm)!=0 or abs(self.right_pwm!=right_pwm)!=0:
-            print('left_pwm:', self.left_pwm, 'right_pwm:', self.right_pwm)
+            # print('left_pwm:', self.left_pwm, 'right_pwm:', self.right_pwm)
             if abs(left_pwm - self.left_pwm)==0:
                 pass
             else:
@@ -125,7 +184,9 @@ class PiControl:
             sleep_time = sleep_time + delta_time
         # self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
         # self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
-        print('left_pwm:',self.left_pwm,'right_pwm:',self.right_pwm)
+        # 不支持输出获取pwm状态，以后再调试
+        # print('left_pwm:',self.left_pwm,self.pi.get_PWM_dutycycle(config.left_pwm_pin),'right_pwm:',self.right_pwm,self.pi.get_PWM_dutycycle(config.right_pwm_pin))
+        print(time.time(),'left_pwm:',self.left_pwm,'right_pwm:',self.right_pwm)
 
 if __name__ == '__main__':
     pi_obj = PiControl()

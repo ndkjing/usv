@@ -63,6 +63,5 @@ def play_audio(audio_index=0, b_backend=False):
             else:
                 os.system('mpg321 %s' % os.path.join(audios_base_dir,audio_dict[audio_index]))
 
-
 if __name__ == '__main__':
     play_audio(1)

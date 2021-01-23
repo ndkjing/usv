@@ -611,7 +611,7 @@ def get_path(baidu_map_obj=None,
             target_pixs.append(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lat))
         # target_pixs.insert(0,baidu_map_obj.ship_pix)
         # 如果是直接到达模式
-        if config.b_direct and not config.home_debug:
+        if config.b_direct :
             _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(target_pixs)
             return return_gaode_lng_lat_path
         # if b_show:

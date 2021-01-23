@@ -30,7 +30,6 @@ from dataGetSend import com_data
 import config
 logger = log.LogHandler('pi_log')
 
-
 class PiMain:
     def __init__(self):
         self.gps_obj = com_data.SerialData(
@@ -52,6 +51,7 @@ class PiMain:
         # 树莓派pwm波控制对象
         if config.current_platform == 'l':
             self.pi_obj = pi_control.PiControl()
+
         # 返航点
         self.home_lng_lat = None
 
@@ -62,6 +62,11 @@ class PiMain:
         self.errorSum = 0
         self.currentError = 0
         self.previousError = 0
+
+        # 船速度
+        self.speed = None
+        # 船行驶里程
+        self.run_distance=0
 
     def distance_p(self, distance):
         pwm = int((distance * 30))
@@ -86,6 +91,8 @@ class PiMain:
         return left_pwm, right_pwm
 
     def get_gps_data(self):
+        last_read_time=time.time()
+        last_read_lng_lat=None
         while True:
             # serial_obj.send_data('31',b_hex=True)
             try:
@@ -100,6 +107,20 @@ class PiMain:
                                                    float(data_list[2][2:]) /
                                                    60, 6)
                     self.lng_lat = [lng, lat]
+                    if last_read_lng_lat is None:
+                        last_read_lng_lat = copy.deepcopy(self.lng_lat)
+                        last_read_time = time.time()
+                    else:
+                        speed_distance = lng_lat_calculate.distanceFromCoordinate(last_read_lng_lat[0],
+                                                                 last_read_lng_lat[1],
+                                                                 self.lng_lat[0],
+                                                                 self.lng_lat[1])
+                        # 计算当前行驶里程
+                        self.run_distance += speed_distance
+                        # 计算速度
+                        self.speed = round(speed_distance/(time.time()-last_read_time),1)
+                        last_read_lng_lat = copy.deepcopy(self.lng_lat)
+                        last_read_time = time.time()
                     self.lng_lat_error = float(data_list[8])
             except Exception as e:
                 logger.error({'error': e})
@@ -175,17 +196,66 @@ class PiMain:
         left_pwm, right_pwm = self.pid_pwm(distance, theta_error)
         return left_pwm, right_pwm
 
+    def remote_control(self):
+        """
+        遥控器输入
+        :return:
+        """
+        while True:
+            try:
+                remote_forward_pwm = int(self.pi_obj.channel3_input_pwm)
+                remote_steer_pwm = int(self.pi_obj.channel1_input_pwm)
+                # print('remote', remote_forward_pwm, remote_steer_pwm)
+                # 防止抖动
+                if remote_forward_pwm<1550 and remote_forward_pwm >1450:
+                    remote_forward_pwm=1500
+                # 防止过大值
+                elif remote_forward_pwm>=1900:
+                    remote_forward_pwm=1900
+                # 防止初始读取到0电机会转动， 设置为1500
+                elif remote_forward_pwm<1000 :
+                    remote_forward_pwm=1500
+                # 防止过小值
+                elif remote_forward_pwm<=1100 and remote_forward_pwm>=1000:
+                    remote_forward_pwm=1100
+
+                # 防止抖动
+                if remote_steer_pwm < 1550 and remote_steer_pwm > 1450:
+                    remote_steer_pwm = 1500
+                # 防止过大值
+                elif remote_steer_pwm >= 1900:
+                    remote_steer_pwm = 1900
+                # 防止初始读取到0电机会转动， 设置为1500
+                elif remote_steer_pwm < 1000:
+                    remote_steer_pwm = 1500
+                # 防止过小值
+                elif remote_steer_pwm <= 1100 and remote_steer_pwm >= 1000:
+                    remote_steer_pwm = 1100
+                # print('remote_forward_pwm,remote_steer_pwm',remote_forward_pwm,remote_steer_pwm)
+                remote_left_pwm = 1500 + (remote_forward_pwm-1500) + (remote_steer_pwm-1500)
+                remote_right_pwm = 1500 + (remote_forward_pwm-1500) - (remote_steer_pwm-1500)
+                self.pi_obj.set_pwm(remote_left_pwm,remote_right_pwm)
+                time.sleep(1.0/self.pi_obj.hz)
+            except Exception as e:
+                logger.error({'error': e})
+
 
 if __name__ == '__main__':
     pi_main_obj = PiMain()
     compass_thread = threading.Thread(target=pi_main_obj.get_compass_data)
     gps_thread = threading.Thread(target=pi_main_obj.get_gps_data)
+    if config.b_use_remote_control:
+        remote_control_thread = threading.Thread(target=pi_main_obj.remote_control)
 
     compass_thread.setDaemon(True)
     gps_thread.setDaemon(True)
+    if config.b_use_remote_control:
+        remote_control_thread.setDaemon(True)
 
     compass_thread.start()
     gps_thread.start()
+    if config.b_use_remote_control:
+        remote_control_thread.start()
 
     while True:
         try:
@@ -378,7 +448,7 @@ if __name__ == '__main__':
             elif key_input.startswith('m'):
                 break
         except KeyboardInterrupt:
-            continue
+            break
         except Exception as e:
             print({'error': e})
             continue

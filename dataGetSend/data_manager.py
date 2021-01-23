@@ -23,7 +23,6 @@ from utils import lng_lat_calculate
 import config
 from piControl import pi_main
 
-
 class DataManager:
     def __init__(self):
         self.data_define_obj = DataDefine()
@@ -34,7 +33,7 @@ class DataManager:
         self.com_data_send_logger = LogHandler('com_data_send_logger',level=20)
         self.server_log = LogHandler('server_data')
         self.map_log = LogHandler('map_log')
-        self.drone_log = LogHandler('drone_log')
+        # self.drone_log = LogHandler('drone_log')
 
         if config.current_platform=='l':
             # 串口数据收发对象
@@ -75,11 +74,16 @@ class DataManager:
 
         # 记录当前发送给单片机目标点经纬度（避免重复发送）
         self.send_target_gaode_lng_lat=None
-        # 记录手动与自动
-        self.b_manul = 1
 
         # 路径跟踪是否被终止
         self.b_stop_path_track = False
+
+        # 返回状态消息中提示消息
+        self.notice_info =''
+
+        # 记录里程与时间数据
+        self.totle_distance =0
+        self.plan_start_time=None
 
     def get_serial_obj(self,port,baud,time_out,log):
         return SerialData(config.port, config.baud, timeout=1 / config.com2pi_interval,
@@ -163,20 +167,13 @@ class DataManager:
                     manul_or_auto = 1
                 # 收到停止终止所有路径规划点
                 if d==-1:
-                    self.server_data_obj.mqtt_send_get_obj.target_lng_lat=[]
-                    self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status=[]
+                    self.server_data_obj.mqtt_send_get_obj.path_planning_points=[]
+                    self.server_data_obj.mqtt_send_get_obj.path_planning_points_status=[]
                 # 使用路径规划但是没有路径
-                if config.b_use_path_planning:
-                    if len(self.plan_path) == 0 :
-                        manul_or_auto = 1
-                    else:
-                        manul_or_auto = 0
-                else:
-                    if len(self.server_data_obj.mqtt_send_get_obj.target_lng_lat)>0:
-                        manul_or_auto = 0
 
-                # 手动模式使用用户给定角度
-                self.logger.debug({'d':d,'self.manul':self.b_manul,'count':count})
+                if len(self.server_data_obj.mqtt_send_get_obj.path_planning_points)>0:
+                    manul_or_auto = 0
+
                 if  manul_or_auto==1 :
                     if d == 0:
                         temp_com_data = 1
@@ -229,54 +226,82 @@ class DataManager:
 
                 # 自动模式计算角度
                 if manul_or_auto==0:
+                    # 第一次进入路径规划时候的点设置为返航点
+                    if self.pi_main_obj.home_lng_lat is not None:
+                        self.pi_main_obj.set_home_location()
                     # 使用树莓派
                     if config.b_use_pi:
                         if self.pi_main_obj.lng_lat is None:
                             self.logger.error('无当前GPS，不能自主巡航')
+                            time.sleep(0.5)
                             continue
-                        elif self.pi_main_obj.home_lng_lat is None:
-                            self.pi_main_obj.set_home_location()
-                        #将目标经纬度转换为真实经纬度
-                        pi_current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.pi_main_obj.lng_lat)
+                        if self.plan_start_time is None:
+                            self.plan_start_time = time.time()
                         # 设置自动路径搜索为False
                         self.b_stop_path_track=False
-                        for index,gaode_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.target_lng_lat):
+                        self.logger.info({'点击地点': self.server_data_obj.mqtt_send_get_obj.path_planning_points})
+                        pi_current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.pi_main_obj.lng_lat)
+                        # 计算总里程
+                        for index,gaode_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points):
+                            if index==0:
+                                distance_p = lng_lat_calculate.distanceFromCoordinate(
+                                                                        pi_current_gaode_lng_lat[0],
+                                                                        pi_current_gaode_lng_lat[1],
+                                                                        gaode_lng_lat[0],
+                                                                        gaode_lng_lat[1])
+                                self.totle_distance += distance_p
+                            else:
+                                distance_p = lng_lat_calculate.distanceFromCoordinate(
+                                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index-1][0],
+                                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index-1][1],
+                                    gaode_lng_lat[0],
+                                    gaode_lng_lat[1])
+                                self.totle_distance += distance_p
+                        for index,gaode_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points):
                             # 判断该点是否已经到达
-                            if self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[index]==1:
+                            if self.server_data_obj.mqtt_send_get_obj.path_planning_points_status[index]==1:
                                 continue
                             # 计算目标真实经纬度
-                            target_lng_lat_gps = lng_lat_calculate.gps_gaode_to_gps(self.pi_main_obj.lng_lat,
+                                # 将目标经纬度转换为真实经纬度
+                            pi_current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.pi_main_obj.lng_lat)
+                            path_planning_point_gps = lng_lat_calculate.gps_gaode_to_gps(self.pi_main_obj.lng_lat,
                                                                                     pi_current_gaode_lng_lat,
                                                                                     gaode_lng_lat)
-                            self.logger.info({'目标地点': target_lng_lat_gps})
+                            self.logger.info({'目标真实GPS': path_planning_point_gps})
                             distance = lng_lat_calculate.distanceFromCoordinate(
                                 self.pi_main_obj.lng_lat[0],
                                 self.pi_main_obj.lng_lat[1],
-                                target_lng_lat_gps[0],
-                                target_lng_lat_gps[1])
+                                path_planning_point_gps[0],
+                                path_planning_point_gps[1])
                             while distance > config.arrive_distance:
                                 distance = lng_lat_calculate.distanceFromCoordinate(
                                     self.pi_main_obj.lng_lat[0],
                                     self.pi_main_obj.lng_lat[1],
-                                    target_lng_lat_gps[0],
-                                    target_lng_lat_gps[1])
+                                    path_planning_point_gps[0],
+                                    path_planning_point_gps[1])
+
                                 if int(time.time()) % 2 == 0:
-                                    self.logger.info({'距离目标点距离: ': distance})
+                                    self.logger.debug({'距离目标点距离: ': distance})
                                 left_pwm, right_pwm = self.pi_main_obj.point_control(
-                                    target_lng_lat_gps)
-                                print('left_pwm, right_pwm', left_pwm, right_pwm)
-                                self.pi_main_obj.pi_obj.forward(left_pwm, right_pwm)
+                                    path_planning_point_gps)
+                                self.pi_main_obj.pi_obj.set_pwm(left_pwm, right_pwm)
                                 # 按了暂停按钮 清空规划点
                                 if int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == -1:
+                                    # 停止电机
                                     self.pi_main_obj.pi_obj.stop()
-                                    self.server_data_obj.mqtt_send_get_obj.target_lng_lat = []
-                                    self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status = []
+                                    # 清空目标点和状态
+                                    self.server_data_obj.mqtt_send_get_obj.path_planning_points = []
+                                    self.server_data_obj.mqtt_send_get_obj.path_planning_points_status = []
+                                    # 清空里程和时间
+                                    self.totle_distance = 0
+                                    self.plan_start_time=None
+                                    # 记录是因为按了暂停按钮而终止
                                     self.b_stop_path_track=True
                                     break
                                 time.sleep(config.pid_interval)
                             if self.b_stop_path_track:
                                 break
-                            self.server_data_obj.mqtt_send_get_obj.target_lng_lat_status[index] = 1
+                            self.server_data_obj.mqtt_send_get_obj.path_planning_points_status[index] = 1
                         # 全部结束后停止
                         self.pi_main_obj.pi_obj.stop()
                     # 计算发送给单片机数据
@@ -299,7 +324,7 @@ class DataManager:
                             current_lng_lat = self.data_define_obj.status['current_lng_lat']
                             current_gaode_lng_lat = self.baidu_map_obj.gps_to_gaode_lng_lat(current_lng_lat)
                             # 计算目标真实经纬度
-                            target_lng_lat_gps = lng_lat_calculate.gps_gaode_to_gps(current_lng_lat,
+                            path_planning_point_gps = lng_lat_calculate.gps_gaode_to_gps(current_lng_lat,
                                                                                     current_gaode_lng_lat,
                                                                                     self.plan_path[1])
                             # 使用飞控
@@ -310,14 +335,12 @@ class DataManager:
                                 self.drone_obj.goto(x,y)
                                 self.com_data_send_logger.info({'target_x': x, 'target_y': y})
 
-
-
                             else:
                                 self.com_data_send_logger.info({'send_target_lng_lat_gps': self.send_target_gaode_lng_lat,
-                                                  'target_lng_lat_gps': target_lng_lat_gps})
+                                                  'path_planning_point_gps': path_planning_point_gps})
 
                                 com_data_send = 'A5A50,0,%f,%f,0,0,0,0,0,0#' % (
-                                    target_lng_lat_gps[0], target_lng_lat_gps[1])
+                                    path_planning_point_gps[0], path_planning_point_gps[1])
                                 self.com_data_obj.send_data(com_data_send)
                                 self.com_data_send_logger.info('com_data_send: ' + str(com_data_send))
                                 # 记录上次发送经纬度 如果一样则不发送
@@ -325,75 +348,10 @@ class DataManager:
                         # 重置手动控制
                         self.server_data_obj.mqtt_send_get_obj.control_move_direction=str(360)
                         last_control = None
-                        self.b_manul = 1
-
-                    """
-                    # 该点已达  判断小于5米为已经到达
-                    if lng_lat_calculate.distanceFromCoordinate(current_gaode_lng_lat[0],
-                                                                current_gaode_lng_lat[1],
-                                                                self.plan_path[index][0],
-                                                                self.plan_path[index][1], ) < 5:
-                        self.plan_path_status[index] = 1
-                        continue
-
-                    target_degree = lng_lat_calculate.angleFromCoordinate(
-                        current_gaode_lng_lat[0],
-                        current_gaode_lng_lat[1],
-                        self.plan_path[index][0],
-                        self.plan_path[index][1])
-                    # 偏差角度
-                    delta_degree = target_degree - self.ship_current_direction
-                    auto_move_direction = 360
-                    # 判断移动方向
-                    if delta_degree >= 0:
-                        if delta_degree < 45 or delta_degree >= 315:
-                            auto_move_direction = 0
-                        elif delta_degree >= 45 and delta_degree < 135:
-                            auto_move_direction = 90
-                        elif delta_degree >= 135 and delta_degree < 225:
-                            auto_move_direction = 180
-                        elif delta_degree >= 225 and delta_degree < 315:
-                            auto_move_direction = 270
-                    else:
-                        if abs(delta_degree) < 45 or abs(delta_degree) >= 315:
-                            auto_move_direction = 0
-                        elif abs(delta_degree) >= 45 and abs(delta_degree) < 135:
-                            auto_move_direction = 270
-                        elif abs(delta_degree) >= 135 and abs(delta_degree) < 225:
-                            auto_move_direction = 180
-                        elif abs(delta_degree) >= 225 and abs(delta_degree) < 315:
-                            auto_move_direction = 90
-                    obstacle_direction = basic_obstacle_avoid.move(self.l_distance, self.r_distance)
-                    if self.l_distance is not None and self.l_distance is not None:
-                        # 超声波避障
-                        obstacle_direction = basic_obstacle_avoid.move(self.l_distance, self.r_distance)
-                        if obstacle_direction != int(self.server_data_obj.mqtt_send_get_obj.control_move_direction):
-                            self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
-                        else:
-                            self.com_data_obj.send_data(
-                                'A%sZ' % (self.server_data_obj.mqtt_send_get_obj.control_move_direction))
-                        if not int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == 360:
-                            self.logger.debug('control_move_direction: ' + str(
-                                self.server_data_obj.mqtt_send_get_obj.control_move_direction))
-                                            if obstacle_direction != int(auto_move_direction):
-                        self.com_data_obj.send_data('A%sZ' % (obstacle_direction))
-                    else:
-                        self.com_data_obj.send_data('A%sZ' % (str(auto_move_direction)))
-                    self.logger.info('auto_move_direction: ' + str(auto_move_direction))
-                    """
-
-                # if count%300==0:
-                #     if self.baidu_map_obj is not None:
-                #         if  self.baidu_map_obj.init_ship_gps is not None:
-                #             self.com_data_obj.send_data(
-                #                 'B6B6,%f,%f#' % (self.baidu_map_obj.init_ship_gps[0], self.baidu_map_obj.init_ship_gps[1]))
-                #     if count>10000000:
-                #         count=1
-                # count += 1
-
-
         except KeyboardInterrupt:
             self.com_data_obj.send_data('A5A55,0,0,0,0,0,0,0,0,0#')
+        except Exception as e:
+            self.com_data_send_logger.error({'error':e})
 
     # 读取函数会阻塞 必须使用线程
     # 发送mqtt状态数据和检测数据
@@ -404,6 +362,7 @@ class DataManager:
                 self.data_define_obj.pool_code = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.pool_id)
             status_data = copy.deepcopy(self.data_define_obj.status)
             status_data.update({'mapId': self.data_define_obj.pool_code})
+
             detect_data = copy.deepcopy(self.data_define_obj.detect)
             detect_data.update({'mapId': self.data_define_obj.pool_code})
 
@@ -415,10 +374,29 @@ class DataManager:
                 if current_lng_lat is not None:
                     current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(current_lng_lat)
                     status_data.update({'current_lng_lat': current_gaode_lng_lat})
+                if self.pi_main_obj.home_lng_lat is not None:
+                    home_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.pi_main_obj.home_lng_lat)
+                    status_data.update({'home_lng_lat': home_gaode_lng_lat})
 
             # 更新模拟数据
             mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
             mqtt_send_status_data = data_define.fake_status_data(status_data)
+
+            # 更新速度  更新里程
+            if self.pi_main_obj.speed is not None:
+                status_data.update({'speed': self.pi_main_obj.speed})
+                status_data.update({"totle_time": round(self.totle_distance / (self.pi_main_obj.speed), 1)})
+            status_data.update({"totle_distance": self.totle_distance})
+            status_data.update({"run_distance": self.pi_main_obj.run_distance})
+            if self.plan_start_time is not None:
+                status_data.update({"runtime": round(time.time()-self.plan_start_time)})
+
+            # 更新船头方向
+            if self.pi_main_obj.theta is not None:
+                status_data.update({"direction": self.pi_main_obj.theta})
+            # 更新经纬度误差
+            if self.pi_main_obj.lng_lat_error is not None:
+                status_data.update({"lng_lat_error": self.pi_main_obj.lng_lat_error})
 
             # 替换键
             for k_all, v_all in data_define.name_mappings.items():
@@ -427,7 +405,6 @@ class DataManager:
                     mqtt_send_detect_data[k_all].update({new_key:pop_value})
 
             # 向mqtt发送数据
-            count=1
             if self.data_define_obj.pool_code == '':
                 self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
                           qos=1)
@@ -438,14 +415,13 @@ class DataManager:
                           qos=1)
                 self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
                 #TODO 暂时随机 以后改为到目标点发送
-                if random.random()>0.7:
+                if random.random()>0.8:
                     self.send(method='http', data=mqtt_send_detect_data,
                               url=config.http_data_save,
                               http_type='POST')
                     self.send(method='mqtt', topic='detect_data_%s' % (config.ship_code), data=mqtt_send_detect_data,
                               qos=1)
                     self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
-                count+=1
 
     def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):
         """
@@ -498,191 +474,11 @@ class DataManager:
             if self.data_define_obj.status['current_lng_lat'] is None:
                 if config.b_play_audio:
                     audios_manager.play_audio(5, b_backend=False)
-                # self.logger.error('当前GPS信号弱')
+                self.logger.error('当前GPS信号弱')
             # if not check_network.check_network():
             #     if config.b_play_audio:
             #         audios_manager.play_audio(2, b_backend=False)
             #     self.logger.error('当前无网络信号')
-
-            # 将寻找湖泊部分移到服务器   若是用户没有点击点
-
-            """
-           
-            if self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat is None or self.server_data_obj.mqtt_send_get_obj.pool_click_zoom is None:
-                self.logger.info('没有点击湖，等待用户执行操作')
-                continue
-
-            # 查找与更新湖泊id
-            save_img_dir = os.path.join(config.root_path, 'baiduMap', 'imgs')
-            if not os.path.exists(save_img_dir):
-                os.mkdir(save_img_dir)
-            save_img_path = os.path.join(
-                    save_img_dir, 'gaode_%f_%f_%i_%i.png' %
-                                  (self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[0],
-                                   self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[1],
-                                   self.server_data_obj.mqtt_send_get_obj.pool_click_zoom,
-                                   1))
-
-            ## 创建于查找湖泊
-            if len(self.data_define_obj.pool_code) <= 0 or not os.path.exists(save_img_path) :
-                # 创建地图对象
-                self.baidu_map_obj = baidu_map.BaiduMap(
-                    lng_lat=self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat,
-                    zoom=self.server_data_obj.mqtt_send_get_obj.pool_click_zoom,
-                    logger=self.map_log)
-
-                pool_cnts, (pool_cx, pool_cy) = self.baidu_map_obj.get_pool_pix()
-                if pool_cnts is None or pool_cx == -2:
-                    # 若返回为None表示没找到湖 定义错误代码
-                    is_collision = 1
-                    pool_info_data = {
-                        'deviceId': config.ship_code,
-                        'lng_lat': self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat,
-                        'is_collision': is_collision,
-                        'zoom': self.server_data_obj.mqtt_send_get_obj.pool_click_zoom,
-                    }
-                    self.send(method='mqtt', topic='pool_info_%s' % (config.ship_code), data=pool_info_data, qos=1)
-                    self.logger.debug({'pool_info_data':pool_info_data})
-                    continue
-                # 获取湖泊轮廓与中心点经纬度位置 _位置为提供前端直接绘图使用
-                _, self.baidu_map_obj.pool_lng_lats = self.baidu_map_obj.pix_to_gps(pool_cnts)
-                _, self.baidu_map_obj.pool_center_lng_lat = self.baidu_map_obj.pix_to_gps([[pool_cx, pool_cy]])
-                self.logger.info({'pool_center_lng_lat': self.baidu_map_obj.pool_center_lng_lat})
-
-                # 判断当前湖泊是否曾经出现，出现过则获取的ID 没出现过发送请求获取新ID
-                if isinstance(self.baidu_map_obj.pool_cnts, np.ndarray):
-                    save_pool_cnts = self.baidu_map_obj.pool_cnts.tolist()
-                else:
-                    save_pool_cnts = self.baidu_map_obj.pool_cnts
-                send_data = {"longitudeLatitude": json.dumps(self.baidu_map_obj.pool_center_lng_lat),
-                             "mapData": json.dumps(self.baidu_map_obj.pool_lng_lats),
-                             "deviceId": config.ship_code,
-                             "pixData": json.dumps(save_pool_cnts)}
-
-                # 本地保存经纬度信息，放大1000000倍 用来只保存整数
-                save_pool_lng_lats = [[int(i[0] * 1000000), int(i[1] * 1000000)] for i in
-                                      self.baidu_map_obj.pool_lng_lats]
-
-                if not os.path.exists(config.local_map_data_path):
-                    # 发送请求获取湖泊ID
-                    self.logger.debug({'send_data': send_data})
-                    if config.home_debug:
-                        pool_id='123123213'
-                    else:
-                        pool_id = self.send(
-                            method='http', data=send_data, url=config.http_save, http_type='POST')
-
-                    if isinstance(self.baidu_map_obj.pool_cnts, np.ndarray):
-                        save_pool_cnts = self.baidu_map_obj.pool_cnts.tolist()
-                    else:
-                        save_pool_cnts = self.baidu_map_obj.pool_cnts
-                    save_data = {"mapList": [{"id": pool_id,
-                                              "pool_center_lng_lat": self.baidu_map_obj.pool_center_lng_lat,
-                                              "pool_lng_lats": save_pool_lng_lats,
-                                              "pool_cnts": save_pool_cnts}]}
-                    self.logger.info({'pool_id': pool_id})
-                    with open(config.local_map_data_path, 'w') as f:
-                        json.dump(save_data, f)
-                else:
-                    with open(config.local_map_data_path, 'r') as f:
-                        local_map_data = json.load(f)
-                        pool_id = baidu_map.is_in_contours(
-                            (self.baidu_map_obj.lng_lat[0]*1000000, self.baidu_map_obj.lng_lat[1]*1000000), local_map_data)
-
-                    if pool_id is not None:
-                        self.logger.info({'在本地找到湖泊 poolid': pool_id})
-
-                    # 不存在获取新的id
-                    else:
-                        if config.home_debug:
-                            pool_id = '123123213'
-                        else:
-                            pool_id = self.send(
-                                method='http', data=send_data, url=config.http_save, http_type='POST')
-
-                        self.logger.info({'新的湖泊 poolid': pool_id})
-                        with open(config.local_map_data_path, 'w') as f:
-                            # 以前存储键值
-                            # local_map_data["mapList"].append({"id": pool_id,
-                            #                                   "longitudeLatitude": self.baidu_map_obj.pool_center_lng_lat,
-                            #                                   "mapData": self.baidu_map_obj.pool_lng_lat,
-                            #                                   "pool_cnt": pool_cnts.tolist()})
-                            if isinstance(self.baidu_map_obj.pool_cnts, np.ndarray):
-                                save_pool_cnts = self.baidu_map_obj.pool_cnts.tolist()
-                            local_map_data["mapList"].append({"id": pool_id,
-                                                              "pool_center_lng_lat": self.baidu_map_obj.pool_center_lng_lat,
-                                                              "pool_lng_lats": save_pool_lng_lats,
-                                                              "pool_cnts": save_pool_cnts})
-                            json.dump(local_map_data, f)
-
-                self.data_define_obj.pool_code = pool_id
-
-                pool_info_data = {
-                    'deviceId': config.ship_code,
-                    'mapId': self.data_define_obj.pool_code,
-                    'lng_lat': self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat,
-                    # 'pool_lng_lats':self.baidu_map_obj.pool_lng_lats
-                }
-                self.send(method='mqtt', topic='pool_info_%s' % (config.ship_code), data=pool_info_data, qos=2)
-                self.logger.info({'pool_info_data':pool_info_data})
-            """
-
-            ## 配置判断
-            len_target_lng_lat = len(self.server_data_obj.mqtt_send_get_obj.target_lng_lat)
-
-            if len_target_lng_lat<=0:
-                pass
-
-            # 启用路径规划
-            elif config.b_use_path_planning:
-                # 单点航行模式
-                if len_target_lng_lat==1:
-                    target_lng_lats = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.target_lng_lat)
-                    # 是否返航
-                    if int(self.server_data_obj.mqtt_send_get_obj.back_home)==1:
-                        if config.home_debug:
-                            target_lng_lats.append(config.init_gaode_gps)
-                        else:
-                            current_lng_lat = self.data_define_obj.status['current_lng_lat']
-                            if self.baidu_map_obj is not None and current_lng_lat is not None:
-                                current_gaode_lng_lat = self.baidu_map_obj.gps_to_gaode_lng_lat(current_lng_lat)
-                                target_lng_lats.append(current_gaode_lng_lat)
-                    # 判断是否是上次的点
-                    if self.plan_path_status is not None and self.current_target_gaode_lng_lats is not None and self.current_target_gaode_lng_lats==self.server_data_obj.mqtt_send_get_obj.target_lng_lat:
-                        pass
-                    else:
-                        self.logger.info({'target_lng_lat': self.server_data_obj.mqtt_send_get_obj.target_lng_lat})
-                        self.path_planning(mode=0, target_lng_lats=target_lng_lats)
-                        self.current_target_gaode_lng_lats = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.target_lng_lat)
-
-                # 多点巡航模式
-                elif len_target_lng_lat > 1 :
-                    target_lng_lats = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.target_lng_lat)
-                    # 是否返航
-                    if int(self.server_data_obj.mqtt_send_get_obj.back_home) == 1:
-                        if config.home_debug:
-                            target_lng_lats.append(config.init_gaode_gps)
-                        else:
-                            current_lng_lat = self.data_define_obj.status['current_lng_lat']
-                            if self.baidu_map_obj is not None and current_lng_lat is not None:
-                                current_gaode_lng_lat = self.baidu_map_obj.gps_to_gaode_lng_lat(current_lng_lat)
-                                target_lng_lats.append(current_gaode_lng_lat)
-                    self.path_planning(mode=1, target_lng_lats=target_lng_lats)
-
-                # 自动搜索模式
-                if self.server_data_obj.mqtt_send_get_obj.row_gap is not None and self.server_data_obj.mqtt_send_get_obj.col_gap is not None and self.server_data_obj.mqtt_send_get_obj.safe_gap is not None:
-                    # 根据用户指定米数距离计算像素距离
-                    meter_pix = self.server_data_obj.mqtt_send_get_obj.meter_pix.get(self.server_data_obj.mqtt_send_get_obj.zoom[0])
-                    row_pix_gap =  int(self.server_data_obj.mqtt_send_get_obj.self.row_gap/meter_pix)
-                    col_pix_gap = int(self.server_data_obj.mqtt_send_get_obj.self.col_gap/meter_pix)
-                    safe_pix_gap = self.server_data_obj.mqtt_send_get_obj.self.safe_gap
-                    self.baidu_map_obj.scan_pool(self.baidu_map_obj.pool_cnts, pix_gap=row_pix_gap,safe_distance=safe_pix_gap)
-                    self.path_planning(mode=2)
-
-                ## TODO 巡逻绕湖模式
-                elif self.server_data_obj.mqtt_send_get_obj.round_pool_gap is not None:
-                    pass
-                        # self.baidu_map_obj.scan_pool(self.baidu_map_obj.pool_cnts, pix_gap=row_pix_gap,safe_distance=safe_pix_gap)
 
             ## 检查确认航线
             if config.b_check_path_planning:
@@ -698,21 +494,10 @@ class DataManager:
             # 获取初始地点GPS
             if self.server_data_obj.mqtt_send_get_obj.b_start:
                 pass
-            # 先暂时用点击点就过去，不用等待启动按钮
-            elif not config.b_use_start:
-                if len_target_lng_lat>0:
-                    if self.pi_main_obj.home_lng_lat is None:
-                        self.pi_main_obj.set_home_location()
-
-            elif config.b_use_start:
-                if self.pi_main_obj.home_lng_lat is None:
-                    self.pi_main_obj.set_home_location()
             else:
                 if config.home_debug:
                     self.baidu_map_obj.init_ship_gps = config.init_gaode_gps
                     self.baidu_map_obj.init_ship_gaode_lng_lat = config.init_gaode_gps
-                else:
-                    self.baidu_map_obj.init_ship_gps = self.data_define_obj.status['current_lng_lat']
 
     # 路径规划
     def path_planning(self, target_lng_lats=None, mode=5,back_home=False):

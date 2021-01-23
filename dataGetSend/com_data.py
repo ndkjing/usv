@@ -151,7 +151,6 @@ if __name__ == '__main__':
     serial_obj = SerialData(
         '/dev/compass',
         9600,
-        # timeout=1 /config.com2pi_interval,
         timeout=0.7,
         logger=logger)
     while True:

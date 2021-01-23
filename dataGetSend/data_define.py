@@ -46,7 +46,7 @@ def get_ship_code():
 
 # 剩余电量
 def get_dump_energy():
-    return init_dump_energy - round((time.time() - init_time) / (60*2), 1)
+    return round(init_dump_energy - round((time.time() - init_time) / (60*2), 1),1)
 
 # data_flow
 def get_data_flow():
@@ -201,10 +201,10 @@ def fake_status_data(status_data):
     return_dict.update({'data_flow': get_data_flow()})
     return_dict.update({'sampling_count': get_sampling_count()})
     return_dict.update({'capicity': get_capicity()})
-    return_dict.update({'totle_time': 36})
-    return_dict.update({'runtime': get_runtime(36)})
-    return_dict.update({'totle_distance': 10086})
-    return_dict.update({'run_distance': get_run_distance(10086)})
+    # return_dict.update({'totle_time': 36})
+    # return_dict.update({'runtime': get_runtime(36)})
+    # return_dict.update({'totle_distance': 10086})
+    # return_dict.update({'run_distance': get_run_distance(10086)})
     return return_dict
 
 
@@ -251,13 +251,16 @@ class DataDefine:
         """
         # 订阅话题
         self.topics = (
-                        ('pool_click_%s' % (config.ship_code), 2),
-                        ('control_data_%s' % (config.ship_code), 2),
+                        ('pool_click_%s' % (config.ship_code), 1),
+                        ('control_data_%s' % (config.ship_code), 1),
                         ('path_confirm_%s' % (config.ship_code), 0),
                         ('user_lng_lat_%s' % (config.ship_code), 0),
-                        ('start_%s' % (config.ship_code), 2),
+                        ('start_%s' % (config.ship_code), 1),
                         ('pool_info_%s' % (config.ship_code), 1),
-                        ('path_planning_confirm_%s' % (config.ship_code), 2))
+                        ('auto_lng_lat_%s' % (config.ship_code), 1),
+                        ('path_planning_%s' % (config.ship_code), 1),
+                        ('status_data_%s' % (config.ship_code), 0),
+                        ('path_planning_confirm_%s' % (config.ship_code), 1))
         self.pool_code = ''
         self.water = self.water_data()
         self.weather = self.weather_data()

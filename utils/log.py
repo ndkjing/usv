@@ -21,7 +21,6 @@ LOG_PATH = os.path.join(ROOT_PATH, 'log')
 if not os.path.exists(LOG_PATH):
     os.mkdir(LOG_PATH)
 
-
 class LogHandler(logging.Logger):
     """
     LogHandler

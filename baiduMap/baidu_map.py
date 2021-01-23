@@ -532,7 +532,7 @@ class BaiduMap(object):
 
     def scan_pool(self,
                   meter_gap=20,
-                  col_pix_gap=None,
+                  col_meter_gap=None,
                   safe_meter_distance=20,
                   b_show=False):
         """
@@ -591,10 +591,18 @@ class BaiduMap(object):
         :return: 环湖高德地图经纬度点
         """
         from utils import line_calculate
-        shrink_pool_cnts = line_calculate.shrink_polygon(np.asarray(self.pool_cnts), r=0.7)
+        shrink_pool_cnts = line_calculate.shrink_polygon(np.asarray(self.pool_cnts), r=0.7)[0]
+        save_shrink_pool_cnts = []
+        for point in shrink_pool_cnts:
+            point_test = tuple((point[0],point[1]))
+            in_cnt = cv2.pointPolygonTest(np.asarray(self.pool_cnts),point_test,method_0)
+            if in_cnt>0:
+                save_shrink_pool_cnts.append(list(point_test))
         if b_show:
-            shrink_img = cv2.drawContours(self.show_img, shrink_pool_cnts, -1, (0, 0, 255), 3)
-            cv2.imshow('shrink_img',shrink_img)
+            for p in save_shrink_pool_cnts:
+                cv2.circle(self.show_img, tuple(p), 5, (0, 255, 255), -1)
+            # shrink_img = cv2.drawContours(self.show_img, np.asarray([save_shrink_pool_cnts]), -1, (0, 0, 255), 3)
+            cv2.imshow('shrink_img',self.show_img)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
 
@@ -606,7 +614,9 @@ if __name__ == '__main__':
     obj = BaiduMap([114.431689,30.523207], zoom=15,
                    scale=1, map_type=MapType.gaode)
     pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=False)
-    # scan_cnts = obj.scan_pool(meter_gap=50, safe_meter_distance=5,b_show=True)
+    scan_cnts = obj.scan_pool(meter_gap=50, safe_meter_distance=10,b_show=False)
+    return_gps, return_gps_list = obj.pix_to_gps(scan_cnts)
+
     obj.surround_pool(b_show=True)
     # obj = BaiduMap([114.393142, 30.558963], zoom=15,map_type=MapType.baidu)
     # obj = BaiduMap([114.718257,30.648004],zoom=14)
