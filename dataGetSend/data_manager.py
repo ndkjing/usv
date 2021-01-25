@@ -85,8 +85,16 @@ class DataManager:
         self.totle_distance =0
         self.plan_start_time=None
 
-    def get_serial_obj(self,port,baud,time_out,log):
-        return SerialData(config.port, config.baud, timeout=1 / config.com2pi_interval,
+        ## 提示消息
+        # 距离下一个目标点距离
+        self.distance_p=0
+        # 目标点信息
+        self.path_info= [0,0]
+        # 手动控制时朝向
+        self.control_info = ""
+
+    def get_serial_obj(self,port,baud,time_out,log=None):
+        return SerialData(port, baud, timeout=1 / config.com2pi_interval,
                                        logger=self.com_data_read_logger)
 
     # 读取函数会阻塞 必须使用线程
@@ -179,6 +187,7 @@ class DataManager:
                     if d == 0:
                         temp_com_data = 1
                         pwm_data = {'1': 1900, '3': 1900}
+
                     elif d == 90:
                         temp_com_data = 3
                         pwm_data = {'1': 1900, '3': 1100}
@@ -204,14 +213,19 @@ class DataManager:
                     # 使用树莓派
                     elif config.b_use_pi:
                         if d == 0:
+                            self.control_info='向前'
                             self.pi_main_obj.pi_obj.forward()
                         elif d == 90:
+                            self.control_info = '向左'
                             self.pi_main_obj.pi_obj.left()
                         elif d == 180:
+                            self.control_info = '向后'
                             self.pi_main_obj.pi_obj.backword()
                         elif d == 270:
+                            self.control_info = '向右'
                             self.pi_main_obj.pi_obj.right()
                         elif d == -1 :
+                            self.control_info = '停止'
                             self.pi_main_obj.pi_obj.stop()
 
                         # 改变状态不再重复发送指令
@@ -227,6 +241,7 @@ class DataManager:
 
                 # 自动模式计算角度
                 if manul_or_auto==0:
+                    self.control_info=''
                     # 第一次进入路径规划时候的点设置为返航点
                     if self.pi_main_obj.home_lng_lat is not None:
                         self.pi_main_obj.set_home_location()
@@ -281,8 +296,11 @@ class DataManager:
                                     self.pi_main_obj.lng_lat[1],
                                     path_planning_point_gps[0],
                                     path_planning_point_gps[1])
-                                if int(time.time()) % 3 == 0:
-                                    self.logger.info({'距离目标点距离: ': distance})
+                                # 更新提醒的距离信息
+                                self.path_info = [index,len(self.server_data_obj.mqtt_send_get_obj.path_planning_points)]
+                                self.distance_p = distance
+                                if int(time.time()) % 1 == 0:
+                                    self.logger.debug({'距离目标点距离: ': distance})
                                 left_pwm, right_pwm = self.pi_main_obj.point_control(path_planning_point_gps)
                                 # print('left_pwm, right_pwm',left_pwm, right_pwm)
                                 self.pi_main_obj.pi_obj.set_pwm(left_pwm, right_pwm)
@@ -297,6 +315,9 @@ class DataManager:
                                     # 清空里程和时间
                                     self.totle_distance = 0
                                     self.plan_start_time=None
+                                    # 情况提醒
+                                    self.path_info = [0,0]
+                                    self.distance_p = 0
                                     # 记录是因为按了暂停按钮而终止
                                     self.b_stop_path_track=True
                                     break
@@ -480,6 +501,21 @@ class DataManager:
             #     if config.b_play_audio:
             #         audios_manager.play_audio(2, b_backend=False)
             #     self.logger.error('当前无网络信号')
+
+            notice_info_data = {
+            # // 船状态提示消息
+            "distance": self.distance_p,
+            #// 路径规划提示消息
+            "path_info": '当前目标点:%d 目标点总数: %d' %(int(self.path_info[0]),int(self.path_info[0])),
+            # 船执行手动控制信息
+            "control_info":self.control_info
+            }
+
+            self.send(
+                method='mqtt',
+                topic='notice_info_%s' %(config.ship_code),
+                data=notice_info_data,
+                qos=0)
 
             ## 检查确认航线
             if config.b_check_path_planning:

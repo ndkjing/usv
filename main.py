@@ -159,7 +159,6 @@ def main():
                     data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_gps_obj(port=config.gps_port, baud=config.gps_baud)
                 except Exception as e:
                     logger.error({'串口关闭失败': 111, 'error': e})
-
                 gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
                 gps_thread.setDaemon(True)
                 gps_thread.start()

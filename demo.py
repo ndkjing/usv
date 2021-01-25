@@ -599,3 +599,5 @@ print(a.pop(2),a)
 
 a = {1:2,3:4,5:{1:2,2:3}}
 print(a.get(1),a.get(5).get(2),a.get(6))
+path_info=[1.23,32.321321]
+print({"path_info": '当前目标点:%d 目标点总数: %d' %(int(path_info[0]),int(path_info[1]))})

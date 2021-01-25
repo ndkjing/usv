@@ -431,7 +431,7 @@ class WebServer:
             topic='path_planning_%s' %
             (config.ship_code),
             data=mqtt_send_path_planning_data,
-            qos=2)
+            qos=1)
         self.logger.info(
             {'mqtt_send_path_planning_data': mqtt_send_path_planning_data})
 
