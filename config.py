@@ -50,14 +50,14 @@ com2pi_interval = 1
 pi2com_interval = 0.05
 
 # 给服务器发送时间间隔
-pi2mqtt_interval = 1
+pi2mqtt_interval = 2
 
 # 接收服务器方向控制间隔
 mqtt_control_interval = 1
 
 # 检查船状态间隔 单位秒
 # 检查经纬度
-check_status_interval = 2
+check_status_interval = 1.5
 
 # 检查网络连接状态间隔
 check_network_interval=10
@@ -120,7 +120,7 @@ b_direct= True
 path_search_safe_distance = 10
 
 # 到达点距离范围判断，单位米
-arrive_distance = 2
+arrive_distance = 2.5
 
 # 查找数量
 find_points_num=4
@@ -163,8 +163,8 @@ right_pwm_pin = 23
 
 # 是否使用遥控器
 b_use_remote_control=False
-#1 通道
+#1 通道 水平
 channel_1_pin = 12
-#3 通道
+#3 通道 垂直
 channel_3_pin = 16
 

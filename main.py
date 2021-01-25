@@ -33,6 +33,7 @@ sys.path.append(
         'pathPlanning'))
 
 logger = log.LogHandler('main_log')
+
 def main():
     if config.b_play_audio:
         audios_manager.play_audio(0)
@@ -56,10 +57,8 @@ def main():
     # 启动串口数据收发和mqtt数据收发
     if (config.current_platform == "l"):
         if os.path.exists(config.port):
-            get_com_data_thread = threading.Thread(
-                target=data_manager_obj.get_com_data)
-        send_com_data_thread = threading.Thread(
-            target=data_manager_obj.send_com_data)
+            get_com_data_thread = threading.Thread(target=data_manager_obj.get_com_data)
+        send_com_data_thread = threading.Thread(target=data_manager_obj.send_com_data)
         if os.path.exists(config.compass_port):
             compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
         if os.path.exists(config.gps_port):
@@ -112,15 +111,16 @@ def main():
     while True:
         #  判断线程是否死亡并重启线程
         if (config.current_platform == "l"):
-            if not get_com_data_thread.is_alive() and  os.path.exists(config.port):
+            if  os.path.exists(config.port) and not get_com_data_thread.is_alive() :
                 if config.home_debug:
                     time.sleep(10)
                     pass
                 else:
                     logger.error('restart get_com_data_thread')
                     try:
-                        data_manager_obj.com_data_obj.uart.close()
-                        data_manager_obj.com_data_obj =data_manager_obj.get_serial_obj()
+                        if data_manager_obj.com_data_obj.uart.is_open():
+                            data_manager_obj.com_data_obj.uart.close()
+                        data_manager_obj.com_data_obj =data_manager_obj.get_serial_obj(port=config.port,baud=config.baud)
                     except Exception as e:
                         logger.error({'串口关闭失败':111, 'error': e})
                     get_com_data_thread = threading.Thread(
@@ -128,15 +128,24 @@ def main():
                     get_com_data_thread.setDaemon(True)
                     get_com_data_thread.start()
                     time.sleep(10)
-                if not send_com_data_thread.is_alive():
-                    logger.error('restart send_com_data_thread')
-                    send_com_data_thread = threading.Thread(
-                        target=data_manager_obj.send_com_data)
-                    send_com_data_thread.setDaemon(True)
-                    send_com_data_thread.start()
-                    time.sleep(10)
+
+            if not send_com_data_thread.is_alive():
+                logger.error('restart send_com_data_thread')
+                send_com_data_thread = threading.Thread(
+                    target=data_manager_obj.send_com_data)
+                send_com_data_thread.setDaemon(True)
+                send_com_data_thread.start()
+                time.sleep(10)
+
             if not compass_thread.is_alive():
                 logger.error('restart compass_thread')
+                try:
+                    if data_manager_obj.pi_main_obj.compass_obj.uart.is_open():
+                        data_manager_obj.pi_main_obj.compass_obj.uart.close()
+                    data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_compass_obj(port=config.compass_port, baud=config.compass_baud)
+                except Exception as e:
+                    logger.error({'串口关闭失败': 111, 'error': e})
+
                 compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
                 compass_thread.setDaemon(True)
                 compass_thread.start()
@@ -144,10 +153,18 @@ def main():
 
             if not gps_thread.is_alive():
                 logger.error('restart gps_thread')
+                try:
+                    if data_manager_obj.pi_main_obj.gps_obj.uart.is_open():
+                        data_manager_obj.pi_main_obj.gps_obj.uart.close()
+                    data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_gps_obj(port=config.gps_port, baud=config.gps_baud)
+                except Exception as e:
+                    logger.error({'串口关闭失败': 111, 'error': e})
+
                 gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
                 gps_thread.setDaemon(True)
                 gps_thread.start()
                 time.sleep(10)
+
             if config.b_use_remote_control:
                 if not remote_control_thread.is_alive():
                     logger.error('restart remote_control_thread')

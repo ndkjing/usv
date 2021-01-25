@@ -1,3 +1,5 @@
+import logging
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 import requests
 import json
 import random
@@ -533,7 +535,7 @@ class BaiduMap(object):
     def scan_pool(self,
                   meter_gap=20,
                   col_meter_gap=None,
-                  safe_meter_distance=20,
+                  safe_meter_distance=None,
                   b_show=False):
         """
         传入湖泊像素轮廓和采样间隔返回采样扫描点
@@ -543,6 +545,10 @@ class BaiduMap(object):
         :param safe_distance
         """
         # 求坐标点最大外围矩阵
+        if safe_meter_distance is None:
+            safe_meter_distance=10
+        if col_meter_gap is None:
+            col_meter_gap=meter_gap
         (x, y, w, h) = cv2.boundingRect(self.pool_cnts)
         self.logger.debug({'(x, y, w, h)': (x, y, w, h)})
         # 循环生成点同时判断点是否在湖泊范围在则添加到列表中
@@ -611,8 +617,13 @@ if __name__ == '__main__':
     # obj = BaiduMap([114.431529, 30.524413], zoom=15, scale=1, map_type=MapType.gaode)
     # obj = BaiduMap([114.438009, 30.540082], zoom=14, scale=1, map_type=MapType.gaode)
     # obj = BaiduMap([114.373904, 30.540625], zoom=14, scale=1, map_type=MapType.gaode)
+
     obj = BaiduMap([114.431689,30.523207], zoom=15,
                    scale=1, map_type=MapType.gaode)
+    a = BaiduMap.gps_to_gaode_lng_lat([114.000,12.33213])
+    print(a)
+    import time
+    time.sleep(1000)
     pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=False)
     scan_cnts = obj.scan_pool(meter_gap=50, safe_meter_distance=10,b_show=False)
     return_gps, return_gps_list = obj.pix_to_gps(scan_cnts)

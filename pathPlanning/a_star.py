@@ -553,7 +553,7 @@ def get_path(baidu_map_obj=None,
                 cv2.imshow('scan', cv2.resize(baidu_map_obj.show_img,(512,512)))
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
-
+            return return_gaode_lng_lat_path
     elif mode == 1:
         if target_lng_lats is None:
             return 'target_pixs is None'

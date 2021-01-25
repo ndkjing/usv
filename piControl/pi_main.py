@@ -32,17 +32,10 @@ logger = log.LogHandler('pi_log')
 
 class PiMain:
     def __init__(self):
-        self.gps_obj = com_data.SerialData(
-            config.gps_port,
-            config.gps_baud,
-            timeout=1 / config.com2pi_interval,
-            logger=logger)
 
-        self.compass_obj = com_data.SerialData(
-            config.compass_port,
-            config.compass_baud,
-            timeout=0.2,
-            logger=logger)
+        self.gps_obj = self.get_gps_obj()
+        self.compass_obj = self.get_compass_obj()
+
         # 经纬度 和 船头角度 北为0 逆时针为正
         self.lng_lat = None
         self.lng_lat_error = None
@@ -67,6 +60,20 @@ class PiMain:
         self.speed = None
         # 船行驶里程
         self.run_distance=0
+
+    def get_compass_obj(self):
+        return com_data.SerialData(
+            config.compass_port,
+            config.compass_baud,
+            timeout=0.4,
+            logger=logger)
+
+    def get_gps_obj(self):
+        return com_data.SerialData(
+            config.gps_port,
+            config.gps_baud,
+            timeout=1 / config.com2pi_interval,
+            logger=logger)
 
     def distance_p(self, distance):
         pwm = int((distance * 30))
@@ -94,21 +101,24 @@ class PiMain:
         last_read_time=time.time()
         last_read_lng_lat=None
         while True:
-            # serial_obj.send_data('31',b_hex=True)
             try:
                 data = self.gps_obj.readline()
                 str_data = data.decode('ascii')
                 if str_data.startswith('$GNGGA'):
                     data_list = str_data.split(',')
-                    # print(data_list)
+                    if len(data_list)<8:
+                        continue
                     lng, lat = round(float(data_list[4][:3]) +
                                      float(data_list[4][3:]) /
                                      60, 6), round(float(data_list[2][:2]) +
                                                    float(data_list[2][2:]) /
                                                    60, 6)
-                    self.lng_lat = [lng, lat]
+                    if lng<1 or lat<1:
+                        pass
+                    else:
+                        self.lng_lat = [lng, lat]
                     self.lng_lat_error = float(data_list[8])
-                    if self.lng_lat_error < 2:
+                    if self.lng_lat_error < 3:
                         if last_read_lng_lat is None:
                             last_read_lng_lat = copy.deepcopy(self.lng_lat)
                             last_read_time = time.time()
@@ -123,9 +133,11 @@ class PiMain:
                             self.speed = round(speed_distance/(time.time()-last_read_time),1)
                             last_read_lng_lat = copy.deepcopy(self.lng_lat)
                             last_read_time = time.time()
-
             except Exception as e:
+                last_read_lng_lat=None
+                last_read_time = time.time()
                 logger.error({'error': e})
+                time.sleep(1)
 
     def get_compass_data(self):
         while True:
@@ -141,6 +153,7 @@ class PiMain:
                 time.sleep(config.pid_interval)
             except Exception as e:
                 logger.error({'error': e})
+                time.sleep(1)
 
     def get_current_location(self):
         print(
@@ -237,7 +250,7 @@ class PiMain:
                 remote_left_pwm = 1500 + (remote_forward_pwm-1500) + (remote_steer_pwm-1500)
                 remote_right_pwm = 1500 + (remote_forward_pwm-1500) - (remote_steer_pwm-1500)
                 self.pi_obj.set_pwm(remote_left_pwm,remote_right_pwm)
-                time.sleep(1.0/self.pi_obj.hz)
+                time.sleep(0.1)
             except Exception as e:
                 logger.error({'error': e})
 

@@ -245,11 +245,11 @@ class MqttSendGet:
                 return
             self.row_gap = auto_lng_lat_data.get('config').get('row_gap')
             self.col_gap = auto_lng_lat_data.get('config').get('col_gap')
-            if auto_lng_lat_data.get('config').get('safe_gap') is not None:
+            if auto_lng_lat_data.get('config').get('safe_gap') is not None :
                 self.safe_gap = auto_lng_lat_data.get('config').get('safe_gap')
             self.round_pool_gap = auto_lng_lat_data.get('config').get('round_pool_gap')
             self.logger.info({'topic':topic,
-                'row_gap': self.row_gap,
+                                'row_gap': self.row_gap,
                               'col_gap': self.col_gap,
                               'safe_gap': self.safe_gap,
                               'round_pool_gap': self.round_pool_gap})
@@ -304,13 +304,13 @@ class MqttSendGet:
         # 服务器从状态数据中获取 当前经纬度
         elif topic == 'status_data_%s' % (config.ship_code):
             status_data = json.loads(msg.payload)
-            if not status_data.get("status_data"):
-                self.logger.error('"status_data"设置启动消息没有"status_data"字段')
+            if not status_data.get("current_lng_lat"):
+                self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
                 return
-            self.current_lng_lat =status_data.get("status_data").get('current_lng_lat')
+            self.current_lng_lat =status_data.get('current_lng_lat')
 
-            self.logger.info({'topic': topic,
-                              'current_lng_lat': status_data.get("status_data").get('current_lng_lat')})
+            # self.logger.info({'topic': topic,
+            #                   'current_lng_lat': status_data.get('current_lng_lat')})
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):

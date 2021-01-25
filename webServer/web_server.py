@@ -278,7 +278,7 @@ class WebServer:
                     topic='pool_info_%s' %
                     (config.ship_code),
                     data=pool_info_data,
-                    qos=2)
+                    qos=1)
                 self.logger.info({'pool_info_data': pool_info_data})
 
     def get_plan_path(self):
@@ -379,25 +379,42 @@ class WebServer:
                )
             self.logger.info(
                 {'return_gaode_lng_lat_path': return_gaode_lng_lat_path})
+            # 当查找不成功时
             if isinstance(return_gaode_lng_lat_path, str):
                 self.logger.error(return_gaode_lng_lat_path)
-                return
-            # 路径点
-            self.plan_path = return_gaode_lng_lat_path
-            # 路径点状态
-            self.plan_path_points_status = [0] * len(self.plan_path)
-            # 路径确认与取消状态
-            # self.plan_path_status = 0
-            # self.start = True
-            # self.b_manul = 0
+                mqtt_send_path_planning_data = {
+                    "deviceId": config.ship_code,
+                    "mapId": self.data_define_obj.pool_code,
+                    "sampling_points": target_lng_lats,
+                    "path_points": target_lng_lats,
+                    "path_id": len(target_lng_lats)
+                }
+            elif return_gaode_lng_lat_path is None:
+                self.logger.error(return_gaode_lng_lat_path)
+                mqtt_send_path_planning_data = {
+                    "deviceId": config.ship_code,
+                    "mapId": self.data_define_obj.pool_code,
+                    "sampling_points": target_lng_lats,
+                    "path_points": target_lng_lats,
+                    "path_id": len(target_lng_lats)
+                }
+            else:
+                # 路径点
+                self.plan_path = return_gaode_lng_lat_path
+                # 路径点状态
+                self.plan_path_points_status = [0] * len(self.plan_path)
+                # 路径确认与取消状态
+                # self.plan_path_status = 0
+                # self.start = True
+                # self.b_manul = 0
 
-            mqtt_send_path_planning_data = {
-                "deviceId": config.ship_code,
-                "mapId": self.data_define_obj.pool_code,
-                "sampling_points": target_lng_lats,
-                "path_points": self.plan_path,
-                "path_id": len(self.plan_path)
-            }
+                mqtt_send_path_planning_data = {
+                    "deviceId": config.ship_code,
+                    "mapId": self.data_define_obj.pool_code,
+                    "sampling_points": target_lng_lats,
+                    "path_points": self.plan_path,
+                    "path_id": len(self.plan_path)
+                }
         # 不进行路径规划直接到达
         else:
             self.plan_path = copy.deepcopy(target_lng_lats)
@@ -408,6 +425,7 @@ class WebServer:
                 "path_points": target_lng_lats,
                 "path_id": len(target_lng_lats)
             }
+        # 发送路径规划数据
         self.send(
             method='mqtt',
             topic='path_planning_%s' %
