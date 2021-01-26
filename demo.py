@@ -594,10 +594,12 @@ import math
     # expansion_poly = shrink_polygon(shrink_poly, -0.5)
     # print(perimeter, area, shrink_poly, expansion_poly)
 
-a = [1,2,3]
-print(a.pop(2),a)
+# a = [1,2,3]
+# print(a.pop(2),a)
+#
+# a = {1:2,3:4,5:{1:2,2:3}}
+# print(a.get(1),a.get(5).get(2),a.get(6))
+# path_info=[1.23,32.321321]
+# print({"path_info": '当前目标点:%d 目标点总数: %d' %(int(path_info[0]),int(path_info[1]))})
 
-a = {1:2,3:4,5:{1:2,2:3}}
-print(a.get(1),a.get(5).get(2),a.get(6))
-path_info=[1.23,32.321321]
-print({"path_info": '当前目标点:%d 目标点总数: %d' %(int(path_info[0]),int(path_info[1]))})
+print(type([[1,23],[321,321]]),isinstance(np.asarray([1,2]),list),isinstance(np.asarray([1,2]),np.ndarray))

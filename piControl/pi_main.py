@@ -76,7 +76,7 @@ class PiMain:
             logger=logger)
 
     def distance_p(self, distance):
-        pwm = int((distance * 30))
+        pwm = int((distance * (config.motor_forward/config.full_speed_meter)))
         if pwm >= config.motor_forward:
             pwm = config.motor_forward
         return pwm
@@ -288,8 +288,6 @@ if __name__ == '__main__':
                     gear = None
             if key_input.startswith('w'):
                 if gear is not None:
-                    if gear >= 4:
-                        gear = 4
                     pi_main_obj.pi_obj.forward(
                         1600 + 100 * gear, 1600 + 100 * gear)
                 else:

@@ -16,13 +16,13 @@ name_mappings = {
     # 'ship_code':'deviceId',
     'water':
         {'pH': 'ph',
-            'DO': 'doDo',
-            'COD': 'cod',
-            'EC': 'ec',
-            'TD': 'td',
-            'NH3_NH4': 'nh3Nh4',
-            'TN': 'tn',
-            'TP': 'tp'},
+         'DO': 'doDo',
+         'COD': 'cod',
+         'EC': 'ec',
+         'TD': 'td',
+         'NH3_NH4': 'nh3Nh4',
+         'TN': 'tn',
+         'TP': 'tp'},
 
     'weather':
         {
@@ -38,62 +38,43 @@ name_mappings = {
 }
 
 # 当前真实数据列表 不在该表中的值使用生成数据
-current_data =['COD','wt','current_lng_lat','direction','speed','attitude_angle','b_online','ship_code','pool_code']
+current_data = ['COD', 'wt', 'current_lng_lat', 'direction', 'speed', 'attitude_angle', 'b_online', 'ship_code',
+                'pool_code']
+
 
 # 生成船号
 def get_ship_code():
     return str(uuid4())
 
+
 # 剩余电量
 def get_dump_energy():
-    return round(init_dump_energy - round((time.time() - init_time) / (60*2), 1),1)
+    return round(init_dump_energy - round((time.time() - init_time) / (60 * 2), 1), 1)
+
 
 # data_flow
 def get_data_flow():
     return round((time.time() - init_time) / (10), 1)
 
+
 # sampling_count 30S add 1
 def get_sampling_count():
-    return (time.time() - init_time)//30
+    return (time.time() - init_time) // 30
+
 
 # capicity
 def get_capicity():
     return round((time.time() - init_time) / (60), 1)
 
-# 当前经纬度
-def get_current_lng_lat(init_lng_lat):
-    if random.random() > 0.5:
-        init_lng_lat = [
-            round(
-                init_lng_lat[0] -
-                round(
-                    random.random(),
-                    1) /
-                1000,
-                6),
-            round(
-                init_lng_lat[1],
-                6)]
-    else:
-        init_lng_lat = [
-            round(
-                init_lng_lat[0],
-                6),
-            round(
-                init_lng_lat[1] -
-                round(
-                    random.random(),
-                    1) /
-                1000,
-                6)]
-    return init_lng_lat
-#获取当前时间
+# 获取当前时间
 def get_runtime(totle_time):
-    return totle_time - round((time.time() - init_time)/60, 1)
+    return totle_time - round((time.time() - init_time) / 60, 1)
+
 
 # 获取当前行驶距离
 def get_run_distance(totle_distance):
-    return totle_distance - round((time.time() - init_time) , 1)
+    return totle_distance - round((time.time() - init_time), 1)
+
 
 # 船号
 # if ship_code == None:
@@ -107,7 +88,6 @@ init_dump_energy = 100
 init_time = time.time()
 # 经纬度
 init_lng_lat = [114.39458, 30.547412]
-
 
 init_ststus_data = {"dump_energy": 0.000,
                     "current_lng_lat": [100.155214, 36.993676],
@@ -151,15 +131,15 @@ init_detect_data = {
 }
 # 初始假数据
 init_fake_ststus_data = {"dump_energy": 0.000,
-                    "liquid_level": 0.000,
-                    "b_leakage": False,
-                    "b_homing": False,
-                    "charge_energy": 0.000,
-                    "sampling_depth": 0.000,
-                    "data_flow": 0.000,
-                    "sampling_count": 0,
-                    "capicity": 0.00
-                    }
+                         "liquid_level": 0.000,
+                         "b_leakage": False,
+                         "b_homing": False,
+                         "charge_energy": 0.000,
+                         "sampling_depth": 0.000,
+                         "data_flow": 0.000,
+                         "sampling_count": 0,
+                         "capicity": 0.00
+                         }
 
 init_fake_detect_data = {
     "water": {
@@ -185,7 +165,6 @@ init_fake_detect_data = {
 wind_direction = ['315', '0', '45', '90', '135', '180', '225', '270']
 
 
-
 def fake_status_data(status_data):
     """
     返回检测数据
@@ -197,14 +176,10 @@ def fake_status_data(status_data):
     return_dict.update({"b_leakage": False})
     return_dict.update({"b_homing": False})
     return_dict.update({"charge_energy": round(round(random.random(), 3) * 100, 1)})
-    return_dict.update({'sampling_depth': random.randint(1, 50)/10.0})
+    return_dict.update({'sampling_depth': random.randint(1, 50) / 10.0})
     return_dict.update({'data_flow': get_data_flow()})
     return_dict.update({'sampling_count': get_sampling_count()})
     return_dict.update({'capicity': get_capicity()})
-    # return_dict.update({'totle_time': 36})
-    # return_dict.update({'runtime': get_runtime(36)})
-    # return_dict.update({'totle_distance': 10086})
-    # return_dict.update({'run_distance': get_run_distance(10086)})
     return return_dict
 
 
@@ -244,6 +219,7 @@ def fake_detect_data(detect_data):
         {"EC": random.randint(480, 600) / 10.0})
     return return_dict
 
+
 class DataDefine:
     def __init__(self):
         """
@@ -251,16 +227,17 @@ class DataDefine:
         """
         # 订阅话题
         self.topics = (
-                        ('pool_click_%s' % (config.ship_code), 1),
-                        ('control_data_%s' % (config.ship_code), 1),
-                        ('path_confirm_%s' % (config.ship_code), 0),
-                        ('user_lng_lat_%s' % (config.ship_code), 0),
-                        ('start_%s' % (config.ship_code), 1),
-                        ('pool_info_%s' % (config.ship_code), 1),
-                        ('auto_lng_lat_%s' % (config.ship_code), 1),
-                        ('path_planning_%s' % (config.ship_code), 1),
-                        ('status_data_%s' % (config.ship_code), 0),
-                        ('path_planning_confirm_%s' % (config.ship_code), 1))
+            ('pool_click_%s' % (config.ship_code), 1),
+            ('control_data_%s' % (config.ship_code), 1),
+            ('path_confirm_%s' % (config.ship_code), 0),
+            ('user_lng_lat_%s' % (config.ship_code), 0),
+            ('start_%s' % (config.ship_code), 1),
+            ('switch_%s' % (config.ship_code), 1),
+            ('pool_info_%s' % (config.ship_code), 1),
+            ('auto_lng_lat_%s' % (config.ship_code), 1),
+            ('path_planning_%s' % (config.ship_code), 1),
+            ('status_data_%s' % (config.ship_code), 0),
+            ('path_planning_confirm_%s' % (config.ship_code), 1))
         self.pool_code = ''
         self.water = self.water_data()
         self.weather = self.weather_data()
@@ -371,10 +348,10 @@ class DataDefine:
                        "data_flow": None,
                        "sampling_count": None,
                        "capicity": None,
-                       "totle_time":None,
-                       "runtime":None,
-                       "totle_distance":None,
-                       "run_distance":None
+                       "totle_time": None,
+                       "runtime": None,
+                       "totle_distance": None,
+                       "run_distance": None
                        }
         return return_dict
 
@@ -403,6 +380,7 @@ class DataDefine:
         return_detect_data['water'] = self.water
         return_detect_data['deviceId'] = config.ship_code
         return return_detect_data
+
 
 if __name__ == '__main__':
     # 简单测试获取数据

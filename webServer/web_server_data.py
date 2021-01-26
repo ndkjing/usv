@@ -13,7 +13,8 @@ import requests
 
 class ServerData:
     def __init__(self, logger,
-                 topics,ship_code=None):
+                 topics,
+                 ship_code):
         self.logger = logger
         self.topics = topics
         self.http_send_get_obj = HttpSendGet()
@@ -79,23 +80,15 @@ class MqttSendGet:
         self.logger = logger
         self.mqtt_host = mqtt_host
         self.mqtt_port = mqtt_port
-        if (config.current_platform == "l"):
-            client_id = client_id+'dk_linux2'
-            self.mqtt_user = 'dk_linux2'
-        elif (config.current_platform == "l_j"):
-            client_id = client_id + 'dk_linux_j'
-            self.mqtt_user = 'dk_linux_j'
-        elif (config.current_platform == "l_j"):
-            client_id = client_id + 'dk_linux_x'
-            self.mqtt_user = 'dk_linux_x'
-        elif ship_code is not None:
+        if ship_code is not None:
             client_id = ship_code
             self.mqtt_user = 'dk_linux_x'+ship_code
         else:
             client_id = client_id + 'dk_windwos'
             self.mqtt_user = 'dk_windwos'
         self.mqtt_passwd = 'public'
-
+        self.ship_code =ship_code
+        self.logger.info({'client_id':client_id})
         self.mqtt_client = mqtt.Client(client_id=client_id)
         self.mqtt_client.username_pw_set(self.mqtt_user, password=self.mqtt_passwd)
         self.mqtt_client.on_connect = self.on_connect_callback
@@ -154,7 +147,7 @@ class MqttSendGet:
 
     # 建立连接时候回调
     def on_connect_callback(self, client, userdata, flags, rc):
-        self.logger.info('Connected with result code:  ' + str(rc))
+        self.logger.info('Connected with result code:  ' + str(rc),)
 
     # 发布消息回调
     def on_publish_callback(self, client, userdata, mid):
@@ -168,7 +161,7 @@ class MqttSendGet:
         # 判断topic
         topic = msg.topic
         # 处理控制数据
-        if topic == 'control_data_%s' % (config.ship_code):
+        if topic == 'control_data_%s' % (self.ship_code):
             control_data = json.loads(msg.payload)
             if control_data.get('move_direction') is None :
                 self.logger.error('control_data_处理控制数据没有move_direction')
@@ -179,7 +172,7 @@ class MqttSendGet:
                               })
 
         # 处理开关信息
-        if topic == 'switch_%s' % (config.ship_code):
+        if topic == 'switch_%s' % (self.ship_code):
             switch_data = json.loads(msg.payload)
             if switch_data.get('b_draw') is None :
                 self.logger.error('switch_data_处理控制数据没有b_draw b_sampling')
@@ -193,7 +186,7 @@ class MqttSendGet:
                               })
 
         # 处理初始点击确定湖数据
-        elif topic == 'pool_click_%s' % (config.ship_code):
+        elif topic == 'pool_click_%s' % (self.ship_code):
             pool_click_data = json.loads(msg.payload)
             if pool_click_data.get('lng_lat') is None:
                 self.logger.error('pool_click  用户点击经纬度数据没有经纬度字段')
@@ -212,7 +205,7 @@ class MqttSendGet:
                               })
 
         # 用户点击经纬度和图层 保存到指定路径
-        elif topic == 'user_lng_lat_%s' % (config.ship_code):
+        elif topic == 'user_lng_lat_%s' % (self.ship_code):
             user_lng_lat_data = json.loads(msg.payload)
             if user_lng_lat_data.get('lng_lat') is None:
                 self.logger.error('user_lng_lat_用户点击经纬度数据没有经纬度字段')
@@ -246,7 +239,7 @@ class MqttSendGet:
                               })
 
         # 用户设置自动求取检测点经纬度
-        elif topic == 'auto_lng_lat_%s' % (config.ship_code):
+        elif topic == 'auto_lng_lat_%s' % (self.ship_code):
             auto_lng_lat_data = json.loads(msg.payload)
             if  auto_lng_lat_data.get('config') is None:
                 self.logger.error('auto_lng_lat_用户设置自动求取检测点经纬度没有config字段')
@@ -266,7 +259,7 @@ class MqttSendGet:
                               'round_pool_gap': self.round_pool_gap})
 
         # 返回路径规划点
-        elif topic == 'path_planning_%s' % (config.ship_code):
+        elif topic == 'path_planning_%s' % (self.ship_code):
             path_planning_data = json.loads(msg.payload)
             if  path_planning_data.get('path_points') is None:
                 self.logger.error('path_planning_用户确认轨迹 没有path_points字段')
@@ -278,7 +271,7 @@ class MqttSendGet:
                               })
 
         # 用户确认轨迹
-        elif topic == 'path_planning_confirm_%s' % (config.ship_code):
+        elif topic == 'path_planning_confirm_%s' % (self.ship_code):
             path_planning_confirm_data = json.loads(msg.payload)
             if not path_planning_confirm_data.get('path_id'):
                 self.logger.error('path_planning_confirm_用户确认轨迹 没有path_id字段')
@@ -295,7 +288,7 @@ class MqttSendGet:
                               })
 
         # 启动设备
-        elif topic == 'start_%s' % (config.ship_code):
+        elif topic == 'start_%s' % (self.ship_code):
             start_data = json.loads(msg.payload)
             if not start_data.get('start'):
                 self.logger.error('start_设置启动消息没有start字段')
@@ -304,7 +297,7 @@ class MqttSendGet:
             self.logger.info({'topic':topic,'b_start': start_data.get('start')})
 
         # 湖泊id
-        elif topic == 'pool_info_%s' % (config.ship_code):
+        elif topic == 'pool_info_%s' % (self.ship_code):
             pool_info_data = json.loads(msg.payload)
             if not pool_info_data.get('mapId'):
                 self.logger.error('pool_info_data设置启动消息没有mapId字段')
@@ -313,15 +306,12 @@ class MqttSendGet:
             self.logger.info({'topic': topic, 'mapId': pool_info_data.get('mapId')})
 
         # 服务器从状态数据中获取 当前经纬度
-        elif topic == 'status_data_%s' % (config.ship_code):
+        elif topic == 'status_data_%s' % (self.ship_code):
             status_data = json.loads(msg.payload)
             if not status_data.get("current_lng_lat"):
                 self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
                 return
             self.current_lng_lat =status_data.get('current_lng_lat')
-
-            # self.logger.info({'topic': topic,
-            #                   'current_lng_lat': status_data.get('current_lng_lat')})
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):

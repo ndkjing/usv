@@ -19,6 +19,10 @@ sys.path.append(
 sys.path.append(
     os.path.join(
         root_path,
+        'webServer'))
+sys.path.append(
+    os.path.join(
+        root_path,
         'dataGetSend'))
 sys.path.append(
     os.path.join(
@@ -47,8 +51,7 @@ class WebServer:
         self.server_log = LogHandler('server_data')
         self.map_log = LogHandler('map_log')
         # mqtt服务器数据收发对象
-        self.server_data_obj = ServerData(
-            self.server_log, topics=self.data_define_obj.topics)
+        self.server_data_obj = ServerData(self.server_log, topics=self.data_define_obj.topics)
 
         # 记录目标点击地点
         self.current_target_gaode_lng_lats=None
@@ -115,7 +118,7 @@ class WebServer:
             time.sleep(config.check_status_interval)
             # 若是用户没有点击点
             if self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat is None or self.server_data_obj.mqtt_send_get_obj.pool_click_zoom is None:
-                self.logger.info('没有点击湖，等待用户执行操作')
+                # self.logger.info('没有点击湖，等待用户执行操作')
                 continue
 
             # 查找与更新湖泊id
@@ -339,7 +342,7 @@ class WebServer:
                                                                    safe_meter_distance=self.server_data_obj.mqtt_send_get_obj.safe_gap,
                                                                    b_show=False)
                     _, scan_point_gaode_list = self.baidu_map_obj.pix_to_gps(scan_point_cnts)
-                    self.path_planning(mode=2, target_lng_lats=scan_point_gaode_list)
+                    self.path_planning(mode=1, target_lng_lats=scan_point_gaode_list)
                     self.server_data_obj.mqtt_send_get_obj.row_gap=None
                     self.server_data_obj.mqtt_send_get_obj.col_gap=None
                     self.server_data_obj.mqtt_send_get_obj.safe_gap=None
@@ -377,10 +380,9 @@ class WebServer:
                 target_lng_lats=target_lng_lats,
                 b_show=False,
                )
-            self.logger.info(
-                {'return_gaode_lng_lat_path': return_gaode_lng_lat_path})
+
             # 当查找不成功时
-            if isinstance(return_gaode_lng_lat_path, str):
+            if isinstance(return_gaode_lng_lat_path, str) or return_gaode_lng_lat_path is None:
                 self.logger.error(return_gaode_lng_lat_path)
                 mqtt_send_path_planning_data = {
                     "deviceId": config.ship_code,
@@ -389,25 +391,12 @@ class WebServer:
                     "path_points": target_lng_lats,
                     "path_id": len(target_lng_lats)
                 }
-            elif return_gaode_lng_lat_path is None:
-                self.logger.error(return_gaode_lng_lat_path)
-                mqtt_send_path_planning_data = {
-                    "deviceId": config.ship_code,
-                    "mapId": self.data_define_obj.pool_code,
-                    "sampling_points": target_lng_lats,
-                    "path_points": target_lng_lats,
-                    "path_id": len(target_lng_lats)
-                }
+                self.logger.error({'return_gaode_lng_lat_path': return_gaode_lng_lat_path})
             else:
                 # 路径点
                 self.plan_path = return_gaode_lng_lat_path
                 # 路径点状态
                 self.plan_path_points_status = [0] * len(self.plan_path)
-                # 路径确认与取消状态
-                # self.plan_path_status = 0
-                # self.start = True
-                # self.b_manul = 0
-
                 mqtt_send_path_planning_data = {
                     "deviceId": config.ship_code,
                     "mapId": self.data_define_obj.pool_code,
@@ -415,6 +404,7 @@ class WebServer:
                     "path_points": self.plan_path,
                     "path_id": len(self.plan_path)
                 }
+                self.logger.error({'len return_gaode_lng_lat_path': len(return_gaode_lng_lat_path)})
         # 不进行路径规划直接到达
         else:
             self.plan_path = copy.deepcopy(target_lng_lats)
@@ -425,6 +415,7 @@ class WebServer:
                 "path_points": target_lng_lats,
                 "path_id": len(target_lng_lats)
             }
+
         # 发送路径规划数据
         self.send(
             method='mqtt',
@@ -432,8 +423,7 @@ class WebServer:
             (config.ship_code),
             data=mqtt_send_path_planning_data,
             qos=1)
-        self.logger.info(
-            {'mqtt_send_path_planning_data': mqtt_send_path_planning_data})
+        self.logger.info({'mqtt_send_path_planning_data': mqtt_send_path_planning_data})
 
 if __name__ == '__main__':
     config.b_use_path_planning=True

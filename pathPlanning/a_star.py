@@ -96,7 +96,7 @@ class AStar:
         while self.OPEN:
             _, s = heapq.heappop(self.OPEN)
             self.CLOSED.append(s)
-            print('s',s)
+            # print('s',s)
             if s == self.s_goal:  # stop condition
                 break
 
@@ -108,7 +108,6 @@ class AStar:
                     self.g[s_n] = new_cost
                     self.PARENT[s_n] = s
                     heapq.heappush(self.OPEN, (self.f_value(s_n), s_n))
-
         return self.extract_path(self.PARENT), self.CLOSED
 
     def searching_repeated_astar(self, e):
@@ -469,15 +468,10 @@ def get_path(baidu_map_obj=None,
     :param baidu_map_obj 地图对象
     :param mode 选择模式
     :param target_lng_lats 目标经纬度集合，传入为高德经纬度
-    :param target_pixs 目标像素
     :param b_show 是否显示图像
-    :param map_connect 搜索一个点最多连接数量
-    :param pix_gap 自动搜索像素间隔
     mode
-    ０　到达目标点后停留
-    １　到达多个目标点
-    ２　扫描整个湖泊
-    4  返航
+    0  单个目标点
+    １　多个目标点
     """
     global path_matrix
     if config.home_debug and baidu_map_obj==None:
@@ -492,6 +486,7 @@ def get_path(baidu_map_obj=None,
 
     if baidu_map_obj.ship_gaode_lng_lat is None:
         return 'no ship gps'
+    # 单点
     if mode==0:
         if target_lng_lats is None:
             return 'target_pixs is None'
@@ -499,25 +494,20 @@ def get_path(baidu_map_obj=None,
             return 'len(target_pixs) is >1 choose mode 1'
         if baidu_map_obj.ship_pix is None :
             baidu_map_obj.ship_pix = baidu_map_obj.gaode_lng_lat_to_pix(baidu_map_obj.ship_gaode_lng_lat)
-        s_start = tuple(baidu_map_obj.ship_pix)
-        s_goal = tuple(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lats[0]))
-        print('s_start,s_goal',s_start,s_goal)
-
-        s_start =mod_point(s_start)
-        s_goal = mod_point(s_goal)
-        print('s_start,s_goal', s_start, s_goal)
+        row_start = tuple(baidu_map_obj.ship_pix)
+        row_goal = tuple(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lats[0]))
+        s_start =mod_point(row_start)
+        s_goal = mod_point(row_goal)
+        print('row_start,row_goal',row_start,row_goal,'s_start,s_goal', s_start, s_goal)
         # 判断是否能直线到达，不能则采用路径搜索
         if not cross_outpool(s_start,s_goal,baidu_map_obj.pool_cnts):
-            # baidu_map_obj.outpool_cnts_set = get_outpool_set(np.array(baidu_map_obj.pool_cnts))
             astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.pool_cnts)
             try:
                 astar_path, visited = astar.searching()
-                print('astar_path', astar_path)
                 return_pix_path = astar_path[::-1]
-                print('原始长度',len(return_pix_path))
-                return_pix_path = multi_points_to_simple_points(return_pix_path)
-                print('简化后长度', len(return_pix_path))
-                _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
+                simple_return_pix_path = multi_points_to_simple_points(return_pix_path)
+                print('原始长度',len(return_pix_path),'简化后长度', len(simple_return_pix_path))
+                _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(simple_return_pix_path)
                 if b_show:
                     baidu_map_obj.show_img = cv2.polylines(baidu_map_obj.show_img,
                                                            [np.array(astar_path, dtype=np.int32)], False, (255, 0, 0),
@@ -542,8 +532,8 @@ def get_path(baidu_map_obj=None,
         # 直接可达模式
         else:
             return_pix_path = []
-            return_pix_path.append(s_start)
-            return_pix_path.append(s_goal)
+            return_pix_path.append(row_start)
+            return_pix_path.append(row_goal)
             _, return_gaode_lng_lat_path = baidu_map_obj.pix_to_gps(return_pix_path)
             if b_show:
                 cv2.circle(baidu_map_obj.show_img, s_start, 5, [255, 255, 0], -1)
@@ -554,6 +544,7 @@ def get_path(baidu_map_obj=None,
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
             return return_gaode_lng_lat_path
+    # 多点
     elif mode == 1:
         if target_lng_lats is None:
             return 'target_pixs is None'

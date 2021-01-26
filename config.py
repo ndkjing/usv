@@ -50,7 +50,7 @@ com2pi_interval = 1
 pi2com_interval = 0.05
 
 # 给服务器发送时间间隔
-pi2mqtt_interval = 2
+pi2mqtt_interval = 1.5
 
 # 接收服务器方向控制间隔
 mqtt_control_interval = 1
@@ -148,11 +148,13 @@ b_use_pi=True
 left_motor_cw = 1
 right_motor_cw = 0
 # 电机前进分量
-motor_forward = 300
+motor_forward = 250
 # 电机转弯分量
 motor_steer = 250
+# 大于多少米全速前进
+full_speed_meter=5.0
 kp = 1.0
-ki = 0.6
+ki = 0.7
 kd = 0.1
 
 # 左侧电机信号输出控制口

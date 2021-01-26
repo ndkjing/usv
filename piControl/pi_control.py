@@ -4,7 +4,7 @@
 import sys
 import os
 
-root_dir =  os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root_dir)
 
 sys.path.append(
@@ -24,17 +24,19 @@ sys.path.append(
         'pathPlanning'))
 
 from utils import log
+
 logger = log.LogHandler('main_log')
 import config
 import pigpio
 import time
 
+
 class PiControl:
     def __init__(self):
         self.left_pwm = 1500
         self.right_pwm = 1500
-        self.pice=20000
-        self.diff=int(20000/self.pice)
+        self.pice = 20000
+        self.diff = int(20000 / self.pice)
         self.hz = 50
 
         self.pi = pigpio.pi()
@@ -56,12 +58,12 @@ class PiControl:
         self.channel1_input_pwm = 0
         self.channel3_input_pwm = 0
         # 当前是否是遥控器控制 True 为遥控器控制 False 为网页控制
-        self.b_remote_control=True
+        self.b_remote_control = True
 
         self.cb1 = self.pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, self.mycallback)
         self.cb2 = self.pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, self.mycallback)
 
-    def in_callback(self,argu, gpio, level, tick):
+    def in_callback(self, argu, gpio, level, tick):
         if level == 0:
             self.tick_0[argu] = tick
             if self.tick_1[argu] is not None:
@@ -80,7 +82,7 @@ class PiControl:
         else:
             self.tick_1[argu] = tick
 
-    def mycallback(self,gpio, level, tick):
+    def mycallback(self, gpio, level, tick):
         # print('level',level,gpio)
         if level == 0:
             if int(gpio) == int(config.channel_1_pin):
@@ -105,42 +107,42 @@ class PiControl:
             if gpio == int(config.channel_3_pin):
                 self.tick_1[1] = tick
 
-    def forward(self,left_pwm=None,right_pwm=None):
+    def forward(self, left_pwm=None, right_pwm=None):
         if left_pwm is None:
-                left_pwm = 1700
+            left_pwm = 1850
+        if right_pwm is None:
+            right_pwm = 1850
+        self.set_pwm(left_pwm, right_pwm)
+
+    def backword(self, left_pwm=None, right_pwm=None):
+        if left_pwm is None:
+            left_pwm = 1300
+        if right_pwm is None:
+            right_pwm = 1300
+        self.set_pwm(left_pwm, right_pwm)
+
+    def left(self, left_pwm=None, right_pwm=None):
+        if left_pwm is None:
+            left_pwm = 1300
         if right_pwm is None:
             right_pwm = 1700
-        self.set_pwm(left_pwm,right_pwm)
-
-    def backword(self,left_pwm=None,right_pwm=None):
-        if left_pwm is None:
-            left_pwm = 1350
-        if right_pwm is None:
-            right_pwm = 1350
         self.set_pwm(left_pwm, right_pwm)
 
-    def left(self,left_pwm=None,right_pwm=None):
+    def right(self, left_pwm=None, right_pwm=None):
         if left_pwm is None:
-            left_pwm = 1350
+            left_pwm = 1700
         if right_pwm is None:
-            right_pwm = 1650
-        self.set_pwm(left_pwm, right_pwm)
-
-    def right(self,left_pwm=None,right_pwm=None):
-        if left_pwm is None:
-            left_pwm = 1650
-        if right_pwm is None:
-            right_pwm = 1350
+            right_pwm = 1300
         self.set_pwm(left_pwm, right_pwm)
 
     def stop(self):
-        self.set_pwm(1500,1500)
+        self.set_pwm(1500, 1500)
 
     def init_motor(self):
-        self.set_pwm(1500,1500)
+        self.set_pwm(1500, 1500)
         time.sleep(5)
 
-    def set_pwm(self,left_pwm,right_pwm):
+    def set_pwm(self, left_pwm, right_pwm):
         """
         设置pwm波数值
         :param left_pwm:
@@ -148,31 +150,31 @@ class PiControl:
         :return:
         """
         # 判断是否大于阈值
-        if left_pwm>=config.max_pwm:
+        if left_pwm >= config.max_pwm:
             left_pwm = config.max_pwm
-        if left_pwm<=config.min_pwm:
+        if left_pwm <= config.min_pwm:
             left_pwm = config.min_pwm
         if right_pwm >= config.max_pwm:
             right_pwm = config.max_pwm
         if right_pwm <= config.min_pwm:
             right_pwm = config.min_pwm
+
         # 如果有反桨叶反转电机pwm值
         if config.left_motor_cw == 1:
             left_pwm = 1500 - (left_pwm - 1500)
         if config.right_motor_cw == 1:
             right_pwm = 1500 - (right_pwm - 1500)
 
-        left_pwm = int(left_pwm/(20000/self.pice)/(50/self.hz))
-        right_pwm = int(right_pwm/(20000/self.pice)/(50/self.hz))
-        sleep_time=0.001
-        delta_time = 0.002/500.0
-        while abs(self.left_pwm-left_pwm)!=0 or abs(self.right_pwm!=right_pwm)!=0:
-            # print(time.time(),'left_pwm:', self.left_pwm, 'right_pwm:', self.right_pwm)
-            if abs(left_pwm - self.left_pwm)==0:
+        left_pwm = int(left_pwm / (20000 / self.pice) / (50 / self.hz))
+        right_pwm = int(right_pwm / (20000 / self.pice) / (50 / self.hz))
+        sleep_time = 0.001
+        delta_time = 0.002 / 500.0
+        while abs(self.left_pwm - left_pwm) != 0 or abs(self.right_pwm != right_pwm) != 0:
+            if abs(left_pwm - self.left_pwm) == 0:
                 pass
             else:
                 self.left_pwm = self.left_pwm + (left_pwm - self.left_pwm) // abs(left_pwm - self.left_pwm) * 1
-            if abs(right_pwm - self.right_pwm)==0:
+            if abs(right_pwm - self.right_pwm) == 0:
                 pass
             else:
                 self.right_pwm = self.right_pwm + (right_pwm - self.right_pwm) // abs(right_pwm - self.right_pwm) * 1
@@ -184,8 +186,8 @@ class PiControl:
         # self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
         # 不支持输出获取pwm状态，以后再调试
         # print('left_pwm:',self.left_pwm,self.pi.get_PWM_dutycycle(config.left_pwm_pin),'right_pwm:',self.right_pwm,self.pi.get_PWM_dutycycle(config.right_pwm_pin))
-        print(time.time(),'left_pwm:',self.left_pwm,'right_pwm:',self.right_pwm)
+        print(time.time(), 'left_pwm:', self.left_pwm, 'right_pwm:', self.right_pwm)
+
 
 if __name__ == '__main__':
     pi_obj = PiControl()
-
