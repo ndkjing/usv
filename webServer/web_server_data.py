@@ -118,7 +118,7 @@ class MqttSendGet:
         # 船当前经纬度 给服务器路径规划使用
         self.current_lng_lat = None
         # 船返航点经纬度 给服务器路径规划使用
-        self.home_lng_lat = []
+        self.home_lng_lat = None
 
         # 自动求取经纬度设置 行间距 列间距 离岸边安全距离
         self.row_gap = None
@@ -308,11 +308,15 @@ class MqttSendGet:
         # 服务器从状态数据中获取 当前经纬度
         elif topic == 'status_data_%s' % (self.ship_code):
             status_data = json.loads(msg.payload)
-            if not status_data.get("current_lng_lat"):
+            if status_data.get("current_lng_lat") is None:
                 self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
                 return
-            self.current_lng_lat =status_data.get('current_lng_lat')
-
+            else:
+                self.current_lng_lat =status_data.get('current_lng_lat')
+            if status_data.get("home_lng_lat") is None:
+                pass
+            else:
+                self.home_lng_lat =status_data.get('home_lng_lat')
     # 发布消息
     def publish_topic(self, topic, data, qos=0):
         """

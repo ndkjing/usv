@@ -4,7 +4,7 @@
 import sys
 import os
 
-root_dir =  os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root_dir)
 
 sys.path.append(
@@ -102,7 +102,7 @@ class SerialData:
         #     return data_read
 
     # 发数据
-    def send_data(self, data,b_hex=False):
+    def send_data(self, data, b_hex=False):
         if b_hex:
             self.uart.write(bytes.fromhex(data))
         else:
@@ -148,18 +148,56 @@ class SerialData:
 if __name__ == '__main__':
     import config
 
-    serial_obj = SerialData(
-        '/dev/compass',
-        9600,
-        timeout=0.7,
-        logger=logger)
-    while True:
-        key_input = input('input:')
-        serial_obj.send_data(key_input,b_hex=True)
-        print(serial_obj.readline())
-        print(serial_obj.readline())
-        print(serial_obj.readline())
-        print(serial_obj.readline())
+    b_compass = True
+    b_com_data = False
+    if b_compass:
+        com_obj = SerialData(config.compass_port,
+                                config.compass_baud,
+                                timeout=0.7,
+                                logger=logger)
+        com_obj1 = SerialData(config.compass_port1,
+                             config.compass_baud1,
+                             timeout=0.7,
+                             logger=logger)
+        while True:
+            # C0  开始  C1 结束
+            key_input = input('input:')
+            com_obj.send_data(key_input, b_hex=True)
+            com_obj1.send_data(key_input, b_hex=True)
+            print('0号罗盘数据:',com_obj.readline(),com_obj.readline(),com_obj.readline(),com_obj.readline())
+            print('1号罗盘数据:',com_obj1.readline(),com_obj1.readline(),com_obj1.readline(),com_obj1.readline())
+
+    elif b_com_data:
+        serial_obj = SerialData(config.port,
+                                config.baud,
+                                timeout=0.7,
+                                logger=logger)
+        while True:
+            print(serial_obj.readline())
+            print(serial_obj.readline())
+            print(serial_obj.readline())
+            print(serial_obj.readline())
+            key_input = input('input:')
+            try:
+                i = int(key_input)
+                if i == 1:
+                    serial_obj.send_data('A1Z')
+                else:
+                    serial_obj.send_data('A0Z')
+            except Exception as e:
+                print({'error':e})
+
+    else:
+        serial_obj = SerialData('com3',
+                                '9600',
+                                timeout=0.7,
+                                logger=logger)
+        while True:
+            data = serial_obj.read_size(4)
+            # print(time.time(),type(data),data)
+            str_data = str(binascii.b2a_hex(data))[2:-1]
+            # print(str_data)
+            print(int(str_data[2:-2], 16) / 1000)
     # while True:
     #     # serial_obj.send_data('31',b_hex=True)
     #
@@ -173,15 +211,15 @@ if __name__ == '__main__':
     #         print('误差',data_list[8])
     #     # 角度
 
-        # str_data = data.decode('ascii')[:-3]
-        # # print('str_data',str_data,type(str_data))
-        # if len(str_data)<2:
-        #     continue
-        # # str_data = str_data.encode('utf8')
-        # # print(str_data.split('.'))
-        # float_data = float(str_data)
-        # print(time.time(),'float_data', float_data,type(float_data))
-        # time.sleep(0.1)
+    # str_data = data.decode('ascii')[:-3]
+    # # print('str_data',str_data,type(str_data))
+    # if len(str_data)<2:
+    #     continue
+    # # str_data = str_data.encode('utf8')
+    # # print(str_data.split('.'))
+    # float_data = float(str_data)
+    # print(time.time(),'float_data', float_data,type(float_data))
+    # time.sleep(0.1)
     # t1 = Thread(target=get_com_data)
     # t2 = Thread(target=send_com_data)
     # t1.start()

@@ -250,6 +250,7 @@ class DataDefine:
         """
         :param value_from 数据来源
         解释　　　　　字典键名称　　数据类型　　
+        水温       wt　　　　　 浮点数　　
         酸碱度       pH　　　　　 浮点数　　
         溶解氧　　　　DO          浮点数　　
         化学需氧量   COD　　　　  浮点数　　
@@ -380,7 +381,6 @@ class DataDefine:
         return_detect_data['water'] = self.water
         return_detect_data['deviceId'] = config.ship_code
         return return_detect_data
-
 
 if __name__ == '__main__':
     # 简单测试获取数据

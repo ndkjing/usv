@@ -38,8 +38,6 @@ from pathPlanning import a_star
 from baiduMap import baidu_map
 from utils.log import LogHandler
 from webServer.web_server_data import ServerData
-from dataGetSend import data_define
-from dataGetSend.data_define import DataDefine
 from webServer import server_data_define
 from webServer import server_config
 
@@ -160,12 +158,15 @@ class WebServer:
                 # 创建于查找湖泊
                 if len(self.data_define_obj_dict.get(ship_code).pool_code) <= 0 or not os.path.exists(save_img_path):
                     # 创建地图对象
-                    self.baidu_map_obj = baidu_map.BaiduMap(
-                        lng_lat=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat,
-                        zoom=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom,
-                        logger=self.map_log,
-                        map_type=self.current_map_type)
-                    self.baidu_map_obj_dict.update({ship_code:self.baidu_map_obj})
+                    if  os.path.exists(save_img_path) and self.baidu_map_obj_dict.get(ship_code) is not None:
+                        continue
+                    else:
+                        self.baidu_map_obj = baidu_map.BaiduMap(
+                            lng_lat=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat,
+                            zoom=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom,
+                            logger=self.map_log,
+                            map_type=self.current_map_type)
+                        self.baidu_map_obj_dict.update({ship_code:self.baidu_map_obj})
                     pool_cnts, (pool_cx, pool_cy) = self.baidu_map_obj_dict.get(ship_code).get_pool_pix()
                     # 为NOne表示没有找到湖泊 继续换地图找
                     if pool_cnts is None:
@@ -309,18 +310,15 @@ class WebServer:
                 if len_target_lng_lat >= 0:
                     # 单点航行模式
                     if len_target_lng_lat == 1:
-                        target_lng_lats = copy.deepcopy(
-                            self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.target_lng_lat)
+                        target_lng_lats = copy.deepcopy(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.target_lng_lat)
                         # 是否返航
                         if int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.back_home) == 1:
                             if config.home_debug:
                                 target_lng_lats.append(config.init_gaode_gps)
                             else:
                                 # 添加当前经纬度作为返航点
-                                if self.baidu_map_obj_dict.get(ship_code) is not None and len(
-                                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat) > 0:
-                                    target_lng_lats.append(
-                                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat)
+                                if self.baidu_map_obj_dict.get(ship_code) is not None and self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat is not None:
+                                    target_lng_lats.append(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat)
 
                         # 判断是否是上次的点
                         if self.current_target_gaode_lng_lats_dict.get(ship_code) == target_lng_lats:
@@ -328,7 +326,7 @@ class WebServer:
                         else:
                             self.logger.info({'target_lng_lats': target_lng_lats})
                             self.current_target_gaode_lng_lats_dict.update({ship_code:copy.deepcopy(target_lng_lats)})
-                            self.path_planning(mode=0, target_lng_lats=target_lng_lats, ship_code=ship_code)
+                            self.path_planning(target_lng_lats=target_lng_lats, ship_code=ship_code)
 
                     # 多点巡航模式
                     elif len_target_lng_lat > 1:
@@ -340,8 +338,7 @@ class WebServer:
                                 target_lng_lats.append(config.init_gaode_gps)
                             else:
                                 # 添加当前经纬度作为返航点
-                                if self.baidu_map_obj_dict.get(ship_code) is not None and len(
-                                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat) > 0:
+                                if self.baidu_map_obj_dict.get(ship_code) is not None and self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat is not None:
                                     target_lng_lats.append(
                                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat)
 
@@ -350,13 +347,14 @@ class WebServer:
                         else:
                             self.logger.info({'target_lng_lats': target_lng_lats})
                             self.current_target_gaode_lng_lats_dict.update({ship_code:copy.deepcopy(target_lng_lats)})
-                            self.path_planning(mode=1, target_lng_lats=target_lng_lats, ship_code=ship_code)
+                            self.path_planning(target_lng_lats=target_lng_lats, ship_code=ship_code)
 
                 # 判断是否上传了间距使用自动生成采样点
                 if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.row_gap is not None:
                     try:
                         if self.baidu_map_obj_dict.get(ship_code) is None:
                             self.logger.error('地图对象还没有初始化，不能自动设置')
+                            time.sleep(1)
                             continue
                         scan_point_cnts = self.baidu_map_obj_dict.get(ship_code).scan_pool(
                             meter_gap=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.row_gap,
@@ -364,7 +362,7 @@ class WebServer:
                             safe_meter_distance=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.safe_gap,
                             b_show=False)
                         _, scan_point_gaode_list = self.baidu_map_obj_dict.get(ship_code).pix_to_gps(scan_point_cnts)
-                        self.path_planning(mode=1, target_lng_lats=scan_point_gaode_list, ship_code=ship_code)
+                        self.path_planning(target_lng_lats=scan_point_gaode_list, ship_code=ship_code)
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.row_gap = None
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.col_gap = None
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.safe_gap = None
@@ -375,19 +373,15 @@ class WebServer:
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.safe_gap = None
 
     # 路径规划
-    def path_planning(self, target_lng_lats, ship_code, mode=5, back_home=False):
+    def path_planning(self, target_lng_lats, ship_code):
         """
         :param mode
         return path points
         """
         b_plan_path = False
         if config.home_debug:
-            self.baidu_map_obj_dict.get(ship_code).ship_pix = self.baidu_map_obj_dict.get(ship_code).gaode_lng_lat_to_pix(
-                config.init_gaode_gps)
-            print('self.baidu_map_obj_dict.get(ship_code).ship_pix', self.baidu_map_obj_dict.get(ship_code).ship_pix)
-            self.baidu_map_obj_dict.get(ship_code).ship_gps = config.init_gaode_gps
-            self.baidu_map_obj_dict.get(ship_code).init_ship_gps = config.init_gaode_gps
-            self.baidu_map_obj_dict.get(ship_code).init_ship_gaode_lng_lat = config.init_gaode_gps
+            self.baidu_map_obj.ship_gaode_lng_lat = config.ship_gaode_lng_lat
+            b_plan_path = True
         else:
             # 在服务器上运行不考虑船的位置
             if self.baidu_map_obj_dict.get(ship_code) is not None and self.server_data_obj_dict.get(
@@ -397,10 +391,9 @@ class WebServer:
                 b_plan_path = True
 
         # 进行路径规划
-        if config.b_use_path_planning and b_plan_path:
+        if server_config.b_use_path_planning and b_plan_path:
             return_gaode_lng_lat_path = a_star.get_path(
                 baidu_map_obj=self.baidu_map_obj_dict.get(ship_code),
-                mode=mode,
                 target_lng_lats=target_lng_lats,
                 b_show=False,
             )
@@ -428,7 +421,7 @@ class WebServer:
                     "path_points": self.plan_path,
                     "path_id": len(self.plan_path)
                 }
-                self.logger.error({'len return_gaode_lng_lat_path': len(return_gaode_lng_lat_path)})
+                self.logger.info({'len return_gaode_lng_lat_path': len(return_gaode_lng_lat_path)})
         # 不进行路径规划直接到达
         else:
             self.plan_path = copy.deepcopy(target_lng_lats)
@@ -451,7 +444,6 @@ class WebServer:
 
 
 if __name__ == '__main__':
-    config.b_use_path_planning = False
     web_server_obj = WebServer()
     find_pool_thread = threading.Thread(target=web_server_obj.find_pool)
     get_plan_path_thread = threading.Thread(target=web_server_obj.get_plan_path)

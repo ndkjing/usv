@@ -69,7 +69,7 @@ ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380c'
 
 ## 串口位置和波特率
 # 单片机
-port = '/dev/stc'
+port = '/dev/ttyAMA0'
 baud = 115200
 # imu
 imu_port = '/dev/imu'
@@ -87,8 +87,11 @@ gps_port = '/dev/gps'
 gps_baud = 115200
 
 # 罗盘
-compass_port = '/dev/compass'
+compass_port = '/dev/compass0'
 compass_baud = 9600
+
+compass_port1 = '/dev/compass1'
+compass_baud1 = 9600
 
 # http 接口
 # 查询船是否注册  wuhanligong.xxlun.com/union
@@ -111,9 +114,8 @@ b_play_audio=False
 # 在家调试模式
 home_debug = False
 init_gaode_gps = [114.348713,30.464501]
-
-# 直达模式
-b_direct= True
+ship_gaode_lng_lat=[114.434561,30.519726]
+# ship_gaode_lng_lat=[114.5242, 30.506895]
 
 # 路径搜索像素安全距离
 path_search_safe_distance = 10
@@ -122,7 +124,7 @@ path_search_safe_distance = 10
 arrive_distance = 2.5
 
 # 查找数量
-find_points_num=4
+find_points_num=7
 
 max_pwm = 2000
 min_pwm = 1000
@@ -133,7 +135,10 @@ pid_interval=0.1
 home_location_path = os.path.join(root_path, 'home_location.json')
 
 # 使用路径规划和避免湖泊轮廓
-b_use_path_planning=False
+if home_debug:
+    b_use_path_planning=True
+else:
+    b_use_path_planning=False
 # 检查路径规划
 b_check_path_planning = False
 
@@ -145,22 +150,22 @@ b_use_start=False
 b_use_pi=True
 
 # 正反桨页设置  0 正桨叶   1 反桨叶
-left_motor_cw = 1
+left_motor_cw = 0
 right_motor_cw = 0
 # 电机前进分量
-motor_forward = 250
+motor_forward = 350
 # 电机转弯分量
-motor_steer = 250
+motor_steer = 450
 # 大于多少米全速前进
 full_speed_meter=5.0
-kp = 1.0
-ki = 0.7
-kd = 0.1
+kp = 1
+ki = 0.1
+kd = 0.3
 
 # 左侧电机信号输出控制口
-left_pwm_pin = 18
+left_pwm_pin = 23
 # 右侧电机信号输出控制口
-right_pwm_pin = 23
+right_pwm_pin = 24
 
 # 是否使用遥控器
 b_use_remote_control=False
@@ -168,4 +173,19 @@ b_use_remote_control=False
 channel_1_pin = 12
 #3 通道 垂直
 channel_3_pin = 16
+
+# 是否使用超声波
+b_use_ultrasonic=False
+ultrasonic_baud = 9600
+left_rx = 4
+left_tx = 17
+right_rx = 27
+right_tx = 22
+
+# 抽水时间 单位秒
+draw_time = 20
+# 开机前等待时间
+start_sleep_time=6
+# 电机初始化时间
+motor_init_time = 4
 

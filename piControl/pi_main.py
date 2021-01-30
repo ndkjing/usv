@@ -23,7 +23,7 @@ sys.path.append(
         'piControl'))
 from piControl import simplePid
 from piControl import pi_control
-
+from piControl import pi_softuart
 from utils import lng_lat_calculate
 from utils import log
 from dataGetSend import com_data
@@ -34,13 +34,16 @@ class PiMain:
     def __init__(self):
 
         self.gps_obj = self.get_gps_obj()
-        self.compass_obj = self.get_compass_obj()
-
+        if os.path.exists(config.compass_port):
+            self.compass_obj = self.get_compass_obj(config.compass_port,config.compass_baud)
+        if os.path.exists(config.compass_port1):
+            self.compass_obj1 = self.get_compass_obj(config.compass_port1,config.compass_baud1)
         # 经纬度 和 船头角度 北为0 逆时针为正
         self.lng_lat = None
         self.lng_lat_error = None
 
         self.theta = None
+        self.theta1 = None
         # 树莓派pwm波控制对象
         if config.current_platform == 'l':
             self.pi_obj = pi_control.PiControl()
@@ -61,10 +64,16 @@ class PiMain:
         # 船行驶里程
         self.run_distance=0
 
-    def get_compass_obj(self):
+        if config.b_use_ultrasonic and config.current_platform == 'l':
+            self.left_ultrasonic_obj = self.get_left_ultrasonic_obj()
+            self.right_ultrasonic_obj = self.get_right_ultrasonic_obj()
+        # 左右侧超声波距离，没有返回None  -1 表示距离过近
+        self.left_distance=None
+        self.right_distance=None
+    def get_compass_obj(self,port,baud):
         return com_data.SerialData(
-            config.compass_port,
-            config.compass_baud,
+            port,
+            baud,
             timeout=0.4,
             logger=logger)
 
@@ -75,6 +84,12 @@ class PiMain:
             timeout=1 / config.com2pi_interval,
             logger=logger)
 
+    def get_left_ultrasonic_obj(self):
+        return pi_softuart.PiSoftuart(pi=self.pi_obj.pi, rx_pin=config.left_rx, tx_pin=config.left_tx, baud=config.ultrasonic_baud)
+
+    def get_right_ultrasonic_obj(self):
+        return pi_softuart.PiSoftuart(pi=self.pi_obj.pi, rx_pin=config.right_rx, tx_pin=config.right_tx,
+                                      baud=config.ultrasonic_baud)
     def distance_p(self, distance):
         pwm = int((distance * (config.motor_forward/config.full_speed_meter)))
         if pwm >= config.motor_forward:
@@ -88,6 +103,8 @@ class PiMain:
         self.previousError = theta_error
         # 控制量归一化
         pwm = int((control / 180.0) * config.motor_steer)
+        if pwm >= config.motor_steer:
+            pwm = config.motor_steer
         return pwm
 
     def pid_pwm(self, distance, theta_error):
@@ -97,6 +114,7 @@ class PiMain:
         right_pwm = 1500 + forward_pwm + steer_pwm
         return left_pwm, right_pwm
 
+    # 在线程中读取 gps
     def get_gps_data(self):
         last_read_time=time.time()
         last_read_lng_lat=None
@@ -139,21 +157,63 @@ class PiMain:
                 logger.error({'error': e})
                 time.sleep(1)
 
+    # 在线程中读取罗盘
     def get_compass_data(self):
         while True:
             try:
                 self.compass_obj.send_data('31', b_hex=True)
-                data = self.compass_obj.readline()
+                time.sleep(0.1)
+                data0 = self.compass_obj.readline()
                 # 角度
-                str_data = data.decode('ascii')[:-3]
-                if len(str_data) < 2:
+                str_data0 = data0.decode('ascii')[:-3]
+                if len(str_data0) < 2:
                     continue
-                float_data = float(str_data)
-                self.theta = 360 - float_data
+                float_data0 = float(str_data0)
+                self.theta = 360 - float_data0
                 time.sleep(config.pid_interval)
             except Exception as e:
+                self.theta = None
                 logger.error({'error': e})
                 time.sleep(1)
+
+    # 获取备份罗盘数据
+    def get_compass1_data(self):
+        if os.path.exists(config.compass_port1):
+            while True:
+                try:
+                    self.compass_obj1.send_data('31', b_hex=True)
+                    time.sleep(0.1)
+                    data1 = self.compass_obj1.readline()
+                    # 角度
+                    str_data1 = data1.decode('ascii')[:-3]
+                    if len(str_data1) < 2:
+                        continue
+                    float_data1 = float(str_data1)
+                    self.theta1 = 360 - float_data1
+                    time.sleep(config.pid_interval)
+                except Exception as e:
+                    self.theta1=None
+                    logger.error({'error': e})
+                    time.sleep(1)
+
+    # 在线程中读取超声波
+    def get_left_distance(self):
+        if config.b_use_ultrasonic and config.current_platform == 'l':
+            while True:
+                l_distance = self.left_ultrasonic_obj.read()
+                if l_distance is None :
+                    pass
+                else:
+                    self.left_distance = l_distance
+
+    def get_right_distance(self):
+        if config.b_use_ultrasonic and config.current_platform == 'l':
+            while True:
+                distance = self.right_ultrasonic_obj.read()
+                if distance is None:
+                    pass
+                else:
+                    self.right_distance = distance
 
     def get_current_location(self):
         print(
@@ -161,20 +221,26 @@ class PiMain:
             self.lng_lat,
             'gps偏差: ',
             self.lng_lat_error,
-            ', 船头方向:',
-            self.theta)
+            ', 船头方向0:',
+            self.theta,
+            ', 船头方向1:',
+            self.theta1
+            )
+        if config.b_use_ultrasonic and config.current_platform == 'l':
+            self.right_ultrasonic_obj.read()
 
     def set_home_location(self):
-        if self.lng_lat is None:
+        if self.lng_lat is None :
             logger.error('当前无GPS信号，无法设置返航点')
-        # gps为靠近0
-        elif abs(self.lng_lat[0])<10:
-            logger.error('当前无GPS信号弱，无法设置返航点')
         else:
-            self.home_lng_lat = copy.deepcopy(self.lng_lat)
-            print({'保存路径':config.home_location_path})
-            with open(config.home_location_path,'w') as f:
-                json.dump({'home_lng_lat':self.home_lng_lat},f)
+            if abs(self.lng_lat[0])<10:
+                # gps为靠近0
+                logger.error('当前无GPS信号弱，无法设置返航点')
+            else:
+                self.home_lng_lat = copy.deepcopy(self.lng_lat)
+            # print({'保存路径':config.home_location_path})
+            # with open(config.home_location_path,'w') as f:
+            #     json.dump({'home_lng_lat':self.home_lng_lat},f)
 
     def yaw_control(self, yaw):
         """
@@ -200,7 +266,16 @@ class PiMain:
                                                       lng_lat[0],
                                                       lng_lat[1])
         # 求船头与目标角度偏差角度
-        theta_error =  theta-self.theta
+        # 都为空直接不要误差
+        if self.theta is None and self.theta1 is None:
+            current_theta =  theta
+        elif self.theta is None and self.theta1 is not None:
+            current_theta = self.theta1
+        elif self.theta is not None and self.theta1 is None:
+            current_theta = self.theta
+        else:
+            current_theta = (self.theta+self.theta1)/2
+        theta_error =  current_theta
         if abs(theta_error) > 180:
             if theta_error > 0:
                 theta_error = theta_error - 360
@@ -465,3 +540,4 @@ if __name__ == '__main__':
         except Exception as e:
             print({'error': e})
             continue
+

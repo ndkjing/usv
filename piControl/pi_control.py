@@ -30,7 +30,6 @@ import config
 import pigpio
 import time
 
-
 class PiControl:
     def __init__(self):
         self.left_pwm = 1500
@@ -63,30 +62,9 @@ class PiControl:
         self.cb1 = self.pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, self.mycallback)
         self.cb2 = self.pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, self.mycallback)
 
-    def in_callback(self, argu, gpio, level, tick):
-        if level == 0:
-            self.tick_0[argu] = tick
-            if self.tick_1[argu] is not None:
-                diff = pigpio.tickDiff(self.tick_1[argu], tick)
-                self.temp_read[argu][self.count[argu]] = diff
-                # count[argu]+=1
-                # if  count[argu]==20:
-                #     sum_temp_read=0
-                #     a=0
-                #     for i in range(20):
-                #         sum_temp_read+=temp_read[argu][a]
-                #         a+=1
-                #     save[argu]=sum_temp_read/20
-                #     count[argu]=0
-                self.save[argu] = self.temp_read[argu][self.count[argu]]
-        else:
-            self.tick_1[argu] = tick
-
     def mycallback(self, gpio, level, tick):
-        # print('level',level,gpio)
         if level == 0:
             if int(gpio) == int(config.channel_1_pin):
-                # print('channel1', diff)
                 self.tick_0[0] = tick
                 if self.tick_1[0] is not None:
                     diff = pigpio.tickDiff(self.tick_1[0], tick)
@@ -100,7 +78,6 @@ class PiControl:
                     self.channel3_input_pwm = int(diff)
                     self.temp_read[1][self.count[1]] = diff
                     self.save[1] = int(self.temp_read[1][self.count[1]])
-                    # print('channel3', diff)
         else:
             if gpio == int(config.channel_1_pin):
                 self.tick_1[0] = tick
@@ -140,7 +117,7 @@ class PiControl:
 
     def init_motor(self):
         self.set_pwm(1500, 1500)
-        time.sleep(5)
+        time.sleep(config.motor_init_time)
 
     def set_pwm(self, left_pwm, right_pwm):
         """
@@ -168,7 +145,7 @@ class PiControl:
         left_pwm = int(left_pwm / (20000 / self.pice) / (50 / self.hz))
         right_pwm = int(right_pwm / (20000 / self.pice) / (50 / self.hz))
         sleep_time = 0.001
-        delta_time = 0.002 / 500.0
+        delta_time = 0.0001 / 500.0
         while abs(self.left_pwm - left_pwm) != 0 or abs(self.right_pwm != right_pwm) != 0:
             if abs(left_pwm - self.left_pwm) == 0:
                 pass

@@ -5,7 +5,7 @@ import time
 import json
 import copy
 import random
-
+import math
 from dataGetSend.data_define import DataDefine
 from dataGetSend import data_define
 from dataGetSend.server_data import ServerData
@@ -92,82 +92,101 @@ class DataManager:
         self.control_info = ""
         # 开关控制信息
         self.switch_info = 0
+        # 当前是否抽水
+        self.current_b_draw=None
+        # 抽水开始时间
+        self.draw_start_time = None
+        # 抽水结束发送数据
+        self.b_draw_over_send_data = False
+        # 单片机串口读取到的数据
+        self.second_lng_lat = None
+        self.water_data_dict = {}
+        # 剩余电量
+        self.dump_energy = None
 
-    def get_serial_obj(self, port, baud, time_out, log=None):
+    def get_serial_obj(self, port, baud, time_out=None, log=None):
         return SerialData(port, baud, timeout=1 / config.com2pi_interval,
                           logger=self.com_data_read_logger)
 
     # 读取函数会阻塞 必须使用线程
     def get_com_data(self):
         while True:
-            row_com_data_read = self.com_data_obj.readline()
-            self.com_data_read_logger.debug({'row_com_data_read': row_com_data_read})
-            com_data_read = str(row_com_data_read)[2:-5]
-            self.com_data_read_logger.debug({'str com_data_read': com_data_read})
-            # 解析串口发送过来的数据
-            if com_data_read is None:
-                continue
-            # 读取数据过短跳过
-            if len(com_data_read) < 5:
-                continue
-            com_data_list = com_data_read.split(',')
-
-            # 角度，TDS，温度，经度，纬度，左侧距离1，右侧距离2，距离目标点距离
+            # 水质数据 b''BBD:0,R:158,Z:36,P:0,T:16.1,V:92.08,x1:0,x2:2,x3:1,x4:0\r\n'
+            # 经纬度数据 b'AA2020.2354804,N,11425.41234568896,E\r\n'
             try:
-                # 当前朝向
-                self.ship_current_direction = com_data_list[0].split('AAA')[1]
-                # TDO
-                self.data_define_obj.water['TD'] = com_data_list[1]
-                # 水质数据
-                # 水温
-                self.data_define_obj.water['wt'] = com_data_list[2]
-                # 经纬度 非法制则不处理
-                if float(com_data_list[3]) < 10 or float(com_data_list[3]) > 180:
-                    pass
-                elif float(com_data_list[4]) < 10 or float(com_data_list[4]) > 150:
-                    pass
-                else:
-                    self.data_define_obj.status['current_lng_lat'] = [float(com_data_list[3]), float(com_data_list[4])]
-
-                # 左右侧的超声波检测距离 转化为单位米
-                self.l_distance, self.r_distance = float(com_data_list[5]) / 1000, float(com_data_list[6]) / 1000
-                if self.l_distance < 0.5:
-                    self.l_distance = None
-                if self.r_distance < 0.5:
-                    self.r_distance = None
-
-                # 判断距离是否已达
-                target_distance = float(com_data_list[7])
-                if target_distance <= config.arrive_distance:
-                    # 还没开始
-                    if self.current_ststus_index == -1:
-                        pass
-                    # 到达终点
-                    elif self.current_ststus_index == len(self.plan_path):
-                        pass
-                    # 正常到达一点开始下一点
-                    else:
-                        self.plan_path_status[self.current_ststus_index] = 1
-
-                self.com_data_read_logger.debug({'ship_current_direction': self.ship_current_direction,
-                                                 'TD': self.data_define_obj.water['TD'],
-                                                 'water_temperature': self.data_define_obj.water['wt'],
-                                                 'current_lng_lat': self.data_define_obj.status['current_lng_lat'],
-                                                 'r_distance': self.r_distance,
-                                                 'l_distance': self.l_distance,
-                                                 'target_distance': target_distance})
+                row_com_data_read = self.com_data_obj.readline()
+                com_data_read = str(row_com_data_read)[2:-5]
+                self.com_data_read_logger.info({'str com_data_read': com_data_read})
+                # 解析串口发送过来的数据
+                if com_data_read is None:
+                    continue
+                # 读取数据过短跳过
+                if len(com_data_read) < 5:
+                    continue
+                if com_data_read.startswith('AA'):
+                    com_data_list = com_data_read.split(',')
+                    lng, lat = round(float(com_data_list[2][:3]) +
+                                     float(com_data_list[2][3:]) /
+                                     60, 6), round(float(com_data_list[0][2:4]) +
+                                                   float(com_data_list[0][4:]) /
+                                                   60, 6)
+                    self.second_lng_lat = [lng,lat]
+                    self.com_data_read_logger.info({'second_lng_lat': self.second_lng_lat})
+                elif com_data_read.startswith('BB'):
+                    com_data_list = com_data_read.split(',')
+                    self.water_data_dict.update({'EC':float(com_data_list[1].split(':')[1])/math.pow(10,int(com_data_list[7][3:]))})
+                    self.water_data_dict.update({'DO':float(com_data_list[0][2:].split(':')[1])/math.pow(10,int(com_data_list[6][3:]))})
+                    self.water_data_dict.update({'TD':float(com_data_list[2].split(':')[1])/math.pow(10,int(com_data_list[8][3:]))})
+                    self.water_data_dict.update({'pH':float(com_data_list[3].split(':')[1])/math.pow(10,int(com_data_list[9][3:]))})
+                    self.water_data_dict.update({'wt':float(com_data_list[4].split(':')[1])})
+                    self.dump_energy = float(com_data_list[5].split(':')[1])
+                    self.com_data_read_logger.info({'water_data_dict': self.water_data_dict})
+                    # self.com_data_read_logger.info({'dump_energy': self.dump_energy})
             except Exception as e:
-                self.com_data_read_logger.error({'串口数据解析错误': e, '原始数据': row_com_data_read})
+                self.com_data_read_logger.error({'串口数据解析错误': e})
 
-    # 发送函数会阻塞 必须使用线程
+    def draw(self):
+        # 判断是否抽水
+        if self.server_data_obj.mqtt_send_get_obj.b_draw:
+            if self.draw_start_time is None or self.current_b_draw == 0:
+                if self.draw_start_time is not None:
+                    # 超时中断抽水
+                    if time.time()-self.draw_start_time>config.draw_time:
+                        self.b_draw_over_send_data = True
+                        self.com_data_obj.send_data('A0Z')
+                        self.current_b_draw = 0
+                        self.draw_start_time = None
+                else:
+                    self.com_data_obj.send_data('A1Z')
+                    self.current_b_draw = 1
+                    self.draw_start_time = time.time()
+            elif  self.draw_start_time is not None and self.current_b_draw == 1:
+                # 超时中断抽水
+                if time.time() - self.draw_start_time > config.draw_time:
+                    self.b_draw_over_send_data = True
+                    self.com_data_obj.send_data('A0Z')
+                    self.current_b_draw = 0
+                    self.server_data_obj.mqtt_send_get_obj.b_draw=0
+                    self.draw_start_time = None
+        else:
+            if self.current_b_draw is None or self.current_b_draw == 1:
+                self.com_data_obj.send_data('A0Z')
+                self.current_b_draw = 0
+                self.draw_start_time = None
+
+
+                # 发送函数会阻塞 必须使用线程
     def send_com_data(self):
         # 0 自动  1手动
         manul_or_auto = 1
         # 记录上次手动发送
         last_control = None
+
         try:
             while True:
                 time.sleep(config.pi2com_interval)
+                if config.b_use_ultrasonic:
+                    self.logger.info({'left_distance':self.pi_main_obj.left_distance,'right_distance':self.pi_main_obj.left_distance})
                 # 判断当前是手动控制还是自动控制
                 d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
                 if d in [-1, 0, 90, 180, 270]:
@@ -186,7 +205,6 @@ class DataManager:
                     if d == 0:
                         temp_com_data = 1
                         pwm_data = {'1': 1900, '3': 1900}
-
                     elif d == 90:
                         temp_com_data = 3
                         pwm_data = {'1': 1900, '3': 1100}
@@ -237,25 +255,41 @@ class DataManager:
                                 com_data_send = 'A5A5%d,0,0,0,0,0,0,0,0,0#' % temp_com_data
                                 self.com_data_obj.send_data(com_data_send)
                                 self.com_data_send_logger.info('com_data_send' + com_data_send)
+                    # 手动模式下判断是否抽水
+                    self.draw()
 
                 # 自动模式计算角度
                 if manul_or_auto == 0:
                     self.control_info = ''
-                    # 第一次进入路径规划时候的点设置为返航点
-                    if self.pi_main_obj.home_lng_lat is not None:
-                        self.pi_main_obj.set_home_location()
                     # 使用树莓派
                     if config.b_use_pi:
-                        if self.pi_main_obj.lng_lat is None:
+                        if self.pi_main_obj.lng_lat is None and self.second_lng_lat is None:
                             self.logger.error('无当前GPS，不能自主巡航')
                             time.sleep(0.5)
+                            self.pi_main_obj.pi_obj.stop()
+                            self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
+                            # 清空目标点和状态
+                            self.server_data_obj.mqtt_send_get_obj.path_planning_points = []
+                            self.server_data_obj.mqtt_send_get_obj.path_planning_points_status = []
+                            # 清空里程和时间
+                            self.totle_distance = 0
+                            self.plan_start_time = None
+                            # 清空提醒
+                            self.path_info = [0, 0]
+                            self.distance_p = 0
                             continue
+                        # 第一次进入路径规划时候的点设置为返航点
+                        if self.pi_main_obj.home_lng_lat is None:
+                            self.pi_main_obj.set_home_location()
                         if self.plan_start_time is None:
                             self.plan_start_time = time.time()
                         # 设置自动路径搜索为False
                         self.b_stop_path_track = False
                         self.logger.info({'点击地点': self.server_data_obj.mqtt_send_get_obj.path_planning_points})
-                        pi_current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.pi_main_obj.lng_lat)
+                        if self.pi_main_obj.lng_lat is None and self.second_lng_lat is not None:
+                            pi_current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.second_lng_lat)
+                        else:
+                            pi_current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.pi_main_obj.lng_lat)
                         # 计算总里程
                         for index, gaode_lng_lat in enumerate(
                                 self.server_data_obj.mqtt_send_get_obj.path_planning_points):
@@ -299,7 +333,6 @@ class DataManager:
                                     path_planning_point_gps[0],
                                     path_planning_point_gps[1])
                                 # 更新提醒的距离信息
-
                                 self.distance_p = distance
                                 if int(time.time()) % 1 == 0:
                                     self.logger.debug({'距离目标点距离: ': distance})
@@ -317,21 +350,37 @@ class DataManager:
                                     # 清空里程和时间
                                     self.totle_distance = 0
                                     self.plan_start_time = None
-                                    # 情况提醒
+                                    # 清空提醒
                                     self.path_info = [0, 0]
                                     self.distance_p = 0
                                     # 记录是因为按了暂停按钮而终止
                                     self.b_stop_path_track = True
                                     break
-                                time.sleep(config.pid_interval)
+                                # time.sleep(config.pid_interval)
+                            self.server_data_obj.mqtt_send_get_obj.path_planning_points_status[index] = 1
                             if self.b_stop_path_track:
                                 break
-                            self.server_data_obj.mqtt_send_get_obj.path_planning_points_status[index] = 1
+                            # 开始抽水并等待30秒
+                            self.server_data_obj.mqtt_send_get_obj.b_draw=1
+                            self.pi_main_obj.pi_obj.stop()
+                            self.draw()
+                            time.sleep(config.draw_time)
+                            self.b_draw_over_send_data = True
+                            self.draw()
+
                         # 全部结束后停止
                         self.pi_main_obj.pi_obj.stop()
-                    # 计算发送给单片机数据
-                    elif config.b_use_pix:
-                        pass
+                        self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
+                        # 清空目标点和状态
+                        self.server_data_obj.mqtt_send_get_obj.path_planning_points = []
+                        self.server_data_obj.mqtt_send_get_obj.path_planning_points_status = []
+                        # 清空里程和时间
+                        self.totle_distance = 0
+                        self.plan_start_time = None
+                        # 清空提醒
+                        self.path_info = [0, 0]
+                        self.distance_p = 0
+
                     else:
                         for index, value in enumerate(self.plan_path_points_status):
                             if self.plan_path_points_status[index] == 1:
@@ -397,6 +446,10 @@ class DataManager:
             if current_lng_lat is not None:
                 current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(current_lng_lat)
                 status_data.update({'current_lng_lat': current_gaode_lng_lat})
+            elif current_lng_lat is None and self.second_lng_lat is not None:
+                current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.second_lng_lat)
+                status_data.update({'current_lng_lat': current_gaode_lng_lat})
+
             if self.pi_main_obj.home_lng_lat is not None:
                 home_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.pi_main_obj.home_lng_lat)
                 status_data.update({'home_lng_lat': home_gaode_lng_lat})
@@ -405,8 +458,8 @@ class DataManager:
             if self.pi_main_obj.speed is not None:
                 status_data.update({'speed': self.pi_main_obj.speed})
             status_data.update({"totle_time": round(self.totle_distance/(2.0))})
-            status_data.update({"totle_distance": round(self.totle_distance, 1)})
-            status_data.update({"run_distance": round(self.pi_main_obj.run_distance, 1)})
+            status_data.update({"run_distance": round(self.totle_distance, 1)})
+            status_data.update({"totle_distance": round(self.pi_main_obj.run_distance, 1)})
             if self.plan_start_time is not None:
                 status_data.update({"runtime": round(time.time() - self.plan_start_time)})
 
@@ -417,33 +470,39 @@ class DataManager:
             if self.pi_main_obj.lng_lat_error is not None:
                 status_data.update({"lng_lat_error": self.pi_main_obj.lng_lat_error})
 
+            # 更新真实数据
+            if config.ship_code.endswith('a') and self.b_draw_over_send_data:
+                mqtt_send_detect_data = copy.deepcopy(detect_data)
+                mqtt_send_detect_data['water'].update(self.water_data_dict)
+                mqtt_send_status_data = copy.deepcopy(status_data)
+
             # 更新模拟数据
-            mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
-            mqtt_send_status_data = data_define.fake_status_data(status_data)
+            else:
+                mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
+                mqtt_send_status_data = data_define.fake_status_data(status_data)
             # 替换键
             for k_all, v_all in data_define.name_mappings.items():
                 for old_key, new_key in v_all.items():
                     pop_value = mqtt_send_detect_data[k_all].pop(old_key)
                     mqtt_send_detect_data[k_all].update({new_key: pop_value})
-
+            if self.dump_energy is not None:
+                mqtt_send_status_data.update({'dump_energy': self.dump_energy})
             # 向mqtt发送数据
-            if self.data_define_obj.pool_code == '':
-                self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
-                          qos=1)
-                # self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
+            self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
+                      qos=1)
+            # self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
 
-            else:
-                self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
+            if self.b_draw_over_send_data:
+                # self.pi_main_obj.lng_lat 添加真实经纬度
+                self.send(method='mqtt', topic='detect_data_%s' % (config.ship_code), data=mqtt_send_detect_data,
                           qos=1)
-                # self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
-                # TODO 暂时随机 以后改为到目标点发送
-                if random.random() > 0.8:
+                if len(self.data_define_obj.pool_code)>0:
                     self.send(method='http', data=mqtt_send_detect_data,
                               url=config.http_data_save,
                               http_type='POST')
-                    self.send(method='mqtt', topic='detect_data_%s' % (config.ship_code), data=mqtt_send_detect_data,
-                              qos=1)
-                    # self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
+                    self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
+                # 发送结束改为False
+                self.b_draw_over_send_data = False
 
     def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):
         """
@@ -492,7 +551,7 @@ class DataManager:
             # 检查当前状态
             if config.home_debug:
                 self.data_define_obj.status['current_lng_lat'] = config.init_gaode_gps
-            if self.pi_main_obj.lng_lat is None:
+            if self.pi_main_obj.lng_lat in locals() or self.pi_main_obj.lng_lat in globals():
                 if config.b_play_audio:
                     audios_manager.play_audio(5, b_backend=False)
                 self.logger.error('当前GPS信号弱')
@@ -532,10 +591,6 @@ class DataManager:
             # 获取初始地点GPS
             if self.server_data_obj.mqtt_send_get_obj.b_start:
                 pass
-            else:
-                if config.home_debug:
-                    self.baidu_map_obj.init_ship_gps = config.init_gaode_gps
-                    self.baidu_map_obj.init_ship_gaode_lng_lat = config.init_gaode_gps
 
     # 定时发送给单片机数据
     def send_com_heart_data(self):
@@ -546,7 +601,6 @@ class DataManager:
                 self.com_data_obj.send_data(
                     'B6B6,%f,%f#' % (self.baidu_map_obj.init_ship_gps[0], self.baidu_map_obj.init_ship_gps[1]))
                 time.sleep(config.com_heart_time)
-
 
 if __name__ == '__main__':
     obj = DataManager()
