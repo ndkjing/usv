@@ -1,0 +1,23 @@
+{
+  "info_type": 1,
+  "pix_interval": 4,
+  "check_status_interval": 1.5,
+  "check_network_interval": 10,
+  "find_points_num": 7,
+  "max_pwm": 2000,
+  "min_pwm": 1000,
+  "pid_interval": 0.1,
+  "b_use_path_planning": 0,
+  "b_check_path_planning": 0,
+  "left_motor_cw": 0,
+  "right_motor_cw": 0,
+  "motor_forward": 350,
+  "motor_steer": 450,
+  "full_speed_meter": 5.0,
+  "kp": 1,
+  "ki": 0.1,
+  "kd": 0.3,
+  "draw_time": 20,
+  "start_sleep_time": 6,
+  "motor_init_time": 4
+}

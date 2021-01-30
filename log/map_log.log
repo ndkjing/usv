@@ -8,3 +8,229 @@
 2021-01-30 14:44:45,720 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431066_30.521601_15_1.png'}
 2021-01-30 14:44:45,746 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2052}
 2021-01-30 14:44:45,777 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 14:52:05,205 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.432954,30.522941&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 14:52:34,164 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431753,30.524797&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 14:53:21,804 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431288,30.525155&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 14:53:23,001 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431288_30.525155_15_1.png'}
+2021-01-30 14:53:23,339 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2068}
+2021-01-30 14:53:23,408 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 14:53:36,966 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.432404,30.521645&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 14:53:37,632 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.432404_30.521645_15_1.png'}
+2021-01-30 14:53:37,649 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2068}
+2021-01-30 14:53:37,687 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 14:57:26,514 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431514,30.524917&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 14:57:27,233 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431514_30.524917_15_1.png'}
+2021-01-30 14:57:27,263 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2052}
+2021-01-30 14:57:27,294 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 14:58:36,274 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.429992,30.516045&zoom=14&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 14:58:37,456 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.429992_30.516045_14_1.png'}
+2021-01-30 14:58:37,480 baidu_map.py[line:364] INFO 无法在点击处找到湖
+2021-01-30 14:58:38,983 baidu_map.py[line:317] INFO {'png_url': 'https://apis.map.qq.com/ws/staticmap/v2/?center=30.529654,114.435477&zoom=15&size=1024*1024&scale=1&maptype=roadmap&key=PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'}
+2021-01-30 14:58:40,432 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\tecent_114.435477_30.529654_15_1.png'}
+2021-01-30 14:58:40,487 baidu_map.py[line:364] INFO 无法在点击处找到湖
+2021-01-30 14:58:41,990 baidu_map.py[line:317] INFO {'png_url': 'http://api.map.baidu.com/staticimage/v2?ak=wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY&center=114.435477,30.529654&width=1024&height=1024&zoom=15'}
+2021-01-30 14:58:42,612 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\baidu_114.435477_30_15.png'}
+2021-01-30 14:58:42,629 baidu_map.py[line:364] INFO 无法在点击处找到湖
+2021-01-30 14:58:44,131 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.435477,30.529654&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 14:58:44,907 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.435477_30.529654_15_1.png'}
+2021-01-30 14:58:44,928 baidu_map.py[line:364] INFO 无法在点击处找到湖
+2021-01-30 14:58:50,937 baidu_map.py[line:317] INFO {'png_url': 'https://apis.map.qq.com/ws/staticmap/v2/?center=30.525381,114.431106&zoom=15&size=1024*1024&scale=1&maptype=roadmap&key=PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'}
+2021-01-30 14:58:52,051 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\tecent_114.431106_30.525381_15_1.png'}
+2021-01-30 14:58:52,092 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 4844}
+2021-01-30 14:58:52,163 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:00:30,202 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431332,30.524470&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:00:31,160 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431332_30.524470_15_1.png'}
+2021-01-30 15:00:31,180 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2053}
+2021-01-30 15:00:31,210 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:01:30,286 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431216,30.524506&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:01:31,110 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431216_30.524506_15_1.png'}
+2021-01-30 15:01:31,131 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2053}
+2021-01-30 15:01:31,162 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:03:04,497 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431220,30.523898&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:03:05,378 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431220_30.523898_15_1.png'}
+2021-01-30 15:03:05,405 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2051}
+2021-01-30 15:03:05,435 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:03:11,690 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 15}
+2021-01-30 15:04:52,942 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.430796,30.524250&zoom=13&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:04:53,774 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.430796_30.524250_13_1.png'}
+2021-01-30 15:04:53,794 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 443}
+2021-01-30 15:04:53,800 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:07:33,709 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431721,30.525835&zoom=14&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:07:34,829 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431721_30.525835_14_1.png'}
+2021-01-30 15:07:34,848 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1277}
+2021-01-30 15:07:34,868 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:10:30,375 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431076,30.524610&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:10:31,538 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431076_30.524610_15_1.png'}
+2021-01-30 15:10:31,557 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2053}
+2021-01-30 15:10:31,604 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:11:47,802 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 27}
+2021-01-30 15:12:16,827 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431938,30.524724&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:12:18,479 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431938_30.524724_15_1.png'}
+2021-01-30 15:12:18,598 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2053}
+2021-01-30 15:12:18,628 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:12:22,223 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 16}
+2021-01-30 15:12:28,911 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 54}
+2021-01-30 15:12:37,912 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 24}
+2021-01-30 15:13:40,403 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 59}
+2021-01-30 15:13:50,192 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 104}
+2021-01-30 15:14:53,699 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431219,30.525448&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:14:54,316 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431219_30.525448_15_1.png'}
+2021-01-30 15:14:54,336 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2052}
+2021-01-30 15:14:54,366 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:14:57,287 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 15}
+2021-01-30 15:14:59,723 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 10}
+2021-01-30 15:15:02,658 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 25}
+2021-01-30 15:15:05,406 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 32}
+2021-01-30 15:15:21,144 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 22}
+2021-01-30 15:15:42,447 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431217,30.524332&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:15:43,271 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431217_30.524332_15_1.png'}
+2021-01-30 15:15:43,288 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2053}
+2021-01-30 15:15:43,317 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:15:48,744 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 17}
+2021-01-30 15:16:04,014 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 12}
+2021-01-30 15:16:07,646 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 8}
+2021-01-30 15:16:20,500 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 11}
+2021-01-30 15:16:34,624 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 8}
+2021-01-30 15:16:40,877 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 15}
+2021-01-30 15:16:49,777 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 9}
+2021-01-30 15:17:02,658 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 16}
+2021-01-30 15:19:54,109 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431141,30.524796&zoom=14&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:19:55,081 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431141_30.524796_14_1.png'}
+2021-01-30 15:19:55,099 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1279}
+2021-01-30 15:19:55,119 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:19:57,870 baidu_map.py[line:553] DEBUG {'(x, y, w, h)': (454, 399, 207, 400)}
+2021-01-30 15:19:57,879 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 176}
+2021-01-30 15:20:20,126 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 176}
+2021-01-30 15:25:49,577 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431581,30.524946&zoom=14&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:25:50,391 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431581_30.524946_14_1.png'}
+2021-01-30 15:25:50,409 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1277}
+2021-01-30 15:25:50,430 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:27:56,314 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431054,30.524934&zoom=14&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:27:57,392 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431054_30.524934_14_1.png'}
+2021-01-30 15:27:57,411 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1277}
+2021-01-30 15:27:57,430 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:28:24,104 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431780,30.524850&zoom=14&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:28:24,958 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431780_30.524850_14_1.png'}
+2021-01-30 15:28:24,979 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1277}
+2021-01-30 15:28:24,998 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:30:47,607 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431563,30.524643&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:30:48,509 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431563_30.524643_15_1.png'}
+2021-01-30 15:30:48,528 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2053}
+2021-01-30 15:30:48,559 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:30:50,092 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.433874,30.527558&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:30:50,858 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.433874_30.527558_15_1.png'}
+2021-01-30 15:30:50,882 baidu_map.py[line:364] INFO 无法在点击处找到湖
+2021-01-30 15:30:52,386 baidu_map.py[line:317] INFO {'png_url': 'https://apis.map.qq.com/ws/staticmap/v2/?center=30.527558,114.433874&zoom=15&size=1024*1024&scale=1&maptype=roadmap&key=PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'}
+2021-01-30 15:30:53,745 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\tecent_114.433874_30.527558_15_1.png'}
+2021-01-30 15:30:53,793 baidu_map.py[line:364] INFO 无法在点击处找到湖
+2021-01-30 15:30:55,294 baidu_map.py[line:317] INFO {'png_url': 'http://api.map.baidu.com/staticimage/v2?ak=wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY&center=114.433874,30.527558&width=1024&height=1024&zoom=15'}
+2021-01-30 15:30:55,837 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\baidu_114.433874_30_15.png'}
+2021-01-30 15:30:55,852 baidu_map.py[line:364] INFO 无法在点击处找到湖
+2021-01-30 15:32:57,602 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431684,30.527986&zoom=16&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:32:58,336 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431684_30.527986_16_1.png'}
+2021-01-30 15:32:58,354 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2303}
+2021-01-30 15:32:58,388 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:33:06,774 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 67}
+2021-01-30 15:34:12,272 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431837,30.528185&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:34:13,222 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431837_30.528185_15_1.png'}
+2021-01-30 15:34:13,239 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2029}
+2021-01-30 15:34:13,270 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:34:17,073 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 39}
+2021-01-30 15:34:46,709 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 34}
+2021-01-30 15:35:20,436 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431318,30.524420&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:35:21,307 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431318_30.524420_15_1.png'}
+2021-01-30 15:35:21,326 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2053}
+2021-01-30 15:35:21,356 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:35:33,401 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431320,30.528446&zoom=16&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:35:33,960 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431320_30.528446_16_1.png'}
+2021-01-30 15:35:33,984 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2189}
+2021-01-30 15:35:34,016 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:35:50,566 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 12}
+2021-01-30 15:37:16,608 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.432069,30.524855&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:37:17,408 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.432069_30.524855_15_1.png'}
+2021-01-30 15:37:17,432 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2052}
+2021-01-30 15:37:17,467 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:37:22,671 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 10}
+2021-01-30 15:37:26,522 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 13}
+2021-01-30 15:37:32,382 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 15}
+2021-01-30 15:37:35,059 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 20}
+2021-01-30 15:37:42,314 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 14}
+2021-01-30 15:38:26,567 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431206,30.525406&zoom=16&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:38:27,199 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431206_30.525406_16_1.png'}
+2021-01-30 15:38:27,215 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2775}
+2021-01-30 15:38:27,255 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 15:38:30,753 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 17}
+2021-01-30 15:38:33,399 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 26}
+2021-01-30 15:38:35,363 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 35}
+2021-01-30 15:38:40,009 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 25}
+2021-01-30 15:38:42,619 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 19}
+2021-01-30 15:38:47,391 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 26}
+2021-01-30 15:38:49,329 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 14}
+2021-01-30 15:38:56,223 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 13}
+2021-01-30 15:39:01,522 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 14}
+2021-01-30 15:39:31,312 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 43}
+2021-01-30 15:40:12,011 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 19}
+2021-01-30 15:40:18,601 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 21}
+2021-01-30 15:40:21,795 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 23}
+2021-01-30 15:40:24,425 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 29}
+2021-01-30 15:40:27,131 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 31}
+2021-01-30 15:40:32,824 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 45}
+2021-01-30 15:40:37,041 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 57}
+2021-01-30 15:41:30,309 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 57}
+2021-01-30 15:42:37,434 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 53}
+2021-01-30 15:42:41,939 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 61}
+2021-01-30 15:43:17,966 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 10}
+2021-01-30 15:43:22,068 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 10}
+2021-01-30 15:43:36,448 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 12}
+2021-01-30 15:44:05,256 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 16}
+2021-01-30 15:44:08,580 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 20}
+2021-01-30 15:44:10,694 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 18}
+2021-01-30 15:55:19,258 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431327,30.524357&zoom=14&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 15:55:20,667 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431327_30.524357_14_1.png'}
+2021-01-30 15:55:20,685 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1221}
+2021-01-30 15:55:20,704 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 16:07:03,299 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.284429,30.540776&zoom=14&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 16:07:04,312 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.284429_30.540776_14_1.png'}
+2021-01-30 16:07:04,339 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1761}
+2021-01-30 16:07:04,365 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 16:07:09,544 baidu_map.py[line:553] DEBUG {'(x, y, w, h)': (324, 213, 380, 429)}
+2021-01-30 16:07:09,558 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 640}
+2021-01-30 16:07:52,486 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.383897,30.532304&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 16:07:53,371 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.383897_30.532304_15_1.png'}
+2021-01-30 16:07:53,409 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1257}
+2021-01-30 16:07:53,428 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 16:07:55,525 baidu_map.py[line:553] DEBUG {'(x, y, w, h)': (449, 368, 354, 302)}
+2021-01-30 16:07:55,527 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 71}
+2021-01-30 16:08:16,260 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.433801,30.524471&zoom=13&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 16:08:17,167 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.433801_30.524471_13_1.png'}
+2021-01-30 16:08:17,183 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 443}
+2021-01-30 16:08:17,190 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 16:08:18,985 baidu_map.py[line:553] DEBUG {'(x, y, w, h)': (453, 463, 103, 137)}
+2021-01-30 16:08:18,990 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 167}
+2021-01-30 16:09:51,328 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431533,30.524486&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 16:09:52,192 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431533_30.524486_15_1.png'}
+2021-01-30 16:09:52,214 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2053}
+2021-01-30 16:09:52,244 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 16:09:57,567 baidu_map.py[line:553] DEBUG {'(x, y, w, h)': (378, 212, 414, 653)}
+2021-01-30 16:09:57,590 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 196}
+2021-01-30 16:10:34,314 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431335,30.524500&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 16:10:35,119 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431335_30.524500_15_1.png'}
+2021-01-30 16:10:35,145 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2053}
+2021-01-30 16:10:35,175 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 16:43:17,617 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.505909,30.527922&zoom=13&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 16:43:18,483 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.505909_30.527922_13_1.png'}
+2021-01-30 16:43:18,498 baidu_map.py[line:364] INFO 无法在点击处找到湖
+2021-01-30 16:43:19,999 baidu_map.py[line:317] INFO {'png_url': 'https://apis.map.qq.com/ws/staticmap/v2/?center=30.527922,114.505909&zoom=13&size=1024*1024&scale=1&maptype=roadmap&key=PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'}
+2021-01-30 16:43:21,600 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\tecent_114.505909_30.527922_13_1.png'}
+2021-01-30 16:43:21,665 baidu_map.py[line:364] INFO 无法在点击处找到湖
+2021-01-30 16:43:23,166 baidu_map.py[line:317] INFO {'png_url': 'http://api.map.baidu.com/staticimage/v2?ak=wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY&center=114.505909,30.527922&width=1024&height=1024&zoom=13'}
+2021-01-30 16:43:23,872 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\baidu_114.505909_30_13.png'}
+2021-01-30 16:43:23,890 baidu_map.py[line:364] INFO 无法在点击处找到湖
+2021-01-30 16:46:12,065 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.438443,30.541522&zoom=13&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 16:46:13,052 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.438443_30.541522_13_1.png'}
+2021-01-30 16:46:13,109 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 5932}
+2021-01-30 16:46:13,197 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-01-30 16:46:41,846 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.431065,30.524706&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-01-30 16:46:42,680 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.431065_30.524706_15_1.png'}
+2021-01-30 16:46:42,696 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 2053}
+2021-01-30 16:46:42,726 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}

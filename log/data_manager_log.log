@@ -1,2 +1,6 @@
-2021-01-20 16:47:49,181 data_manager.py[line:470] INFO {'«Î«Û url': 'http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/3c50f4c3-a9c1-4872-9f18-883af014380c'}
-2021-01-20 16:47:49,185 data_manager.py[line:471] INFO {'status_code': 200}
+2021-01-30 17:05:17,382 data_manager.py[line:614] INFO move_direction: 360.000000
+2021-01-30 17:05:19,444 data_manager.py[line:614] INFO move_direction: 360.000000
+2021-01-30 17:05:21,445 data_manager.py[line:614] INFO move_direction: 360.000000
+2021-01-30 17:05:23,446 data_manager.py[line:614] INFO move_direction: 360.000000
+2021-01-30 17:42:01,020 data_manager.py[line:514] INFO {'base_setting': {'info_type': 3, 'row': '5', 'col': '2', 'speed_grade': '3', 'secure_distance': '4', 'arrive_range': '5', 'keep_point': '6'}}
+2021-01-30 17:44:46,165 data_manager.py[line:514] INFO {'base_setting': {'info_type': 3, 'row': '5', 'col': '2', 'speed_grade': '3', 'secure_distance': '4', 'arrive_range': '5', 'keep_point': '6'}}

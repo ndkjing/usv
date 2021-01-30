@@ -442,67 +442,161 @@ class DataManager:
             detect_data.update({'mapId': self.data_define_obj.pool_code})
 
             # 更新经纬度为高德经纬度
-            current_lng_lat = self.pi_main_obj.lng_lat
-            if current_lng_lat is not None:
-                current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(current_lng_lat)
-                status_data.update({'current_lng_lat': current_gaode_lng_lat})
-            elif current_lng_lat is None and self.second_lng_lat is not None:
-                current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.second_lng_lat)
-                status_data.update({'current_lng_lat': current_gaode_lng_lat})
+            if not config.home_debug:
+                if self.pi_main_obj.lng_lat in locals() or self.pi_main_obj.lng_lat in globals():
+                    pass
+                current_lng_lat = self.pi_main_obj.lng_lat
+                if current_lng_lat is not None:
+                    current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(current_lng_lat)
+                    status_data.update({'current_lng_lat': current_gaode_lng_lat})
+                elif current_lng_lat is None and self.second_lng_lat is not None:
+                    current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.second_lng_lat)
+                    status_data.update({'current_lng_lat': current_gaode_lng_lat})
 
-            if self.pi_main_obj.home_lng_lat is not None:
-                home_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.pi_main_obj.home_lng_lat)
-                status_data.update({'home_lng_lat': home_gaode_lng_lat})
+                if self.pi_main_obj.home_lng_lat is not None:
+                    home_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.pi_main_obj.home_lng_lat)
+                    status_data.update({'home_lng_lat': home_gaode_lng_lat})
 
-            # 更新速度  更新里程
-            if self.pi_main_obj.speed is not None:
-                status_data.update({'speed': self.pi_main_obj.speed})
-            status_data.update({"totle_time": round(self.totle_distance/(2.0))})
-            status_data.update({"run_distance": round(self.totle_distance, 1)})
-            status_data.update({"totle_distance": round(self.pi_main_obj.run_distance, 1)})
-            if self.plan_start_time is not None:
-                status_data.update({"runtime": round(time.time() - self.plan_start_time)})
+                # 更新速度  更新里程
+                if self.pi_main_obj.speed is not None:
+                    status_data.update({'speed': self.pi_main_obj.speed})
+                status_data.update({"totle_time": round(self.totle_distance/(2.0))})
+                status_data.update({"run_distance": round(self.totle_distance, 1)})
+                status_data.update({"totle_distance": round(self.pi_main_obj.run_distance, 1)})
+                if self.plan_start_time is not None:
+                    status_data.update({"runtime": round(time.time() - self.plan_start_time)})
 
-            # 更新船头方向
-            if self.pi_main_obj.theta is not None:
-                status_data.update({"direction": round(self.pi_main_obj.theta)})
-            # 更新经纬度误差
-            if self.pi_main_obj.lng_lat_error is not None:
-                status_data.update({"lng_lat_error": self.pi_main_obj.lng_lat_error})
+                # 更新船头方向
+                if self.pi_main_obj.theta is not None:
+                    status_data.update({"direction": round(self.pi_main_obj.theta)})
+                # 更新经纬度误差
+                if self.pi_main_obj.lng_lat_error is not None:
+                    status_data.update({"lng_lat_error": self.pi_main_obj.lng_lat_error})
 
-            # 更新真实数据
-            if config.ship_code.endswith('a') and self.b_draw_over_send_data:
-                mqtt_send_detect_data = copy.deepcopy(detect_data)
-                mqtt_send_detect_data['water'].update(self.water_data_dict)
-                mqtt_send_status_data = copy.deepcopy(status_data)
+                # 更新真实数据
+                if config.ship_code.endswith('a') and self.b_draw_over_send_data:
+                    mqtt_send_detect_data = copy.deepcopy(detect_data)
+                    mqtt_send_detect_data['water'].update(self.water_data_dict)
+                    mqtt_send_status_data = copy.deepcopy(status_data)
 
-            # 更新模拟数据
-            else:
-                mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
-                mqtt_send_status_data = data_define.fake_status_data(status_data)
-            # 替换键
-            for k_all, v_all in data_define.name_mappings.items():
-                for old_key, new_key in v_all.items():
-                    pop_value = mqtt_send_detect_data[k_all].pop(old_key)
-                    mqtt_send_detect_data[k_all].update({new_key: pop_value})
-            if self.dump_energy is not None:
-                mqtt_send_status_data.update({'dump_energy': self.dump_energy})
-            # 向mqtt发送数据
-            self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
-                      qos=1)
-            # self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
-
-            if self.b_draw_over_send_data:
-                # self.pi_main_obj.lng_lat 添加真实经纬度
-                self.send(method='mqtt', topic='detect_data_%s' % (config.ship_code), data=mqtt_send_detect_data,
+                # 更新模拟数据
+                else:
+                    mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
+                    mqtt_send_status_data = data_define.fake_status_data(status_data)
+                # 替换键
+                for k_all, v_all in data_define.name_mappings.items():
+                    for old_key, new_key in v_all.items():
+                        pop_value = mqtt_send_detect_data[k_all].pop(old_key)
+                        mqtt_send_detect_data[k_all].update({new_key: pop_value})
+                if self.dump_energy is not None:
+                    mqtt_send_status_data.update({'dump_energy': self.dump_energy})
+                # 向mqtt发送数据
+                self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
                           qos=1)
-                if len(self.data_define_obj.pool_code)>0:
-                    self.send(method='http', data=mqtt_send_detect_data,
-                              url=config.http_data_save,
-                              http_type='POST')
-                    self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
-                # 发送结束改为False
-                self.b_draw_over_send_data = False
+                # self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
+                if self.b_draw_over_send_data:
+                    # self.pi_main_obj.lng_lat 添加真实经纬度
+                    self.send(method='mqtt', topic='detect_data_%s' % (config.ship_code), data=mqtt_send_detect_data,
+                              qos=1)
+                    if len(self.data_define_obj.pool_code) > 0:
+                        self.send(method='http', data=mqtt_send_detect_data,
+                                  url=config.http_data_save,
+                                  http_type='POST')
+                        self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
+                    # 发送结束改为False
+                    self.b_draw_over_send_data = False
+
+            # 发送设置数据
+            if self.server_data_obj.mqtt_send_get_obj.base_setting_data is not None and self.server_data_obj.mqtt_send_get_obj.base_setting_data_info==1:
+                self.server_data_obj.mqtt_send_get_obj.base_setting_data.update({'info_type':3})
+                self.send(method='mqtt', topic='base_setting_%s' % (config.ship_code), data=self.server_data_obj.mqtt_send_get_obj.base_setting_data,
+                          qos=1)
+                self.logger.info({'base_setting':self.server_data_obj.mqtt_send_get_obj.base_setting_data})
+                self.server_data_obj.mqtt_send_get_obj.base_setting_data = None
+
+            if self.server_data_obj.mqtt_send_get_obj.height_setting_data is not None and self.server_data_obj.mqtt_send_get_obj.height_setting_data_info==1:
+                self.server_data_obj.mqtt_send_get_obj.height_setting_data.update({'info_type': 3})
+                self.send(method='mqtt', topic='height_setting_%s' % (config.ship_code), data=self.server_data_obj.mqtt_send_get_obj.height_setting_data,
+                          qos=1)
+                self.logger.info({'height_setting': self.server_data_obj.mqtt_send_get_obj.height_setting_data})
+                self.server_data_obj.mqtt_send_get_obj.height_setting_data = None
+
+            # 更新配置数据
+            if self.server_data_obj.mqtt_send_get_obj.base_setting_data is not None and self.server_data_obj.mqtt_send_get_obj.base_setting_data_info == 2:
+                # {"info_type": 3, "row": "5", "col": "2", "speed_grade": "3", "secure_distance": "4",
+                #  "arrive_range": "5", "keep_point": "6"}
+                # 手动控制设置
+                if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("row"):
+                    config.row_gap = self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("row")
+                if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("col"):
+                    config.col_gap = self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("col")
+                if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("speed_grade"):
+                    config.speed_grade = self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("speed_grade")
+                if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("secure_distance"):
+                    config.path_search_safe_distance = self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("secure_distance")
+                if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("arrive_range"):
+                    config.arrive_distance = self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("arrive_range")
+                if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("keep_point"):
+                    config.find_points_num = self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("keep_point")
+
+            if self.server_data_obj.mqtt_send_get_obj.height_setting_data is not None and self.server_data_obj.mqtt_send_get_obj.height_setting_data_info == 2:
+                # 读取配置
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('motor_forward'):
+                    config.motor_forward = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('motor_forward')
+                else:
+                    config.motor_forward = 350
+
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('motor_steer'):
+                    config.motor_steer = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('motor_steer')
+                else:
+                    config.motor_steer = 450
+
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('kp'):
+                    config.kp = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('kp')
+                else:
+                    config.kp = 1.0
+
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('ki'):
+                    config.ki = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('ki')
+                else:
+                    config.ki = 0.1
+
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('kd'):
+                    config.kd = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('kd')
+                else:
+                    config.kd = 0.3
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('full_speed_meter'):
+                    config.full_speed_meter = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('full_speed_meter')
+                else:
+                    config.full_speed_meter = 5.0
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('check_status_interval'):
+                    config.check_status_interval = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('check_status_interval')
+                else:
+                    config.check_status_interval = 1.0
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('max_pwm'):
+                    config.max_pwm = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('max_pwm')
+                else:
+                    config.max_pwm = 2000
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('min_pwm'):
+                    config.min_pwm = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('min_pwm')
+                else:
+                    config.min_pwm = 1000
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('left_motor_cw'):
+                    config.left_motor_cw = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('left_motor_cw')
+                else:
+                    config.left_motor_cw = 0
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('right_motor_cw'):
+                    config.right_motor_cw = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('right_motor_cw')
+                else:
+                    config.right_motor_cw = 0
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('draw_time'):
+                    config.draw_time = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('draw_time')
+                else:
+                    config.draw_time = 20
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('pid_interval'):
+                    config.pid_interval = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('pid_interval')
+                else:
+                    config.pid_interval = 0.1
 
     def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):
         """
@@ -551,7 +645,8 @@ class DataManager:
             # 检查当前状态
             if config.home_debug:
                 self.data_define_obj.status['current_lng_lat'] = config.init_gaode_gps
-            if self.pi_main_obj.lng_lat in locals() or self.pi_main_obj.lng_lat in globals():
+
+            if self.pi_main_obj in locals() or self.pi_main_obj in globals():
                 if config.b_play_audio:
                     audios_manager.play_audio(5, b_backend=False)
                 self.logger.error('当前GPS信号弱')
@@ -604,10 +699,9 @@ class DataManager:
 
 if __name__ == '__main__':
     obj = DataManager()
-
+    obj.send_mqtt_data()
     while True:
-        move_direction = obj.server_data_obj.mqtt_send_get_obj.control_move_direction
-        obj.send(method='com', data=move_direction)
-        obj.logger.info('move_direction: %f' % (float(move_direction)))
+        # move_direction = obj.server_data_obj.mqtt_send_get_obj.control_move_direction
+        # obj.logger.info('move_direction: %f' % (float(move_direction)))
         time.sleep(2)
         # 等待一段时间后归位

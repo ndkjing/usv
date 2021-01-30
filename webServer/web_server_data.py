@@ -290,11 +290,11 @@ class MqttSendGet:
         # 启动设备
         elif topic == 'start_%s' % (self.ship_code):
             start_data = json.loads(msg.payload)
-            if not start_data.get('start'):
-                self.logger.error('start_设置启动消息没有start字段')
+            if not start_data.get('search_pattern'):
+                self.logger.error('start_设置启动消息没有search_pattern字段')
                 return
-            self.b_start = int(start_data.get('start'))
-            self.logger.info({'topic':topic,'b_start': start_data.get('start')})
+            self.b_start = int(start_data.get('search_pattern'))
+            self.logger.info({'topic':topic,'b_start': start_data.get('search_pattern')})
 
         # 湖泊id
         elif topic == 'pool_info_%s' % (self.ship_code):
@@ -317,6 +317,8 @@ class MqttSendGet:
                 pass
             else:
                 self.home_lng_lat =status_data.get('home_lng_lat')
+
+
     # 发布消息
     def publish_topic(self, topic, data, qos=0):
         """

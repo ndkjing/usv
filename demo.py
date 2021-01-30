@@ -602,4 +602,13 @@ import math
 # path_info=[1.23,32.321321]
 # print({"path_info": '当前目标点:%d 目标点总数: %d' %(int(path_info[0]),int(path_info[1]))})
 
-print(type([[1,23],[321,321]]),isinstance(np.asarray([1,2]),list),isinstance(np.asarray([1,2]),np.ndarray))
+# print(type([[1,23],[321,321]]),isinstance(np.asarray([1,2]),list),isinstance(np.asarray([1,2]),np.ndarray))
+a = {1:2,3:2}
+print(a,a.update({5:5}),a)
+import json
+
+print(a.get(112312))
+if None:
+    print(111)
+if  a.get(112312):
+    print(222)

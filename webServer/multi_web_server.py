@@ -314,7 +314,7 @@ class WebServer:
                         # 是否返航
                         if int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.back_home) == 1:
                             if config.home_debug:
-                                target_lng_lats.append(config.init_gaode_gps)
+                                target_lng_lats.append(config.ship_gaode_lng_lat)
                             else:
                                 # 添加当前经纬度作为返航点
                                 if self.baidu_map_obj_dict.get(ship_code) is not None and self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat is not None:
@@ -326,8 +326,10 @@ class WebServer:
                         else:
                             self.logger.info({'target_lng_lats': target_lng_lats})
                             self.current_target_gaode_lng_lats_dict.update({ship_code:copy.deepcopy(target_lng_lats)})
-                            self.path_planning(target_lng_lats=target_lng_lats, ship_code=ship_code)
-
+                            try:
+                                self.path_planning(target_lng_lats=target_lng_lats, ship_code=ship_code)
+                            except Exception as e:
+                                self.logger.error({'error':e})
                     # 多点巡航模式
                     elif len_target_lng_lat > 1:
                         target_lng_lats = copy.deepcopy(
@@ -335,7 +337,7 @@ class WebServer:
                         # 是否返航
                         if int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.back_home) == 1:
                             if config.home_debug:
-                                target_lng_lats.append(config.init_gaode_gps)
+                                target_lng_lats.append(config.ship_gaode_lng_lat)
                             else:
                                 # 添加当前经纬度作为返航点
                                 if self.baidu_map_obj_dict.get(ship_code) is not None and self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat is not None:

@@ -86,16 +86,16 @@ class PiControl:
 
     def forward(self, left_pwm=None, right_pwm=None):
         if left_pwm is None:
-            left_pwm = 1850
+            left_pwm = 1500+int(config.speed_grade)*100
         if right_pwm is None:
-            right_pwm = 1850
+            right_pwm = 1500+int(config.speed_grade)*100
         self.set_pwm(left_pwm, right_pwm)
 
     def backword(self, left_pwm=None, right_pwm=None):
         if left_pwm is None:
-            left_pwm = 1300
+            left_pwm = 1500-int(config.speed_grade)*100
         if right_pwm is None:
-            right_pwm = 1300
+            right_pwm = 1500-int(config.speed_grade)*100
         self.set_pwm(left_pwm, right_pwm)
 
     def left(self, left_pwm=None, right_pwm=None):

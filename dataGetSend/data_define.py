@@ -237,6 +237,8 @@ class DataDefine:
             ('auto_lng_lat_%s' % (config.ship_code), 1),
             ('path_planning_%s' % (config.ship_code), 1),
             ('status_data_%s' % (config.ship_code), 0),
+            ('base_setting_%s' % (config.ship_code), 1),
+            ('height_setting_%s' % (config.ship_code), 1),
             ('path_planning_confirm_%s' % (config.ship_code), 1))
         self.pool_code = ''
         self.water = self.water_data()

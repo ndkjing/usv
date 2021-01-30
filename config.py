@@ -1,5 +1,6 @@
 # 保存地图数据路径
 import os
+import json
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'mapsData')
 if not os.path.exists(maps_dir):
@@ -11,6 +12,8 @@ local_map_data_path = os.path.join(maps_dir, 'local_map.json')
 
 # 保存当前用户点击位置相关信息
 usr_lng_lat_path = os.path.join(maps_dir, 'usr_lng_lat_path.json')
+base_setting_path = os.path.join(root_path, 'configs', 'base_setting.json')
+height_setting_path = os.path.join(root_path,  'configs','height_setting.json')
 
 import platform
 sysstr = platform.system()
@@ -36,7 +39,41 @@ gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
 tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
 # 百度地图key
 baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
+if os.path.exists(base_setting_path):
+    try:
+        with open(base_setting_path,'r') as f:
+            base_setting_data = json.load(f)
+        # 读取配置
+        if base_setting_data.get('speed_grade') :
+            speed_grade=base_setting_data.get('speed_grade')
+        else:
+            speed_grade = 2
 
+        if base_setting_data.get('arrive_range') :
+            arrive_distance=base_setting_data.get('arrive_range')
+        else:
+            arrive_distance = 2.5
+
+        if base_setting_data.get('keep_point') :
+            find_points_num=base_setting_data.get('keep_point')
+        else:
+            find_points_num = 5
+
+        if base_setting_data.get('secure_distance'):
+            path_search_safe_distance = base_setting_data.get('secure_distance')
+        else:
+            path_search_safe_distance = 5
+
+        if base_setting_data.get('row') :
+            row_gap=base_setting_data.get('row')
+        else:
+            row_gap = 50
+        if base_setting_data.get('col') :
+            col_gap=base_setting_data.get('col')
+        else:
+            arrive_distance = 50
+    except Exception as e:
+        print({'error':e})
 # 检测像素间隔
 pix_interval=4
 
@@ -50,13 +87,10 @@ com2pi_interval = 1
 pi2com_interval = 0.05
 
 # 给服务器发送时间间隔
-pi2mqtt_interval = 1.5
-
-# 接收服务器方向控制间隔
-mqtt_control_interval = 1
+pi2mqtt_interval = 1
 
 # 检查船状态间隔 单位秒
-check_status_interval = 1.5
+# check_status_interval = 1.5
 
 # 检查网络连接状态间隔
 check_network_interval=10
@@ -112,24 +146,88 @@ mod='auto'
 b_play_audio=False
 
 # 在家调试模式
-home_debug = False
+home_debug = True
 init_gaode_gps = [114.348713,30.464501]
-ship_gaode_lng_lat=[114.434561,30.519726]
+ship_gaode_lng_lat=[114.432893,30.527554]
 # ship_gaode_lng_lat=[114.5242, 30.506895]
 
 # 路径搜索像素安全距离
-path_search_safe_distance = 10
+# path_search_safe_distance = 10
 
 # 到达点距离范围判断，单位米
-arrive_distance = 2.5
+# arrive_distance = 2.5
 
 # 查找数量
-find_points_num=7
+# find_points_num=7
 
-max_pwm = 2000
-min_pwm = 1000
+if os.path.exists(height_setting_path):
+    try:
+        with open(height_setting_path,'r') as f:
+            height_setting_data = json.load(f)
+        # 读取配置
+        if height_setting_data.get('motor_forward') :
+            motor_forward=height_setting_data.get('motor_forward')
+        else:
+            motor_forward = 350
+
+        if height_setting_data.get('motor_steer') :
+            motor_steer=height_setting_data.get('motor_steer')
+        else:
+            motor_steer =450
+
+        if height_setting_data.get('kp') :
+            kp=height_setting_data.get('kp')
+        else:
+            kp =1.0
+
+        if height_setting_data.get('ki'):
+            ki = height_setting_data.get('ki')
+        else:
+            ki = 0.1
+
+        if height_setting_data.get('kd') :
+            kd=height_setting_data.get('kd')
+        else:
+            kd = 0.3
+        if height_setting_data.get('full_speed_meter') :
+            full_speed_meter=height_setting_data.get('full_speed_meter')
+        else:
+            full_speed_meter = 5.0
+        if height_setting_data.get('check_status_interval'):
+            check_status_interval = height_setting_data.get('check_status_interval')
+        else:
+            check_status_interval = 1.0
+        if height_setting_data.get('max_pwm'):
+            max_pwm = height_setting_data.get('max_pwm')
+        else:
+            max_pwm = 2000
+        if height_setting_data.get('min_pwm'):
+            min_pwm = height_setting_data.get('min_pwm')
+        else:
+            min_pwm = 1000
+        if height_setting_data.get('left_motor_cw'):
+            left_motor_cw = height_setting_data.get('left_motor_cw')
+        else:
+            left_motor_cw = 0
+        if height_setting_data.get('right_motor_cw'):
+            right_motor_cw = height_setting_data.get('right_motor_cw')
+        else:
+            right_motor_cw = 0
+        if height_setting_data.get('draw_time'):
+            draw_time = height_setting_data.get('draw_time')
+        else:
+            draw_time = 20
+        if height_setting_data.get('pid_interval'):
+            pid_interval = height_setting_data.get('pid_interval')
+        else:
+            pid_interval = 0.1
+    except Exception as e:
+        print({'error':e})
+
+# max_pwm = 2000
+# min_pwm = 1000
 # pid间隔
-pid_interval=0.1
+# pid_interval=0.1
 
 # 保存返航点地址路径
 home_location_path = os.path.join(root_path, 'home_location.json')
@@ -150,17 +248,17 @@ b_use_start=False
 b_use_pi=True
 
 # 正反桨页设置  0 正桨叶   1 反桨叶
-left_motor_cw = 0
-right_motor_cw = 0
+# left_motor_cw = 0
+# right_motor_cw = 0
 # 电机前进分量
-motor_forward = 350
+# motor_forward = 350
 # 电机转弯分量
-motor_steer = 450
+# motor_steer = 450
 # 大于多少米全速前进
-full_speed_meter=5.0
-kp = 1
-ki = 0.1
-kd = 0.3
+# full_speed_meter=5.0
+# kp = 1.0
+# ki = 0.1
+# kd = 0.3
 
 # 左侧电机信号输出控制口
 left_pwm_pin = 23
@@ -183,9 +281,8 @@ right_rx = 27
 right_tx = 22
 
 # 抽水时间 单位秒
-draw_time = 20
+# draw_time = 20
 # 开机前等待时间
 start_sleep_time=6
 # 电机初始化时间
 motor_init_time = 4
-

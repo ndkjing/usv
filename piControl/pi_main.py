@@ -51,9 +51,9 @@ class PiMain:
         # 返航点
         self.home_lng_lat = None
 
-        self.kp = config.kp
-        self.ki = config.ki
-        self.kd = config.kd
+        # self.kp = config.kp
+        # self.ki = config.ki
+        # self.kd = config.kd
 
         self.errorSum = 0
         self.currentError = 0
@@ -98,8 +98,8 @@ class PiMain:
 
     def update_steer_pid(self, theta_error):
         errorSum = self.errorSum + theta_error
-        control = self.kp * theta_error + self.ki * errorSum + \
-            self.kd * (theta_error - self.previousError)
+        control = config.kp * theta_error + config.ki * errorSum + \
+            config.kd * (theta_error - self.previousError)
         self.previousError = theta_error
         # 控制量归一化
         pwm = int((control / 180.0) * config.motor_steer)
