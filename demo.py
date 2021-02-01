@@ -606,9 +606,6 @@ import math
 a = {1:2,3:2}
 print(a,a.update({5:5}),a)
 import json
-
-print(a.get(112312))
-if None:
-    print(111)
-if  a.get(112312):
-    print(222)
+while 1:
+    print(time.time(),int(time.time())%2==0)
+    time.sleep(0.5)

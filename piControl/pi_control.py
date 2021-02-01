@@ -119,7 +119,7 @@ class PiControl:
         self.set_pwm(1500, 1500)
         time.sleep(config.motor_init_time)
 
-    def set_pwm(self, left_pwm, right_pwm):
+    def set_pwm(self, left_pwm, right_pwm,pwm_timeout=None):
         """
         设置pwm波数值
         :param left_pwm:
@@ -146,6 +146,7 @@ class PiControl:
         right_pwm = int(right_pwm / (20000 / self.pice) / (50 / self.hz))
         sleep_time = 0.001
         delta_time = 0.0001 / 500.0
+        start_pwm_time = time.time()
         while abs(self.left_pwm - left_pwm) != 0 or abs(self.right_pwm != right_pwm) != 0:
             if abs(left_pwm - self.left_pwm) == 0:
                 pass
@@ -159,12 +160,13 @@ class PiControl:
             self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
             time.sleep(sleep_time)
             sleep_time = sleep_time + delta_time
+            if pwm_timeout and time.time()-start_pwm_time>pwm_timeout:
+                break
         # self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
         # self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
         # 不支持输出获取pwm状态，以后再调试
         # print('left_pwm:',self.left_pwm,self.pi.get_PWM_dutycycle(config.left_pwm_pin),'right_pwm:',self.right_pwm,self.pi.get_PWM_dutycycle(config.right_pwm_pin))
         print(time.time(), 'left_pwm:', self.left_pwm, 'right_pwm:', self.right_pwm)
-
 
 if __name__ == '__main__':
     pi_obj = PiControl()

@@ -86,6 +86,8 @@ class DataManager:
         # 提示消息
         # 距离下一个目标点距离
         self.distance_p = 0
+        # 路径结束计算得分
+        self.distance_move_score = 0
         # 目标点信息
         self.path_info = [0, 0]
         # 手动控制时信息
@@ -110,13 +112,16 @@ class DataManager:
 
     # 读取函数会阻塞 必须使用线程
     def get_com_data(self):
+        last_read_time = time.time()
         while True:
             # 水质数据 b''BBD:0,R:158,Z:36,P:0,T:16.1,V:92.08,x1:0,x2:2,x3:1,x4:0\r\n'
             # 经纬度数据 b'AA2020.2354804,N,11425.41234568896,E\r\n'
             try:
                 row_com_data_read = self.com_data_obj.readline()
                 com_data_read = str(row_com_data_read)[2:-5]
-                self.com_data_read_logger.info({'str com_data_read': com_data_read})
+                # if time.time()-last_read_time>3:
+                #     last_read_time = time.time()
+                #     self.com_data_read_logger.info({'str com_data_read': com_data_read})
                 # 解析串口发送过来的数据
                 if com_data_read is None:
                     continue
@@ -131,7 +136,9 @@ class DataManager:
                                                    float(com_data_list[0][4:]) /
                                                    60, 6)
                     self.second_lng_lat = [lng,lat]
-                    self.com_data_read_logger.info({'second_lng_lat': self.second_lng_lat})
+                    if time.time() - last_read_time > 3:
+                        last_read_time = time.time()
+                        self.com_data_read_logger.info({'second_lng_lat': self.second_lng_lat})
                 elif com_data_read.startswith('BB'):
                     com_data_list = com_data_read.split(',')
                     self.water_data_dict.update({'EC':float(com_data_list[1].split(':')[1])/math.pow(10,int(com_data_list[7][3:]))})
@@ -140,7 +147,10 @@ class DataManager:
                     self.water_data_dict.update({'pH':float(com_data_list[3].split(':')[1])/math.pow(10,int(com_data_list[9][3:]))})
                     self.water_data_dict.update({'wt':float(com_data_list[4].split(':')[1])})
                     self.dump_energy = float(com_data_list[5].split(':')[1])
-                    self.com_data_read_logger.info({'water_data_dict': self.water_data_dict})
+                    if time.time() - last_read_time > 3:
+                        last_read_time = time.time()
+                        self.com_data_read_logger.info({'str com_data_read': com_data_read})
+                        self.com_data_read_logger.info({'water_data_dict': self.water_data_dict})
                     # self.com_data_read_logger.info({'dump_energy': self.dump_energy})
             except Exception as e:
                 self.com_data_read_logger.error({'串口数据解析错误': e})
@@ -160,7 +170,7 @@ class DataManager:
                     self.com_data_obj.send_data('A1Z')
                     self.current_b_draw = 1
                     self.draw_start_time = time.time()
-            elif  self.draw_start_time is not None and self.current_b_draw == 1:
+            elif self.draw_start_time is not None and self.current_b_draw == 1:
                 # 超时中断抽水
                 if time.time() - self.draw_start_time > config.draw_time:
                     self.b_draw_over_send_data = True
@@ -176,6 +186,24 @@ class DataManager:
 
 
                 # 发送函数会阻塞 必须使用线程
+
+    def clear_status(self):
+        """
+        按了暂停或者不满足开始状态时候清除状态
+        :return:
+        """
+        self.pi_main_obj.pi_obj.stop()
+        self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
+        # 清空目标点和状态
+        self.server_data_obj.mqtt_send_get_obj.path_planning_points = []
+        self.server_data_obj.mqtt_send_get_obj.path_planning_points_status = []
+        # 清空里程和时间
+        self.totle_distance = 0
+        self.plan_start_time = None
+        # 清空提醒
+        self.path_info = [0, 0]
+        self.distance_p = 0
+
     def send_com_data(self):
         # 0 自动  1手动
         manul_or_auto = 1
@@ -227,6 +255,7 @@ class DataManager:
                             last_control = pwm_data
                             self.drone_obj.channel_control(pwm_data)
                             self.com_data_send_logger.info({'com pwm data': pwm_data})
+
                     # 使用树莓派
                     elif config.b_use_pi:
                         if d == 0:
@@ -266,17 +295,7 @@ class DataManager:
                         if self.pi_main_obj.lng_lat is None and self.second_lng_lat is None:
                             self.logger.error('无当前GPS，不能自主巡航')
                             time.sleep(0.5)
-                            self.pi_main_obj.pi_obj.stop()
-                            self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
-                            # 清空目标点和状态
-                            self.server_data_obj.mqtt_send_get_obj.path_planning_points = []
-                            self.server_data_obj.mqtt_send_get_obj.path_planning_points_status = []
-                            # 清空里程和时间
-                            self.totle_distance = 0
-                            self.plan_start_time = None
-                            # 清空提醒
-                            self.path_info = [0, 0]
-                            self.distance_p = 0
+                            self.clear_status()
                             continue
                         # 第一次进入路径规划时候的点设置为返航点
                         if self.pi_main_obj.home_lng_lat is None:
@@ -290,6 +309,7 @@ class DataManager:
                             pi_current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.second_lng_lat)
                         else:
                             pi_current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.pi_main_obj.lng_lat)
+                        start_distance = self.pi_main_obj.run_distance
                         # 计算总里程
                         for index, gaode_lng_lat in enumerate(
                                 self.server_data_obj.mqtt_send_get_obj.path_planning_points):
@@ -338,21 +358,11 @@ class DataManager:
                                     self.logger.debug({'距离目标点距离: ': distance})
                                 left_pwm, right_pwm = self.pi_main_obj.point_control(path_planning_point_gps)
                                 # print('left_pwm, right_pwm',left_pwm, right_pwm)
-                                self.pi_main_obj.pi_obj.set_pwm(left_pwm, right_pwm)
+                                self.pi_main_obj.pi_obj.set_pwm(left_pwm, right_pwm,pwm_timeout=config.pid_interval)
                                 # 按了暂停按钮 清空规划点
                                 # print(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
                                 if int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == -1:
-                                    # 停止电机
-                                    self.pi_main_obj.pi_obj.stop()
-                                    # 清空目标点和状态
-                                    self.server_data_obj.mqtt_send_get_obj.path_planning_points = []
-                                    self.server_data_obj.mqtt_send_get_obj.path_planning_points_status = []
-                                    # 清空里程和时间
-                                    self.totle_distance = 0
-                                    self.plan_start_time = None
-                                    # 清空提醒
-                                    self.path_info = [0, 0]
-                                    self.distance_p = 0
+                                    self.clear_status()
                                     # 记录是因为按了暂停按钮而终止
                                     self.b_stop_path_track = True
                                     break
@@ -360,7 +370,7 @@ class DataManager:
                             self.server_data_obj.mqtt_send_get_obj.path_planning_points_status[index] = 1
                             if self.b_stop_path_track:
                                 break
-                            # 开始抽水并等待30秒
+                            # 开始抽水并等待
                             self.server_data_obj.mqtt_send_get_obj.b_draw=1
                             self.pi_main_obj.pi_obj.stop()
                             self.draw()
@@ -369,17 +379,12 @@ class DataManager:
                             self.draw()
 
                         # 全部结束后停止
-                        self.pi_main_obj.pi_obj.stop()
-                        self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
-                        # 清空目标点和状态
-                        self.server_data_obj.mqtt_send_get_obj.path_planning_points = []
-                        self.server_data_obj.mqtt_send_get_obj.path_planning_points_status = []
-                        # 清空里程和时间
-                        self.totle_distance = 0
-                        self.plan_start_time = None
-                        # 清空提醒
-                        self.path_info = [0, 0]
-                        self.distance_p = 0
+                        end_distance = self.pi_main_obj.run_distance
+                        try:
+                            self.distance_move_score = round(self.distance_p/(end_distance-start_distance),2)
+                        except Exception as e:
+                            self.logger.error({'error':e})
+                        self.clear_status()
 
                     else:
                         for index, value in enumerate(self.plan_path_points_status):
@@ -443,8 +448,6 @@ class DataManager:
 
             # 更新经纬度为高德经纬度
             if not config.home_debug:
-                if self.pi_main_obj.lng_lat in locals() or self.pi_main_obj.lng_lat in globals():
-                    pass
                 current_lng_lat = self.pi_main_obj.lng_lat
                 if current_lng_lat is not None:
                     current_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(current_lng_lat)
@@ -465,7 +468,6 @@ class DataManager:
                 status_data.update({"totle_distance": round(self.pi_main_obj.run_distance, 1)})
                 if self.plan_start_time is not None:
                     status_data.update({"runtime": round(time.time() - self.plan_start_time)})
-
                 # 更新船头方向
                 if self.pi_main_obj.theta is not None:
                     status_data.update({"direction": round(self.pi_main_obj.theta)})
@@ -492,12 +494,15 @@ class DataManager:
                     mqtt_send_status_data.update({'dump_energy': self.dump_energy})
                 # 向mqtt发送数据
                 self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
-                          qos=1)
+                          qos=0)
                 # self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
                 if self.b_draw_over_send_data:
                     # self.pi_main_obj.lng_lat 添加真实经纬度
                     self.send(method='mqtt', topic='detect_data_%s' % (config.ship_code), data=mqtt_send_detect_data,
-                              qos=1)
+                              qos=0)
+                    save_detect_data = copy.deepcopy(mqtt_send_detect_data)
+                    save_detect_data.update({'lng_lat':self.pi_main_obj.lng_lat})
+                    self.logger.info({"本地保存检测数据":save_detect_data})
                     if len(self.data_define_obj.pool_code) > 0:
                         self.send(method='http', data=mqtt_send_detect_data,
                                   url=config.http_data_save,
@@ -506,97 +511,30 @@ class DataManager:
                     # 发送结束改为False
                     self.b_draw_over_send_data = False
 
-            # 发送设置数据
-            if self.server_data_obj.mqtt_send_get_obj.base_setting_data is not None and self.server_data_obj.mqtt_send_get_obj.base_setting_data_info==1:
-                self.server_data_obj.mqtt_send_get_obj.base_setting_data.update({'info_type':3})
-                self.send(method='mqtt', topic='base_setting_%s' % (config.ship_code), data=self.server_data_obj.mqtt_send_get_obj.base_setting_data,
-                          qos=1)
-                self.logger.info({'base_setting':self.server_data_obj.mqtt_send_get_obj.base_setting_data})
-                self.server_data_obj.mqtt_send_get_obj.base_setting_data = None
-
-            if self.server_data_obj.mqtt_send_get_obj.height_setting_data is not None and self.server_data_obj.mqtt_send_get_obj.height_setting_data_info==1:
-                self.server_data_obj.mqtt_send_get_obj.height_setting_data.update({'info_type': 3})
-                self.send(method='mqtt', topic='height_setting_%s' % (config.ship_code), data=self.server_data_obj.mqtt_send_get_obj.height_setting_data,
-                          qos=1)
-                self.logger.info({'height_setting': self.server_data_obj.mqtt_send_get_obj.height_setting_data})
-                self.server_data_obj.mqtt_send_get_obj.height_setting_data = None
-
-            # 更新配置数据
-            if self.server_data_obj.mqtt_send_get_obj.base_setting_data is not None and self.server_data_obj.mqtt_send_get_obj.base_setting_data_info == 2:
-                # {"info_type": 3, "row": "5", "col": "2", "speed_grade": "3", "secure_distance": "4",
-                #  "arrive_range": "5", "keep_point": "6"}
-                # 手动控制设置
-                if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("row"):
-                    config.row_gap = self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("row")
-                if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("col"):
-                    config.col_gap = self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("col")
-                if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("speed_grade"):
-                    config.speed_grade = self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("speed_grade")
-                if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("secure_distance"):
-                    config.path_search_safe_distance = self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("secure_distance")
-                if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("arrive_range"):
-                    config.arrive_distance = self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("arrive_range")
-                if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("keep_point"):
-                    config.find_points_num = self.server_data_obj.mqtt_send_get_obj.base_setting_data.get("keep_point")
-
-            if self.server_data_obj.mqtt_send_get_obj.height_setting_data is not None and self.server_data_obj.mqtt_send_get_obj.height_setting_data_info == 2:
-                # 读取配置
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('motor_forward'):
-                    config.motor_forward = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('motor_forward')
+            # 客户端获取基础设置数据
+            if self.server_data_obj.mqtt_send_get_obj.base_setting_data_info in [1,4]:
+                if self.server_data_obj.mqtt_send_get_obj.base_setting_data is None:
+                    self.logger.error(
+                        {'base_setting_data is None': self.server_data_obj.mqtt_send_get_obj.base_setting_data})
                 else:
-                    config.motor_forward = 350
-
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('motor_steer'):
-                    config.motor_steer = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('motor_steer')
+                    self.server_data_obj.mqtt_send_get_obj.base_setting_data.update({'info_type':3})
+                    self.send(method='mqtt', topic='base_setting_%s' % (config.ship_code), data=self.server_data_obj.mqtt_send_get_obj.base_setting_data,
+                              qos=0)
+                    self.logger.info({'base_setting':self.server_data_obj.mqtt_send_get_obj.base_setting_data})
+                    self.server_data_obj.mqtt_send_get_obj.base_setting_data = None
+                    self.server_data_obj.mqtt_send_get_obj.base_setting_data_info=0
+            # 客户端获取高级设置数据
+            if self.server_data_obj.mqtt_send_get_obj.height_setting_data_info in [1,4]:
+                if self.server_data_obj.mqtt_send_get_obj.height_setting_data is None:
+                    self.logger.error({'height_setting_data is None':self.server_data_obj.mqtt_send_get_obj.height_setting_data})
                 else:
-                    config.motor_steer = 450
-
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('kp'):
-                    config.kp = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('kp')
-                else:
-                    config.kp = 1.0
-
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('ki'):
-                    config.ki = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('ki')
-                else:
-                    config.ki = 0.1
-
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('kd'):
-                    config.kd = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('kd')
-                else:
-                    config.kd = 0.3
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('full_speed_meter'):
-                    config.full_speed_meter = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('full_speed_meter')
-                else:
-                    config.full_speed_meter = 5.0
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('check_status_interval'):
-                    config.check_status_interval = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('check_status_interval')
-                else:
-                    config.check_status_interval = 1.0
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('max_pwm'):
-                    config.max_pwm = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('max_pwm')
-                else:
-                    config.max_pwm = 2000
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('min_pwm'):
-                    config.min_pwm = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('min_pwm')
-                else:
-                    config.min_pwm = 1000
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('left_motor_cw'):
-                    config.left_motor_cw = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('left_motor_cw')
-                else:
-                    config.left_motor_cw = 0
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('right_motor_cw'):
-                    config.right_motor_cw = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('right_motor_cw')
-                else:
-                    config.right_motor_cw = 0
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('draw_time'):
-                    config.draw_time = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('draw_time')
-                else:
-                    config.draw_time = 20
-                if self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('pid_interval'):
-                    config.pid_interval = self.server_data_obj.mqtt_send_get_obj.height_setting_data.get('pid_interval')
-                else:
-                    config.pid_interval = 0.1
+                    self.server_data_obj.mqtt_send_get_obj.height_setting_data.update({'info_type': 3})
+                    self.send(method='mqtt', topic='height_setting_%s' % (config.ship_code), data=self.server_data_obj.mqtt_send_get_obj.height_setting_data,
+                              qos=0)
+                    self.logger.info({'height_setting': self.server_data_obj.mqtt_send_get_obj.height_setting_data})
+                    self.server_data_obj.mqtt_send_get_obj.height_setting_data = None
+                    # 改为0位置状态，不再重复发送
+                    self.server_data_obj.mqtt_send_get_obj.height_setting_data_info=0
 
     def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):
         """
@@ -646,18 +584,16 @@ class DataManager:
             if config.home_debug:
                 self.data_define_obj.status['current_lng_lat'] = config.init_gaode_gps
 
-            if self.pi_main_obj in locals() or self.pi_main_obj in globals():
                 if config.b_play_audio:
                     audios_manager.play_audio(5, b_backend=False)
-                self.logger.error('当前GPS信号弱')
+                # self.logger.error('当前GPS信号弱')
             # if not check_network.check_network():
             #     if config.b_play_audio:
             #         audios_manager.play_audio(2, b_backend=False)
             #     self.logger.error('当前无网络信号')
-
             notice_info_data = {
                 # // 船状态提示消息
-                "distance": self.distance_p,
+                "distance": str(self.distance_p)+ '  '+str(self.distance_move_score),
                 # // 路径规划提示消息
                 "path_info": '当前目标点:%d 目标点总数: %d' % (int(self.path_info[0]), int(self.path_info[1])),
                 # 船执行手动控制信息

@@ -32,21 +32,20 @@ sys.path.append(
         'pathPlanning'))
 
 import config
+from webServer import server_config
 from baiduMap import baidu_map
-
 
 class Env:
     """
     Env 2D
     """
-
     def __init__(self, outpool_points):
         # self.x_range = 51  # size of background
         # self.y_range = 31
-        self.motions = [(-config.pix_interval, 0), (-config.pix_interval, config.pix_interval),
-                        (0, config.pix_interval), (config.pix_interval, config.pix_interval),
-                        (config.pix_interval, 0), (config.pix_interval, -config.pix_interval),
-                        (0, -config.pix_interval), (-config.pix_interval, -config.pix_interval)]
+        self.motions = [(-server_config.pix_interval, 0), (-server_config.pix_interval, server_config.pix_interval),
+                        (0, server_config.pix_interval), (server_config.pix_interval, server_config.pix_interval),
+                        (server_config.pix_interval, 0), (server_config.pix_interval, -server_config.pix_interval),
+                        (0, -server_config.pix_interval), (-server_config.pix_interval, -server_config.pix_interval)]
         self.outpool_points = outpool_points
         self.obs = self.obs_map()
 
@@ -98,7 +97,7 @@ class AStar:
         while self.OPEN:
             _, s = heapq.heappop(self.OPEN)
             self.CLOSED.append(s)
-            print('s', s)
+            # print('s', s)
             if s == self.s_goal:  # stop condition
                 break
 
@@ -278,7 +277,7 @@ def get_outpool_set(contour, safe_distance=0):
     # 起始点
     start_x, start_y = x, y
     # 当前点
-    current_x, current_y = start_x, start_y + config.pix_interval
+    current_x, current_y = start_x, start_y + server_config.pix_interval
     # 判断x轴是递增的加还是减 True 为加
     b_add_or_sub = True
 
@@ -289,15 +288,15 @@ def get_outpool_set(contour, safe_distance=0):
             if in_cnt <= safe_distance:
                 outpool_cnts_set.append(list(point))
             if b_add_or_sub:
-                current_x += config.pix_interval
+                current_x += server_config.pix_interval
             else:
-                current_x -= config.pix_interval
-        current_y += config.pix_interval
+                current_x -= server_config.pix_interval
+        current_y += server_config.pix_interval
         if b_add_or_sub:
-            current_x -= config.pix_interval
+            current_x -= server_config.pix_interval
             b_add_or_sub = False
         else:
-            current_x += config.pix_interval
+            current_x += server_config.pix_interval
             b_add_or_sub = True
     return outpool_cnts_set
 
@@ -456,10 +455,10 @@ def multi_points_to_simple_points(points):
 # 将点转换为符合模数的数
 def mod_point(point):
     point = list(point)
-    if point[0] % config.pix_interval != 0:
-        point[0] = point[0] + config.pix_interval - point[0] % config.pix_interval
-    if point[1] % config.pix_interval != 0:
-        point[1] = point[1] + +config.pix_interval - point[1] % config.pix_interval
+    if point[0] % server_config.pix_interval != 0:
+        point[0] = point[0] + server_config.pix_interval - point[0] % server_config.pix_interval
+    if point[1] % server_config.pix_interval != 0:
+        point[1] = point[1] + +server_config.pix_interval - point[1] % server_config.pix_interval
     point = tuple(point)
     return point
 

@@ -1,6 +1,627 @@
-2021-01-30 17:05:17,382 data_manager.py[line:614] INFO move_direction: 360.000000
-2021-01-30 17:05:19,444 data_manager.py[line:614] INFO move_direction: 360.000000
-2021-01-30 17:05:21,445 data_manager.py[line:614] INFO move_direction: 360.000000
-2021-01-30 17:05:23,446 data_manager.py[line:614] INFO move_direction: 360.000000
-2021-01-30 17:42:01,020 data_manager.py[line:514] INFO {'base_setting': {'info_type': 3, 'row': '5', 'col': '2', 'speed_grade': '3', 'secure_distance': '4', 'arrive_range': '5', 'keep_point': '6'}}
-2021-01-30 17:44:46,165 data_manager.py[line:514] INFO {'base_setting': {'info_type': 3, 'row': '5', 'col': '2', 'speed_grade': '3', 'secure_distance': '4', 'arrive_range': '5', 'keep_point': '6'}}
+2021-02-01 10:27:17,745 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:27:21,090 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:36:23,280 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:40:21,651 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:41:58,903 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:44:06,233 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:44:17,255 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:44:22,262 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:44:27,270 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:44:29,274 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:45:01,356 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:48:42,442 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:48:58,447 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:49:36,460 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:50:06,481 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:51:01,502 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:51:25,545 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '5', 'col': '2', 'info_type': 3}}
+2021-02-01 10:52:16,666 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '1', 'col': '2', 'info_type': 3}}
+2021-02-01 10:52:27,687 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '1111', 'col': '2', 'info_type': 3}}
+2021-02-01 10:54:03,806 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '1111', 'col': '2', 'info_type': 3}}
+2021-02-01 10:54:05,809 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '1111', 'col': '2', 'info_type': 3}}
+2021-02-01 10:58:22,439 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '1111', 'col': '2', 'info_type': 3}}
+2021-02-01 11:00:03,166 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '1111', 'col': '2', 'info_type': 3}}
+2021-02-01 11:00:04,166 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '1111', 'col': '2', 'info_type': 3}}
+2021-02-01 11:00:30,176 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '1111', 'col': '2', 'info_type': 3}}
+2021-02-01 11:01:05,188 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '1111', 'col': '2', 'info_type': 3}}
+2021-02-01 11:01:13,191 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '1111', 'col': '2', 'info_type': 3}}
+2021-02-01 11:01:15,191 data_manager.py[line:509] INFO {'height_setting': {'motor_forward': 12, 'motor_steer': 13, 'kp': 15, 'ki': 16, 'kd': 17, 'full_speed_meter': 14, 'check_status_interval': 2, 'max_pwm': 5, 'min_pwm': 6, 'left_motor_cw': 10, 'right_motor_cw': 11, 'draw_time': 18, 'pid_interval': 7, 'info_type': 3}}
+2021-02-01 11:01:21,194 data_manager.py[line:509] INFO {'height_setting': {'motor_forward': 12, 'motor_steer': 13, 'kp': 15, 'ki': 16, 'kd': 17, 'full_speed_meter': 14, 'check_status_interval': 2, 'max_pwm': 5, 'min_pwm': 6, 'left_motor_cw': 10, 'right_motor_cw': 11, 'draw_time': 18, 'pid_interval': 7, 'info_type': 3}}
+2021-02-01 11:01:28,200 data_manager.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': '5', 'keep_point': '6', 'secure_distance': '4', 'row': '1111', 'col': '2', 'info_type': 3}}
+2021-02-01 11:01:28,200 data_manager.py[line:509] INFO {'height_setting': {'motor_forward': 12, 'motor_steer': 13, 'kp': 15, 'ki': 16, 'kd': 17, 'full_speed_meter': 14, 'check_status_interval': 2, 'max_pwm': 5, 'min_pwm': 6, 'left_motor_cw': 10, 'right_motor_cw': 11, 'draw_time': 18, 'pid_interval': 7, 'info_type': 3}}
+2021-02-01 12:46:12,398 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 6, 'secure_distance': 4, 'row': 1111, 'col': 2, 'info_type': 3}}
+2021-02-01 12:46:13,404 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:46:14,404 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:46:15,404 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:46:16,405 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:46:17,405 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:46:21,406 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5, 'keep_point': 6, 'secure_distance': 4, 'row': 1111, 'col': '2222', 'info_type': 3}}
+2021-02-01 12:46:22,408 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:46:23,408 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:46:24,408 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:46:25,409 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:46:25,409 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3}}
+2021-02-01 12:46:26,410 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:27,411 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:28,411 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:29,413 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:30,413 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:31,413 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:32,414 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:33,414 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:34,414 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:35,416 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:36,416 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:37,417 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:38,418 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:39,418 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:40,418 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:41,420 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3}}
+2021-02-01 12:46:42,421 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:43,421 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:44,423 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5, 'keep_point': 6, 'secure_distance': 4, 'row': 1111, 'col': '2222', 'info_type': 3}}
+2021-02-01 12:46:44,423 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:45,424 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:46:45,424 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3}}
+2021-02-01 12:46:46,424 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:47,425 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:48,425 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:49,426 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:50,429 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:51,432 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:52,432 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:53,434 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:54,434 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:55,434 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:56,435 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:57,435 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:58,435 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:46:59,435 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:00,436 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:01,437 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:02,437 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:03,439 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:04,439 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:05,439 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:06,441 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:07,441 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:08,441 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:09,442 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:10,442 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:11,442 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:12,444 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:13,444 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:14,444 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:15,445 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:16,445 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:17,445 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:18,446 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:19,447 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:20,447 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:21,448 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:22,449 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:23,450 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:24,452 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:25,452 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:26,452 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:27,453 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:28,453 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:29,453 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:30,455 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:31,455 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:32,455 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:33,455 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:34,456 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:35,456 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:36,456 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:37,457 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:38,457 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:39,457 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:40,458 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:41,458 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:42,459 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:43,460 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:44,460 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:45,460 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:46,461 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:47,461 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:48,462 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:49,464 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:50,464 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:51,464 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:52,465 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:53,465 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:54,465 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:55,468 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:56,468 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:57,469 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:58,470 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:47:59,470 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:00,471 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:01,473 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:02,473 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:03,473 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:04,474 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:05,474 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:06,474 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:07,474 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:08,475 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:09,475 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:10,475 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:11,476 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:12,476 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:13,476 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:14,477 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:15,477 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:16,477 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:17,478 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:18,478 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:19,478 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:20,479 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:21,479 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:22,479 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:23,480 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:24,480 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:25,480 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:26,481 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:27,482 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:28,483 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:29,484 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:30,484 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:31,484 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:32,485 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:33,486 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:34,486 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:35,487 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:36,487 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:37,487 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:38,488 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:39,488 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:40,488 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:41,489 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:42,489 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:43,489 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:44,490 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:45,492 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:46,492 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:47,493 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:48,494 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:49,494 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:50,495 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:51,496 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:52,496 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:53,497 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:54,516 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:55,516 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:56,517 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:48:57,517 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:50:05,522 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5, 'keep_point': 6, 'secure_distance': '455', 'row': 1111, 'col': '2222', 'info_type': 3}}
+2021-02-01 12:50:06,522 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:07,523 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:08,524 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:09,524 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:10,524 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:14,527 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5, 'keep_point': 6, 'secure_distance': '455°¡', 'row': 1111, 'col': '2222', 'info_type': 3}}
+2021-02-01 12:50:15,527 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:16,527 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:17,529 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:18,530 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5, 'keep_point': 6, 'secure_distance': '455°¡', 'row': 1111, 'col': '2222', 'info_type': 3}}
+2021-02-01 12:50:19,530 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:20,531 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:21,531 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:22,531 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:23,532 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:24,532 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:25,533 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:26,535 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:27,536 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:28,536 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:29,537 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:30,537 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:31,538 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:32,538 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:33,539 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:34,540 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:35,541 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:36,542 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:37,542 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:38,542 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:39,543 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:40,544 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:41,544 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:42,546 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:43,546 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:44,548 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:45,548 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:46,548 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:47,549 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:48,550 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:49,550 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:50,551 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:51,552 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:52,552 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:53,552 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:54,554 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:55,554 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:56,555 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:57,557 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:58,557 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:50:59,558 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:00,559 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:01,560 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:02,560 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:03,561 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:07,562 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5, 'keep_point': 6, 'secure_distance': '455', 'row': 1111, 'col': '2222', 'info_type': 3}}
+2021-02-01 12:51:08,563 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:09,563 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:10,564 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:11,564 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:12,564 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:13,565 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:14,565 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:15,566 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:16,568 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:16,569 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3}}
+2021-02-01 12:51:17,570 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:17,571 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:18,571 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:18,571 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:19,572 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:19,572 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:20,572 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:20,572 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:21,573 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:22,573 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:23,573 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:23,573 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3, 'pix_interval': '123'}}
+2021-02-01 12:51:24,573 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:24,573 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:25,575 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5, 'keep_point': 6, 'secure_distance': '455', 'row': 1111, 'col': '2222', 'info_type': 3}}
+2021-02-01 12:51:25,576 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:26,576 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:26,577 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:27,577 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:27,578 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3, 'pix_interval': '123'}}
+2021-02-01 12:51:28,579 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:28,579 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:29,579 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:29,579 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:30,580 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:30,581 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:31,582 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:31,582 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:32,582 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:32,582 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:33,582 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:33,582 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:34,583 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:35,584 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:36,585 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:37,585 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:38,587 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5, 'keep_point': 6, 'secure_distance': '455', 'row': 1111, 'col': '2222', 'info_type': 3}}
+2021-02-01 12:51:39,587 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:39,588 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:40,589 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:40,589 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:41,590 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:41,591 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:42,591 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:42,592 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:43,592 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:43,592 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:44,593 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:44,594 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:45,594 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:45,594 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:46,594 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:46,595 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:47,596 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:47,597 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:48,597 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:48,597 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:49,597 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:49,597 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:50,598 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:50,599 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:51,599 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:51,599 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:52,600 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5, 'keep_point': 6, 'secure_distance': '455', 'row': 1111, 'col': '2222', 'info_type': 3}}
+2021-02-01 12:51:52,600 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:53,600 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:53,600 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:54,600 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:54,600 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:55,600 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:55,601 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:56,602 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:56,602 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:57,602 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:57,603 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:58,603 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:51:58,603 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:51:59,604 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:00,605 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:01,605 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:02,606 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:03,607 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:04,607 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:05,609 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:06,609 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:07,609 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5, 'keep_point': 6, 'secure_distance': '455', 'row': 1111, 'col': '2222', 'info_type': 3}}
+2021-02-01 12:52:07,609 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:52:08,610 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:08,610 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:52:09,610 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:09,610 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:52:10,610 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:10,611 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:52:11,612 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:11,612 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:52:12,613 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:12,613 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:52:13,613 data_manager.py[line:501] ERROR {'base_setting_data is None': None}
+2021-02-01 12:52:13,613 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:54:42,645 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3}}
+2021-02-01 12:54:54,649 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:54:55,651 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:54:56,652 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:54:57,652 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:54:58,654 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:54:59,654 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:00,654 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:01,656 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:02,656 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:03,657 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:04,657 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:05,658 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:06,658 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:07,659 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:08,660 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:09,660 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:10,661 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:11,661 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:12,662 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:13,664 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:14,664 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:15,664 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:16,665 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:17,666 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:18,666 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:19,666 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:20,677 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:21,680 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:22,680 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:23,682 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:24,683 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:25,687 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:26,688 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:27,688 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:28,688 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:29,689 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:30,689 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:31,689 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:32,690 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:33,690 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:34,690 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:35,691 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:36,691 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:37,691 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:38,692 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:39,692 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:40,693 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:41,694 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:42,694 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:43,694 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:44,695 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:45,696 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:46,697 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:47,699 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:48,700 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:49,700 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:50,701 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:51,702 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:52,702 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:53,703 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:54,704 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:55,704 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:56,704 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:57,705 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:58,705 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:55:59,706 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:00,706 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:01,707 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:02,708 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:03,708 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:04,708 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:05,709 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:06,709 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:07,709 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:08,709 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:09,710 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:10,710 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:11,710 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:12,712 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:13,712 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:14,712 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:15,713 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:16,713 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:17,714 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:18,715 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:19,715 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:20,715 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:21,716 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:22,716 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:23,716 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:24,716 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:25,717 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:26,718 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:27,720 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:28,720 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:29,721 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:30,721 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:31,722 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:32,722 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:33,722 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:34,723 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:35,723 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:36,724 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:37,725 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:38,725 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:39,726 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:40,727 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:41,728 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:42,728 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:43,729 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:44,730 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:45,731 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:46,731 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:47,731 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:48,731 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:49,732 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:50,732 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:51,732 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:52,733 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:53,733 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:54,733 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:55,734 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:56,735 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:57,735 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:58,735 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:56:59,736 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:00,737 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:01,737 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:02,738 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:03,738 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:04,738 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:05,739 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:06,739 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:07,739 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:08,741 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:09,741 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:10,741 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:11,743 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:12,744 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:13,744 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:14,745 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:15,745 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:16,745 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:17,746 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:18,746 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:19,758 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:20,759 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:21,759 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:22,759 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:23,760 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:24,765 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:25,765 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:26,766 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:27,767 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:28,767 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:29,768 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:30,768 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:31,768 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:32,782 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:33,783 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:34,784 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:35,784 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:36,785 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:37,786 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:38,786 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:39,787 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:40,787 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:41,787 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:42,788 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:43,789 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:44,789 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:45,790 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:46,790 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:47,791 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:48,793 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:49,793 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:50,793 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:51,794 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:52,794 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:53,794 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:54,795 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:55,795 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:56,796 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:57,798 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:58,799 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:57:59,799 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:58:00,801 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:58:01,801 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:58:02,801 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:58:03,801 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:58:04,802 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:58:05,802 data_manager.py[line:512] ERROR {'height_setting_data is None': None}
+2021-02-01 12:59:03,212 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3}}
+2021-02-01 12:59:07,214 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3}}
+2021-02-01 13:01:24,259 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 6, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:02:07,274 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 6, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:02:18,279 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3}}
+2021-02-01 13:03:25,301 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3}}
+2021-02-01 13:03:28,301 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3}}
+2021-02-01 13:04:09,315 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 6, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:04:17,326 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 6, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:04:30,342 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 6, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:04:40,372 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 6, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:05:08,381 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3}}
+2021-02-01 13:06:02,443 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 6, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:06:02,443 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'info_type': 3}}
+2021-02-01 13:06:33,468 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 6, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:07:04,271 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:07:22,278 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:07:32,283 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:07:41,288 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:07:45,291 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:07:46,291 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:09:11,321 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:09:14,323 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:09:15,325 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:09:16,328 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:09:19,329 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:09:20,330 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:09:23,332 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:09:25,334 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:09:26,334 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:09:29,336 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:09:30,336 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:09:31,336 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:10:49,364 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:10:50,365 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:11:13,394 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 5.0, 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:11:16,396 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:11:25,401 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': '1300', 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:11:26,403 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:11:28,404 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:12:14,419 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': 5, 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:12:17,422 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': 5, 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:13:01,483 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:13:20,490 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': '3', 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:13:35,551 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:15:08,589 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': '3', 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:15:10,590 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:15:14,591 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:15:18,592 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': '3', 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:15:20,593 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:15:32,597 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:15:35,599 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:15:37,600 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:15:42,636 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:16:24,763 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': '3', 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:16:27,764 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:16:34,767 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:16:45,773 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': '3', 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:17:02,779 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:17:25,786 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:17:44,793 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:17:58,797 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:18:03,802 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': '3', 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:18:06,803 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': '550', 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:18:13,805 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': '550', 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:19:19,827 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': '3', 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:19:20,831 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': '550', 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:21:21,906 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': '3', 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:21:22,907 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': '550', 'kp': 1, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5, 'check_status_interval': 1, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}
+2021-02-01 13:21:30,909 data_manager.py[line:506] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': '3', 'keep_point': 5, 'secure_distance': 10, 'row': 1111, 'col': 2222, 'info_type': 3}}
+2021-02-01 13:22:59,938 data_manager.py[line:517] INFO {'height_setting': {'motor_forward': 350, 'motor_steer': 450, 'kp': 1.0, 'ki': 0.1, 'kd': 0.3, 'full_speed_meter': 5.0, 'check_status_interval': 1.0, 'max_pwm': 2000, 'min_pwm': 1000, 'left_motor_cw': 0, 'right_motor_cw': 0, 'draw_time': 20, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10.0, 'stop_pwm': 1500, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'info_type': 3}}

@@ -1,0 +1,6 @@
+2021-01-30 17:05:17,382 data_manager.py[line:614] INFO move_direction: 360.000000
+2021-01-30 17:05:19,444 data_manager.py[line:614] INFO move_direction: 360.000000
+2021-01-30 17:05:21,445 data_manager.py[line:614] INFO move_direction: 360.000000
+2021-01-30 17:05:23,446 data_manager.py[line:614] INFO move_direction: 360.000000
+2021-01-30 17:42:01,020 data_manager.py[line:514] INFO {'base_setting': {'info_type': 3, 'row': '5', 'col': '2', 'speed_grade': '3', 'secure_distance': '4', 'arrive_range': '5', 'keep_point': '6'}}
+2021-01-30 17:44:46,165 data_manager.py[line:514] INFO {'base_setting': {'info_type': 3, 'row': '5', 'col': '2', 'speed_grade': '3', 'secure_distance': '4', 'arrive_range': '5', 'keep_point': '6'}}

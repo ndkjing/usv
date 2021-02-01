@@ -159,10 +159,12 @@ class PiMain:
 
     # 在线程中读取罗盘
     def get_compass_data(self):
+        # 累计50次出错则记为None
+        count = 50
         while True:
             try:
                 self.compass_obj.send_data('31', b_hex=True)
-                time.sleep(0.1)
+                time.sleep(0.05)
                 data0 = self.compass_obj.readline()
                 # 角度
                 str_data0 = data0.decode('ascii')[:-3]
@@ -170,19 +172,25 @@ class PiMain:
                     continue
                 float_data0 = float(str_data0)
                 self.theta = 360 - float_data0
-                time.sleep(config.pid_interval)
+                time.sleep(config.compass_timeout/2)
+                count=50
             except Exception as e:
-                self.theta = None
+                if count > 0:
+                    count = count - 1
+                else:
+                    self.theta = None
                 logger.error({'error': e})
                 time.sleep(1)
 
     # 获取备份罗盘数据
     def get_compass1_data(self):
         if os.path.exists(config.compass_port1):
+            # 累计50次出错则记为None
+            count=50
             while True:
                 try:
                     self.compass_obj1.send_data('31', b_hex=True)
-                    time.sleep(0.1)
+                    time.sleep(0.05)
                     data1 = self.compass_obj1.readline()
                     # 角度
                     str_data1 = data1.decode('ascii')[:-3]
@@ -190,9 +198,13 @@ class PiMain:
                         continue
                     float_data1 = float(str_data1)
                     self.theta1 = 360 - float_data1
-                    time.sleep(config.pid_interval)
+                    time.sleep(config.compass_timeout/2)
+                    count=50
                 except Exception as e:
-                    self.theta1=None
+                    if count>0:
+                        count=count-1
+                    else:
+                        self.theta1=None
                     logger.error({'error': e})
                     time.sleep(1)
 

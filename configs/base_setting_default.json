@@ -1,9 +1,1 @@
-{
-  "info_type": 2,
-  "row": "5",
-  "col": "2",
-  "speed_grade": "3",
-  "secure_distance": "4",
-  "arrive_range": "5",
-  "keep_point": "6"
-}
+{"speed_grade": 5, "arrive_range": 3.0, "keep_point": 5, "secure_distance": 10, "row": 1111, "col": 2222}

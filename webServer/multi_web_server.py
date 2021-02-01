@@ -303,7 +303,7 @@ class WebServer:
     def get_plan_path(self):
         while True:
             for ship_code in server_config.ship_code_list:
-                time.sleep(0.2)
+                time.sleep(0.1)
                 # 配置判断
                 len_target_lng_lat = len(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.target_lng_lat)
 
@@ -443,7 +443,6 @@ class WebServer:
             data=mqtt_send_path_planning_data,
             qos=1)
         self.logger.info({'mqtt_send_path_planning_data': mqtt_send_path_planning_data})
-
 
 if __name__ == '__main__':
     web_server_obj = WebServer()

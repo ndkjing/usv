@@ -1,4 +1,3 @@
-
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -63,7 +62,6 @@ Author: Atsushi Sakai(@Atsushi_twi)
 """
 import math
 import bisect
-
 
 class Spline:
     """
@@ -178,7 +176,6 @@ class Spline:
                 h[i + 1] - 3.0 * (self.a[i + 1] - self.a[i]) / h[i]
         return B
 
-
 class Spline2D:
     """
     2D Cubic Spline class
@@ -226,7 +223,6 @@ class Spline2D:
         yaw = math.atan2(dy, dx)
         return yaw
 
-
 def calc_spline_course(x, y, ds=0.1):
     sp = Spline2D(x, y)
     s = list(np.arange(0, sp.s[-1], ds))
@@ -242,7 +238,7 @@ def calc_spline_course(x, y, ds=0.1):
     return rx, ry, ryaw, rk, s
 
 
-def main():  # pragma: no cover
+def main1():  # pragma: no cover
     print("Spline 2D test")
     import matplotlib.pyplot as plt
     x = [-2.5, 0.0, 2.5, 5.0, 7.5, 3.0, -1.0]
@@ -285,11 +281,6 @@ def main():  # pragma: no cover
 
     plt.show()
 
-
-# if __name__ == '__main__':
-#     main()
-
-
 k = 0.5  # control gain
 Kp = 1.0  # speed proportional gain
 dt = 0.1  # [s] time difference
@@ -297,7 +288,6 @@ L = 2.9  # [m] Wheel base of vehicle
 max_steer = np.radians(30.0)  # [rad] max steering angle
 
 show_animation = True
-
 
 class State(object):
     """
@@ -437,7 +427,6 @@ def main():
         ai = pid_control(target_speed, state.v)
         di, target_idx = stanley_control(state, cx, cy, cyaw, target_idx)
         state.update(ai, di)
-
         time += dt
 
         x.append(state.x)

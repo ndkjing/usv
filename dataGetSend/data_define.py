@@ -227,19 +227,19 @@ class DataDefine:
         """
         # 订阅话题
         self.topics = (
-            ('pool_click_%s' % (config.ship_code), 1),
-            ('control_data_%s' % (config.ship_code), 1),
+            ('pool_click_%s' % (config.ship_code), 0),
+            ('control_data_%s' % (config.ship_code), 0),
             ('path_confirm_%s' % (config.ship_code), 0),
             ('user_lng_lat_%s' % (config.ship_code), 0),
-            ('start_%s' % (config.ship_code), 1),
-            ('switch_%s' % (config.ship_code), 1),
-            ('pool_info_%s' % (config.ship_code), 1),
-            ('auto_lng_lat_%s' % (config.ship_code), 1),
-            ('path_planning_%s' % (config.ship_code), 1),
+            ('start_%s' % (config.ship_code), 0),
+            ('switch_%s' % (config.ship_code), 0),
+            ('pool_info_%s' % (config.ship_code), 0),
+            ('auto_lng_lat_%s' % (config.ship_code), 0),
+            ('path_planning_%s' % (config.ship_code), 0),
             ('status_data_%s' % (config.ship_code), 0),
-            ('base_setting_%s' % (config.ship_code), 1),
-            ('height_setting_%s' % (config.ship_code), 1),
-            ('path_planning_confirm_%s' % (config.ship_code), 1))
+            ('base_setting_%s' % (config.ship_code), 0),
+            ('height_setting_%s' % (config.ship_code), 0),
+            ('path_planning_confirm_%s' % (config.ship_code), 0))
         self.pool_code = ''
         self.water = self.water_data()
         self.weather = self.weather_data()

@@ -6,6 +6,7 @@ import config
 from dataGetSend import data_define
 from utils import log
 import os
+import copy
 import paho.mqtt.client as mqtt
 import time
 import json
@@ -149,13 +150,17 @@ class MqttSendGet:
         self.b_draw = 0
         # 启动还是停止
         self.b_start = 0
-        # 设置数据
+        # 基础设置数据
         self.base_setting_data = None
         # 基础数据设置类型
-        self.base_setting_data_info=None
+        self.base_setting_data_info = None
+        self.base_setting_default_data = None
+        # 高级设置
         self.height_setting_data = None
-        # 高级设置类型
+        # 类型
         self.height_setting_data_info = None
+        self.height_setting_default_data = None
+
     # 连接MQTT服务器
     def mqtt_connect(self):
         self.mqtt_client.connect(self.mqtt_host, self.mqtt_port, 60)
@@ -281,6 +286,7 @@ class MqttSendGet:
                 if path_planning_data.get('path_points') is None:
                     self.logger.error('path_planning_用户确认轨迹 没有path_points字段')
                     return
+                self.sampling_points = path_planning_data.get('sampling_points')
                 self.path_planning_points = path_planning_data.get('path_points')
                 self.path_planning_points_status = [0] * len(self.path_planning_points)
                 self.logger.info({'topic': topic,
@@ -326,7 +332,7 @@ class MqttSendGet:
             elif topic == 'status_data_%s' % (config.ship_code):
                 status_data = json.loads(msg.payload)
                 if not status_data.get("current_lng_lat"):
-                    self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
+                    # self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
                     return
                 self.current_lng_lat = status_data.get('current_lng_lat')
                 # self.logger.info({'topic': topic,
@@ -334,6 +340,7 @@ class MqttSendGet:
 
             # 基础配置
             elif topic == 'base_setting_%s' % (config.ship_code):
+                self.logger.info({'base_setting ': json.loads(msg.payload)})
                 if len(msg.payload) < 5:
                     return
                 base_setting_data = json.loads(msg.payload)
@@ -352,8 +359,18 @@ class MqttSendGet:
                         with open(config.base_setting_path, 'w') as f:
                             self.base_setting_data.update(base_setting_data)
                             json.dump(self.base_setting_data, f)
+                        config.update_base_setting()
+                    # 恢复默认配置
+                    elif info_type == 4:
+                        with open(config.base_setting_path, 'w') as f:
+                            with open(config.base_setting_default_path, 'r') as df:
+                                self.base_setting_default_data = json.load(df)
+                                self.base_setting_data = copy.deepcopy(self.base_setting_default_data)
+                                json.dump(self.base_setting_data, f)
+                        config.update_base_setting()
             # 高级配置
             elif topic == 'height_setting_%s' % (config.ship_code):
+                self.logger.info({'height_setting_data': json.loads(msg.payload)})
                 height_setting_data = json.loads(msg.payload)
                 if height_setting_data.get("info_type") is None:
                     self.logger.error('"height_setting_data"设置启动消息没有"info_type"字段')
@@ -363,15 +380,24 @@ class MqttSendGet:
                     self.height_setting_data_info = info_type
                     if info_type == 1:
                         with open(config.height_setting_path, 'r') as f:
-                            self.base_setting_data = json.load(f)
+                            self.height_setting_data = json.load(f)
                     elif info_type == 2:
                         with open(config.height_setting_path, 'r') as f:
                             self.height_setting_data = json.load(f)
                         with open(config.height_setting_path, 'w') as f:
                             self.height_setting_data.update(height_setting_data)
                             json.dump(self.height_setting_data, f)
+                        config.update_height_setting()
+                    # 恢复默认配置
+                    elif info_type == 4:
+                        with open(config.height_setting_path, 'w') as f:
+                            with open(config.height_setting_default_path, 'r') as df:
+                                self.height_setting_default_data = json.load(df)
+                                self.height_setting_data = copy.deepcopy(self.height_setting_default_data)
+                                json.dump(self.height_setting_data, f)
+                        config.update_height_setting()
         except Exception as e:
-            self.logger.error({'error':e})
+            self.logger.error({'error': e})
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):
