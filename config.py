@@ -148,8 +148,6 @@ pi2com_interval = 0.05
 # 给服务器发送时间间隔
 pi2mqtt_interval = 1
 
-
-
 # 上传给单片机心跳时间间隔 单位秒
 com_heart_time = 1 * 60
 

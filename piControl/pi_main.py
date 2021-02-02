@@ -168,17 +168,18 @@ class PiMain:
                 data0 = self.compass_obj.readline()
                 # 角度
                 str_data0 = data0.decode('ascii')[:-3]
-                if len(str_data0) < 2:
+                if len(str_data0) < 1:
                     continue
                 float_data0 = float(str_data0)
                 self.theta = 360 - float_data0
-                time.sleep(config.compass_timeout/2)
+                time.sleep(config.compass_timeout/4)
                 count=50
             except Exception as e:
-                if count > 0:
+                if count >0:
                     count = count - 1
                 else:
-                    self.theta = None
+                    pass
+                    # self.theta = None
                 logger.error({'error': e})
                 time.sleep(1)
 
@@ -198,7 +199,7 @@ class PiMain:
                         continue
                     float_data1 = float(str_data1)
                     self.theta1 = 360 - float_data1
-                    time.sleep(config.compass_timeout/2)
+                    time.sleep(config.compass_timeout/4)
                     count=50
                 except Exception as e:
                     if count>0:
@@ -287,7 +288,7 @@ class PiMain:
             current_theta = self.theta
         else:
             current_theta = (self.theta+self.theta1)/2
-        theta_error =  current_theta
+        theta_error =  theta -self.theta
         if abs(theta_error) > 180:
             if theta_error > 0:
                 theta_error = theta_error - 360

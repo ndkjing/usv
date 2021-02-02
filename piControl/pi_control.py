@@ -32,8 +32,8 @@ import time
 
 class PiControl:
     def __init__(self):
-        self.left_pwm = 1500
-        self.right_pwm = 1500
+        self.left_pwm = config.stop_pwm
+        self.right_pwm = config.stop_pwm
         self.pice = 20000
         self.diff = int(20000 / self.pice)
         self.hz = 50
@@ -86,16 +86,16 @@ class PiControl:
 
     def forward(self, left_pwm=None, right_pwm=None):
         if left_pwm is None:
-            left_pwm = 1500+int(config.speed_grade)*100
+            left_pwm = config.stop_pwm+int(config.speed_grade)*100
         if right_pwm is None:
-            right_pwm = 1500+int(config.speed_grade)*100
+            right_pwm = config.stop_pwm+int(config.speed_grade)*100
         self.set_pwm(left_pwm, right_pwm)
 
     def backword(self, left_pwm=None, right_pwm=None):
         if left_pwm is None:
-            left_pwm = 1500-int(config.speed_grade)*100
+            left_pwm = config.stop_pwm-int(config.speed_grade)*100
         if right_pwm is None:
-            right_pwm = 1500-int(config.speed_grade)*100
+            right_pwm = config.stop_pwm-int(config.speed_grade)*100
         self.set_pwm(left_pwm, right_pwm)
 
     def left(self, left_pwm=None, right_pwm=None):
@@ -113,10 +113,10 @@ class PiControl:
         self.set_pwm(left_pwm, right_pwm)
 
     def stop(self):
-        self.set_pwm(1500, 1500)
+        self.set_pwm(config.stop_pwm, config.stop_pwm)
 
     def init_motor(self):
-        self.set_pwm(1500, 1500)
+        self.set_pwm(config.stop_pwm, config.stop_pwm)
         time.sleep(config.motor_init_time)
 
     def set_pwm(self, left_pwm, right_pwm,pwm_timeout=None):
@@ -138,9 +138,9 @@ class PiControl:
 
         # 如果有反桨叶反转电机pwm值
         if config.left_motor_cw == 1:
-            left_pwm = 1500 - (left_pwm - 1500)
+            left_pwm = config.stop_pwm - (left_pwm - config.stop_pwm)
         if config.right_motor_cw == 1:
-            right_pwm = 1500 - (right_pwm - 1500)
+            right_pwm = config.stop_pwm - (right_pwm - config.stop_pwm)
 
         left_pwm = int(left_pwm / (20000 / self.pice) / (50 / self.hz))
         right_pwm = int(right_pwm / (20000 / self.pice) / (50 / self.hz))
