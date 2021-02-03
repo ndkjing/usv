@@ -493,9 +493,9 @@ class DataManager:
                     last_read_time = time.time()
                     self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
                 if self.b_draw_over_send_data:
-                    # self.pi_main_obj.lng_lat 添加真实经纬度
                     self.send(method='mqtt', topic='detect_data_%s' % (config.ship_code), data=mqtt_send_detect_data,
                               qos=0)
+                    # 添加真实经纬度
                     save_detect_data = copy.deepcopy(mqtt_send_detect_data)
                     save_detect_data.update({'lng_lat':self.pi_main_obj.lng_lat})
                     self.logger.info({"本地保存检测数据":save_detect_data})
@@ -579,7 +579,6 @@ class DataManager:
             # 检查当前状态
             if config.home_debug:
                 self.data_define_obj.status['current_lng_lat'] = config.init_gaode_gps
-
                 if config.b_play_audio:
                     audios_manager.play_audio(5, b_backend=False)
                 # self.logger.error('当前GPS信号弱')

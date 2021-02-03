@@ -124,6 +124,7 @@ class WebServer:
         while True:
             # 循环等待一定时间
             time.sleep(config.check_status_interval)
+
             for ship_code in server_config.ship_code_list:
                 # 若是用户没有点击点
                 if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat is None or self.server_data_obj_dict.get(
@@ -134,6 +135,13 @@ class WebServer:
                 save_img_dir = os.path.join(config.root_path, 'baiduMap', 'imgs')
                 if not os.path.exists(save_img_dir):
                     os.mkdir(save_img_dir)
+                # 超过1000张图片时候删除图片
+                save_img_name_list = os.listdir(save_img_dir)
+                if len(save_img_name_list)>1000:
+                    for i in save_img_name_list:
+                        print(os.path.join(save_img_dir,i))
+                        os.remove(os.path.join(save_img_dir,i))
+
                 if self.current_map_type == baidu_map.MapType.gaode:
                     save_img_path = os.path.join(
                         save_img_dir, 'gaode_%f_%f_%i_%i.png' %

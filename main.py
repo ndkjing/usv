@@ -9,6 +9,7 @@ from dataGetSend.data_manager import DataManager
 from audios import audios_manager
 import sys
 import os
+
 if config.home_debug:
     time.sleep(config.start_sleep_time)
 
@@ -35,6 +36,7 @@ sys.path.append(
 
 logger = log.LogHandler('main_log')
 
+
 def main():
     if config.b_play_audio:
         audios_manager.play_audio(0)
@@ -51,8 +53,8 @@ def main():
             # TODO 未注册暂时跳过
             logger.error({'binding status': binding_data['flag']})
         logger.info({'binding status': binding_data['flag']})
-    except Exception as e:
-        logger.error({'binding_data error': e})
+    except Exception as e1:
+        logger.error({'binding_data error': e1})
 
     # 启动串口数据收发和mqtt数据收发
     if (config.current_platform == "l"):
@@ -125,18 +127,18 @@ def main():
     # send_com_data_thread.join()
     # check_status_thread.join()
     # send_com_heart_thread.join()
-    thread_restart_time=3
+    thread_restart_time = 3
     while True:
         #  判断线程是否死亡并重启线程
         if (config.current_platform == "l"):
-            if  os.path.exists(config.port) and not get_com_data_thread.is_alive() :
+            if os.path.exists(config.port) and not get_com_data_thread.is_alive():
                 logger.error('restart get_com_data_thread')
                 try:
                     if data_manager_obj.com_data_obj.uart.is_open():
                         data_manager_obj.com_data_obj.uart.close()
-                    data_manager_obj.com_data_obj =data_manager_obj.get_serial_obj(port=config.port,baud=config.baud)
+                    data_manager_obj.com_data_obj = data_manager_obj.get_serial_obj(port=config.port, baud=config.baud)
                 except Exception as e:
-                    logger.error({'串口关闭失败':111, 'error': e})
+                    logger.error({'串口关闭失败': 111, 'error': e})
                 get_com_data_thread = threading.Thread(target=data_manager_obj.get_com_data)
                 get_com_data_thread.setDaemon(True)
                 get_com_data_thread.start()
@@ -156,7 +158,8 @@ def main():
                     try:
                         if data_manager_obj.pi_main_obj.compass_obj.uart.is_open():
                             data_manager_obj.pi_main_obj.compass_obj.uart.close()
-                        data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_compass_obj(port=config.compass_port, baud=config.compass_baud)
+                        data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_compass_obj(
+                            port=config.compass_port, baud=config.compass_baud)
                     except Exception as e:
                         logger.error({'串口关闭失败': 111, 'error': e})
 
@@ -171,7 +174,8 @@ def main():
                     try:
                         if data_manager_obj.pi_main_obj.compass_obj1.uart.is_open():
                             data_manager_obj.pi_main_obj.compass_obj1.uart.close()
-                        data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_compass_obj(port=config.compass_port1, baud=config.compass_baud1)
+                        data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_compass_obj(
+                            port=config.compass_port1, baud=config.compass_baud1)
                     except Exception as e:
                         logger.error({'串口关闭失败': 111, 'error': e})
 
@@ -207,7 +211,8 @@ def main():
                     try:
                         if data_manager_obj.pi_main_obj.gps_obj.uart.is_open():
                             data_manager_obj.pi_main_obj.gps_obj.uart.close()
-                        data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_gps_obj(port=config.gps_port, baud=config.gps_baud)
+                        data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_gps_obj(port=config.gps_port,
+                                                                                                 baud=config.gps_baud)
                     except Exception as e:
                         logger.error({'串口关闭失败': 111, 'error': e})
                     gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
@@ -241,10 +246,11 @@ def main():
         else:
             time.sleep(1)
 
+
 if __name__ == '__main__':
     while True:
         try:
             main()
         except Exception as e:
             time.sleep(5)
-            logger.error({'main error':e})
+            logger.error({'main error': e})

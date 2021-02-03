@@ -165,7 +165,7 @@ imu_baud = 115200
 if current_platform == 'l':
     pix_port = '/dev/ttyACM0'
 else:
-    pix_port = 'com22'
+    pix_port = 'tcp:127.0.0.1:5760'
 pix_baud = 115200
 b_use_pix = False
 
