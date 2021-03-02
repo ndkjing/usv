@@ -4,7 +4,7 @@ import json
 import platform
 
 root_path = os.path.dirname(os.path.abspath(__file__))
-maps_dir = os.path.join(root_path, 'mapsData')
+maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
     os.mkdir(maps_dir)
 
@@ -14,16 +14,20 @@ local_map_data_path = os.path.join(maps_dir, 'local_map.json')
 
 # 保存当前用户点击位置相关信息
 usr_lng_lat_path = os.path.join(maps_dir, 'usr_lng_lat_path.json')
-base_setting_path = os.path.join(root_path, 'configs', 'base_setting.json')
-base_setting_default_path = os.path.join(root_path, 'configs', 'base_setting_default.json')
-height_setting_path = os.path.join(root_path, 'configs', 'height_setting.json')
-height_setting_default_path = os.path.join(root_path, 'configs', 'height_setting_default.json')
+# 保存行驶路径和时间数据
+run_distance_time_path = os.path.join(root_path, 'statics', 'run_distance_time_path.json')
+base_setting_path = os.path.join(root_path, 'statics', 'configs', 'base_setting.json')
+base_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'base_setting_default.json')
+height_setting_path = os.path.join(root_path, 'statics', 'configs', 'height_setting.json')
+height_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'height_setting_default.json')
+# 保存湖号和路径数据
+save_plan_path = os.path.join(root_path, 'statics', 'configs', 'save_plan_path.json')
 
 sysstr = platform.system()
 if (sysstr == "Windows"):
     print("Call Windows tasks")
     current_platform = 'w'
-    if platform.node()=='DESKTOP-MSUAAG9':
+    if platform.node() == 'DESKTOP-MSUAAG9':
         current_platform = 'w_j'
 elif (sysstr == "Linux"):  # 树莓派上也是Linux
     print("Call Linux tasks")
@@ -32,30 +36,36 @@ elif (sysstr == "Linux"):  # 树莓派上也是Linux
         current_platform = 'l_j'
     elif platform.node() == 'xxl':
         current_platform = 'l_x'
+    elif platform.node() == 'raspberrypi':
+        current_platform = 'l_pi'
     else:
         current_platform = 'l'
 else:
     print("other System tasks")
     current_platform = 'o'
-
+# 百度地图key
+baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
 # 高德秘钥
 gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
 # 腾讯地图key
 tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
-# 百度地图key
-baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
+
 
 # 速度等级 1到5级 速度从低到高，仅能控制手动模式下速度   1 级表示1600 5 2000
-speed_grade = 2
+speed_grade = 3
 arrive_distance = 2.5
 # 多点和寻点模式下查找连接点数量
 keep_point = 0
 # 路径搜索保留离湖泊边缘安全路径
-path_search_safe_distance = 5
+path_search_safe_distance = 15
 # 寻点模式行间隔
 row_gap = 50
 # 寻点模式列间隔
 col_gap = 50
+# 湖泊名称
+pool_name = "梁子湖"
+# 视频链接
+video_url = "http://123.32132.321321.213"
 
 def update_base_setting():
     global speed_grade
@@ -64,6 +74,8 @@ def update_base_setting():
     global path_search_safe_distance
     global row_gap
     global col_gap
+    global pool_name
+    global video_url
     if os.path.exists(base_setting_path):
         try:
             with open(base_setting_path, 'r') as f:
@@ -129,40 +141,43 @@ def update_base_setting():
                     col_gap = s_col_gap
                 except Exception as e:
                     print({'error': e})
-
+            if base_setting_data.get('pool_name'):
+                try:
+                    s_pool_name = base_setting_data.get('pool_name')
+                    pool_name = s_pool_name
+                except Exception as e:
+                    print({'error': e})
+            if base_setting_data.get('video_url'):
+                try:
+                    s_video_url = base_setting_data.get('video_url')
+                    video_url = s_video_url
+                except Exception as e:
+                    print({'error': e})
         except Exception as e:
             print({'error': e})
 
-
-update_base_setting()
-
 # 罗盘等待时间间隔
 compass_timeout = 0.2
-
 # 单片机发送给树莓派等待时间
-com2pi_interval = 1
-
+stc2pi_timeout = 1
 # 给单片机发送等待时间
-pi2com_interval = 0.05
-
+pi2com_timeout = 0.05
 # 给服务器发送时间间隔
 pi2mqtt_interval = 1
-
 # 上传给单片机心跳时间间隔 单位秒
-com_heart_time = 1 * 60
-
+# com_heart_time = 1 * 60
 # 船编号
 ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380a'
 
 # 串口位置和波特率
 # 单片机
-port = '/dev/ttyAMA0'
-baud = 115200
+stc_port = '/dev/ttyAMA0'
+stc_baud = 115200
 # imu
 imu_port = '/dev/imu'
 imu_baud = 115200
 # 飞控
-if current_platform == 'l':
+if current_platform == 'l_pi':
     pix_port = '/dev/ttyACM0'
 else:
     pix_port = 'tcp:127.0.0.1:5760'
@@ -195,38 +210,25 @@ mqtt_port = 1884
 # 手动模式和自动模式
 # mod in ['manual', 'auto']
 mod = 'auto'
-# 是否播放声音
-b_play_audio = False
 
-# 在家调试模式
-home_debug = False
-init_gaode_gps = [114.348713, 30.464501]
-ship_gaode_lng_lat = [114.432893, 30.527554]
-# ship_gaode_lng_lat=[114.5242, 30.506895]
-
-# 路径搜索像素安全距离
-# path_search_safe_distance = 10
-# 到达点距离范围判断，单位米
-# arrive_distance = 2.5
-# # 检测像素间隔
-# pix_interval=4
+ship_gaode_lng_lat = [114.524096, 30.506853]
 
 # 电机前进分量
-motor_forward = 350
+motor_forward = 100
 # 电机转弯分量
-motor_steer = 450
+motor_steer = 200
 # pid三参数
-kp = 1.0
-ki = 0.1
-kd = 0.3
+kp = 2.6
+ki = 0.0
+kd = 0.0
 # 大于多少米全速
-full_speed_meter = 5.0
+full_speed_meter = 6.0
 # 发送状态数据时间间隔
 check_status_interval = 1.0
 # 最大pwm值
-max_pwm = 2000
+max_pwm = 1800
 # 最小pwm值
-min_pwm = 1000
+min_pwm = 1200
 # 停止中位pwm
 stop_pwm = 1500
 # 左侧电机正反桨  0 正桨叶   1 反桨叶
@@ -234,7 +236,7 @@ left_motor_cw = 0
 # 右侧电机正反桨  0 正桨叶   1 反桨叶
 right_motor_cw = 0
 # 抽水时间单位秒
-draw_time = 20
+draw_time = 30
 # pid间隔
 pid_interval = 0.1
 # 开机前等待时间
@@ -248,7 +250,28 @@ network_backhome = 0
 # 剩余电量返航 0关闭  1开启 大于1的数值表示剩余电量低于该值就返航，默认30
 energy_backhome = 0
 # 最多查找连接点数量
-find_points_num=5
+find_points_num = 5
+# TSP优化路径 0 不使用  1使用
+b_tsp = 0
+# 断网检查
+b_check_network = 0
+# 是否播放声音
+b_play_audio = 0
+# 在家调试模式
+home_debug = 0
+# 添加避障方式设置 1 停止  2 绕行
+obstacle_avoid_type=1
+# 路径规划方式
+path_plan_type=1
+# 路径跟踪方式  1 pid    2 pure pursuit
+path_track_type=1
+# 校准罗盘  0 不校准 1 开始校准 2 结束校准
+calibration_compass = 0
+
+# 地图规划最小单位，米
+cell_size = int(arrive_distance)
+# 前视觉距离
+forward_see_distance = 1.5*arrive_distance
 
 def update_height_setting():
     global motor_forward
@@ -271,6 +294,13 @@ def update_height_setting():
     global network_backhome
     global energy_backhome
     global find_points_num
+    global b_check_network
+    global b_play_audio
+    global home_debug
+    global obstacle_avoid_type
+    global path_plan_type
+    global path_track_type
+    global calibration_compass
 
     if os.path.exists(height_setting_path):
         try:
@@ -287,7 +317,6 @@ def update_height_setting():
                     motor_forward = s_motor_forward
                 except Exception as e:
                     print({'error': e})
-
             if height_setting_data.get('motor_steer'):
                 try:
                     s_motor_steer = int(height_setting_data.get('motor_steer'))
@@ -298,7 +327,6 @@ def update_height_setting():
                     motor_steer = s_motor_steer
                 except Exception as e:
                     print({'error': e})
-
             if height_setting_data.get('kp'):
                 try:
                     s_kp = float(height_setting_data.get('kp'))
@@ -325,7 +353,6 @@ def update_height_setting():
                     full_speed_meter = s_full_speed_meter
                 except Exception as e:
                     print({'error': e})
-
             if height_setting_data.get('check_status_interval'):
                 try:
                     s_check_status_interval = float(height_setting_data.get('check_status_interval'))
@@ -336,7 +363,6 @@ def update_height_setting():
                     check_status_interval = s_check_status_interval
                 except Exception as e:
                     print({'error': e})
-
             if height_setting_data.get('check_network_interval'):
                 try:
                     s_check_network_interval = float(height_setting_data.get('check_network_interval'))
@@ -347,7 +373,6 @@ def update_height_setting():
                     check_network_interval = s_check_network_interval
                 except Exception as e:
                     print({'error': e})
-
             if height_setting_data.get('max_pwm'):
                 try:
                     s_max_pwm = int(height_setting_data.get('max_pwm'))
@@ -356,7 +381,6 @@ def update_height_setting():
                     max_pwm = s_max_pwm
                 except Exception as e:
                     print({'error': e})
-
             if height_setting_data.get('min_pwm'):
                 try:
                     s_min_pwm = int(height_setting_data.get('min_pwm'))
@@ -408,7 +432,6 @@ def update_height_setting():
                     start_sleep_time = s_start_sleep_time
                 except Exception as e:
                     print({'error': e})
-
             if height_setting_data.get('motor_init_time'):
                 try:
                     s_motor_init_time = int(height_setting_data.get('motor_init_time'))
@@ -417,7 +440,6 @@ def update_height_setting():
                     motor_init_time = s_motor_init_time
                 except Exception as e:
                     print({'error': e})
-
             if height_setting_data.get('network_backhome'):
                 try:
                     s_network_backhome = int(height_setting_data.get('network_backhome'))
@@ -426,7 +448,6 @@ def update_height_setting():
                     network_backhome = s_network_backhome
                 except Exception as e:
                     print({'error': e})
-
             if height_setting_data.get('energy_backhome'):
                 try:
                     s_energy_backhome = int(height_setting_data.get('energy_backhome'))
@@ -438,7 +459,6 @@ def update_height_setting():
                     energy_backhome = s_energy_backhome
                 except Exception as e:
                     print({'error': e})
-
             if height_setting_data.get('find_points_num'):
                 try:
                     s_find_points_num = int(height_setting_data.get('find_points_num'))
@@ -449,10 +469,87 @@ def update_height_setting():
                     find_points_num = s_find_points_num
                 except Exception as e:
                     print({'error': e})
+            if height_setting_data.get('b_check_network'):
+                try:
+                    s_b_check_network = int(height_setting_data.get('b_check_network'))
+                    if s_b_check_network in [0,1]:
+                        pass
+                    else:
+                        s_b_check_network = 0
+                    b_check_network = s_b_check_network
+                except Exception as e:
+                    print({'error': e})
+            if height_setting_data.get('b_play_audio'):
+                try:
+                    s_b_play_audio = int(height_setting_data.get('b_play_audio'))
+                    if s_b_play_audio in [0, 1, 2, 3, 4, 5, 6, 7, 8]:
+                        pass
+                    else:
+                        s_b_play_audio = 0
+                    b_play_audio = s_b_play_audio
+                except Exception as e:
+                    print({'error': e})
+            if height_setting_data.get('home_debug'):
+                try:
+                    s_home_debug = int(height_setting_data.get('home_debug'))
+                    if s_home_debug in [0,1]:
+                        pass
+                    else:
+                        s_home_debug = 0
+
+                    home_debug = s_home_debug
+                    # 如果在树莓派上不能使用调试模式
+                    if current_platform == 'l_pi':
+                        home_debug = 0
+                except Exception as e:
+                    print({'error': e})
+            if height_setting_data.get('obstacle_avoid_type'):
+                try:
+                    s_obstacle_avoid_type = int(height_setting_data.get('obstacle_avoid_type'))
+                    if s_obstacle_avoid_type in [1,2,3,4]:
+                        pass
+                    else:
+                        s_obstacle_avoid_type = 1
+                    obstacle_avoid_type = s_obstacle_avoid_type
+                except Exception as e:
+                    print({'error': e})
+            if height_setting_data.get('path_plan_type'):
+                try:
+                    s_path_plan_type = int(height_setting_data.get('path_plan_type'))
+                    if s_path_plan_type in [0,1]:
+                        pass
+                    else:
+                        s_path_plan_type = 0
+                    path_plan_type = s_path_plan_type
+                except Exception as e:
+                    print({'error': e})
+            if height_setting_data.get('path_track_type'):
+                try:
+                    s_path_track_type = int(height_setting_data.get('path_track_type'))
+                    if s_path_track_type in [0,1,2,3]:
+                        pass
+                    else:
+                        s_path_track_type= 0
+                    path_track_type = s_path_track_type
+                except Exception as e:
+                    print({'error': e})
+            if height_setting_data.get('calibration_compass'):
+                try:
+                    s_calibration_compass = int(height_setting_data.get('calibration_compass'))
+                    if s_calibration_compass in [0, 1, 2]:
+                        pass
+                    else:
+                        s_calibration_compass = 0
+                    calibration_compass = s_calibration_compass
+                except Exception as e:
+                    print({'error': e})
+
         except Exception as e:
             print({'error': e})
 
-update_height_setting()
+def update_setting():
+    update_base_setting()
+    update_height_setting()
 
 # 保存配置到文件中
 def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_default=False):
@@ -464,6 +561,8 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        'secure_distance': path_search_safe_distance,
                        'row': row_gap,
                        'col': col_gap,
+                       'pool_name':pool_name,
+                       'video_url':video_url
                        },
                       bf)
     if b_base_default:
@@ -474,6 +573,8 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        'secure_distance': path_search_safe_distance,
                        'row': row_gap,
                        'col': col_gap,
+                       'pool_name': pool_name,
+                       'video_url': video_url
                        },
                       bdf)
     if b_height:
@@ -491,13 +592,21 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        'right_motor_cw': right_motor_cw,
                        'draw_time': draw_time,
                        'pid_interval': pid_interval,
-                       'start_sleep_time':start_sleep_time,
-                       'motor_init_time':motor_init_time,
-                       'check_network_interval':check_network_interval,
+                       'start_sleep_time': start_sleep_time,
+                       'motor_init_time': motor_init_time,
+                       'check_network_interval': check_network_interval,
                        'stop_pwm': stop_pwm,
                        'network_backhome': network_backhome,
                        'energy_backhome': energy_backhome,
-                       'find_points_num':find_points_num
+                       'find_points_num': find_points_num,
+                       'b_tsp': b_tsp,
+                       'b_check_network':b_check_network,
+                       'b_play_audio':b_play_audio,
+                       'home_debug':home_debug,
+                       'obstacle_avoid_type':obstacle_avoid_type,
+                       'path_plan_type':path_plan_type,
+                       'path_track_type':path_track_type,
+                       'calibration_compass':calibration_compass
                        },
                       hf)
     if b_height_default:
@@ -515,43 +624,48 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        'right_motor_cw': right_motor_cw,
                        'draw_time': draw_time,
                        'pid_interval': pid_interval,
-                       'start_sleep_time':start_sleep_time,
-                       'motor_init_time':motor_init_time,
-                       'check_network_interval':check_network_interval,
+                       'start_sleep_time': start_sleep_time,
+                       'motor_init_time': motor_init_time,
+                       'check_network_interval': check_network_interval,
                        'stop_pwm': stop_pwm,
                        'network_backhome': network_backhome,
                        'energy_backhome': energy_backhome,
-                       'find_points_num': find_points_num
+                       'find_points_num': find_points_num,
+                       'b_tsp': b_tsp,
+                       'b_check_network': b_check_network,
+                       'b_play_audio': b_play_audio,
+                       'home_debug': home_debug,
+                       'obstacle_avoid_type': obstacle_avoid_type,
+                       'path_plan_type': path_plan_type,
+                       'path_track_type': path_track_type,
+                       'calibration_compass': calibration_compass
                        },
                       hdf)
 
 # 保存返航点地址路径
 home_location_path = os.path.join(root_path, 'home_location.json')
-
-# 使用路径规划和避免湖泊轮廓
-if home_debug:
-    b_use_path_planning = True
-else:
-    b_use_path_planning = False
 # 检查路径规划
 b_check_path_planning = False
-
 # 是否使用启动按钮
 b_use_start = False
 
-########### 树莓派GPIO端口相关设置
+########### 树莓派GPIO端口相关设置 均使用BCM编码端口
 # 使用树莓派控制电机
 b_use_pi = True
 # 左侧电机信号输出控制口
 left_pwm_pin = 23
 # 右侧电机信号输出控制口
 right_pwm_pin = 24
+
 # 是否使用遥控器
-b_use_remote_control = False
-# 1 通道 水平
-channel_1_pin = 12
-# 3 通道 垂直
-channel_3_pin = 16
+b_use_remote_control = True
+# usv a 遥控器  水平是1通道   垂直是2通道
+# 水平
+channel_1_pin = 26
+# 垂直
+channel_3_pin = 19
+# 开启遥控器输入pin口
+start_remote_pin = 13
 
 # 是否使用超声波
 b_use_ultrasonic = False
@@ -561,5 +675,5 @@ left_tx = 17
 right_rx = 27
 right_tx = 22
 
-if home_debug:
-    write_setting(True,True,True,True)
+if __name__ == '__main__':
+    write_setting(True, True, True, True)

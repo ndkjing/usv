@@ -1,8 +1,0 @@
-2021-02-02 20:36:05,395 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.439326,30.539227&zoom=13&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
-2021-02-02 20:36:07,769 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.439326_30.539227_13_1.png'}
-2021-02-02 20:36:08,083 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 5970}
-2021-02-02 20:36:08,229 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}
-2021-02-02 20:36:55,000 baidu_map.py[line:317] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.438296,30.538636&zoom=13&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
-2021-02-02 20:36:56,032 baidu_map.py[line:332] INFO {'save_img_path': 'D:\\pythonProject\\usv\\baiduMap\\imgs\\gaode_114.438296_30.538636_13_1.png'}
-2021-02-02 20:36:56,081 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 5956}
-2021-02-02 20:36:56,212 baidu_map.py[line:450] DEBUG {'pix_to_gps len(cnts)': 1}

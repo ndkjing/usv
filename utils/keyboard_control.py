@@ -1,7 +1,6 @@
 """
 备用键盘上上下左右方向键控制
 """
-import time
 import sys
 import os
 # 不能被xshell转发
@@ -12,7 +11,7 @@ import logging
 
 logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
                     level=logging.DEBUG)
-from dataGetSend import com_data
+from drivers import com_data
 import config
 # import enum
 # class Direction(enum.Enum):
@@ -42,7 +41,7 @@ import config
 
 
 if __name__ == '__main__':
-    serial_obj = com_data.SerialData(config.port, config.baud, timeout=1/config.com2pi_interval)
+    serial_obj = com_data.SerialData(config.port, config.baud, timeout=1 / config.com2pi_interval)
     # key_obj = Control()
     i = 0
     com_data_send = 'A5A5%d,0,0,0,0,0,0,0,0,0#\r\n' % 5

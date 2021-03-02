@@ -1,6 +1,0 @@
-2021-01-15 09:04:36,216 server_data.py[line:295] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
-2021-01-15 09:04:36,218 server_data.py[line:295] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
-2021-01-15 09:04:36,218 server_data.py[line:295] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
-2021-01-15 09:04:36,218 server_data.py[line:295] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
-2021-01-15 09:04:36,219 server_data.py[line:295] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 2}
-2021-01-15 09:04:36,429 server_data.py[line:143] INFO Connected with result code:  0

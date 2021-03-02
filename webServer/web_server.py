@@ -33,13 +33,12 @@ sys.path.append(
         root_path,
         'pathPlanning'))
 import config
-from utils import lng_lat_calculate
-from pathPlanning import a_star
-from baiduMap import baidu_map
+from moveControl.pathPlanning import a_star
+from externalConnect import baidu_map
 from utils.log import LogHandler
-from dataGetSend.server_data import ServerData
-from dataGetSend import data_define
-from dataGetSend.data_define import DataDefine
+from externalConnect.server_data import ServerData
+from webServer import server_config
+from messageBus.data_define import DataDefine
 
 class WebServer:
     def __init__(self):
@@ -125,21 +124,21 @@ class WebServer:
             save_img_dir = os.path.join(config.root_path, 'baiduMap', 'imgs')
             if not os.path.exists(save_img_dir):
                 os.mkdir(save_img_dir)
-            if self.current_map_type==baidu_map.MapType.gaode:
+            if self.current_map_type== baidu_map.MapType.gaode:
                 save_img_path = os.path.join(
                     save_img_dir, 'gaode_%f_%f_%i_%i.png' %
                     (self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[0],
                      self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[1],
                      self.server_data_obj.mqtt_send_get_obj.pool_click_zoom,
                      1))
-            elif self.current_map_type==baidu_map.MapType.tecent:
+            elif self.current_map_type== baidu_map.MapType.tecent:
                 save_img_path = os.path.join(
                     save_img_dir, 'tecent_%f_%f_%i_%i.png' %
                                   (self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[0],
                                    self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[1],
                                    self.server_data_obj.mqtt_send_get_obj.pool_click_zoom,
                                    1))
-            elif self.current_map_type==baidu_map.MapType.baidu:
+            elif self.current_map_type== baidu_map.MapType.baidu:
                 save_img_path = os.path.join(
                     save_img_dir, 'baidu_%f_%f_%i_%i.png' %
                                   (self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat[0],
@@ -344,13 +343,9 @@ class WebServer:
                     _, scan_point_gaode_list = self.baidu_map_obj.pix_to_gps(scan_point_cnts)
                     self.path_planning(target_lng_lats=scan_point_gaode_list)
                     self.server_data_obj.mqtt_send_get_obj.row_gap=None
-                    self.server_data_obj.mqtt_send_get_obj.col_gap=None
-                    self.server_data_obj.mqtt_send_get_obj.safe_gap=None
                 except Exception as e:
                     self.logger.error({'error':e})
                     self.server_data_obj.mqtt_send_get_obj.row_gap = None
-                    self.server_data_obj.mqtt_send_get_obj.col_gap = None
-                    self.server_data_obj.mqtt_send_get_obj.safe_gap = None
 
     # 路径规划
     def path_planning(self, target_lng_lats):
@@ -369,7 +364,7 @@ class WebServer:
         print(config.home_debug)
         print('self.baidu_map_obj.ship_gaode_lng_lat',self.baidu_map_obj.ship_gaode_lng_lat)
         # 进行路径规划
-        if config.b_use_path_planning and b_plan_path:
+        if server_config.b_use_path_planning and b_plan_path:
             return_gaode_lng_lat_path = a_star.get_path(
                 baidu_map_obj=self.baidu_map_obj,
                 target_lng_lats=target_lng_lats,

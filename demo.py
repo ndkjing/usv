@@ -1,6 +1,7 @@
 import threading
 import random
 import time
+
 """
 
 class A:
@@ -72,7 +73,7 @@ if __name__ == '__main__':
 #     if len(i)==1:
 #         print(type(i))
 #         print('A%sZ'%(i))
-        # time.sleep(0.1)
+# time.sleep(0.1)
 # from audios import audios_manager
 # audios_manager.play_audio('setup.mp3')
 
@@ -114,7 +115,6 @@ import numpy as np
 # b.insert(0,10)
 # print(b)
 import math
-
 
 # 测试通过
 # def DDD2DMS(number):
@@ -247,8 +247,8 @@ import math
 # print(type(a))
 
 import math
-#points内的点处在同一条直线上吗？
-#points内至少有3个点。
+# points内的点处在同一条直线上吗？
+# points内至少有3个点。
 # def on_one_line(points):
 #     delta_x = points[1][0] - points[0][0]
 #     delta_y = points[1][1] - points[0][1]
@@ -586,13 +586,13 @@ import math
 #
 #
 # if __name__ == "__main__":
-    # poly = np.array([[0, 0], [0, 1], [0.5, 2], [1, 1], [1, 0]])
-    # perimeter = Perimeter(poly)
-    # area = Area(poly)
-    #
-    # shrink_poly = shrink_polygon(poly, 0.5)
-    # expansion_poly = shrink_polygon(shrink_poly, -0.5)
-    # print(perimeter, area, shrink_poly, expansion_poly)
+# poly = np.array([[0, 0], [0, 1], [0.5, 2], [1, 1], [1, 0]])
+# perimeter = Perimeter(poly)
+# area = Area(poly)
+#
+# shrink_poly = shrink_polygon(poly, 0.5)
+# expansion_poly = shrink_polygon(shrink_poly, -0.5)
+# print(perimeter, area, shrink_poly, expansion_poly)
 
 # a = [1,2,3]
 # print(a.pop(2),a)
@@ -602,10 +602,19 @@ import math
 # path_info=[1.23,32.321321]
 # print({"path_info": '当前目标点:%d 目标点总数: %d' %(int(path_info[0]),int(path_info[1]))})
 
-# print(type([[1,23],[321,321]]),isinstance(np.asarray([1,2]),list),isinstance(np.asarray([1,2]),np.ndarray))
-a = {1:2,3:2}
-print(a,a.update({5:5}),a)
-import json
-while 1:
-    print(time.time(),int(time.time())%2==0)
-    time.sleep(0.5)
+# # print(type([[1,23],[321,321]]),isinstance(np.asarray([1,2]),list),isinstance(np.asarray([1,2]),np.ndarray))
+# a = {1:2,3:2}
+# print(a,a.update({5:5}),a)
+# import json
+# while 1:
+#     if time.time() % 2 <0.1:
+#         print(time.time(),int(time.time())%2==0)
+#         time.sleep(0.1)
+# theta=30
+# distance=10
+# print(math.sin(math.radians(theta)) * distance)
+map_data = np.zeros((2,3))
+print(map_data.shape)
+a = [1,1,1,2]
+print(a.count(0))
+

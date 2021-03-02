@@ -1,10 +1,11 @@
 """
 网络数据收发
 """
-from dataGetSend.data_define import DataDefine
+from messageBus.data_define import DataDefine
 import config
-from dataGetSend import data_define
+from messageBus import data_define
 from utils import log
+import copy
 
 import paho.mqtt.client as mqtt
 import time
@@ -64,6 +65,7 @@ class HttpSendGet:
         """
         get_url = self.base_url + uri
         response = requests.get(uri)
+
 
 class MqttSendGet:
     """
@@ -136,8 +138,14 @@ class MqttSendGet:
         self.b_sampling = 0
         # 抽水控制位  0为不抽水　1为抽水
         self.b_draw = 0
-        # 启动还是停止
+        # 启动还是停止寻点模式
         self.b_start=0
+        # 请求设置类型
+        self.base_setting_data_info=-1
+        # 点击湖泊
+        self.b_pool_click = 0
+        # 重置选择湖泊
+        self.reset_pool_click=0
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -170,9 +178,8 @@ class MqttSendGet:
             self.logger.info({'topic':topic,
                                 'control_move_direction': control_data.get('move_direction'),
                               })
-
         # 处理开关信息
-        if topic == 'switch_%s' % (self.ship_code):
+        elif topic == 'switch_%s' % (self.ship_code):
             switch_data = json.loads(msg.payload)
             if switch_data.get('b_draw') is None :
                 self.logger.error('switch_data_处理控制数据没有b_draw b_sampling')
@@ -198,7 +205,7 @@ class MqttSendGet:
             self.pool_click_lng_lat = lng_lat
             zoom = int(round(float(pool_click_data.get('zoom')), 0))
             self.pool_click_zoom = zoom
-
+            self.b_pool_click = 1
             self.logger.info({'topic':topic,
                                 'lng_lat': pool_click_data.get('lng_lat'),
                               'zoom': pool_click_data.get('zoom')
@@ -309,7 +316,7 @@ class MqttSendGet:
         elif topic == 'status_data_%s' % (self.ship_code):
             status_data = json.loads(msg.payload)
             if status_data.get("current_lng_lat") is None:
-                self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
+                # self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
                 return
             else:
                 self.current_lng_lat =status_data.get('current_lng_lat')
@@ -317,7 +324,37 @@ class MqttSendGet:
                 pass
             else:
                 self.home_lng_lat =status_data.get('home_lng_lat')
-
+        # 基础配置
+        elif topic == 'base_setting_%s' % (self.ship_code):
+            self.logger.info({'base_setting ': json.loads(msg.payload)})
+            if len(msg.payload) < 5:
+                return
+            base_setting_data = json.loads(msg.payload)
+            if base_setting_data.get("info_type") is None:
+                self.logger.error('"base_setting_data"设置启动消息没有"info_type"字段')
+                return
+            else:
+                info_type = int(base_setting_data.get('info_type'))
+                self.base_setting_data_info = info_type
+                if info_type == 1:
+                    print('base_setting_path',config.base_setting_path)
+                    with open(config.base_setting_path, 'r') as f:
+                        self.base_setting_data = json.load(f)
+                elif info_type == 2:
+                    with open(config.base_setting_path, 'r') as f:
+                        self.base_setting_data = json.load(f)
+                    with open(config.base_setting_path, 'w') as f:
+                        self.base_setting_data.update(base_setting_data)
+                        json.dump(self.base_setting_data, f)
+                    config.update_base_setting()
+                # 恢复默认配置
+                elif info_type == 4:
+                    with open(config.base_setting_path, 'w') as f:
+                        with open(config.base_setting_default_path, 'r') as df:
+                            self.base_setting_default_data = json.load(df)
+                            self.base_setting_data = copy.deepcopy(self.base_setting_default_data)
+                            json.dump(self.base_setting_data, f)
+                    config.update_base_setting()
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):
