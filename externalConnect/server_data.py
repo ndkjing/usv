@@ -119,6 +119,8 @@ class MqttSendGet:
         self.sampling_points = []
         self.path_planning_points = []
         self.sampling_points_status = []
+        self.sampling_points_gps = []
+        self.path_planning_points_gps = []
 
         # 船当前经纬度 给服务器路径规划使用
         self.current_lng_lat = None

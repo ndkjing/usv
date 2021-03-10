@@ -54,7 +54,6 @@ logger = log.LogHandler('main_log')
 
 def main():
     config.update_setting()
-
     if config.b_play_audio:
         audios_manager.play_audio(audio_index=audios_manager.AudioType.start)
     # 数据处理对象
@@ -133,6 +132,7 @@ def main():
     # send_com_data_thread.join()
     # check_status_thread.join()
     # send_com_heart_thread.join()
+    print('home_debug', config.home_debug)
     thread_restart_time = 3
     while True:
         #  判断线程是否死亡并重启线程

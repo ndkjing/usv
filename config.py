@@ -262,8 +262,11 @@ b_tsp = 0
 b_check_network = 0
 # 是否播放声音
 b_play_audio = 0
-# 在家调试模式
-home_debug = 1
+# 不是在树莓派上都是用调试模式
+if current_platform==CurrentPlatform.pi:
+    home_debug = 0
+else:
+    home_debug = 1
 # 添加避障方式设置 1 停止  2 绕行
 obstacle_avoid_type = 1
 # 路径规划方式

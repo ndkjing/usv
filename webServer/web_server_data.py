@@ -249,7 +249,7 @@ class MqttSendGet:
         # 用户设置自动求取检测点经纬度
         elif topic == 'auto_lng_lat_%s' % (self.ship_code):
             auto_lng_lat_data = json.loads(msg.payload)
-            if  auto_lng_lat_data.get('config') is None:
+            if auto_lng_lat_data.get('config') is None:
                 self.logger.error('auto_lng_lat_用户设置自动求取检测点经纬度没有config字段')
                 return
             if auto_lng_lat_data.get('config').get('row_gap') is None:
@@ -269,7 +269,7 @@ class MqttSendGet:
         # 返回路径规划点
         elif topic == 'path_planning_%s' % (self.ship_code):
             path_planning_data = json.loads(msg.payload)
-            if  path_planning_data.get('path_points') is None:
+            if path_planning_data.get('path_points') is None:
                 self.logger.error('path_planning_用户确认轨迹 没有path_points字段')
                 return
             self.path_planning_points = path_planning_data.get('path_points')

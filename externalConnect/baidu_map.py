@@ -387,6 +387,7 @@ class BaiduMap(object):
         :param lng_lat: 真实gps 列表，[经度，纬度]
         :return:高德经纬度 列表，[经度，纬度]
         """
+        print('call gps_to_gaode_lng_lat')
         url = 'https://restapi.amap.com/v3/assistant/coordinate/convert?locations={lng_lat}&coordsys=gps&key={key}'.format(
             lng_lat="%f,%f" % (lng_lat[0], lng_lat[1]), key=config.gaode_key)
         response = requests.get(url=url)

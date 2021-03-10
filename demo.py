@@ -613,8 +613,9 @@ import math
 # theta=30
 # distance=10
 # print(math.sin(math.radians(theta)) * distance)
-map_data = np.zeros((2,3))
-print(map_data.shape)
-a = [1,1,1,2]
-print(a.count(0))
+# map_data = np.zeros((2,3))
+# print(map_data.shape)
+# a = [1,1,1,2]
+# print(a.count(0))
+
 

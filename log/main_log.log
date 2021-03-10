@@ -40,3 +40,11 @@
 2021-03-09 20:54:02,555 main.py[line:71] INFO {'binding status': 1}
 2021-03-10 09:03:11,573 main.py[line:71] INFO {'binding status': 1}
 2021-03-10 09:23:14,616 main.py[line:71] INFO {'binding status': 1}
+2021-03-10 11:03:04,761 main.py[line:71] INFO {'binding status': 1}
+2021-03-10 19:04:38,944 main.py[line:71] INFO {'binding status': 1}
+2021-03-10 19:16:06,256 main.py[line:70] INFO {'binding status': 1}
+2021-03-10 19:20:17,302 main.py[line:70] INFO {'binding status': 1}
+2021-03-10 19:21:22,727 main.py[line:70] INFO {'binding status': 1}
+2021-03-10 19:23:54,558 main.py[line:70] INFO {'binding status': 1}
+2021-03-10 19:25:57,600 main.py[line:237] ERROR restart send_com_data_thread
+2021-03-10 19:26:00,601 main.py[line:237] ERROR restart send_com_data_thread
