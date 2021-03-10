@@ -1,6 +1,0 @@
-2021-02-02 20:36:08,230 multi_web_server.py[line:207] INFO {'pool_center_lng_lat': [[114.432288, 30.548247]]}
-2021-02-02 20:36:08,379 multi_web_server.py[line:261] INFO {'在本地找到湖泊 poolid': '1347371895545110529'}
-2021-02-02 20:36:08,387 multi_web_server.py[line:306] INFO {'pool_info_data': {'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380c', 'mapId': '1347371895545110529', 'lng_lat': [114.439326, 30.539227]}}
-2021-02-02 20:36:56,213 multi_web_server.py[line:209] INFO {'pool_center_lng_lat': [[114.432287, 30.548247]]}
-2021-02-02 20:36:56,287 multi_web_server.py[line:263] INFO {'在本地找到湖泊 poolid': '1347371895545110529'}
-2021-02-02 20:36:56,288 multi_web_server.py[line:308] INFO {'pool_info_data': {'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380c', 'mapId': '1347371895545110529', 'lng_lat': [114.438296, 30.538636]}}
