@@ -148,8 +148,8 @@ class ComData:
 if __name__ == '__main__':
     import config
 
-    b_compass = False
-    b_alt = True
+    b_compass = 1
+    b_alt = 0
     b_com_data = False
     if b_compass:
         com_obj = ComData(config.compass_port,

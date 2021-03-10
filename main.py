@@ -10,7 +10,7 @@ from drivers import audios_manager
 import sys
 import os
 
-if (config.current_platform == "l_pi"):
+if (config.current_platform ==  config.CurrentPlatform.pi):
     time.sleep(config.start_sleep_time)
 
 sys.path.append(
@@ -73,7 +73,7 @@ def main():
         logger.error({'binding_data error': e1})
 
     # 启动串口数据收发和mqtt数据收发
-    if (config.current_platform == "l_pi"):
+    if config.current_platform == config.CurrentPlatform.pi:
         if os.path.exists(config.stc_port):
             get_com_data_thread = threading.Thread(target=data_manager_obj.get_com_data)
         if os.path.exists(config.compass_port):
@@ -96,7 +96,7 @@ def main():
     send_com_data_thread.setDaemon(True)
     send_mqtt_data_thread.setDaemon(True)
 
-    if (config.current_platform == "l_pi"):
+    if (config.current_platform == config.CurrentPlatform.pi):
         if os.path.exists(config.stc_port):
             get_com_data_thread.setDaemon(True)
         if os.path.exists(config.compass_port):
@@ -112,7 +112,7 @@ def main():
     check_status_thread.start()
     send_mqtt_data_thread.start()
     send_com_data_thread.start()
-    if (config.current_platform == "l_pi"):
+    if (config.current_platform == config.CurrentPlatform.pi):
         if os.path.exists(config.stc_port):
             get_com_data_thread.start()
 
@@ -136,7 +136,7 @@ def main():
     thread_restart_time = 3
     while True:
         #  判断线程是否死亡并重启线程
-        if (config.current_platform == "l_pi"):
+        if (config.current_platform == config.CurrentPlatform.pi):
             if os.path.exists(config.stc_port) and not get_com_data_thread.is_alive():
                 logger.error('restart get_com_data_thread')
                 try:

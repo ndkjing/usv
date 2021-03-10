@@ -88,6 +88,12 @@ class WebServer:
             http_type='POST',
             url=''):
         """
+        :param ship_code:
+        :param url:
+        :param http_type:
+        :param qos:
+        :param data:
+        :param topic:
         :param method 获取数据方式　http mqtt com
         """
         assert method in ['http', 'mqtt',
@@ -168,7 +174,7 @@ class WebServer:
                                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat[1],
                                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom,
                                        1))
-                elif self.current_map_type == baidu_map.MapType.baidu:
+                else:
                     save_img_path = os.path.join(
                         save_img_dir, 'baidu_%f_%f_%i_%i.png' %
                                       (self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat[0],
@@ -176,7 +182,7 @@ class WebServer:
                                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom,
                                        1))
                 # 创建于查找湖泊
-                if len(self.data_define_obj_dict.get(ship_code).pool_code) <= 0 or not os.path.exists(save_img_path):
+                if self.data_define_obj_dict.get(ship_code).pool_code or not os.path.exists(save_img_path):
                     # 创建地图对象
                     if os.path.exists(save_img_path) and self.baidu_map_obj_dict.get(ship_code) is not None:
                         continue
@@ -288,14 +294,15 @@ class WebServer:
                         # 不存在获取新的id
                         else:
                             try:
+                                self.logger.info({config.http_save: send_data})
                                 pool_id = self.send(
                                     method='http',
                                     data=send_data,
                                     ship_code=ship_code,
                                     url=config.http_save,
                                     http_type='POST')
-                                self.logger.info({config.http_save:send_data})
                             except Exception as e:
+                                # self.logger.info({config.http_save: send_data})
                                 self.logger.error({'error': e})
                             self.logger.info({'新的湖泊 poolid': pool_id})
                             with open(config.local_map_data_path, 'w') as f:

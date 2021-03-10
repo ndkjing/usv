@@ -49,7 +49,7 @@ class PiMain:
         self.cb2 = self.pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, self.mycallback)
         self.cb3 = self.pi.callback(config.start_remote_pin, pigpio.EITHER_EDGE, self.mycallback)
 
-        if config.b_use_ultrasonic and config.current_platform == 'l':
+        if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             self.left_ultrasonic_obj = self.get_left_ultrasonic_obj()
             self.right_ultrasonic_obj = self.get_right_ultrasonic_obj()
         # 左右侧超声波距离，没有返回None  -1 表示距离过近
@@ -65,7 +65,7 @@ class PiMain:
 
     # 在线程中读取超声波
     def get_left_distance(self):
-        if config.b_use_ultrasonic and config.current_platform == 'l_pi':
+        if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             while True:
                 l_distance = self.left_ultrasonic_obj.read()
                 if l_distance is None :
@@ -74,7 +74,7 @@ class PiMain:
                     self.left_distance = l_distance
 
     def get_right_distance(self):
-        if config.b_use_ultrasonic and config.current_platform == 'l_pi':
+        if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             while True:
                 distance = self.right_ultrasonic_obj.read()
                 if distance is None:
@@ -238,7 +238,7 @@ class PiMain:
         # self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
         # 不支持输出获取pwm状态，以后再调试
         # print('left_pwm:',self.left_pwm,self.pi.get_PWM_dutycycle(config.left_pwm_pin),'right_pwm:',self.right_pwm,self.pi.get_PWM_dutycycle(config.right_pwm_pin))
-        print(time.time(), 'left_pwm:', self.left_pwm, 'right_pwm:', self.right_pwm)
+        # print(time.time(), 'left_pwm:', self.left_pwm, 'right_pwm:', self.right_pwm)
 
 
 if __name__ == '__main__':

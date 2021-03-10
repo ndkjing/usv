@@ -83,21 +83,15 @@ class MqttSendGet:
         self.logger = logger
         self.mqtt_host = mqtt_host
         self.mqtt_port = mqtt_port
-        if (config.current_platform == "l_pi"):
-            client_id = client_id + 'dk_linux2'
-            self.mqtt_user = 'dk_linux2'
-        elif (config.current_platform == "l_j"):
-            client_id = client_id + 'dk_linux_j'
-            self.mqtt_user = 'dk_linux_j'
-        elif (config.current_platform == "l_j"):
-            client_id = client_id + 'dk_linux_x'
-            self.mqtt_user = 'dk_linux_x'
-        elif ship_code is not None:
-            client_id = ship_code
-            self.mqtt_user = 'dk_linux_x' + ship_code
-        else:
-            client_id = client_id + 'dk_windwos'
-            self.mqtt_user = 'dk_windwos'
+        if config.current_platform == config.CurrentPlatform.pi:
+            client_id = client_id + 'pi'
+            self.mqtt_user = 'linux2'
+        elif config.current_platform == config.CurrentPlatform.linux:
+            client_id = client_id + 'linux'
+            self.mqtt_user = 'linux'
+        else :
+            client_id = client_id + 'windows'
+            self.mqtt_user = 'windows'
         self.mqtt_passwd = 'public'
         self.mqtt_client = mqtt.Client(client_id=client_id)
         self.mqtt_client.username_pw_set(self.mqtt_user, password=self.mqtt_passwd)
@@ -115,7 +109,7 @@ class MqttSendGet:
         self.zoom = []
         self.meter_pix = {}
         self.mode = []
-        self.pool_id = None
+        self.pool_code = None
         # 记录经纬度是不是已经到达或者放弃到达（在去的过程中手动操作） 0准备过去(自动) -1放弃（手动）  1 已经到达的点  2:该点是陆地
         self.target_lng_lat_status = []
         # 当前航线  -1是还没选择
@@ -351,7 +345,7 @@ class MqttSendGet:
                 if not pool_info_data.get('mapId'):
                     self.logger.error('pool_info_data设置启动消息没有mapId字段')
                     return
-                self.pool_id = str(pool_info_data.get('mapId'))
+                self.pool_code = str(pool_info_data.get('mapId'))
                 self.logger.info({'topic': topic, 'mapId': pool_info_data.get('mapId')})
 
             # 服务器从状态数据中获取 当前经纬度

@@ -1,6 +1,7 @@
 # 保存地图数据路径
-import os
+import enum
 import json
+import os
 import platform
 
 root_path = os.path.dirname(os.path.abspath(__file__))
@@ -23,33 +24,35 @@ height_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'hei
 # 保存湖号和路径数据
 save_plan_path = os.path.join(root_path, 'statics', 'configs', 'save_plan_path.json')
 
+
+class CurrentPlatform(enum.Enum):
+    windwos = 1
+    linux = 2
+    pi = 3
+    others = 4
+
+
 sysstr = platform.system()
-if (sysstr == "Windows"):
+if sysstr == "Windows":
     print("Call Windows tasks")
-    current_platform = 'w'
-    if platform.node() == 'DESKTOP-MSUAAG9':
-        current_platform = 'w_j'
-elif (sysstr == "Linux"):  # 树莓派上也是Linux
+    current_platform = CurrentPlatform.windwos
+elif sysstr == "Linux":  # 树莓派上也是Linux
     print("Call Linux tasks")
     # 公司Linux电脑名称
-    if platform.node() == 'jing':
-        current_platform = 'l_j'
-    elif platform.node() == 'xxl':
-        current_platform = 'l_x'
-    elif platform.node() == 'raspberrypi':
-        current_platform = 'l_pi'
+    if platform.node() == 'raspberrypi':
+        current_platform = CurrentPlatform.pi
     else:
-        current_platform = 'l'
+        current_platform = CurrentPlatform.linux
 else:
     print("other System tasks")
-    current_platform = 'o'
+    current_platform = CurrentPlatform.others
+
 # 百度地图key
 baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
 # 高德秘钥
 gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
 # 腾讯地图key
 tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
-
 
 # 速度等级 1到5级 速度从低到高，仅能控制手动模式下速度   1 级表示1600 5 2000
 speed_grade = 3
@@ -66,6 +69,7 @@ col_gap = 50
 pool_name = "梁子湖"
 # 视频链接
 video_url = "http://123.32132.321321.213"
+
 
 def update_base_setting():
     global speed_grade
@@ -156,6 +160,7 @@ def update_base_setting():
         except Exception as e:
             print({'error': e})
 
+
 # 罗盘等待时间间隔
 compass_timeout = 0.2
 # 单片机发送给树莓派等待时间
@@ -177,7 +182,7 @@ stc_baud = 115200
 imu_port = '/dev/imu'
 imu_baud = 115200
 # 飞控
-if current_platform == 'l_pi':
+if current_platform ==  CurrentPlatform.pi:
     pix_port = '/dev/ttyACM0'
 else:
     pix_port = 'tcp:127.0.0.1:5760'
@@ -218,7 +223,7 @@ motor_forward = 100
 # 电机转弯分量
 motor_steer = 200
 # pid三参数
-kp = 2.6
+kp = 2.0
 ki = 0.0
 kd = 0.0
 # 大于多少米全速
@@ -258,20 +263,21 @@ b_check_network = 0
 # 是否播放声音
 b_play_audio = 0
 # 在家调试模式
-home_debug = 0
+home_debug = 1
 # 添加避障方式设置 1 停止  2 绕行
-obstacle_avoid_type=1
+obstacle_avoid_type = 1
 # 路径规划方式
-path_plan_type=1
+path_plan_type = 1
 # 路径跟踪方式  1 pid    2 pure pursuit
-path_track_type=1
+path_track_type = 1
 # 校准罗盘  0 不校准 1 开始校准 2 结束校准
 calibration_compass = 0
 
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
 # 前视觉距离
-forward_see_distance = 1.5*arrive_distance
+forward_see_distance = 1.5 * arrive_distance
+
 
 def update_height_setting():
     global motor_forward
@@ -472,7 +478,7 @@ def update_height_setting():
             if height_setting_data.get('b_check_network'):
                 try:
                     s_b_check_network = int(height_setting_data.get('b_check_network'))
-                    if s_b_check_network in [0,1]:
+                    if s_b_check_network in [0, 1]:
                         pass
                     else:
                         s_b_check_network = 0
@@ -492,21 +498,21 @@ def update_height_setting():
             if height_setting_data.get('home_debug'):
                 try:
                     s_home_debug = int(height_setting_data.get('home_debug'))
-                    if s_home_debug in [0,1]:
+                    if s_home_debug in [0, 1]:
                         pass
                     else:
                         s_home_debug = 0
 
                     home_debug = s_home_debug
                     # 如果在树莓派上不能使用调试模式
-                    if current_platform == 'l_pi':
+                    if current_platform == CurrentPlatform.pi:
                         home_debug = 0
                 except Exception as e:
                     print({'error': e})
             if height_setting_data.get('obstacle_avoid_type'):
                 try:
                     s_obstacle_avoid_type = int(height_setting_data.get('obstacle_avoid_type'))
-                    if s_obstacle_avoid_type in [1,2,3,4]:
+                    if s_obstacle_avoid_type in [1, 2, 3, 4]:
                         pass
                     else:
                         s_obstacle_avoid_type = 1
@@ -516,7 +522,7 @@ def update_height_setting():
             if height_setting_data.get('path_plan_type'):
                 try:
                     s_path_plan_type = int(height_setting_data.get('path_plan_type'))
-                    if s_path_plan_type in [0,1]:
+                    if s_path_plan_type in [0, 1]:
                         pass
                     else:
                         s_path_plan_type = 0
@@ -526,10 +532,10 @@ def update_height_setting():
             if height_setting_data.get('path_track_type'):
                 try:
                     s_path_track_type = int(height_setting_data.get('path_track_type'))
-                    if s_path_track_type in [0,1,2,3]:
+                    if s_path_track_type in [0, 1, 2, 3]:
                         pass
                     else:
-                        s_path_track_type= 0
+                        s_path_track_type = 0
                     path_track_type = s_path_track_type
                 except Exception as e:
                     print({'error': e})
@@ -547,9 +553,11 @@ def update_height_setting():
         except Exception as e:
             print({'error': e})
 
+
 def update_setting():
     update_base_setting()
     update_height_setting()
+
 
 # 保存配置到文件中
 def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_default=False):
@@ -561,8 +569,8 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        'secure_distance': path_search_safe_distance,
                        'row': row_gap,
                        'col': col_gap,
-                       'pool_name':pool_name,
-                       'video_url':video_url
+                       'pool_name': pool_name,
+                       'video_url': video_url
                        },
                       bf)
     if b_base_default:
@@ -600,13 +608,13 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        'energy_backhome': energy_backhome,
                        'find_points_num': find_points_num,
                        'b_tsp': b_tsp,
-                       'b_check_network':b_check_network,
-                       'b_play_audio':b_play_audio,
-                       'home_debug':home_debug,
-                       'obstacle_avoid_type':obstacle_avoid_type,
-                       'path_plan_type':path_plan_type,
-                       'path_track_type':path_track_type,
-                       'calibration_compass':calibration_compass
+                       'b_check_network': b_check_network,
+                       'b_play_audio': b_play_audio,
+                       'home_debug': home_debug,
+                       'obstacle_avoid_type': obstacle_avoid_type,
+                       'path_plan_type': path_plan_type,
+                       'path_track_type': path_track_type,
+                       'calibration_compass': calibration_compass
                        },
                       hf)
     if b_height_default:
@@ -642,10 +650,9 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        },
                       hdf)
 
+
 # 保存返航点地址路径
 home_location_path = os.path.join(root_path, 'home_location.json')
-# 检查路径规划
-b_check_path_planning = False
 # 是否使用启动按钮
 b_use_start = False
 
@@ -675,5 +682,10 @@ left_tx = 17
 right_rx = 27
 right_tx = 22
 
+# 使用角度  1 使用罗盘1角度   2 使用罗盘2角度  3 使用经纬度移动计算角度
+if home_debug:
+    use_shape_theta_type = 3
+else:
+    use_shape_theta_type = 1
 if __name__ == '__main__':
     write_setting(True, True, True, True)

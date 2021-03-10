@@ -141,6 +141,7 @@ class MqttSendGet:
         # 启动还是停止寻点模式
         self.b_start=0
         # 请求设置类型
+        self.base_setting_data = None
         self.base_setting_data_info=-1
         # 点击湖泊
         self.b_pool_click = 0
