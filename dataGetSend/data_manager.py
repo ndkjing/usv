@@ -19,6 +19,7 @@ from utils import lng_lat_calculate
 import config
 from piControl import pi_main
 
+
 class DataManager:
     def __init__(self):
         self.data_define_obj = DataDefine()
