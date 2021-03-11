@@ -263,7 +263,7 @@ b_check_network = 0
 # 是否播放声音
 b_play_audio = 0
 # 不是在树莓派上都是用调试模式
-if current_platform==CurrentPlatform.pi:
+if current_platform == CurrentPlatform.pi:
     home_debug = 0
 else:
     home_debug = 1
@@ -690,5 +690,7 @@ if home_debug:
     use_shape_theta_type = 3
 else:
     use_shape_theta_type = 1
+
+test=1
 if __name__ == '__main__':
     write_setting(True, True, True, True)
