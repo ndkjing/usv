@@ -208,6 +208,7 @@ class MqttSendGet:
                     self.sampling_points = []
                     self.path_planning_points = []
                     self.sampling_points_status = []
+                    self.sampling_points_gps=[]
                 self.logger.info({'topic': topic,
                                   'control_move_direction': control_data.get('move_direction'),
                                   })

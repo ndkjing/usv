@@ -105,6 +105,8 @@ class DataManager:
         self.low_dump_energy_warnning = 0
         # 返航点
         self.home_lng_lat = None
+        # 返航点高德经纬度
+        self.home_gaode_lng_lat = None
         # 船速度
         self.speed = None
         # 船行驶里程
@@ -441,6 +443,7 @@ class DataManager:
         self.server_data_obj.mqtt_send_get_obj.sampling_points = []
         self.server_data_obj.mqtt_send_get_obj.path_planning_points = []
         self.server_data_obj.mqtt_send_get_obj.sampling_points_status = []
+        self.server_data_obj.mqtt_send_get_obj.sampling_points_gps = []
         # 清空里程和时间
         self.totle_distance = 0
         self.plan_start_time = None
@@ -658,7 +661,7 @@ class DataManager:
             sample_lng_lat_gps[0],
             sample_lng_lat_gps[1])
         self.distance_p = distance
-        if  distance < config.arrive_distance:
+        if distance < config.arrive_distance:
             return True
         while distance > config.arrive_distance:
             # 更新提醒的距离信息
@@ -897,6 +900,8 @@ class DataManager:
                 self.logger.info({'全部距离': self.totle_distance})
                 # 将目标点转换为真实经纬度
                 self.update_ship_gaode_lng_lat()
+                self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps = []
+                self.server_data_obj.mqtt_send_get_obj.sampling_points_gps = []
                 if config.home_debug:
                     self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.path_planning_points)
                     self.server_data_obj.mqtt_send_get_obj.sampling_points_gps = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.sampling_points)
@@ -916,20 +921,31 @@ class DataManager:
                     print(self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
                     for index, sampling_point_gps in enumerate(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps):
                         # 判断该点是否已经到达
+                        print('sampling_points',self.server_data_obj.mqtt_send_get_obj.sampling_points)
+                        print('sampling_points_gps',self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)
+                        print('sampling_points_status',self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
+                        # 如果状态清空则跳出
+                        if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status)<=0:
+                            break
                         if self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] == 1:
                             continue
                         # 计算下一个目标点经纬度
-                        next_lng_lat = self.calc_target_lng_lat()
-                        # 如果当前点靠近采样点指定范围就停止并采样
-                        sample_distance = lng_lat_calculate.distanceFromCoordinate(
-                            next_lng_lat[0],
-                            next_lng_lat[1],
-                            sampling_point_gps[0],
-                            sampling_point_gps[1])
-                        if sample_distance < config.forward_see_distance:
-                            b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps, b_force_arrive=True)
+                        b_smooth_path = False
+                        if b_smooth_path:
+                            next_lng_lat = self.calc_target_lng_lat()
+                            # 如果当前点靠近采样点指定范围就停止并采样
+                            sample_distance = lng_lat_calculate.distanceFromCoordinate(
+                                next_lng_lat[0],
+                                next_lng_lat[1],
+                                sampling_point_gps[0],
+                                sampling_point_gps[1])
+                            if sample_distance < config.forward_see_distance:
+                                b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps, b_force_arrive=True)
+                            else:
+                                b_arrive_sample = self.points_arrive_control(next_lng_lat, sampling_point_gps, b_force_arrive=False)
                         else:
-                            b_arrive_sample = self.points_arrive_control(next_lng_lat, sampling_point_gps, b_force_arrive=False)
+                            b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
+                                                                         b_force_arrive=True)
                         # print('sample_distance b_arrive_sample',sample_distance,b_arrive_sample)
                         if b_arrive_sample:
                             # 更新目标点提示消息
@@ -996,8 +1012,9 @@ class DataManager:
                 if config.home_debug:
                     home_gaode_lng_lat = self.home_lng_lat
                 else:
-                    home_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.home_lng_lat)
-                status_data.update({'home_lng_lat': home_gaode_lng_lat})
+                    if not self.home_gaode_lng_lat:
+                        self.home_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.home_lng_lat)
+                status_data.update({'home_lng_lat': self.home_gaode_lng_lat})
             # 更新速度  更新里程
             if self.speed is not None:
                 status_data.update({'speed': self.speed})

@@ -19,10 +19,12 @@ class SimplePid:
         self.right_distance=None
 
     def distance_p(self, distance, theta_error):
-        motor_forward = int(config.motor_forward * (180-abs(theta_error))/(180*1.5))
+        # motor_forward = int(config.motor_forward * (180-abs(theta_error))/(180*1.4))
+        motor_forward = int(config.motor_forward)
         pwm = int((distance * (motor_forward/config.full_speed_meter)))
         if pwm >= config.motor_forward:
             pwm = config.motor_forward
+        pwm = int(pwm * (180-abs(theta_error))/(180*1.2))
         return pwm
 
     def update_steer_pid(self, theta_error):
@@ -53,9 +55,10 @@ class SimplePid:
         if (forward_pwm + steer_pwm) == 0:
             return 1500, 1500
         scale_pwm = (config.max_pwm-config.stop_pwm)/(forward_pwm+abs(steer_pwm))
+        scale_pwm = 1
         left_pwm = 1500 + int(forward_pwm*scale_pwm) - int(steer_pwm*scale_pwm)
         right_pwm = 1500 + int(forward_pwm*scale_pwm) + int(steer_pwm*scale_pwm)
-        # print('forward_pwm,steer_pwm,left_pwm,right_pwm',forward_pwm,steer_pwm,left_pwm,right_pwm)
+        print('theta_error forward_pwm,steer_pwm,left_pwm,right_pwm',theta_error, forward_pwm,steer_pwm,left_pwm,right_pwm)
         return left_pwm, right_pwm
 
     def pid_pwm_1(self, forward_distance, steer_distance):

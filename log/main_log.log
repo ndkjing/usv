@@ -48,3 +48,4 @@
 2021-03-10 19:23:54,558 main.py[line:70] INFO {'binding status': 1}
 2021-03-10 19:25:57,600 main.py[line:237] ERROR restart send_com_data_thread
 2021-03-10 19:26:00,601 main.py[line:237] ERROR restart send_com_data_thread
+2021-03-11 13:37:13,391 main.py[line:70] INFO {'binding status': 1}
