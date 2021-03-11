@@ -691,6 +691,6 @@ if home_debug:
 else:
     use_shape_theta_type = 1
 
-test=1
+test=2
 if __name__ == '__main__':
     write_setting(True, True, True, True)
