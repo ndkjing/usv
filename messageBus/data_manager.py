@@ -987,11 +987,8 @@ class DataManager:
                 self.gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.lng_lat)
             except Exception as e:
                 self.logger.error({'error': e})
-                self.gaode_lng_lat = None
         elif self.lng_lat is not None and not self.use_true_gps:
             self.gaode_lng_lat = self.lng_lat
-        else:
-            self.gaode_lng_lat = None
 
     # 读取函数会阻塞 必须使用线程发送mqtt状态数据和检测数据
     def send_mqtt_data(self):

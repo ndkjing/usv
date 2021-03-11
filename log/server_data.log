@@ -1790,3 +1790,23 @@
 2021-03-11 13:37:47,953 server_data.py[line:425] INFO {'refresh_setting ': {'info_type': 1}}
 2021-03-11 13:37:47,955 server_data.py[line:365] INFO {'base_setting ': {'info_type': 1}}
 2021-03-11 13:37:47,982 server_data.py[line:365] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 10, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-03-11 17:35:34,896 server_data.py[line:474] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,897 server_data.py[line:474] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,897 server_data.py[line:474] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,898 server_data.py[line:474] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,898 server_data.py[line:474] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,898 server_data.py[line:474] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,899 server_data.py[line:474] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,899 server_data.py[line:474] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,900 server_data.py[line:474] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,900 server_data.py[line:474] INFO {'topic': 'status_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,901 server_data.py[line:474] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,901 server_data.py[line:474] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,902 server_data.py[line:474] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,902 server_data.py[line:474] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,902 server_data.py[line:474] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,903 server_data.py[line:474] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-11 17:35:34,916 server_data.py[line:175] INFO Connected with result code:  0
+2021-03-11 17:35:37,589 server_data.py[line:426] INFO {'refresh_setting ': {'info_type': 1}}
+2021-03-11 17:35:37,590 server_data.py[line:366] INFO {'base_setting ': {'info_type': 1}}
+2021-03-11 17:35:38,077 server_data.py[line:366] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 10, 'row': '50', 'col': '50', 'pool_name': '梁子湖', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
