@@ -48,3 +48,6 @@
 2021-03-10 19:23:54,558 main.py[line:70] INFO {'binding status': 1}
 2021-03-10 19:25:57,600 main.py[line:237] ERROR restart send_com_data_thread
 2021-03-10 19:26:00,601 main.py[line:237] ERROR restart send_com_data_thread
+2021-03-11 13:39:23,771 main.py[line:70] INFO {'binding status': 1}
+2021-03-11 17:22:45,336 main.py[line:72] ERROR {'binding_data error': JSONDecodeError('Expecting value: line 1 column 1 (char 0)')}
+2021-03-11 17:31:33,664 main.py[line:70] INFO {'binding status': 1}
