@@ -918,19 +918,19 @@ class DataManager:
                         self.server_data_obj.mqtt_send_get_obj.sampling_points_gps.append(sampling_point_gps)
                 self.path_info = [0, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
                 while self.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(0) > 0:
-                    print(self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
+                    # print(self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
                     for index, sampling_point_gps in enumerate(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps):
                         # 判断该点是否已经到达
-                        print('sampling_points',self.server_data_obj.mqtt_send_get_obj.sampling_points)
-                        print('sampling_points_gps',self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)
-                        print('sampling_points_status',self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
+                        # print('sampling_points',self.server_data_obj.mqtt_send_get_obj.sampling_points)
+                        # print('sampling_points_gps',self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)
+                        # print('sampling_points_status',self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
                         # 如果状态清空则跳出
                         if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status)<=0:
                             break
                         if self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] == 1:
                             continue
                         # 计算下一个目标点经纬度
-                        b_smooth_path = False
+                        b_smooth_path = True
                         if b_smooth_path:
                             next_lng_lat = self.calc_target_lng_lat()
                             # 如果当前点靠近采样点指定范围就停止并采样
