@@ -91,11 +91,13 @@ def main():
     check_status_thread = threading.Thread(target=data_manager_obj.check_status)
     send_mqtt_data_thread = threading.Thread(target=data_manager_obj.send_mqtt_data)
     update_ship_gaode_thread = threading.Thread(target=data_manager_obj.update_ship_gaode_lng_lat)
+    update_config_thread = threading.Thread(target=data_manager_obj.update_config)
 
     check_status_thread.setDaemon(True)
     send_com_data_thread.setDaemon(True)
     send_mqtt_data_thread.setDaemon(True)
     update_ship_gaode_thread.setDaemon(True)
+    update_config_thread.setDaemon(True)
 
     if config.current_platform == config.CurrentPlatform.pi:
         if os.path.exists(config.stc_port):
@@ -113,11 +115,11 @@ def main():
     send_mqtt_data_thread.start()
     send_com_data_thread.start()
     update_ship_gaode_thread.start()
+    update_config_thread.start()
 
     if config.current_platform == config.CurrentPlatform.pi:
         if os.path.exists(config.stc_port):
             get_com_data_thread.start()
-
         if os.path.exists(config.compass_port):
             compass_thread.start()
         if os.path.exists(config.compass_port1):
@@ -137,7 +139,6 @@ def main():
     # send_com_heart_thread.join()
     print('home_debug', config.home_debug)
     thread_restart_time = 1
-    thread_restart_time = 3
     while True:
         #  判断线程是否死亡并重启线程
         if config.current_platform == config.CurrentPlatform.pi:
@@ -250,6 +251,13 @@ def main():
                 target=data_manager_obj.update_ship_gaode_lng_lat)
             update_ship_gaode_thread.setDaemon(True)
             update_ship_gaode_thread.start()
+
+        if not update_config_thread.is_alive():
+            logger.error('restart update_config_thread')
+            update_config_thread = threading.Thread(
+                target=data_manager_obj.update_config)
+            update_config_thread.setDaemon(True)
+            update_config_thread.start()
         else:
             time.sleep(1)
 

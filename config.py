@@ -10,7 +10,7 @@ if not os.path.exists(maps_dir):
     os.mkdir(maps_dir)
 
 # 保存所有地图湖泊信息位置
-map_data_path = os.path.join(maps_dir, 'map.json')
+# map_data_path = os.path.join(maps_dir, 'map.json')
 local_map_data_path = os.path.join(maps_dir, 'local_map.json')
 
 # 保存当前用户点击位置相关信息
@@ -219,11 +219,11 @@ mod = 'auto'
 ship_gaode_lng_lat = [114.524096, 30.506853]
 
 # 电机前进分量
-motor_forward = 100
+motor_forward = 200
 # 电机转弯分量
 motor_steer = 200
 # pid三参数
-kp = 2.0
+kp = 0.8
 ki = 0.0
 kd = 0.0
 # 大于多少米全速
@@ -235,9 +235,9 @@ max_pwm = 1800
 # 最小pwm值
 min_pwm = 1200
 # 停止中位pwm
-stop_pwm = 1500
+stop_pwm = 1510
 # 左侧电机正反桨  0 正桨叶   1 反桨叶
-left_motor_cw = 0
+left_motor_cw = 1
 # 右侧电机正反桨  0 正桨叶   1 反桨叶
 right_motor_cw = 0
 # 抽水时间单位秒
@@ -271,11 +271,10 @@ else:
 obstacle_avoid_type = 1
 # 路径规划方式
 path_plan_type = 1
-# 路径跟踪方式  1 pid    2 pure pursuit
-path_track_type = 1
+# 路径跟踪方式  1 pid    2 pure pursuit  3 宫凯调试的pid
+path_track_type = 3
 # 校准罗盘  0 不校准 1 开始校准 2 结束校准
 calibration_compass = 0
-
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
 # 前视觉距离

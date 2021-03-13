@@ -2,6 +2,7 @@ import threading
 import math
 import time
 import json
+from numpy import e
 import os
 from utils import lng_lat_calculate
 from utils import log
@@ -38,16 +39,13 @@ class SimplePid:
             pwm = config.motor_steer
         return pwm
 
-    def update_steer_pid_1(self, forward_distance, steer_distance):
+    def update_steer_pid_1(self,steer_distance):
         error_i = steer_distance
         errorSum = self.errorSum + error_i
         control = config.kp * error_i + config.ki * errorSum + \
             config.kd * (error_i - self.previousError)
         self.previousError = error_i
-        pwm = int(control * config.motor_steer)
-        if pwm >= config.motor_steer:
-            pwm = config.motor_steer
-        return pwm
+        return control
 
     def pid_pwm(self, distance, theta_error):
         forward_pwm = self.distance_p(distance, theta_error)
@@ -61,11 +59,21 @@ class SimplePid:
         # print('theta_error forward_pwm,steer_pwm,left_pwm,right_pwm',theta_error, forward_pwm,steer_pwm,left_pwm,right_pwm)
         return left_pwm, right_pwm
 
-    def pid_pwm_1(self, forward_distance, steer_distance):
-        forward_pwm = self.distance_p(forward_distance)
-        steer_pwm = self.update_steer_pid_1(forward_distance,steer_distance)
-        left_pwm = 1500 + forward_pwm - steer_pwm
-        right_pwm = 1500 + forward_pwm + steer_pwm
+    @staticmethod
+    def make_to_pwm(a):
+        d = ((0.5 * a + 1.5) * 1000)
+        return d
+
+    def pid_pwm_1(self, distance, theta_error):
+        steer_control = self.update_steer_pid_1(theta_error)
+        steer_uniform = 2.0 / (1.0 + e**(-0.1 * steer_control * 20)) - 1.0
+        forward_pwm = SimplePid.make_to_pwm(2.0 / (1.0 + e**(-0.1 * distance * 3)) - 1.0)
+        left_steer_pwm = SimplePid.make_to_pwm(steer_uniform)
+        right_steer_pwm = SimplePid.make_to_pwm(-steer_uniform)
+        steer_ratio = 0.9 * abs(left_steer_pwm - 1500) / (abs(right_steer_pwm - 1500) + abs(forward_pwm - 1500))
+        left_pwm = (left_steer_pwm - 1500) * steer_ratio + (forward_pwm - 1500) * (1 - steer_ratio) + 1500
+        right_pwm = (right_steer_pwm - 1500) * steer_ratio + (forward_pwm - 1500) * (1 - steer_ratio) + 1500
+        print('steer_uniform,forward_pwm,left_steer_pwm,left_pwm,right_pwm',steer_uniform,forward_pwm,left_steer_pwm,left_pwm,right_pwm)
         return left_pwm, right_pwm
 
     def yaw_control(self, yaw):

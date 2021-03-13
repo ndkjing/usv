@@ -250,12 +250,12 @@ class DataManager:
             try:
                 # 检查罗盘是否需要校准 # 开始校准
                 if int(config.calibration_compass) == 1:
-                    if last_send_data !='C0':
+                    if last_send_data != 'C0':
                         self.compass_obj.send_data('C0', b_hex=True)
                         time.sleep(0.05)
                         data0 = self.compass_obj.readline()
                         str_data0 = data0.decode('ascii')
-                        if len(str_data0)>3:
+                        if len(str_data0) > 3:
                             self.compass_notice_info += str_data0
                         data0 = self.compass_obj.readline()
                         str_data0 = data0.decode('ascii')
@@ -269,7 +269,7 @@ class DataManager:
                 # 结束校准
                 elif int(config.calibration_compass) == 2:
                     if last_send_data != 'C1':
-                        self.compass_notice_info=''
+                        self.compass_notice_info = ''
                         self.compass_obj.send_data('C1', b_hex=True)
                         time.sleep(0.05)
                         data0 = self.compass_obj.readline()
@@ -289,7 +289,7 @@ class DataManager:
                         config.calibration_compass = 0
                         config.write_setting(b_height=True)
                 # 隐藏修改 设置为10 改为启用gps计算角度  设置为9 改为启用二号罗盘
-                elif int(config.calibration_compass) in [9,10]:
+                elif int(config.calibration_compass) in [9, 10]:
                     self.theta = None
                 else:
                     self.compass_obj.send_data('31', b_hex=True)
@@ -451,7 +451,7 @@ class DataManager:
         self.path_info = [0, 0]
         self.distance_p = 0
         # 清空路径
-        self.smooth_path_lng_lat=None
+        self.smooth_path_lng_lat = None
 
     # 检查遥控器输入
     def check_remote_pwm(self):
@@ -532,26 +532,29 @@ class DataManager:
                                                                     self.lng_lat[1],
                                                                     target_lng_lat[0],
                                                                     target_lng_lat[1])
-                for i in range(1, int((distance//config.forward_see_distance)+1)):
+                for i in range(1, int((distance // config.forward_see_distance) + 1)):
                     cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                               self.lng_lat[1],
                                                                               theta,
-                                                                              config.forward_see_distance*i)
+                                                                              config.forward_see_distance * i)
                     smooth_path_lng_lat.append(cal_lng_lat)
             else:
-                theta = lng_lat_calculate.angleFromCoordinate(self.server_data_obj.mqtt_send_get_obj.path_planning_points[index-1][0],
-                                                self.server_data_obj.mqtt_send_get_obj.path_planning_points[index-1][1],
-                                                target_lng_lat[0],
-                                                target_lng_lat[1])
-                distance = lng_lat_calculate.distanceFromCoordinate(self.server_data_obj.mqtt_send_get_obj.path_planning_points[index-1][0],
-                                                                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index-1][1],
-                                                                    target_lng_lat[0],
-                                                                    target_lng_lat[1])
-                for i in range(1, int((distance//config.forward_see_distance) + 1)):
-                    cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.server_data_obj.mqtt_send_get_obj.path_planning_points[index-1][0],
-                                                                              self.server_data_obj.mqtt_send_get_obj.path_planning_points[index-1][1],
-                                                                              theta,
-                                                                              config.forward_see_distance * i)
+                theta = lng_lat_calculate.angleFromCoordinate(
+                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][0],
+                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][1],
+                    target_lng_lat[0],
+                    target_lng_lat[1])
+                distance = lng_lat_calculate.distanceFromCoordinate(
+                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][0],
+                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][1],
+                    target_lng_lat[0],
+                    target_lng_lat[1])
+                for i in range(1, int((distance // config.forward_see_distance) + 1)):
+                    cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(
+                        self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][0],
+                        self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][1],
+                        theta,
+                        config.forward_see_distance * i)
                     smooth_path_lng_lat.append(cal_lng_lat)
                 if distance < config.forward_see_distance:
                     smooth_path_lng_lat.append(target_lng_lat)
@@ -596,26 +599,26 @@ class DataManager:
         根据超声波距离构建障碍物地图
         :return: 障碍物位置举证
         """
-        map_size = int(10/0.5)
-        obstacle_map = np.zeros((map_size,map_size))
+        map_size = int(10 / 0.5)
+        obstacle_map = np.zeros((map_size, map_size))
         # 判断前方距离是否有障碍物，根据障碍物改变目标点
         if config.b_use_ultrasonic:
             if self.l_distance <= 0.25:
-                self.l_distance=None
+                self.l_distance = None
             if self.r_distance <= 0.25:
-                self.r_distance=None
+                self.r_distance = None
             if self.l_distance:
-                y_l = int(map_size/2)-1
-                x_l = int(map_size/2) - int(self.l_distance/0.5)
+                y_l = int(map_size / 2) - 1
+                x_l = int(map_size / 2) - int(self.l_distance / 0.5)
                 obstacle_map[0:x_l][y_l] = 1
             if self.r_distance:
-                y_l = int(map_size/2)+1
-                x_l = int(map_size/2) - int(self.r_distance/0.5)
+                y_l = int(map_size / 2) + 1
+                x_l = int(map_size / 2) - int(self.r_distance / 0.5)
                 obstacle_map[0:x_l][y_l] = 1
         return obstacle_map
 
     # 计算障碍物下目标点
-    def get_avoid_obstacle_point(self,path_planning_point_gps):
+    def get_avoid_obstacle_point(self, path_planning_point_gps):
         """
         根据障碍物地图获取下一个运动点
         :return:
@@ -631,14 +634,14 @@ class DataManager:
                                                                                      self.lng_lat[1],
                                                                                      theta,
                                                                                      distance)
-                elif self.l_distance<3 and self.r_distance>3:
+                elif self.l_distance < 3 and self.r_distance > 3:
                     distance = 3
                     theta = -90
                     next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                                      self.lng_lat[1],
                                                                                      theta,
                                                                                      distance)
-                elif self.l_distance>3 and self.r_distance<3:
+                elif self.l_distance > 3 and self.r_distance < 3:
                     distance = 3
                     theta = 90
                     next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
@@ -707,14 +710,16 @@ class DataManager:
                 else:
                     forward_distance = -all_distance * math.cos(math.radians(theta_error + 180))
                     steer_distance = all_distance * math.sin(math.radians(theta_error + 180))
-                b_use_theta_error = True
-                if b_use_theta_error:
+
+                if config.path_track_type == 3:
+                    left_pwm, right_pwm = self.path_track_obj.pid_pwm_1(
+                        forward_distance,
+                        steer_distance)
+
+                else :
                     left_pwm, right_pwm = self.path_track_obj.pid_pwm(distance=all_distance,
                                                                       theta_error=theta_error)
-                else:
-                    left_pwm, right_pwm = self.path_track_obj.pid_pwm_1(
-                        forward_distance=forward_distance,
-                        steer_distance=steer_distance)
+
                 # 在家调试模式下预测目标经纬度
                 if config.home_debug:
                     time.sleep(0.5)
@@ -725,20 +730,20 @@ class DataManager:
                                                                                   self.lng_lat[0],
                                                                                   self.lng_lat[1])
                         self.run_distance += speed_distance
-                    left_delta_pwm = int(self.last_left_pwm + left_pwm)/2 - config.stop_pwm
-                    right_delta_pwm = int(self.last_right_pwm + right_pwm)/2 - config.stop_pwm
+                    left_delta_pwm = int(self.last_left_pwm + left_pwm) / 2 - config.stop_pwm
+                    right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
                     steer_power = left_delta_pwm - right_delta_pwm
                     forward_power = left_delta_pwm + right_delta_pwm
                     delta_distance = forward_power * 0.01
                     delta_theta = steer_power * 0.05
                     # if time.time() % 2 < 1:
-                        # print('left_delta_pwm, right_delta_pwm left_pwm,right_pwm', left_delta_pwm, right_delta_pwm, left_pwm, right_pwm)
-                        # print('delta_distance,delta_theta, forward_power steer_power',
-                        #       delta_distance, delta_theta, forward_power,
-                        #       steer_power)
+                    # print('left_delta_pwm, right_delta_pwm left_pwm,right_pwm', left_delta_pwm, right_delta_pwm, left_pwm, right_pwm)
+                    # print('delta_distance,delta_theta, forward_power steer_power',
+                    #       delta_distance, delta_theta, forward_power,
+                    #       steer_power)
                     self.last_lng_lat = copy.deepcopy(self.lng_lat)
                     if self.current_theta is not None:
-                        self.current_theta = (self.current_theta - delta_theta/2) % 360
+                        self.current_theta = (self.current_theta - delta_theta / 2) % 360
                     self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                                self.lng_lat[1],
                                                                                self.current_theta,
@@ -802,7 +807,7 @@ class DataManager:
                 # 此时清除d
                 self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
             # 调试模式下无法使用遥控器
-            if not config.home_debug and config.current_platform ==config.CurrentPlatform.pi:
+            if not config.home_debug and config.current_platform == config.CurrentPlatform.pi:
                 remote_left_pwm, remote_right_pwm = self.check_remote_pwm()
             else:
                 remote_left_pwm, remote_right_pwm = config.stop_pwm, config.stop_pwm
@@ -899,12 +904,14 @@ class DataManager:
                         self.totle_distance += distance_p
                 self.logger.info({'全部距离': self.totle_distance})
                 # 将目标点转换为真实经纬度
-                self.update_ship_gaode_lng_lat()
+                # self.update_ship_gaode_lng_lat()
                 self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps = []
                 self.server_data_obj.mqtt_send_get_obj.sampling_points_gps = []
                 if config.home_debug:
-                    self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.path_planning_points)
-                    self.server_data_obj.mqtt_send_get_obj.sampling_points_gps = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.sampling_points)
+                    self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps = copy.deepcopy(
+                        self.server_data_obj.mqtt_send_get_obj.path_planning_points)
+                    self.server_data_obj.mqtt_send_get_obj.sampling_points_gps = copy.deepcopy(
+                        self.server_data_obj.mqtt_send_get_obj.sampling_points)
                 else:
                     for path_planning_point in self.server_data_obj.mqtt_send_get_obj.path_planning_points:
                         path_planning_point_gps = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
@@ -917,15 +924,16 @@ class DataManager:
                                                                                 sampling_point)
                         self.server_data_obj.mqtt_send_get_obj.sampling_points_gps.append(sampling_point_gps)
                 self.path_info = [0, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
+                print(self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
                 while self.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(0) > 0:
-                    # print(self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
-                    for index, sampling_point_gps in enumerate(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps):
+                    for index, sampling_point_gps in enumerate(
+                            self.server_data_obj.mqtt_send_get_obj.sampling_points_gps):
                         # 判断该点是否已经到达
                         # print('sampling_points',self.server_data_obj.mqtt_send_get_obj.sampling_points)
                         # print('sampling_points_gps',self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)
                         # print('sampling_points_status',self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
                         # 如果状态清空则跳出
-                        if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status)<=0:
+                        if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) <= 0:
                             break
                         if self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] == 1:
                             continue
@@ -940,9 +948,11 @@ class DataManager:
                                 sampling_point_gps[0],
                                 sampling_point_gps[1])
                             if sample_distance < config.forward_see_distance:
-                                b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps, b_force_arrive=True)
+                                b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
+                                                                             b_force_arrive=True)
                             else:
-                                b_arrive_sample = self.points_arrive_control(next_lng_lat, sampling_point_gps, b_force_arrive=False)
+                                b_arrive_sample = self.points_arrive_control(next_lng_lat, sampling_point_gps,
+                                                                             b_force_arrive=False)
                         else:
                             b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
                                                                          b_force_arrive=True)
@@ -950,7 +960,7 @@ class DataManager:
                         if b_arrive_sample:
                             # 更新目标点提示消息
                             self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] = 1
-                            self.path_info = [index+1, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
+                            self.path_info = [index + 1, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
                             if not config.home_debug:
                                 # 开始抽水并等待
                                 self.server_data_obj.mqtt_send_get_obj.b_draw = 1
@@ -967,7 +977,7 @@ class DataManager:
                 # 全部结束后停止
                 end_distance = self.run_distance
                 try:
-                    self.distance_move_score = round(100 * self.totle_distance/(end_distance - start_distance), 1)
+                    self.distance_move_score = round(100 * self.totle_distance / (end_distance - start_distance), 1)
                 except Exception as e:
                     self.logger.error({'error': e})
                 # 清除状态
@@ -979,16 +989,20 @@ class DataManager:
 
     def update_ship_gaode_lng_lat(self):
         # 更新经纬度为高德经纬度
-        if config.home_debug:
-            if self.lng_lat is None:
-                self.lng_lat = config.ship_gaode_lng_lat
-        if self.lng_lat is not None and self.use_true_gps:
-            try:
-                self.gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.lng_lat)
-            except Exception as e:
-                self.logger.error({'error': e})
-        elif self.lng_lat is not None and not self.use_true_gps:
-            self.gaode_lng_lat = self.lng_lat
+        while True:
+            if config.home_debug:
+                if self.lng_lat is None:
+                    self.lng_lat = config.ship_gaode_lng_lat
+            if self.lng_lat is not None and self.use_true_gps:
+                try:
+                    gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.lng_lat)
+                    if gaode_lng_lat:
+                        self.gaode_lng_lat = gaode_lng_lat
+                except Exception as e:
+                    self.logger.error({'error': e})
+            elif self.lng_lat is not None and not self.use_true_gps:
+                self.gaode_lng_lat = self.lng_lat
+            time.sleep(config.pi2mqtt_interval)
 
     # 读取函数会阻塞 必须使用线程发送mqtt状态数据和检测数据
     def send_mqtt_data(self):
@@ -998,16 +1012,16 @@ class DataManager:
         while True:
             time.sleep(config.pi2mqtt_interval)
             if self.server_data_obj.mqtt_send_get_obj.pool_code:
-                self.data_define_obj.pool_code = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.pool_code)
-            status_data = copy.deepcopy(self.data_define_obj.status)
+                self.data_define_obj.pool_code = self.server_data_obj.mqtt_send_get_obj.pool_code
+            status_data = self.data_define_obj.status
             status_data.update({'mapId': self.data_define_obj.pool_code})
-            detect_data = copy.deepcopy(self.data_define_obj.detect)
+            detect_data = self.data_define_obj.detect
             detect_data.update({'mapId': self.data_define_obj.pool_code})
-            self.update_ship_gaode_lng_lat()
+            # self.update_ship_gaode_lng_lat()
             status_data.update({'current_lng_lat': self.gaode_lng_lat})
             if self.home_lng_lat is not None:
                 if config.home_debug:
-                    home_gaode_lng_lat = self.home_lng_lat
+                    self.home_gaode_lng_lat = self.home_lng_lat
                 else:
                     if not self.home_gaode_lng_lat:
                         self.home_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.home_lng_lat)
@@ -1041,7 +1055,7 @@ class DataManager:
                            'save_time': save_time}, f)
             last_runtime = round(time.time() - self.start_time)
             last_run_distance = round(self.run_distance, 1)
-            status_data.update({"totle_distance": round(save_distance,1)})
+            status_data.update({"totle_distance": round(save_distance, 1)})
             status_data.update({"totle_time": round(save_time)})
 
             # 更新船头方向
@@ -1052,10 +1066,10 @@ class DataManager:
                 status_data.update({"lng_lat_error": self.lng_lat_error})
 
             # 更新真实数据
-            if self.b_draw_over_send_data:
-                mqtt_send_detect_data = copy.deepcopy(detect_data)
+            if not config.home_debug:
+                mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
                 mqtt_send_detect_data['water'].update(self.water_data_dict)
-                mqtt_send_status_data = copy.deepcopy(status_data)
+                mqtt_send_status_data = data_define.fake_status_data(status_data)
             # 更新模拟数据
             else:
                 mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
@@ -1069,32 +1083,36 @@ class DataManager:
                 self.dump_energy_deque.append(self.dump_energy)
                 mqtt_send_status_data.update({'dump_energy': self.dump_energy})
             # 向mqtt发送数据
-            self.send(method='mqtt', topic='status_data_%s' % (config.ship_code), data=mqtt_send_status_data,
+            self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
                       qos=0)
             if time.time() - last_read_time > 10:
                 last_read_time = time.time()
                 self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
             if config.home_debug:
-                if time.time() % 10 < 1:
-                    self.send(method='mqtt', topic='detect_data_%s' % (config.ship_code), data=mqtt_send_detect_data,
+                if time.time() - last_read_time > 10:
+                    last_read_time = time.time()
+                    self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
                               qos=0)
                     self.logger.info({'fakedate': mqtt_send_detect_data})
 
             if self.b_draw_over_send_data:
-                self.send(method='mqtt', topic='detect_data_%s' % (config.ship_code), data=mqtt_send_detect_data,
+                self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
                           qos=0)
-                # 添加真实经纬度
-                save_detect_data = copy.deepcopy(mqtt_send_detect_data)
-                save_detect_data.update({'lng_lat': self.lng_lat})
-                self.logger.info({"本地保存检测数据": save_detect_data})
                 if len(self.data_define_obj.pool_code) > 0:
                     self.send(method='http', data=mqtt_send_detect_data,
                               url=config.http_data_save,
                               http_type='POST')
                     self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
+                # 添加真实经纬度
+                save_detect_data = copy.deepcopy(mqtt_send_detect_data)
+                save_detect_data.update({'lng_lat': self.lng_lat})
+                self.logger.info({"本地保存检测数据": save_detect_data})
+                del save_detect_data
                 # 发送结束改为False
                 self.b_draw_over_send_data = False
 
+    def update_config(self):
+        while True:
             # 客户端获取基础设置数据
             if self.server_data_obj.mqtt_send_get_obj.base_setting_data_info in [1, 4]:
                 if self.server_data_obj.mqtt_send_get_obj.base_setting_data is None:
@@ -1123,6 +1141,7 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.height_setting_data = None
                     # 改为0位置状态，不再重复发送
                     self.server_data_obj.mqtt_send_get_obj.height_setting_data_info = 0
+            time.sleep(config.pi2mqtt_interval)
 
     # 发送数据
     def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):
@@ -1215,7 +1234,7 @@ class DataManager:
                 self.server_data_obj.mqtt_send_get_obj.reset_pool_click = 0
             # 船状态提示消息
             notice_info_data = {
-                "distance": str(round(self.distance_p,2)) + ' s ' + str(self.distance_move_score),
+                "distance": str(round(self.distance_p, 2)) + ' s ' + str(self.distance_move_score),
                 # // 路径规划提示消息
                 "path_info": '当前目标点:%d 目标点总数: %d' % (int(self.path_info[0]), int(self.path_info[1])),
                 # 船执行手动控制信息
@@ -1223,7 +1242,7 @@ class DataManager:
                 # 水泵开关状态消息
                 "draw_info": self.server_data_obj.mqtt_send_get_obj.b_draw,
                 # 自动巡航下角度偏差
-                "theta_error": round(self.theta_error,2),
+                "theta_error": round(self.theta_error, 2),
             }
             notice_info_data.update({"mapId": self.data_define_obj.pool_code})
             # 遥控器是否启用
@@ -1231,7 +1250,7 @@ class DataManager:
                 notice_info_data.update({"b_start_remote": self.pi_main_obj.b_start_remote})
             # 罗盘提示消息
             if len(self.compass_notice_info) > 3:
-                notice_info_data.update({"compass_notice_info": self.compass_notice_info+self.compass_notice_info1})
+                notice_info_data.update({"compass_notice_info": self.compass_notice_info + self.compass_notice_info1})
             # 使用超声波时候更新超声波提示消息
             if config.b_use_ultrasonic:
                 notice_info_data.update({"ultrasonic_distance": str(self.l_distance) + '  ' + str(self.r_distance)})
