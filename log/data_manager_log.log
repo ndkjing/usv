@@ -419,3 +419,18 @@
 2021-03-13 11:52:20,123 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
 2021-03-13 11:52:30,133 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
 2021-03-13 11:52:40,143 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-13 13:15:00,045 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-13 13:15:10,065 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-13 13:15:20,076 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-13 13:15:30,089 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-13 13:15:40,107 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-13 13:15:50,121 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-13 13:16:00,255 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': '1354291518018142209'}}
+2021-03-13 13:16:10,311 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': '1354291518018142209'}}
+2021-03-13 13:16:15,232 data_manager.py[line:881] INFO {'点击地点': [[114.5239, 30.506186], [114.524385, 30.506213], [114.524173, 30.506304]]}
+2021-03-13 13:16:15,232 data_manager.py[line:905] INFO {'全部距离': 145.75948374575887}
+2021-03-13 13:16:20,398 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '64.07 s 0', 'path_info': '当前目标点:0 目标点总数: 3', 'control_info': '', 'draw_info': 0, 'theta_error': 23.08, 'mapId': '1354291518018142209'}}
+2021-03-13 13:16:30,455 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '30.02 s 0', 'path_info': '当前目标点:1 目标点总数: 3', 'control_info': '', 'draw_info': 0, 'theta_error': -100.54, 'mapId': '1354291518018142209'}}
+2021-03-13 13:16:40,507 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '28.21 s 0', 'path_info': '当前目标点:1 目标点总数: 3', 'control_info': '', 'draw_info': 0, 'theta_error': 61.43, 'mapId': '1354291518018142209'}}
+2021-03-13 13:16:50,555 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '5.64 s 0', 'path_info': '当前目标点:1 目标点总数: 3', 'control_info': '', 'draw_info': 0, 'theta_error': 158.16, 'mapId': '1354291518018142209'}}
+2021-03-13 13:17:00,602 data_manager.py[line:1266] INFO {'notice_info_': {'distance': '34.54 s 0', 'path_info': '当前目标点:2 目标点总数: 3', 'control_info': '', 'draw_info': 0, 'theta_error': -55.23, 'mapId': '1354291518018142209'}}
