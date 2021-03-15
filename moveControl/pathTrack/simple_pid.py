@@ -25,7 +25,7 @@ class SimplePid:
         pwm = int((distance * (motor_forward/config.full_speed_meter)))
         if pwm >= config.motor_forward:
             pwm = config.motor_forward
-        pwm = int(pwm * (180-abs(theta_error))/(180*1.2))
+        pwm = int(pwm * (180-abs(theta_error))/180)
         return pwm
 
     def update_steer_pid(self, theta_error):
@@ -50,9 +50,11 @@ class SimplePid:
     def pid_pwm(self, distance, theta_error):
         forward_pwm = self.distance_p(distance, theta_error)
         steer_pwm = self.update_steer_pid(theta_error)
+        # 当前进分量过小时等比例减小转弯分量
+        # steer_pwm = int(steer_pwm*forward_pwm/config.motor_forward)
         if (forward_pwm + steer_pwm) == 0:
             return 1500, 1500
-        scale_pwm = (config.max_pwm-config.stop_pwm)/(forward_pwm+abs(steer_pwm))
+        # scale_pwm = (config.max_pwm-config.stop_pwm)/(forward_pwm+abs(steer_pwm))
         scale_pwm = 1
         left_pwm = 1500 + int(forward_pwm*scale_pwm) - int(steer_pwm*scale_pwm)
         right_pwm = 1500 + int(forward_pwm*scale_pwm) + int(steer_pwm*scale_pwm)

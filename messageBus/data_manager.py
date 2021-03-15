@@ -667,7 +667,8 @@ class DataManager:
         if distance < config.arrive_distance:
             return True
         while distance > config.arrive_distance:
-            # 更新提醒的距离信息
+            #
+            start_time= time.time()
             distance_sample = lng_lat_calculate.distanceFromCoordinate(
                 self.lng_lat[0],
                 self.lng_lat[1],
@@ -752,6 +753,7 @@ class DataManager:
                 self.last_right_pwm = right_pwm
             if not config.home_debug:
                 self.pi_main_obj.set_pwm(left_pwm, right_pwm)
+                print('epoch time', time.time()-start_time)
             # 清空规划点
             if int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == -1:
                 # 记录是因为按了暂停按钮而终止

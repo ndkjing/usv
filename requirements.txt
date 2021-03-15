@@ -11,3 +11,4 @@ tqdm
 tsp_solver
 playsound
 matplotlib
+Scikit-Fuzzy
