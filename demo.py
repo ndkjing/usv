@@ -618,4 +618,7 @@ import math
 # a = [1,1,1,2]
 # print(a.count(0))
 
-
+a = [3,1,2,1,5]
+print(a.index(max(a)))
+del a[0:0]
+print(a)

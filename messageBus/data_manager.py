@@ -569,19 +569,21 @@ class DataManager:
             self.smooth_path_lng_lat = self.smooth_path()
         # 搜索最临近的路点
         distance_list = []
-        for target_lng_lat in self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index]:]:
+        del self.smooth_path_lng_lat[0:self.smooth_path_lng_lat_index[index]]
+        for target_lng_lat in self.smooth_path_lng_lat:
             distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                 self.lng_lat[1],
                                                                 target_lng_lat[0],
                                                                 target_lng_lat[1])
             distance_list.append(distance)
         index = distance_list.index(min(distance_list))
+        if index+1 == len(self.smooth_path_lng_lat):
+            return self.smooth_path_lng_lat[-1]
         lng_lat = self.smooth_path_lng_lat[index]
         index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                         self.lng_lat[1],
                                                                         lng_lat[0],
                                                                         lng_lat[1])
-        index += 1
         while config.forward_see_distance > index_point_distance and (index + 1) < len(self.smooth_path_lng_lat):
             lng_lat = self.smooth_path_lng_lat[index]
             index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
@@ -940,7 +942,7 @@ class DataManager:
                         if self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] == 1:
                             continue
                         # 计算下一个目标点经纬度
-                        b_smooth_path = 0
+                        b_smooth_path = 1
                         if b_smooth_path:
                             next_lng_lat = self.calc_target_lng_lat(index)
                             # 如果当前点靠近采样点指定范围就停止并采样
