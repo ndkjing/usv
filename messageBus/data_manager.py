@@ -137,6 +137,8 @@ class DataManager:
         self.ship_status = ShipStatus.manual
         # 记录平滑路径
         self.smooth_path_lng_lat = None
+        self.smooth_path_lng_lat_index = []
+
         # 船手动控制提示信息
         self.control_info = ''
 
@@ -220,7 +222,7 @@ class DataManager:
                         self.lng_lat_error = float(data_list[8])
                         if not last_read_time:
                             last_read_time = time.time()
-                        if self.lng_lat_error and self.lng_lat_error < 3:
+                        if self.lng_lat_error and self.lng_lat_error < 2.5:
                             if self.last_lng_lat:
                                 # 计算当前行驶里程
                                 speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
@@ -232,7 +234,6 @@ class DataManager:
                                 self.speed = round(speed_distance / (time.time() - last_read_time), 1)
                                 last_read_time = time.time()
             except Exception as e:
-                self.last_lng_lat = None
                 self.logger.error({'error': e})
                 time.sleep(1)
 
@@ -297,7 +298,7 @@ class DataManager:
                         continue
                     float_data0 = float(str_data0)
                     self.theta = 360 - float_data0
-                    time.sleep(config.compass_timeout / 3)
+                    time.sleep(config.compass_timeout/4)
                     count = 50
                     last_send_data = None
                     # self.compass_notice_info = ''
@@ -383,7 +384,7 @@ class DataManager:
                             continue
                         float_data0 = float(str_data0)
                         self.theta1 = 360 - float_data0
-                        time.sleep(config.compass_timeout / 3)
+                        time.sleep(config.compass_timeout)
                         count = 50
                         last_send_data = None
                         # self.compass_notice_info1 = ''
@@ -519,6 +520,7 @@ class DataManager:
     def smooth_path(self):
         smooth_path_lng_lat = []
         for index, target_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps):
+            self.smooth_path_lng_lat_index.append(len(smooth_path_lng_lat))
             if index == 0:
                 theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
                                                               self.lng_lat[1],
@@ -557,7 +559,7 @@ class DataManager:
         return smooth_path_lng_lat
 
     # 计算下一个点经纬度
-    def calc_target_lng_lat(self):
+    def calc_target_lng_lat(self,index):
         """
         根据当前点和路径计算下一个经纬度点
         :return:
@@ -567,7 +569,7 @@ class DataManager:
             self.smooth_path_lng_lat = self.smooth_path()
         # 搜索最临近的路点
         distance_list = []
-        for target_lng_lat in self.smooth_path_lng_lat:
+        for target_lng_lat in self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index]:]:
             distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                 self.lng_lat[1],
                                                                 target_lng_lat[0],
@@ -579,13 +581,14 @@ class DataManager:
                                                                         self.lng_lat[1],
                                                                         lng_lat[0],
                                                                         lng_lat[1])
+        index += 1
         while config.forward_see_distance > index_point_distance and (index + 1) < len(self.smooth_path_lng_lat):
-            index += 1
             lng_lat = self.smooth_path_lng_lat[index]
             index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                             self.lng_lat[1],
                                                                             lng_lat[0],
                                                                             lng_lat[1])
+            index += 1
         # print('index,len(self.smooth_path_lng_lat) index_point_distance',index,len(self.smooth_path_lng_lat),index_point_distance)
         return self.smooth_path_lng_lat[index]
 
@@ -663,7 +666,6 @@ class DataManager:
         if distance < config.arrive_distance:
             return True
         while distance > config.arrive_distance:
-            #
             start_time = time.time()
             distance_sample = lng_lat_calculate.distanceFromCoordinate(
                 self.lng_lat[0],
@@ -690,6 +692,7 @@ class DataManager:
                 else:
                     theta_error = 360 + theta_error
             self.theta_error = theta_error
+            print('point_theta,self.current_theta theta_error',point_theta,self.theta,self.current_theta,theta_error)
             if config.path_track_type == 2:
                 left_pwm, right_pwm = self.path_track_obj.pure_pwm(distance=all_distance,
                                                                    theta_error=theta_error)
@@ -712,11 +715,9 @@ class DataManager:
                     left_pwm, right_pwm = self.path_track_obj.pid_pwm_1(
                         forward_distance,
                         steer_distance)
-
-                else :
+                else:
                     left_pwm, right_pwm = self.path_track_obj.pid_pwm(distance=all_distance,
                                                                       theta_error=theta_error)
-
                 # 在家调试模式下预测目标经纬度
                 if config.home_debug:
                     time.sleep(0.5)
@@ -748,6 +749,7 @@ class DataManager:
                 self.last_left_pwm = left_pwm
                 self.last_right_pwm = right_pwm
             if not config.home_debug:
+                time.sleep(config.pid_interval*2)
                 self.pi_main_obj.set_pwm(left_pwm, right_pwm)
                 print('epoch time', time.time()-start_time)
             # 清空规划点
@@ -769,6 +771,7 @@ class DataManager:
                 self.b_stop_path_track = True
                 self.ship_status = ShipStatus.backhome
                 break
+
             # 如果目标点改变并且不是强制到达 b_force_arrive
             if not b_force_arrive:
                 break
@@ -937,9 +940,9 @@ class DataManager:
                         if self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] == 1:
                             continue
                         # 计算下一个目标点经纬度
-                        b_smooth_path = True
+                        b_smooth_path = 0
                         if b_smooth_path:
-                            next_lng_lat = self.calc_target_lng_lat()
+                            next_lng_lat = self.calc_target_lng_lat(index)
                             # 如果当前点靠近采样点指定范围就停止并采样
                             sample_distance = lng_lat_calculate.distanceFromCoordinate(
                                 next_lng_lat[0],

@@ -162,7 +162,7 @@ def update_base_setting():
 
 
 # 罗盘等待时间间隔
-compass_timeout = 0.2
+compass_timeout = 0.1
 # 单片机发送给树莓派等待时间
 stc2pi_timeout = 1
 # 给单片机发送等待时间
@@ -243,7 +243,7 @@ right_motor_cw = 0
 # 抽水时间单位秒
 draw_time = 30
 # pid间隔
-pid_interval = 0.1
+pid_interval = 0.2
 # 开机前等待时间
 start_sleep_time = 6
 # 电机初始化时间
@@ -278,7 +278,7 @@ calibration_compass = 0
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
 # 前视觉距离
-forward_see_distance = 1.5 * arrive_distance
+forward_see_distance = 5
 
 
 def update_height_setting():
