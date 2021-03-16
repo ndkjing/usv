@@ -23,6 +23,7 @@ sys.path.append(
         'piControl'))
 import config
 
+
 class PiSoftuart(object):
     def __init__(self, pi, rx_pin, tx_pin, baud):
         self._rx_pin = rx_pin
@@ -39,15 +40,17 @@ class PiSoftuart(object):
         pigpio.exceptions = False  # fatal exceptions off (so that closing an unopened gpio doesn't error)
         self._pi.bb_serial_read_close(self._rx_pin)
         pigpio.exceptions = True
-        self._pi.bb_serial_read_open(self._rx_pin, config.ultrasonic_baud, 8)  # open a gpio to bit bang read, 1 byte each time.
+        self._pi.bb_serial_read_open(self._rx_pin, config.ultrasonic_baud,
+                                     8)  # open a gpio to bit bang read, 1 byte each time.
 
-    def read(self, len_data=None):
+    def read_ultrasonic(self, len_data=None):
         if len_data is None:
             len_data = 4
             try:
+                self.write_data('31')
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                print(time.time(), 'count',count,'data',data)
-                if count==len_data:
+                print(time.time(), 'count', count, 'data', data)
+                if count == len_data:
                     str_data = str(binascii.b2a_hex(data))[2:-1]
                     distance = int(str_data[2:-2], 16) / 1000
                     # print(time.time(),'distance',distance)
@@ -57,11 +60,11 @@ class PiSoftuart(object):
                     else:
                         self.distance = distance
                     return distance
-                elif count>len_data:
+                elif count > len_data:
                     str_data = str(binascii.b2a_hex(data))[2:-1]
-                    print('str_data',str_data)
-                    print(r'str_data.split',str_data.split('ff')[0][:4])
-                    print(r'str_data.split',int(str_data.split('ff')[0][:4], 16))
+                    print('str_data', str_data)
+                    print(r'str_data.split', str_data.split('ff')[0][:4])
+                    print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
                     distance = int(str_data.split('ff')[0][:4], 16) / 1000
                     return distance
                 time.sleep(self._thread_ts)
@@ -69,9 +72,62 @@ class PiSoftuart(object):
                 print({'error': e})
                 return None
 
+    def read_compass(self, send_data='31', len_data=None):
+        if len_data is None:
+            len_data = 4
+            try:
+                self.write_data(send_data)
+                count, data = self._pi.bb_serial_read(self._rx_pin)
+                print(time.time(), 'count', count, 'data', data)
+                if count == len_data:
+                    print('str_data', str(data))
+                    str_data = str(binascii.b2a_hex(data))
+                    print('str_data111', str_data)
+                elif count > len_data:
+                    str_data = data.decode('utf-8')
+                    print('str_data', str_data)
+                    theta = float(str_data)
+                    return 360 - theta
+                time.sleep(self._thread_ts)
+            except Exception as e:
+                print({'error': e})
+                return None
+
+    def read_gps(self, len_data=None):
+        if len_data is None:
+            len_data = 4
+            try:
+                count, data = self._pi.bb_serial_read(self._rx_pin)
+                # print(time.time(), 'count', count, 'data', data)
+                if count > len_data:
+                    str_data = data.decode('utf-8')
+                    # print('str_data', str_data)
+                    for i in str_data.split('$'):
+                        if i.startswith('GPGGA'):
+                            gps_data = i
+                            data_list = gps_data.split(',')
+                            if len(data_list) < 8:
+                                continue
+                            print(gps_data)
+                            if data_list[2] and data_list[4]:
+                                lng, lat = round(float(data_list[4][:3]) +
+                                                 float(data_list[4][3:]) /
+                                                 60, 6), round(float(data_list[2][:2]) +
+                                                               float(data_list[2][2:]) /
+                                                               60, 6)
+                                if lng < 1 or lat < 1:
+                                    pass
+                                else:
+                                    lng_lat_error = float(data_list[8])
+                                    print(lng, lat, lng_lat_error)
+                time.sleep(self._thread_ts * 10)
+            except Exception as e:
+                print({'error': e})
+                return None
+
     def write_data(self, msg):
         self._pi.wave_clear()
-        self._pi.wave_add_serial(self._tx_pin, config.baud, msg)
+        self._pi.wave_add_serial(self._tx_pin, 9600, bytes.fromhex(msg))
         data = self._pi.wave_create()
         self._pi.wave_send_once(data)
         if self._pi.wave_tx_busy():
@@ -87,26 +143,46 @@ class PiSoftuart(object):
 
 if __name__ == '__main__':
     pi = pigpio.pi()
-    left_distance_obj = PiSoftuart(pi=pi, rx_pin=config.left_rx, tx_pin=config.left_tx, baud=config.ultrasonic_baud)
-    right_distance_obj = PiSoftuart(pi=pi, rx_pin=config.right_rx, tx_pin=config.right_tx, baud=config.ultrasonic_baud)
+    b_compass = 0
+    b_gps = 1
+    b_ultrasonic = 0
+    if b_compass:
+        compass_obj = PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx, baud=config.pin_compass_baud)
+    elif b_ultrasonic:
+        left_distance_obj = PiSoftuart(pi=pi, rx_pin=config.left_rx, tx_pin=config.left_tx, baud=config.ultrasonic_baud)
+        right_distance_obj = PiSoftuart(pi=pi, rx_pin=config.right_rx, tx_pin=config.right_tx,
+                                        baud=config.ultrasonic_baud)
+    elif b_gps:
+        compass_obj = PiSoftuart(pi=pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx, baud=config.pin_gps_baud)
+    start_time = time.time()
     while True:
-        l_distance = left_distance_obj.read()
-        r_distance = right_distance_obj.read()
-        if l_distance is not None:
-            print('l_distance',l_distance)
-        if r_distance is not None:
-            print('r_distance',r_distance)
+        if b_ultrasonic:
+            l_distance = left_distance_obj.read()
+            r_distance = right_distance_obj.read()
+            if l_distance is not None:
+                print('l_distance', l_distance)
+            if r_distance is not None:
+                print('r_distance', r_distance)
+        elif b_compass:
+            if 20 > time.time()-start_time > 10:
+                l_distance = compass_obj.read_compass(send_data='C0')
+            elif time.time()-start_time > 20:
+                l_distance = compass_obj.read_compass(send_data='C1')
+                start_time = time.time()
+            else:
+                l_distance = compass_obj.read_compass()
+        elif b_gps:
+            l_distance = compass_obj.read_gps()
     # while True:
-        # if thread_left_distance.is_alive():
-        #     print(time.time(),'softuart_obj', softuart_obj.left_distance)
-        #     time.sleep(0.2)
-        # else:
-        #     print(thread_left_distance.is_alive())
-        #     time.sleep(1)
-        #     # recvbuf = bytearray(softuart_obj.read(7))
-        #     # b1 = int(recvbuf[3])
-        #     # b0 = int(recvbuf[4])
-        #     # result = (b1 << 8) | b0
-        #     # print(result / 10.0)
-        #     # time.sleep(.05)
-
+    # if thread_left_distance.is_alive():
+    #     print(time.time(),'softuart_obj', softuart_obj.left_distance)
+    #     time.sleep(0.2)
+    # else:
+    #     print(thread_left_distance.is_alive())
+    #     time.sleep(1)
+    #     # recvbuf = bytearray(softuart_obj.read(7))
+    #     # b1 = int(recvbuf[3])
+    #     # b0 = int(recvbuf[4])
+    #     # result = (b1 << 8) | b0
+    #     # print(result / 10.0)
+    #     # time.sleep(.05)

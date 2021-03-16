@@ -197,13 +197,12 @@ class DataManager:
 
     # 在线程中读取 gps
     def get_gps_data(self):
-        last_read_time = time.time()
-        last_read_lng_lat = None
+        last_read_time=None
         while True:
             try:
                 data = self.gps_obj.readline()
                 str_data = data.decode('ascii')
-                if str_data.startswith('$GNGGA'):
+                if str_data.startswith('$GNGGA') or str_data.startswith('$GPGGA'):
                     data_list = str_data.split(',')
                     if len(data_list) < 8:
                         continue
@@ -218,25 +217,22 @@ class DataManager:
                         # 替换上一次的值
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
                         self.lng_lat = [lng, lat]
-                    self.lng_lat_error = float(data_list[8])
-                    if self.lng_lat_error < 3:
-                        if last_read_lng_lat is None:
-                            last_read_lng_lat = copy.deepcopy(self.lng_lat)
+                        self.lng_lat_error = float(data_list[8])
+                        if not last_read_time:
                             last_read_time = time.time()
-                        else:
-                            # 计算当前行驶里程
-                            speed_distance = lng_lat_calculate.distanceFromCoordinate(last_read_lng_lat[0],
-                                                                                      last_read_lng_lat[1],
-                                                                                      self.lng_lat[0],
-                                                                                      self.lng_lat[1])
-                            self.run_distance += speed_distance
-                            # 计算速度
-                            self.speed = round(speed_distance / (time.time() - last_read_time), 1)
-                            last_read_lng_lat = copy.deepcopy(self.lng_lat)
-                            last_read_time = time.time()
+                        if self.lng_lat_error and self.lng_lat_error < 3:
+                            if self.last_lng_lat:
+                                # 计算当前行驶里程
+                                speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
+                                                                                          self.last_lng_lat[1],
+                                                                                          self.lng_lat[0],
+                                                                                          self.lng_lat[1])
+                                self.run_distance += speed_distance
+                                # 计算速度
+                                self.speed = round(speed_distance / (time.time() - last_read_time), 1)
+                                last_read_time = time.time()
             except Exception as e:
-                last_read_lng_lat = None
-                last_read_time = time.time()
+                self.last_lng_lat = None
                 self.logger.error({'error': e})
                 time.sleep(1)
 
@@ -668,7 +664,7 @@ class DataManager:
             return True
         while distance > config.arrive_distance:
             #
-            start_time= time.time()
+            start_time = time.time()
             distance_sample = lng_lat_calculate.distanceFromCoordinate(
                 self.lng_lat[0],
                 self.lng_lat[1],
@@ -815,7 +811,7 @@ class DataManager:
                 remote_left_pwm, remote_right_pwm = config.stop_pwm, config.stop_pwm
             # 遥控器模式
             if not config.home_debug and config.current_platform == config.CurrentPlatform.pi and self.pi_main_obj.b_start_remote:
-                self.pi_main_obj.set_pwm(left_pwm=remote_left_pwm, right_pwm=remote_right_pwm)
+                self.pi_main_obj.set_pwm(set_left_pwm=remote_left_pwm, set_right_pwm=remote_right_pwm)
             # 手动模式
             elif manul_or_auto == 1:
                 if d == 0:
@@ -906,7 +902,6 @@ class DataManager:
                         self.totle_distance += distance_p
                 self.logger.info({'全部距离': self.totle_distance})
                 # 将目标点转换为真实经纬度
-                # self.update_ship_gaode_lng_lat()
                 self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps = []
                 self.server_data_obj.mqtt_send_get_obj.sampling_points_gps = []
                 if config.home_debug:
@@ -928,6 +923,8 @@ class DataManager:
                 self.path_info = [0, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
                 print(self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
                 while self.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(0) > 0:
+                    # 统计到一个目标点需要多少次调节
+                    change_count_list = [0]*len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)
                     for index, sampling_point_gps in enumerate(
                             self.server_data_obj.mqtt_send_get_obj.sampling_points_gps):
                         # 判断该点是否已经到达
@@ -958,6 +955,7 @@ class DataManager:
                         else:
                             b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
                                                                          b_force_arrive=True)
+                        change_count_list[index] += 1
                         # print('sample_distance b_arrive_sample',sample_distance,b_arrive_sample)
                         if b_arrive_sample:
                             # 更新目标点提示消息
@@ -971,8 +969,7 @@ class DataManager:
                                 time.sleep(config.draw_time)
                                 self.b_draw_over_send_data = True
                                 self.draw()
-                        # break
-                        if self.b_stop_path_track:
+                        else:
                             break
                     if self.b_stop_path_track:
                         break
@@ -989,6 +986,7 @@ class DataManager:
                 if self.ship_status == ShipStatus.backhome:
                     self.back_home()
 
+    # 经纬度转换
     def update_ship_gaode_lng_lat(self):
         # 更新经纬度为高德经纬度
         while True:
@@ -1113,6 +1111,7 @@ class DataManager:
                 # 发送结束改为False
                 self.b_draw_over_send_data = False
 
+    # 配置更新
     def update_config(self):
         while True:
             # 客户端获取基础设置数据
@@ -1194,7 +1193,7 @@ class DataManager:
     def check_status(self):
         while True:
             # 循环等待一定时间
-            time.sleep(config.check_status_interval)
+            time.sleep(config.check_status_interval/2)
             # 检查当前状态
             if config.home_debug:
                 if config.b_play_audio:

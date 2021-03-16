@@ -181,8 +181,8 @@ stc_baud = 115200
 # imu
 imu_port = '/dev/imu'
 imu_baud = 115200
-# 飞控
-if current_platform ==  CurrentPlatform.pi:
+
+if current_platform == CurrentPlatform.pi:
     pix_port = '/dev/ttyACM0'
 else:
     pix_port = 'tcp:127.0.0.1:5760'
@@ -247,7 +247,7 @@ pid_interval = 0.1
 # 开机前等待时间
 start_sleep_time = 6
 # 电机初始化时间
-motor_init_time = 4
+motor_init_time = 1
 # 检查网络连接状态间隔
 check_network_interval = 10
 # 断网返航 0关闭  1开启 大于1的数值表示断网超过该值就返航，默认100秒
@@ -684,12 +684,22 @@ left_tx = 17
 right_rx = 27
 right_tx = 22
 
+# 软串口gps
+b_pin_gps = 1
+pin_gps_baud = 9600
+pin_gps_rx = 21
+pin_gps_tx = 20
+# 软串口罗盘
+b_pin_compass = 1
+pin_compass_baud = 9600
+pin_compass_rx = 12
+pin_compass_tx = 16
+
 # 使用角度  1 使用罗盘1角度   2 使用罗盘2角度  3 使用经纬度移动计算角度
 if home_debug:
     use_shape_theta_type = 3
 else:
     use_shape_theta_type = 1
 
-test=2
 if __name__ == '__main__':
     write_setting(True, True, True, True)

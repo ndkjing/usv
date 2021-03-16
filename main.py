@@ -85,6 +85,9 @@ def main():
         if config.b_use_ultrasonic:
             left_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_left_distance)
             right_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_right_distance)
+
+
+
     else:
         pass
     send_com_data_thread = threading.Thread(target=data_manager_obj.send_com_data)

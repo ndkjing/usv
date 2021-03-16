@@ -191,43 +191,44 @@ class PiMain:
         self.set_pwm(config.stop_pwm, config.stop_pwm)
         time.sleep(config.motor_init_time)
 
-    def set_pwm(self, left_pwm, right_pwm,pwm_timeout=None):
+    def set_pwm(self, set_left_pwm, set_right_pwm, pwm_timeout=None):
         """
         设置pwm波数值
-        :param left_pwm:
-        :param right_pwm:
+        :param pwm_timeout:
+        :param set_left_pwm:
+        :param set_right_pwm:
         :return:
         """
         # 判断是否大于阈值
-        if left_pwm >= config.max_pwm:
-            left_pwm = config.max_pwm
-        if left_pwm <= config.min_pwm:
-            left_pwm = config.min_pwm
-        if right_pwm >= config.max_pwm:
-            right_pwm = config.max_pwm
-        if right_pwm <= config.min_pwm:
-            right_pwm = config.min_pwm
+        if set_left_pwm >= config.max_pwm:
+            set_left_pwm = config.max_pwm
+        if set_left_pwm <= config.min_pwm:
+            set_left_pwm = config.min_pwm
+        if set_right_pwm >= config.max_pwm:
+            set_right_pwm = config.max_pwm
+        if set_right_pwm <= config.min_pwm:
+            set_right_pwm = config.min_pwm
 
         # 如果有反桨叶反转电机pwm值
         if config.left_motor_cw == 1:
-            left_pwm = config.stop_pwm - (left_pwm - config.stop_pwm)
+            set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
         if config.right_motor_cw == 1:
-            right_pwm = config.stop_pwm - (right_pwm - config.stop_pwm)
+            set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
 
-        left_pwm = int(left_pwm / (20000 / self.pice) / (50 / self.hz))
-        right_pwm = int(right_pwm / (20000 / self.pice) / (50 / self.hz))
+        set_left_pwm = int(set_left_pwm / (20000 / self.pice) / (50 / self.hz))
+        set_right_pwm = int(set_right_pwm / (20000 / self.pice) / (50 / self.hz))
         sleep_time = 0.001
         delta_time = 0.0001 / 500.0
         start_pwm_time = time.time()
-        while abs(self.left_pwm - left_pwm) != 0 or abs(self.right_pwm != right_pwm) != 0:
-            if abs(left_pwm - self.left_pwm) == 0:
+        while abs(self.left_pwm - set_left_pwm) != 0 or abs(self.right_pwm != set_right_pwm) != 0:
+            if abs(set_left_pwm - self.left_pwm) == 0:
                 pass
             else:
-                self.left_pwm = self.left_pwm + (left_pwm - self.left_pwm) // abs(left_pwm - self.left_pwm) * 1
-            if abs(right_pwm - self.right_pwm) == 0:
+                self.left_pwm = self.left_pwm + (set_left_pwm - self.left_pwm) // abs(set_left_pwm - self.left_pwm) * 1
+            if abs(set_right_pwm - self.right_pwm) == 0:
                 pass
             else:
-                self.right_pwm = self.right_pwm + (right_pwm - self.right_pwm) // abs(right_pwm - self.right_pwm) * 1
+                self.right_pwm = self.right_pwm + (set_right_pwm - self.right_pwm) // abs(set_right_pwm - self.right_pwm) * 1
             self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
             self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
             time.sleep(sleep_time)

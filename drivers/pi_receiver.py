@@ -35,6 +35,7 @@ count = [1, 0, 0, 0, 0, 0, 0]
 channel1_pwm = 0
 channel3_pwm = 0
 
+
 def in_callback(argu, gpio, level, tick):
     if level == 0:
         tick_0[argu] = tick
@@ -54,15 +55,18 @@ def mycallback(gpio, level, tick):
             diff = pigpio.tickDiff(tick_1[1], tick)
             temp_read[1][count[1]] = diff
             save[1] = int(temp_read[1][count[1]])
-            if gpio==int(config.channel_1_pin):
+            if gpio == int(22):
                 print('channel1', diff)
-            if gpio==int(config.channel_3_pin):
+            if gpio == int(27):
                 print('channel3', diff)
+            if gpio == int(17):
+                print('channel5', diff)
     else:
         tick_1[1] = tick
 
+
 def mycallback3(gpio, level, tick):
-    print('level',level,gpio)
+    print('level', level, gpio)
     if level == 0:
         tick_0[1] = tick
         if tick_1[1] is not None:
@@ -72,6 +76,7 @@ def mycallback3(gpio, level, tick):
             print('channel3', int(save[1]))
     else:
         tick_1[1] = tick
+
 
 # def mycallback3(gpio, level, tick):
 #     # in_callback(2, gpio, level, tick)
@@ -88,10 +93,14 @@ def mycallback3(gpio, level, tick):
 
 
 if __name__ == "__main__":
-    cb1 = pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, mycallback)
-    cb3 = pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, mycallback)
-    print('cb1',cb1,config.channel_1_pin)
-    print('cb3',cb3,config.channel_3_pin)
+    # cb1 = pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, mycallback)
+    # cb3 = pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, mycallback)
+    cb1 = pi.callback(22, pigpio.EITHER_EDGE, mycallback)
+    cb3 = pi.callback(27, pigpio.EITHER_EDGE, mycallback)
+    cb5 = pi.callback(17, pigpio.EITHER_EDGE, mycallback)
+    print('cb1', cb1, config.channel_1_pin)
+    print('cb3', cb3, config.channel_3_pin)
+    print('cb5', cb3, config.channel_3_pin)
     # cb2 = pi.callback(17, pigpio.EITHER_EDGE, mycallback2)
     # cb3 = pi.callback(27, pigpio.EITHER_EDGE, mycallback3)
     # cb4 = pi.callback(22, pigpio.EITHER_EDGE, mycallback4)
