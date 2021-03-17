@@ -192,7 +192,7 @@ b_use_pix = False
 # GPS
 gps_port = '/dev/gps'
 gps_baud = 115200
-
+gps_frequency = 1
 # 罗盘
 compass_port = '/dev/compass0'
 compass_baud = 9600
@@ -247,7 +247,7 @@ pid_interval = 0.2
 # 开机前等待时间
 start_sleep_time = 6
 # 电机初始化时间
-motor_init_time = 1
+motor_init_time = 4
 # 检查网络连接状态间隔
 check_network_interval = 10
 # 断网返航 0关闭  1开启 大于1的数值表示断网超过该值就返航，默认100秒
@@ -677,12 +677,12 @@ channel_3_pin = 19
 start_remote_pin = 13
 
 # 是否使用超声波
-b_use_ultrasonic = False
+b_use_ultrasonic = 1
 ultrasonic_baud = 9600
-left_rx = 4
-left_tx = 17
-right_rx = 27
-right_tx = 22
+left_rx = 22
+left_tx = 27
+right_rx = 17
+right_tx = 4
 
 # 软串口gps
 b_pin_gps = 1

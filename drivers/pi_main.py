@@ -52,9 +52,19 @@ class PiMain:
         if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             self.left_ultrasonic_obj = self.get_left_ultrasonic_obj()
             self.right_ultrasonic_obj = self.get_right_ultrasonic_obj()
+            self.gps_obj = self.get_gps_obj()
+            self.compass_obj = self.get_compass_obj()
         # 左右侧超声波距离，没有返回None  -1 表示距离过近
-        self.left_distance=None
-        self.right_distance=None
+        self.left_distance = None
+        self.right_distance = None
+        # GPS
+        self.lng_lat = None
+        # GPS 误差
+        self.lng_lat_error = None
+        # 罗盘角度
+        self.theta = None
+        # 罗盘提示消息
+        self.compass_notice_info=''
 
     def get_left_ultrasonic_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.left_rx, tx_pin=config.left_tx, baud=config.ultrasonic_baud)
@@ -63,24 +73,62 @@ class PiMain:
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.right_rx, tx_pin=config.right_tx,
                                       baud=config.ultrasonic_baud)
 
+    def get_compass_obj(self):
+        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx, baud=config.pin_compass_baud)
+
+    def get_gps_obj(self):
+        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx, baud=config.pin_gps_baud)
+
     # 在线程中读取超声波
     def get_left_distance(self):
         if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             while True:
-                l_distance = self.left_ultrasonic_obj.read()
-                if l_distance is None :
-                    pass
-                else:
+                l_distance = self.left_ultrasonic_obj.read_ultrasonic()
+                if l_distance:
                     self.left_distance = l_distance
 
     def get_right_distance(self):
         if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             while True:
-                distance = self.right_ultrasonic_obj.read()
-                if distance is None:
-                    pass
+                r_distance = self.right_ultrasonic_obj.read_ultrasonic()
+                if r_distance:
+                    self.right_distance = r_distance
+
+    def get_compass_data(self,data='31'):
+        if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
+            # 记录上一次发送数据
+            last_send_data = None
+            while True:
+                # 检查罗盘是否需要校准 # 开始校准
+                if int(config.calibration_compass) == 1:
+                    if last_send_data != 'C0':
+                        info_data = self.compass_obj.read_compass(send_data='C0')
+                        time.sleep(0.05)
+                        self.compass_notice_info = info_data
+                        last_send_data = 'C0'
+                # 结束校准
+                elif int(config.calibration_compass) == 2:
+                    if last_send_data != 'C1':
+                        self.compass_notice_info = ''
+                        info_data = self.compass_obj.read_compass(send_data='C1')
+                        time.sleep(0.05)
+                        self.compass_notice_info = info_data
+                        last_send_data = 'C1'
+                        # 发送完结束校准命令后将配置改为 0
+                        config.calibration_compass = 0
+                        config.write_setting(b_height=True)
                 else:
-                    self.right_distance = distance
+                    theta = self.compass_obj.read_compass(send_data='31')
+                    if theta:
+                        self.theta = theta
+
+    def get_gps_data(self):
+        if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
+            while True:
+                gps_data = self.gps_obj.read_gps()
+                if gps_data:
+                    self.lng_lat = gps_data[0:2]
+                    self.lng_lat_error = gps_data[2]
 
     def remote_control(self):
         """

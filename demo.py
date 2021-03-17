@@ -619,6 +619,7 @@ import math
 # print(a.count(0))
 
 a = [3,1,2,1,5]
-print(a.index(max(a)))
-del a[0:0]
-print(a)
+del a[a.index(max(a))]
+del a[a.index(min(a))]
+arr = np.array(a)
+print(np.nanmean(arr))

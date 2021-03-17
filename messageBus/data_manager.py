@@ -791,9 +791,9 @@ class DataManager:
         b_log_points = 1
         while True:
             time.sleep(config.pi2com_timeout)
-            if config.b_use_ultrasonic:
-                self.logger.info(
-                    {'left_distance': self.pi_main_obj.left_distance, 'right_distance': self.pi_main_obj.left_distance})
+            # if config.b_use_ultrasonic:
+            #     self.logger.info(
+            #         {'left_distance': self.pi_main_obj.left_distance, 'right_distance': self.pi_main_obj.left_distance})
             # 判断当前是手动控制还是自动控制
             d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
             if d in [-1, 0, 90, 180, 270]:
@@ -1009,6 +1009,33 @@ class DataManager:
                 self.gaode_lng_lat = self.lng_lat
             time.sleep(config.pi2mqtt_interval)
 
+    # 更新经纬度
+    def update_lng_lat(self):
+        last_read_time = None
+        while True:
+            if self.pi_main_obj.lng_lat and self.pi_main_obj.lng_lat[0] > 1 and self.pi_main_obj.lng_lat[1] > 1:
+                self.lng_lat = copy.deepcopy(self.pi_main_obj.lng_lat)
+                self.lng_lat_error = self.pi_main_obj.lng_lat_error
+                if not last_read_time:
+                    last_read_time = time.time()
+                if self.lng_lat_error and self.lng_lat_error < 2.5:
+                    if self.last_lng_lat:
+                        # 计算当前行驶里程
+                        speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
+                                                                                  self.last_lng_lat[1],
+                                                                                  self.lng_lat[0],
+                                                                                  self.lng_lat[1])
+                        self.run_distance += speed_distance
+                        # 计算速度
+                        self.speed = round(speed_distance / (time.time() - last_read_time), 1)
+                        # 替换上一次的值
+                        self.last_lng_lat = copy.deepcopy(self.lng_lat)
+                        last_read_time = time.time()
+                    else:
+                        self.last_lng_lat = copy.deepcopy(self.lng_lat)
+                        last_read_time = time.time()
+            time.sleep(1/config.gps_frequency)
+
     # 读取函数会阻塞 必须使用线程发送mqtt状态数据和检测数据
     def send_mqtt_data(self):
         last_read_time = time.time()
@@ -1064,12 +1091,11 @@ class DataManager:
             status_data.update({"totle_time": round(save_time)})
 
             # 更新船头方向
-            if self.theta is not None:
-                status_data.update({"direction": round(self.theta)})
+            if self.current_theta:
+                status_data.update({"direction": round(self.current_theta)})
             # 更新经纬度误差
             if self.lng_lat_error is not None:
                 status_data.update({"lng_lat_error": self.lng_lat_error})
-
             # 更新真实数据
             if not config.home_debug:
                 mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
@@ -1200,6 +1226,7 @@ class DataManager:
             # 循环等待一定时间
             time.sleep(config.check_status_interval/2)
             # 检查当前状态
+            print('self.pi_main_obj.theta',self.pi_main_obj.theta, self.pi_main_obj.lng_lat_error, self.pi_main_obj.lng_lat,self.pi_main_obj.left_distance,self.pi_main_obj.right_distance)
             if config.home_debug:
                 if config.b_play_audio:
                     audios_manager.play_audio(5, b_backend=False)
@@ -1218,10 +1245,12 @@ class DataManager:
                                                                    self.lng_lat[1])
             else:
                 ship_theta = 0
-            # 求船头与目标角度偏差角度
-            # 都为空直接不要误差
+            # 船头角度
             if config.use_shape_theta_type == 1:
-                self.current_theta = self.theta
+                if config.b_pin_compass:
+                    self.current_theta = self.pi_main_obj.theta
+                else:
+                    self.current_theta = self.theta
             elif config.use_shape_theta_type == 2:
                 self.current_theta = self.theta1
             else:
@@ -1257,9 +1286,11 @@ class DataManager:
             # 罗盘提示消息
             if len(self.compass_notice_info) > 3:
                 notice_info_data.update({"compass_notice_info": self.compass_notice_info + self.compass_notice_info1})
+            if len(self.pi_main_obj.compass_notice_info) > 2:
+                notice_info_data.update({"compass_notice_info": self.pi_main_obj.compass_notice_info})
             # 使用超声波时候更新超声波提示消息
             if config.b_use_ultrasonic:
-                notice_info_data.update({"ultrasonic_distance": str(self.l_distance) + '  ' + str(self.r_distance)})
+                notice_info_data.update({"ultrasonic_distance": str(self.pi_main_obj.left_distance) + '  ' + str(self.pi_main_obj.right_distance)})
             # 使用电量告警是提示消息
             if self.low_dump_energy_warnning:
                 notice_info_data.update({"low_dump_energy_warnning": self.low_dump_energy_warnning})

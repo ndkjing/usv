@@ -10,7 +10,7 @@ from drivers import audios_manager
 import sys
 import os
 
-if (config.current_platform ==  config.CurrentPlatform.pi):
+if (config.current_platform == config.CurrentPlatform.pi):
     time.sleep(config.start_sleep_time)
 
 sys.path.append(
@@ -85,21 +85,23 @@ def main():
         if config.b_use_ultrasonic:
             left_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_left_distance)
             right_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_right_distance)
-
-
-
+        if config.b_pin_gps:
+            soft_gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
+            soft_compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
     else:
         pass
     send_com_data_thread = threading.Thread(target=data_manager_obj.send_com_data)
     check_status_thread = threading.Thread(target=data_manager_obj.check_status)
     send_mqtt_data_thread = threading.Thread(target=data_manager_obj.send_mqtt_data)
     update_ship_gaode_thread = threading.Thread(target=data_manager_obj.update_ship_gaode_lng_lat)
+    update_lng_lat_thread = threading.Thread(target=data_manager_obj.update_lng_lat)
     update_config_thread = threading.Thread(target=data_manager_obj.update_config)
 
     check_status_thread.setDaemon(True)
     send_com_data_thread.setDaemon(True)
     send_mqtt_data_thread.setDaemon(True)
     update_ship_gaode_thread.setDaemon(True)
+    update_lng_lat_thread.setDaemon(True)
     update_config_thread.setDaemon(True)
 
     if config.current_platform == config.CurrentPlatform.pi:
@@ -113,11 +115,15 @@ def main():
             gps_thread.setDaemon(True)
         if config.b_use_ultrasonic:
             left_distance_thread.setDaemon(True)
-
+            right_distance_thread.setDaemon(True)
+        if config.b_pin_gps:
+            soft_compass_thread.setDaemon(True)
+            soft_gps_thread.setDaemon(True)
     check_status_thread.start()
     send_mqtt_data_thread.start()
     send_com_data_thread.start()
     update_ship_gaode_thread.start()
+    update_lng_lat_thread.start()
     update_config_thread.start()
 
     if config.current_platform == config.CurrentPlatform.pi:
@@ -133,6 +139,9 @@ def main():
         if config.b_use_ultrasonic:
             left_distance_thread.start()
             right_distance_thread.start()
+        if config.b_pin_gps:
+            soft_compass_thread.start()
+            soft_gps_thread.start()
 
     # send_com_heart_thread.start()
     # get_com_data_thread.join()
@@ -171,9 +180,8 @@ def main():
                     compass_thread.setDaemon(True)
                     compass_thread.start()
                     time.sleep(thread_restart_time)
-
             if os.path.exists(config.compass_port1):
-                if not compass_thread1.is_alive() :
+                if not compass_thread1.is_alive():
                     logger.error('restart compass_thread1')
                     try:
                         if data_manager_obj.pi_main_obj.compass_obj1.uart.is_open():
@@ -186,7 +194,6 @@ def main():
                     compass_thread1.setDaemon(True)
                     compass_thread1.start()
                     time.sleep(thread_restart_time)
-
             if config.b_use_ultrasonic and not left_distance_thread.is_alive():
                 logger.error('restart left_distance_thread')
                 try:
@@ -197,7 +204,6 @@ def main():
                 left_distance_thread.setDaemon(True)
                 left_distance_thread.start()
                 time.sleep(thread_restart_time)
-
             if config.b_use_ultrasonic and not right_distance_thread.is_alive():
                 logger.error('restart left_distance_thread')
                 try:
@@ -208,7 +214,26 @@ def main():
                 right_distance_thread.setDaemon(True)
                 right_distance_thread.start()
                 time.sleep(thread_restart_time)
-
+            if config.b_pin_gps and not soft_gps_thread.is_alive():
+                logger.error('restart soft_gps_thread')
+                try:
+                    data_manager_obj.pi_main_obj.gps_obj = data_manager_obj.pi_main_obj.get_gps_obj()
+                except Exception as e:
+                    logger.error({'restart soft_gps_thread': 111, 'error': e})
+                soft_gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
+                soft_gps_thread.setDaemon(True)
+                soft_gps_thread.start()
+                time.sleep(thread_restart_time)
+            if config.b_pin_gps and not soft_compass_thread.is_alive():
+                logger.error('restart soft_compass_thread')
+                try:
+                    data_manager_obj.pi_main_obj.compass_obj = data_manager_obj.pi_main_obj.get_gps_obj()
+                except Exception as e:
+                    logger.error({'restart soft_compass_thread': 111, 'error': e})
+                soft_compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
+                soft_compass_thread.setDaemon(True)
+                soft_compass_thread.start()
+                time.sleep(thread_restart_time)
             if os.path.exists(config.compass_port):
                 if not gps_thread.is_alive():
                     logger.error('restart gps_thread')
@@ -255,6 +280,13 @@ def main():
             update_ship_gaode_thread.setDaemon(True)
             update_ship_gaode_thread.start()
 
+        if not update_lng_lat_thread.is_alive():
+            logger.error('restart update_lng_lat_thread')
+            update_lng_lat_thread = threading.Thread(
+                target=data_manager_obj.update_lng_lat)
+            update_lng_lat_thread.setDaemon(True)
+            update_lng_lat_thread.start()
+
         if not update_config_thread.is_alive():
             logger.error('restart update_config_thread')
             update_config_thread = threading.Thread(
@@ -272,4 +304,3 @@ if __name__ == '__main__':
         except Exception as e:
             time.sleep(5)
             logger.error({'main error': e})
-
