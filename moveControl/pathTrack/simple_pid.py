@@ -97,6 +97,7 @@ class SimplePid:
         scale_pwm = 1
         left_pwm = 1500 + int(forward_pwm * scale_pwm) - int(steer_pwm * scale_pwm)
         right_pwm = 1500 + int(forward_pwm * scale_pwm) + int(steer_pwm * scale_pwm)
+        print('theta_error',theta_error,'config.kp',config.kp)
         # print('theta_error forward_pwm,steer_pwm,left_pwm,right_pwm',theta_error, forward_pwm,steer_pwm,left_pwm,right_pwm)
         return left_pwm, right_pwm
 

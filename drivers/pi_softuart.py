@@ -137,9 +137,9 @@ class PiSoftuart(object):
 
 if __name__ == '__main__':
     pi = pigpio.pi()
-    b_compass = 1
+    b_compass = 0
     compass_type = 0
-    b_gps = 0
+    b_gps = 1
     b_ultrasonic = 0
     if b_compass:
         compass_obj = PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx, baud=config.pin_compass_baud)
@@ -167,7 +167,7 @@ if __name__ == '__main__':
                 theta = compass_obj.read_compass()
             print('theta', theta)
         if b_gps:
-            gps_data = compass_obj.read_gps()
+            gps_data = gps_obj.read_gps()
             print('gps_data', gps_data)
     # while True:
     # if thread_left_distance.is_alive():

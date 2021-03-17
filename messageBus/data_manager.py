@@ -694,7 +694,7 @@ class DataManager:
                 else:
                     theta_error = 360 + theta_error
             self.theta_error = theta_error
-            print('point_theta,self.current_theta theta_error',point_theta,self.theta,self.current_theta,theta_error)
+            # print('point_theta,self.current_theta theta_error',point_theta,self.theta,self.current_theta,theta_error)
             if config.path_track_type == 2:
                 left_pwm, right_pwm = self.path_track_obj.pure_pwm(distance=all_distance,
                                                                    theta_error=theta_error)
@@ -966,7 +966,7 @@ class DataManager:
                             # 更新目标点提示消息
                             self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] = 1
                             self.path_info = [index + 1, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
-                            if not config.home_debug:
+                            if not config.home_debug and config.b_draw:
                                 # 开始抽水并等待
                                 self.server_data_obj.mqtt_send_get_obj.b_draw = 1
                                 self.pi_main_obj.stop()
@@ -974,6 +974,8 @@ class DataManager:
                                 time.sleep(config.draw_time)
                                 self.b_draw_over_send_data = True
                                 self.draw()
+                            elif not config.b_draw:
+                                self.pi_main_obj.stop()
                         else:
                             break
                     if self.b_stop_path_track:
@@ -998,13 +1000,14 @@ class DataManager:
             if config.home_debug:
                 if self.lng_lat is None:
                     self.lng_lat = config.ship_gaode_lng_lat
-            if self.lng_lat is not None and self.use_true_gps:
-                try:
-                    gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.lng_lat)
-                    if gaode_lng_lat:
-                        self.gaode_lng_lat = gaode_lng_lat
-                except Exception as e:
-                    self.logger.error({'error': e})
+            if self.lng_lat is not None:
+                if self.use_true_gps or config.b_pin_gps:
+                    try:
+                        gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.lng_lat)
+                        if gaode_lng_lat:
+                            self.gaode_lng_lat = gaode_lng_lat
+                    except Exception as e:
+                        self.logger.error({'error': e})
             elif self.lng_lat is not None and not self.use_true_gps:
                 self.gaode_lng_lat = self.lng_lat
             time.sleep(config.pi2mqtt_interval)
@@ -1226,7 +1229,7 @@ class DataManager:
             # 循环等待一定时间
             time.sleep(config.check_status_interval/2)
             # 检查当前状态
-            print('self.pi_main_obj.theta',self.pi_main_obj.theta, self.pi_main_obj.lng_lat_error, self.pi_main_obj.lng_lat,self.pi_main_obj.left_distance,self.pi_main_obj.right_distance)
+            # print('self.pi_main_obj.theta',self.pi_main_obj.theta, self.pi_main_obj.lng_lat_error, self.pi_main_obj.lng_lat,self.pi_main_obj.left_distance,self.pi_main_obj.right_distance)
             if config.home_debug:
                 if config.b_play_audio:
                     audios_manager.play_audio(5, b_backend=False)
@@ -1286,7 +1289,7 @@ class DataManager:
             # 罗盘提示消息
             if len(self.compass_notice_info) > 3:
                 notice_info_data.update({"compass_notice_info": self.compass_notice_info + self.compass_notice_info1})
-            if len(self.pi_main_obj.compass_notice_info) > 2:
+            if self.pi_main_obj.compass_notice_info:
                 notice_info_data.update({"compass_notice_info": self.pi_main_obj.compass_notice_info})
             # 使用超声波时候更新超声波提示消息
             if config.b_use_ultrasonic:
