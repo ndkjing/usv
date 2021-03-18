@@ -57,14 +57,18 @@ class PiMain:
         # 左右侧超声波距离，没有返回None  -1 表示距离过近
         self.left_distance = None
         self.right_distance = None
+        # 上次左侧距离 上次右侧距离
+        self.last_left_distance = None
+        self.last_right_distance = None
         # GPS
         self.lng_lat = None
         # GPS 误差
         self.lng_lat_error = None
         # 罗盘角度
         self.theta = None
+        self.last_theta = None
         # 罗盘提示消息
-        self.compass_notice_info=''
+        self.compass_notice_info = ''
 
     def get_left_ultrasonic_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.left_rx, tx_pin=config.left_tx, baud=config.ultrasonic_baud)
@@ -79,11 +83,57 @@ class PiMain:
     def get_gps_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx, baud=config.pin_gps_baud)
 
+    # 对距离进行滤波处理
+    def distance_filter(self, distance, left=1):
+        if left:
+            if distance:
+                if not self.last_left_distance:
+                    self.last_left_distance = distance
+                    return distance
+                else:
+                    if abs(distance-self.last_left_distance) > 1:
+                        return self.last_left_distance
+                    else:
+                        self.last_left_distance = distance
+                        return distance
+            else:
+                return self.last_left_distance
+        else:
+            if distance:
+                if not self.last_right_distance:
+                    self.last_right_distance = distance
+                    return distance
+                else:
+                    if abs(distance-self.last_right_distance) > 1:
+                        return self.last_right_distance
+                    else:
+                        self.last_right_distance = distance
+                        return distance
+            else:
+                return self.last_right_distance
+
+    # 罗盘角度滤波
+    def compass_filter(self,theta):
+        if theta:
+            if not self.last_theta:
+                self.last_theta = theta
+                return theta
+            else:
+                if abs(theta-self.last_theta)>180:
+                    return self.last_theta
+                else:
+                    self.last_theta = theta
+                    return theta
+        else:
+            return self.last_theta
+
     # 在线程中读取超声波
     def get_left_distance(self):
         if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             while True:
                 l_distance = self.left_ultrasonic_obj.read_ultrasonic()
+                # 执行滤波
+                l_distance = self.distance_filter(l_distance)
                 if l_distance:
                     self.left_distance = l_distance
 
@@ -91,10 +141,11 @@ class PiMain:
         if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             while True:
                 r_distance = self.right_ultrasonic_obj.read_ultrasonic()
+                r_distance = self.distance_filter(r_distance, left=0)
                 if r_distance:
                     self.right_distance = r_distance
 
-    def get_compass_data(self,data='31'):
+    def get_compass_data(self):
         if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             # 记录上一次发送数据
             last_send_data = None
@@ -118,9 +169,10 @@ class PiMain:
                         config.calibration_compass = 0
                         config.write_setting(b_height=True)
                 else:
-                    theta = self.compass_obj.read_compass(send_data='31')
-                    if theta:
-                        self.theta = theta
+                    theta_ = self.compass_obj.read_compass(send_data='31')
+                    theta_ = self.compass_filter(theta_)
+                    if theta_:
+                        self.theta = theta_
 
     def get_gps_data(self):
         if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
