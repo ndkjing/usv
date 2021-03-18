@@ -64,7 +64,7 @@ class PiSoftuart(object):
                     # print(r'str_data.split', str_data.split('ff')[0][:4])
                     # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
                     distance = int(str_data.split('ff')[0][:4], 16) / 1000
-                    print(str_data.split('ff')[0][:4])
+                    # print(str_data.split('ff')[0][:4])
                     if distance <= 0.30:
                         return -1
                     else:
@@ -113,7 +113,7 @@ class PiSoftuart(object):
                                     pass
                                 else:
                                     lng_lat_error = float(data_list[8])
-                                    print(lng, lat, lng_lat_error)
+                                    # print(lng, lat, lng_lat_error)
                                     return [lng, lat, lng_lat_error]
                 time.sleep(self._thread_ts * 10)
             except Exception as e:
@@ -140,8 +140,8 @@ if __name__ == '__main__':
     pi = pigpio.pi()
     b_compass = 0
     compass_type = 0
-    b_gps = 1
-    b_ultrasonic = 0
+    b_gps = 0
+    b_ultrasonic = 1
     if b_compass:
         compass_obj = PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx, baud=config.pin_compass_baud)
     if b_ultrasonic:
