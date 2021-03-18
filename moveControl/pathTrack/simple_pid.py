@@ -72,10 +72,10 @@ class SimplePid:
             pass
         # 如果出现大于和小于0的很大的数则减小p
         elif abs(mean_var) < 30 and abs(std_var) > 30:
-            config.kp -= 0.02
+            config.kp -= 0.05
         # 如果数值一直都在一侧且减小的很慢则增大p
         elif abs(mean_var) > 30 and abs(std_var) < 30:
-            config.kp += 0.02
+            config.kp += 0.05
 
     def pid_pwm(self, distance, theta_error):
         # 更新最近的误差角度队列
