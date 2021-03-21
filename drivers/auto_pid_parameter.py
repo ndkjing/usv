@@ -1,4 +1,5 @@
-import sys,os
+import sys, os
+
 sys.path.append(
     os.path.dirname(
         os.path.dirname(
@@ -89,7 +90,7 @@ class AutoPidParameter:
     def loop(self):
         config.kp, config.ki, config.kd = self.kp, self.ki, self.kd
         while True:
-            self.kd=0
+            self.kd = 0
             config.kd = self.kd
             for i in range(20):
                 self.start_theta = self.theta
@@ -98,10 +99,10 @@ class AutoPidParameter:
                 current_error = sum(self.theta_error_list)
                 print('self.delta_parameters',
                       self.delta_kp,
-                      'current_error',current_error,
-                      'self.best_error',self.best_error,
-                      'self.best_kp',self.best_kp,
-                      'self.best_kd',self.best_kd)
+                      'current_error', current_error,
+                      'self.best_error', self.best_error,
+                      'self.best_kp', self.best_kp,
+                      'self.best_kd', self.best_kd)
                 if self.delta_kp + self.delta_kd < 0.0001:
                     with open('pid.json', 'w') as f:
                         json.dump({'pid': [self.kp, self.kd]}, f)
@@ -118,20 +119,20 @@ class AutoPidParameter:
             self.kp = self.kp + self.delta_kp
             config.kp = self.kp
 
-                    #
-                    # if current_error > self.best_error:
-                    #     self.kd = self.kd * 1.1
-                    # else:
-                    #     self.best_error = current_error
-                    #     self.kd = self.kd - 2 * self.delta_kd
-                    #     self.caluate_error()
-                    #     current_error = sum(self.theta_error_list)
-                    #     if current_error > self.best_error:
-                    #         self.kd = self.kd * 1.1
-                    #     else:
-                    #         self.best_error = current_error
-                    #         self.kd = self.kd + self.delta_kd
-                    #         self.delta_kd = self.delta_kd * 0.9
+            #
+            # if current_error > self.best_error:
+            #     self.kd = self.kd * 1.1
+            # else:
+            #     self.best_error = current_error
+            #     self.kd = self.kd - 2 * self.delta_kd
+            #     self.caluate_error()
+            #     current_error = sum(self.theta_error_list)
+            #     if current_error > self.best_error:
+            #         self.kd = self.kd * 1.1
+            #     else:
+            #         self.best_error = current_error
+            #         self.kd = self.kd + self.delta_kd
+            #         self.delta_kd = self.delta_kd * 0.9
 
     def caluate_error(self):
         self.theta_error_list = []
@@ -147,6 +148,7 @@ class AutoPidParameter:
                                                        theta_error=theta_error)
             self.pi_main_obj.set_pwm(left_pwm, right_pwm)
             time.sleep(0.2)
+
 
 if __name__ == '__main__':
     auto_obj = AutoPidParameter()
