@@ -530,15 +530,18 @@ class WebServer:
             qos=1)
         self.logger.info({'mqtt_send_path_planning_data': mqtt_send_path_planning_data})
 
-
 if __name__ == '__main__':
-    web_server_obj = WebServer()
-    find_pool_thread = threading.Thread(target=web_server_obj.find_pool)
-    get_plan_path_thread = threading.Thread(target=web_server_obj.get_plan_path)
-    find_pool_thread.start()
-    get_plan_path_thread.start()
     while True:
-        time.sleep(1)
-
+        try:
+            web_server_obj = WebServer()
+            find_pool_thread = threading.Thread(target=web_server_obj.find_pool)
+            get_plan_path_thread = threading.Thread(target=web_server_obj.get_plan_path)
+            find_pool_thread.start()
+            get_plan_path_thread.start()
+            while True:
+                time.sleep(1)
+        except Exception as e:
+            print({'error': e})
+            time.sleep(1)
     # find_pool_thread.start()
     # find_pool_thread.start()

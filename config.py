@@ -259,7 +259,7 @@ find_points_num = 5
 # TSP优化路径 0 不使用  1使用
 b_tsp = 0
 # 断网检查
-b_check_network = 0
+b_check_network = 1
 # 是否播放声音
 b_play_audio = 0
 # 不是在树莓派上都是用调试模式

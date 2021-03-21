@@ -1,8 +1,8 @@
-import os,sys
+import os, sys
 
 sys.path.append(os.path.dirname(
-        os.path.dirname(
-            os.path.abspath(__file__))))
+    os.path.dirname(
+        os.path.abspath(__file__))))
 import time
 from subprocess import run, PIPE
 import config
@@ -24,16 +24,18 @@ def check_network():
 
 def get_ping_delay():
     if config.current_platform == config.CurrentPlatform.pi:
-        (status, output) = subprocess.getstatusoutput('ping -c 3 %s' % ('www.baidu.com'))
+        (status, output) = subprocess.getstatusoutput('ping -c 4 %s' % ('www.baidu.com'))
         res = re.findall('time=(.+)ms', output)
     else:
         (status, output) = subprocess.getstatusoutput('ping %s' % ('www.baidu.com'))
         res = re.findall('时间.(.+)ms', output)
     # res = re.findall('/./d+//(.+)//',output)
-    print('----------------------')
-    print(output)
-    print(res)
-    print('----------------------')
+    res = [float(i) for i in res]
+    # 判断网络状况
+    if len(res) == 0:
+        return 0
+    else:
+        return sum(res) / len(res)
 
 
 if __name__ == '__main__':
@@ -43,4 +45,4 @@ if __name__ == '__main__':
         # 时间大概在 3.1 到20 秒
         # print('cost time:', time.time() - start_time)
         # time.sleep(config.check_network_interval)
-        get_ping_delay()
+        print(get_ping_delay())

@@ -138,9 +138,10 @@ class DataManager:
         # 记录平滑路径
         self.smooth_path_lng_lat = None
         self.smooth_path_lng_lat_index = []
-
         # 船手动控制提示信息
         self.control_info = ''
+        # 网络延时
+        self.ping=0
 
     # 读取函数会阻塞 必须使用线程
     def get_com_data(self):
@@ -1016,7 +1017,7 @@ class DataManager:
     def update_lng_lat(self):
         last_read_time = None
         while True:
-            if self.pi_main_obj.lng_lat and self.pi_main_obj.lng_lat[0] > 1 and self.pi_main_obj.lng_lat[1] > 1:
+            if not config.home_debug and self.pi_main_obj.lng_lat and self.pi_main_obj.lng_lat[0] > 1 and self.pi_main_obj.lng_lat[1] > 1:
                 self.lng_lat = copy.deepcopy(self.pi_main_obj.lng_lat)
                 self.lng_lat_error = self.pi_main_obj.lng_lat_error
                 if not last_read_time:
@@ -1052,7 +1053,7 @@ class DataManager:
             status_data.update({'mapId': self.data_define_obj.pool_code})
             detect_data = self.data_define_obj.detect
             detect_data.update({'mapId': self.data_define_obj.pool_code})
-            # self.update_ship_gaode_lng_lat()
+            status_data.update({'ping': self.ping})
             status_data.update({'current_lng_lat': self.gaode_lng_lat})
             if self.home_lng_lat is not None:
                 if config.home_debug:
@@ -1233,14 +1234,7 @@ class DataManager:
             if config.home_debug:
                 if config.b_play_audio:
                     audios_manager.play_audio(5, b_backend=False)
-            # 检查网络
-            if config.b_check_network:
-                if not check_network.check_network():
-                    if config.b_play_audio:
-                        audios_manager.play_audio(2, b_backend=False)
-                    self.logger.error('当前无网络信号')
-                else:
-                    self.logger.info('当前网络正常...')
+
             if self.last_lng_lat:
                 ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
                                                                    self.last_lng_lat[1],
@@ -1289,10 +1283,10 @@ class DataManager:
             # 罗盘提示消息
             if len(self.compass_notice_info) > 3:
                 notice_info_data.update({"compass_notice_info": self.compass_notice_info + self.compass_notice_info1})
-            if self.pi_main_obj.compass_notice_info:
+            if not config.home_debug and self.pi_main_obj.compass_notice_info:
                 notice_info_data.update({"compass_notice_info": self.pi_main_obj.compass_notice_info})
             # 使用超声波时候更新超声波提示消息
-            if config.b_use_ultrasonic:
+            if config.b_use_ultrasonic and not config.home_debug:
                 notice_info_data.update({"ultrasonic_distance": str(self.pi_main_obj.left_distance) + '  ' + str(self.pi_main_obj.right_distance)})
             # 使用电量告警是提示消息
             if self.low_dump_energy_warnning:
@@ -1320,6 +1314,20 @@ class DataManager:
                               data=save_plan_path_data,
                               qos=0)
 
+    # 检测网络延时
+    def check_ping_delay(self):
+        # 检查网络
+        while True:
+            if config.b_check_network:
+                ping = check_network.get_ping_delay()
+                print('ping',ping)
+                if not check_network.get_ping_delay():
+                    if config.b_play_audio:
+                        audios_manager.play_audio(2, b_backend=False)
+                    self.logger.error('当前无网络信号')
+                else:
+                    self.ping = ping
+            time.sleep(1)
     # 重启电脑
     @staticmethod
     def reboot():
