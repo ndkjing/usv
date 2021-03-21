@@ -148,9 +148,10 @@ class ComData:
 if __name__ == '__main__':
     import config
 
-    b_compass = 1
-    b_alt = 0
-    b_com_data = False
+    b_compass = 0
+    b_ultrasonic = 0
+    b_com_data = 0
+    b_gps = 1
     if b_compass:
         com_obj = ComData(config.compass_port,
                                 config.compass_baud,
@@ -167,7 +168,6 @@ if __name__ == '__main__':
             com_obj1.send_data(key_input, b_hex=True)
             print('0号罗盘数据:',com_obj.readline(),com_obj.readline(),com_obj.readline(),com_obj.readline())
             print('1号罗盘数据:',com_obj1.readline(),com_obj1.readline(),com_obj1.readline(),com_obj1.readline())
-
     elif b_com_data:
         serial_obj = ComData(config.stc_port,
                                 config.stc_baud,
@@ -187,31 +187,7 @@ if __name__ == '__main__':
                     serial_obj.send_data('A0Z')
             except Exception as e:
                 print({'error':e})
-    elif b_alt:
-        serial_obj = ComData('com4',
-                             9600,
-                             timeout=0.2,
-                             logger=logger)
-        print(serial_obj)
-        while True:
-            try:
-                data = serial_obj.read_size(4)
-                print(data)
-                # print(time.time(), 'len(data)', len(data), 'data', data)
-                if len(data) == 4:
-                    str_data = str(binascii.b2a_hex(data))[2:-1]
-                    distance = int(str_data[2:-2], 16) / 1000
-                    print(time.time(),'distance',distance)
-
-                elif len(data) > 4:
-                    str_data = str(binascii.b2a_hex(data))[2:-1]
-                    print('str_data', str_data)
-                    print(r'str_data.split', str_data.split('ff')[0][:4])
-                    print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
-                    distance = int(str_data.split('ff')[0][:4], 16) / 1000
-            except Exception as e:
-                print({'error': e})
-    else:
+    elif b_ultrasonic:
         serial_obj = ComData('com3',
                                 '9600',
                                 timeout=0.7,
@@ -222,19 +198,35 @@ if __name__ == '__main__':
             str_data = str(binascii.b2a_hex(data))[2:-1]
             # print(str_data)
             print(int(str_data[2:-2], 16) / 1000)
-    # while True:
-    #     # serial_obj.send_data('31',b_hex=True)
-    #
-    #     data = serial_obj.readline()
-    #     str_data = data.decode('ascii')
-    #     if str_data.startswith('$GNGGA'):
-    #         data_list = str_data.split(',')
-    #         print(data_list)
-    #         lng,lat = float(data_list[4][:3])+float(data_list[4][3:])/60,float(data_list[2][:2])+float(data_list[2][2:])/60
-    #         print('经纬度',lng,lat)
-    #         print('误差',data_list[8])
-    #     # 角度
-
+    elif b_gps:
+        serial_obj1 = ComData('com4',
+                             115200,
+                             timeout=1,
+                             logger=logger)
+        serial_obj2 = ComData('com7',
+                              9600,
+                              timeout=1,
+                              logger=logger)
+        while True:
+            data1 = serial_obj1.readline()
+            str_data1 = bytes(data1).decode('ascii')
+            if str_data1.startswith('$GNGGA'):
+                data_list1 = str_data1.split(',')
+                print(data_list1)
+                lng1,lat1 = float(data_list1[4][:3])+float(data_list1[4][3:])/60,float(data_list1[2][:2])+float(data_list1[2][2:])/60
+                print('经纬度1',lng1,lat1)
+                print('误差1',data_list1[8])
+            time.sleep(0.2)
+            data2 = serial_obj2.readline()
+            str_data2 = bytes(data2).decode('ascii')
+            if str_data2.startswith('$GNGGA') or str_data2.startswith('$GPGGA'):
+                data_list2 = str_data2.split(',')
+                print(data_list2)
+                lng2, lat2 = float(data_list2[4][:3]) + float(data_list2[4][3:]) / 60, float(data_list2[2][:2]) + float(
+                    data_list2[2][2:]) / 60
+                print('经纬度2', lng2, lat2)
+                print('误差2', data_list2[8])
+            time.sleep(0.2)
     # str_data = data.decode('ascii')[:-3]
     # # print('str_data',str_data,type(str_data))
     # if len(str_data)<2:

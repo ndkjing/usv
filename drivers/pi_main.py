@@ -113,17 +113,19 @@ class PiMain:
                 return self.last_right_distance
 
     # 罗盘角度滤波
-    def compass_filter(self,theta):
+    def compass_filter(self, theta):
         if theta:
             if not self.last_theta:
                 self.last_theta = theta
                 return theta
             else:
-                if abs(theta-self.last_theta)>180:
-                    return self.last_theta
-                else:
-                    self.last_theta = theta
-                    return theta
+                # if abs(theta-self.last_theta)>180:
+                #     return self.last_theta
+                # else:
+                #     self.last_theta = theta
+                #     return theta
+                self.last_theta = theta
+                return theta
         else:
             return self.last_theta
 
@@ -335,6 +337,8 @@ class PiMain:
             sleep_time = sleep_time + delta_time
             if pwm_timeout and time.time()-start_pwm_time > pwm_timeout:
                 break
+        if time.time()-start_pwm_time<config.pid_interval:
+            time.sleep(config.pid_interval-(time.time()-start_pwm_time))
         # self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
         # self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
         # 不支持输出获取pwm状态，以后再调试

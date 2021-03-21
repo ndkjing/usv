@@ -48,13 +48,13 @@ class PiSoftuart(object):
             len_data = 4
             try:
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                # print(time.time(), 'count', count, 'data', data)
+                print(time.time(), 'count', count, 'data', data)
                 if count == len_data:
                     str_data = str(binascii.b2a_hex(data))[2:-1]
                     distance = int(str_data[2:-2], 16) / 1000
                     # print(time.time(),'distance',distance)
                     # 太近进入了盲区 返回 -1
-                    if distance <= 0.30:
+                    if distance <= 0.25:
                         return -1
                     else:
                         return distance
@@ -63,31 +63,39 @@ class PiSoftuart(object):
                     # print('str_data', str_data)
                     # print(r'str_data.split', str_data.split('ff')[0][:4])
                     # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
-                    distance = int(str_data.split('ff')[0][:4], 16) / 1000
+                    distance = int(str_data.split('ff')[1][:4], 16) / 1000
                     print(str_data.split('ff')[0][:4])
-                    if distance <= 0.30:
+                    if distance <= 0.25:
                         return -1
                     else:
                         return distance
-                time.sleep(self._thread_ts)
+                time.sleep(self._thread_ts*2)
             except Exception as e:
+                time.sleep(self._thread_ts * 2)
                 return None
 
     def read_compass(self, send_data='31', len_data=None):
         if len_data is None:
             len_data = 4
             try:
+                time.sleep(self._thread_ts /2)
                 self.write_data(send_data)
-                time.sleep(self._thread_ts)
+                time.sleep(self._thread_ts * 1)
+            except Exception as e:
+                print({'error read_compass11111': e})
+                time.sleep(self._thread_ts * 1)
+                return
+            try:
                 count, data = self._pi.bb_serial_read(self._rx_pin)
                 # print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
                     str_data = data.decode('utf-8')[2:-1]
                     theta = float(str_data)
                     return 360 - theta
-                # time.sleep(self._thread_ts)
             except Exception as e:
-                print({'error read_compass': e})
+                print({'error read_compass2222': e})
+                time.sleep(self._thread_ts)
+
                 return None
 
     def read_gps(self, len_data=None):
@@ -138,10 +146,10 @@ class PiSoftuart(object):
 
 if __name__ == '__main__':
     pi = pigpio.pi()
-    b_compass = 0
+    b_compass = 1
     compass_type = 0
-    b_gps = 1
-    b_ultrasonic = 0
+    b_gps = 0
+    b_ultrasonic =0
     if b_compass:
         compass_obj = PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx, baud=config.pin_compass_baud)
     if b_ultrasonic:

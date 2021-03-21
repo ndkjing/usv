@@ -99,7 +99,6 @@ class AutoPidParameter:
                                                        theta_error=theta_error)
             self.pi_main_obj.set_pwm(left_pwm, right_pwm)
 
-
 if __name__ == '__main__':
     auto_obj = AutoPidParameter()
     try:

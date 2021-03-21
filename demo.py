@@ -618,8 +618,26 @@ import math
 # a = [1,1,1,2]
 # print(a.count(0))
 
-a = [3,1,2,1,5]
-del a[a.index(max(a))]
-del a[a.index(min(a))]
-arr = np.array(a)
-print(np.nanmean(arr))
+# a = [3,1,2,1,5]
+# del a[a.index(max(a))]
+# del a[a.index(min(a))]
+# arr = np.array(a)
+# print(np.nanmean(arr))
+
+#!/usr/bin/env python
+#coding:utf-8
+
+import subprocess
+# import re
+# import sys
+# import os
+# import subprocess
+#
+# # r = os.system('ping www.baidu.com')
+# (status, output) = subprocess.getstatusoutput('ping -c 3 %s'%('www.baidu.com'))
+# res = re.findall('time=(.+)ms',output)
+# # res = re.findall('/./d+//(.+)//',output)
+# print('----------------------')
+# print(output)
+# print(res)
+# print('----------------------')
