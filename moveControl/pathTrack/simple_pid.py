@@ -82,10 +82,10 @@ class SimplePid:
             pass
         # 如果出现大于和小于0的很大的数则减小p
         elif abs(mean_var) < 30 and abs(std_var) > 30:
-            config.kp -= 0.05
+            config.kp -= 0.02
         # 如果数值一直都在一侧且减小的很慢则增大p
         elif abs(mean_var) > 30 and abs(std_var) < 30:
-            config.kp += 0.05
+            config.kp += 0.02
 
     def pid_pwm(self, distance, theta_error):
         # 更新最近的误差角度队列
@@ -107,7 +107,7 @@ class SimplePid:
         scale_pwm = 1
         left_pwm = 1500 + int(forward_pwm * scale_pwm) - int(steer_pwm * scale_pwm)
         right_pwm = 1500 + int(forward_pwm * scale_pwm) + int(steer_pwm * scale_pwm)
-        print('theta_error',theta_error,'config.kp',config.kp)
+        print('theta_error',theta_error,'config.kp',config.kp,'config.kd',config.kd)
         # print('theta_error forward_pwm,steer_pwm,left_pwm,right_pwm',theta_error, forward_pwm,steer_pwm,left_pwm,right_pwm)
         return left_pwm, right_pwm
 
