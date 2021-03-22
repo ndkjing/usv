@@ -4,7 +4,6 @@ import config
 cnt=0
 
 def check_network():
-
     r = run('ping www.baidu.com',
             stdout=PIPE,
             stderr=PIPE,

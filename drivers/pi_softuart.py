@@ -5,7 +5,7 @@ import threading
 import os
 import sys
 import binascii
-
+import re
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root_dir)
 
@@ -60,17 +60,16 @@ class PiSoftuart(object):
                         return distance
                 elif count > len_data:
                     str_data = str(binascii.b2a_hex(data))[2:-1]
-                    # print('str_data', str_data)
-                    # print(r'str_data.split', str_data.split('ff')[0][:4])
                     # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
-                    distance = int(str_data.split('ff')[0][:4], 16) / 1000
-                    # print(str_data.split('ff')[0][:4])
+                    distance = int(str_data.split('ff')[1][:4], 16) / 1000
+                    # print(time.time(),'distance',distance)
                     if distance <= 0.30:
                         return -1
                     else:
                         return distance
-                time.sleep(self._thread_ts)
+                time.sleep(self._thread_ts*2.5)
             except Exception as e:
+                time.sleep(self._thread_ts*2.5)
                 return None
 
     def read_compass(self, send_data='31', len_data=None):
@@ -82,8 +81,11 @@ class PiSoftuart(object):
                 count, data = self._pi.bb_serial_read(self._rx_pin)
                 # print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
-                    str_data = data.decode('utf-8')[2:-1]
-                    theta = float(str_data)
+                    # str_data = data.decode('utf-8')[2:-1]
+                    str_data = data.decode('utf-8')
+                    res = re.findall('\d+\.\d',str_data)
+                    # print(res)
+                    theta = float(res[0])
                     return 360 - theta
                 # time.sleep(self._thread_ts)
             except Exception as e:
@@ -138,10 +140,10 @@ class PiSoftuart(object):
 
 if __name__ == '__main__':
     pi = pigpio.pi()
-    b_compass = 0
+    b_compass = 1
     compass_type = 0
     b_gps = 0
-    b_ultrasonic = 1
+    b_ultrasonic = 0
     if b_compass:
         compass_obj = PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx, baud=config.pin_compass_baud)
     if b_ultrasonic:
