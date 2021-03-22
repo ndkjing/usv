@@ -96,6 +96,7 @@ def main():
     update_ship_gaode_thread = threading.Thread(target=data_manager_obj.update_ship_gaode_lng_lat)
     update_lng_lat_thread = threading.Thread(target=data_manager_obj.update_lng_lat)
     update_config_thread = threading.Thread(target=data_manager_obj.update_config)
+    check_ping_delay_thread = threading.Thread(target=data_manager_obj.check_ping_delay)
 
     check_status_thread.setDaemon(True)
     send_com_data_thread.setDaemon(True)
@@ -103,6 +104,7 @@ def main():
     update_ship_gaode_thread.setDaemon(True)
     update_lng_lat_thread.setDaemon(True)
     update_config_thread.setDaemon(True)
+    check_ping_delay_thread.setDaemon(True)
 
     if config.current_platform == config.CurrentPlatform.pi:
         if os.path.exists(config.stc_port):
@@ -125,6 +127,7 @@ def main():
     update_ship_gaode_thread.start()
     update_lng_lat_thread.start()
     update_config_thread.start()
+    check_ping_delay_thread.start()
 
     if config.current_platform == config.CurrentPlatform.pi:
         if os.path.exists(config.stc_port):
@@ -293,6 +296,13 @@ def main():
                 target=data_manager_obj.update_config)
             update_config_thread.setDaemon(True)
             update_config_thread.start()
+
+        if not check_ping_delay_thread.is_alive():
+            logger.error('restart check_ping_delay_thread')
+            check_ping_delay_thread = threading.Thread(
+                target=data_manager_obj.check_ping_delay)
+            check_ping_delay_thread.setDaemon(True)
+            check_ping_delay_thread.start()
         else:
             time.sleep(1)
 

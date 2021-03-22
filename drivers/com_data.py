@@ -3,7 +3,7 @@
 """
 import sys
 import os
-from utils import lng_lat_calculate
+
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root_dir)
 
@@ -199,11 +199,11 @@ if __name__ == '__main__':
             # print(str_data)
             print(int(str_data[2:-2], 16) / 1000)
     elif b_gps:
-        serial_obj1 = ComData('com5',
+        serial_obj1 = ComData('com4',
                              115200,
                              timeout=1,
                              logger=logger)
-        serial_obj2 = ComData('com4',
+        serial_obj2 = ComData('com7',
                               9600,
                               timeout=1,
                               logger=logger)
@@ -217,11 +217,8 @@ if __name__ == '__main__':
                 print('经纬度1',lng1,lat1)
                 print('误差1',data_list1[8])
             time.sleep(0.2)
-            try:
-                data2 = serial_obj2.readline()
-                str_data2 = bytes(data2).decode('ascii')
-            except Exception as e:
-                continue
+            data2 = serial_obj2.readline()
+            str_data2 = bytes(data2).decode('ascii')
             if str_data2.startswith('$GNGGA') or str_data2.startswith('$GPGGA'):
                 data_list2 = str_data2.split(',')
                 print(data_list2)
@@ -229,7 +226,6 @@ if __name__ == '__main__':
                     data_list2[2][2:]) / 60
                 print('经纬度2', lng2, lat2)
                 print('误差2', data_list2[8])
-                print('-----------',lng_lat_calculate.angleFromCoordinate(lng1,lat1,lng2,lat2))
             time.sleep(0.2)
     # str_data = data.decode('ascii')[:-3]
     # # print('str_data',str_data,type(str_data))

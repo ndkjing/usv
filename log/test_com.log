@@ -1,0 +1,1 @@
+2021-03-20 11:55:13,999 com_data.py[line:52] ERROR {'串口连接异常：': SerialException("could not open port 'com4': PermissionError(13, '拒绝访问。', None, 5)")}

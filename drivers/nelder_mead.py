@@ -41,7 +41,6 @@ sys.path.append(
         'utils'))
 
 
-
 import copy
 from drivers import pi_main
 from drivers import pi_softuart
@@ -58,7 +57,7 @@ import tqdm
 
 def nelder_mead(f, x_start,
                 step=0.05, no_improve_thr=10e-6,
-                no_improv_break=1000, max_iter=0,
+                no_improv_break=10, max_iter=0,
                 alpha=1., gamma=2., rho=-0.5, sigma=0.5):
     '''
         @param f (function): function to optimize, must return a scalar score
@@ -88,7 +87,6 @@ def nelder_mead(f, x_start,
     # simplex iter
     iters = 0
     while 1:
-        # order
         print('x',x,'res',res)
         res.sort(key=lambda x: x[1])
         best = res[0][1]
@@ -219,7 +217,6 @@ class AutoPidParameter:
 
 if __name__ == '__main__':
     auto_obj = AutoPidParameter()
-    # try:
     get_compass_data_thread = threading.Thread(target=auto_obj.pi_main_obj.get_compass_data)
     get_compass_data_thread.setDaemon(True)
     get_compass_data_thread.start()
@@ -227,3 +224,4 @@ if __name__ == '__main__':
     # except Exception as e:
     #     print('AutoPidParameter error ', e)
     #     auto_obj.pi_main_obj.stop()
+
