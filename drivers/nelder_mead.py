@@ -9,6 +9,8 @@ import threading
 import pigpio
 import json
 import time
+import tqdm
+
 
 def nelder_mead(f, x_start,
                 step=0.05, no_improve_thr=10e-6,
@@ -67,10 +69,10 @@ def nelder_mead(f, x_start,
         x0 = [0.] * dim
         for tup in res[:-1]:
             for i, c in enumerate(tup[0]):
-                x0[i] += c / (len(res)-1)
+                x0[i] += c / (len(res) - 1)
 
         # reflection
-        xr = x0 + alpha*(x0 - res[-1][0])
+        xr = x0 + alpha * (x0 - res[-1][0])
         rscore = f(xr)
         if res[0][1] <= rscore < res[-2][1]:
             del res[-1]
@@ -79,7 +81,7 @@ def nelder_mead(f, x_start,
 
         # expansion
         if rscore < res[0][1]:
-            xe = x0 + gamma*(x0 - res[-1][0])
+            xe = x0 + gamma * (x0 - res[-1][0])
             escore = f(xe)
             if escore < rscore:
                 del res[-1]
@@ -91,7 +93,7 @@ def nelder_mead(f, x_start,
                 continue
 
         # contraction
-        xc = x0 + rho*(x0 - res[-1][0])
+        xc = x0 + rho * (x0 - res[-1][0])
         cscore = f(xc)
         if cscore < res[-1][1]:
             del res[-1]
@@ -102,7 +104,7 @@ def nelder_mead(f, x_start,
         x1 = res[0][0]
         nres = []
         for tup in res:
-            redx = x1 + sigma*(tup[0] - x1)
+            redx = x1 + sigma * (tup[0] - x1)
             score = f(redx)
             nres.append([redx, score])
         res = nres
@@ -117,9 +119,9 @@ class AutoPidParameter:
         self.kp = 0.8
         self.ki = 0
         self.kd = 0
-        self.delta_kp = 0.1*self.kp
-        self.delta_ki = 0.1*self.ki
-        self.delta_kd = 0.1*self.kd
+        self.delta_kp = 0.1 * self.kp
+        self.delta_ki = 0.1 * self.ki
+        self.delta_kd = 0.1 * self.kd
         self.pid_obj = simple_pid.SimplePid()
         self.pi_main_obj = pi_main.PiMain()
         self.theta = None
@@ -129,7 +131,7 @@ class AutoPidParameter:
         # 总共测试次数
         self.loop_count = 100
         # 一个角度调节时间
-        self.change_count = 25
+        self.change_count = 35
         self.best_error = 180 * (self.change_count + 1)
         pi = pigpio.pi()
         self.compass_obj = pi_softuart.PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx,
@@ -146,10 +148,12 @@ class AutoPidParameter:
 
     def caluate_error(self, x):
         config.kp = x[0]
-        # config.ki = x[1]
-        config.kd = x[1]
+        config.ki = x[1]
+        config.kd = x[2]
         self.theta_error_list = []
-        for i in range(self.change_count):
+        self.start_theta = self.theta
+        self.target_theta = (self.theta + 180) % 360
+        for i in tqdm.tqdm(range(self.change_count)):
             theta_error = self.target_theta - self.theta
             self.theta_error_list.append(abs(theta_error))
             if abs(theta_error) > 180:
@@ -158,18 +162,19 @@ class AutoPidParameter:
                 else:
                     theta_error = 360 + theta_error
             left_pwm, right_pwm = self.pid_obj.pid_pwm_2(distance=0,
-                                                       theta_error=theta_error)
+                                                         theta_error=theta_error)
+            start_time = time.time()
             self.pi_main_obj.set_pwm(left_pwm, right_pwm)
+            print('change time :', time.time() - start_time)
 
 
 if __name__ == '__main__':
     auto_obj = AutoPidParameter()
     try:
-        get_compass_data_thread = threading.Thread(target=auto_obj.get_compass_data)
+        get_compass_data_thread = threading.Thread(target=auto_obj.pi_main_obj.get_compass_data)
         get_compass_data_thread.setDaemon(True)
         get_compass_data_thread.start()
         auto_obj.loop()
     except Exception as e:
         print('AutoPidParameter error ', e)
         auto_obj.pi_main_obj.stop()
-

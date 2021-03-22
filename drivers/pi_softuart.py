@@ -48,7 +48,7 @@ class PiSoftuart(object):
             len_data = 4
             try:
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                print(time.time(), 'count', count, 'data', data)
+                # print(time.time(), 'count', count, 'data', data)
                 if count == len_data:
                     str_data = str(binascii.b2a_hex(data))[2:-1]
                     distance = int(str_data[2:-2], 16) / 1000
@@ -64,12 +64,12 @@ class PiSoftuart(object):
                     # print(r'str_data.split', str_data.split('ff')[0][:4])
                     # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
                     distance = int(str_data.split('ff')[1][:4], 16) / 1000
-                    print(str_data.split('ff')[0][:4])
+                    # print(str_data.split('ff')[0][:4])
                     if distance <= 0.25:
                         return -1
                     else:
                         return distance
-                time.sleep(self._thread_ts*2)
+                time.sleep(self._thread_ts * 2)
             except Exception as e:
                 time.sleep(self._thread_ts * 2)
                 return None
@@ -78,7 +78,7 @@ class PiSoftuart(object):
         if len_data is None:
             len_data = 4
             try:
-                time.sleep(self._thread_ts /2)
+                time.sleep(self._thread_ts / 2)
                 self.write_data(send_data)
                 time.sleep(self._thread_ts * 1)
             except Exception as e:
@@ -146,12 +146,21 @@ class PiSoftuart(object):
 
 if __name__ == '__main__':
     pi = pigpio.pi()
-    b_compass = 1
+    input_str = input('type 1 compass  4 gps 5 ultrasonic: ')
+    b_compass = 0
     compass_type = 0
     b_gps = 0
-    b_ultrasonic =0
+    b_ultrasonic = 0
+    if int(input_str) == 1:
+        b_compass = 1
+    elif int(input_str) == 4:
+        b_gps = 1
+    elif int(input_str) == 5:
+        b_ultrasonic = 1
+
     if b_compass:
-        compass_obj = PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx, baud=config.pin_compass_baud)
+        compass_obj = PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx,
+                                 baud=config.pin_compass_baud)
     if b_ultrasonic:
         left_distance_obj = PiSoftuart(pi=pi, rx_pin=config.left_rx, tx_pin=config.left_tx, baud=config.ultrasonic_baud)
         right_distance_obj = PiSoftuart(pi=pi, rx_pin=config.right_rx, tx_pin=config.right_tx,
@@ -170,8 +179,14 @@ if __name__ == '__main__':
         if b_compass:
             if compass_type == 1:
                 theta = compass_obj.read_compass(send_data='C0')
+                input_str2 = input('compass_type 1 start  2 end :')
+                if int(input_str) == 2:
+                    compass_type = 2
+                elif int(input_str) == 1:
+                    compass_type = 1
             elif compass_type == 2:
                 theta = compass_obj.read_compass(send_data='C1')
+                compass_type = 0
             else:
                 theta = compass_obj.read_compass()
             print('theta', theta)
