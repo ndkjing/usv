@@ -141,8 +141,8 @@ class SimplePid:
             steer_pwm = max_control*steer_pwm/(forward_pwm+abs(steer_pwm))
         left_pwm = config.stop_pwm + int(forward_pwm) - int(steer_pwm)
         right_pwm = config.stop_pwm + int(forward_pwm) + int(steer_pwm)
-        print('steer_uniform,forward_pwm,left_steer_pwm,left_pwm,right_pwm', left_pwm, forward_pwm, right_pwm,
-              left_pwm, right_pwm)
+        print('steer_control,forward_pwm,left_pwm,right_pwm', steer_control, forward_pwm, left_pwm,
+              right_pwm)
         return left_pwm, right_pwm
 
     def yaw_control(self, yaw):

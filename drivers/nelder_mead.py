@@ -40,7 +40,6 @@ sys.path.append(
             os.path.abspath(__file__)),
         'utils'))
 
-
 import copy
 from drivers import pi_main
 from drivers import pi_softuart
@@ -56,8 +55,8 @@ import tqdm
 
 
 def nelder_mead(f, x_start,
-                step=0.05, no_improve_thr=10e-6,
-                no_improv_break=10, max_iter=0,
+                step=5, no_improve_thr=10e-6,
+                no_improv_break=100, max_iter=0,
                 alpha=1., gamma=2., rho=-0.5, sigma=0.5):
     '''
         @param f (function): function to optimize, must return a scalar score
@@ -174,7 +173,7 @@ class AutoPidParameter:
         # 总共测试次数
         self.loop_count = 100
         # 一个角度调节时间
-        self.change_count = 35
+        self.change_count = 20
         self.best_error = 180 * (self.change_count + 1)
         pi = pigpio.pi()
         self.compass_obj = pi_softuart.PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx,
@@ -209,17 +208,18 @@ class AutoPidParameter:
             print('theta_error',theta_error)
             left_pwm, right_pwm = self.pid_obj.pid_pwm_2(distance=0,
                                                          theta_error=theta_error)
-            start_time = time.time()
             self.pi_main_obj.set_pwm(left_pwm, right_pwm)
         return sum(self.theta_error_list)
-            # print('change time :', time.time() - start_time)
 
 
 if __name__ == '__main__':
     auto_obj = AutoPidParameter()
     get_compass_data_thread = threading.Thread(target=auto_obj.pi_main_obj.get_compass_data)
+    loop_change_pwm_thread = threading.Thread(target=auto_obj.pi_main_obj.loop_change_pwm)
     get_compass_data_thread.setDaemon(True)
+    loop_change_pwm_thread.setDaemon(True)
     get_compass_data_thread.start()
+    loop_change_pwm_thread.start()
     auto_obj.loop()
     # except Exception as e:
     #     print('AutoPidParameter error ', e)

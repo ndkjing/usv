@@ -154,9 +154,12 @@ if __name__ == '__main__':
     auto_obj = AutoPidParameter()
     try:
         get_compass_data_thread = threading.Thread(target=auto_obj.get_compass_data)
+        loop_change_pwm_thread = threading.Thread(target=auto_obj.pi_main_obj.loop_change_pwm)
         get_compass_data_thread.setDaemon(True)
+        loop_change_pwm_thread.setDaemon(True)
         # get_compass_data_thread.join()
         get_compass_data_thread.start()
+        loop_change_pwm_thread.start()
         auto_obj.loop()
     except Exception as e:
         print('AutoPidParameter error ', e)

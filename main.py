@@ -73,6 +73,7 @@ def main():
 
     # 启动串口数据收发和mqtt数据收发
     if config.current_platform == config.CurrentPlatform.pi:
+        change_pwm_thread = threading.Thread(target=data_manager_obj.pi_main_obj.loop_change_pwm)
         if os.path.exists(config.stc_port):
             get_com_data_thread = threading.Thread(target=data_manager_obj.get_com_data)
         if os.path.exists(config.compass_port):
@@ -107,6 +108,7 @@ def main():
     check_ping_delay_thread.setDaemon(True)
 
     if config.current_platform == config.CurrentPlatform.pi:
+        change_pwm_thread.setDaemon(True)
         if os.path.exists(config.stc_port):
             get_com_data_thread.setDaemon(True)
         if os.path.exists(config.compass_port):
@@ -130,6 +132,7 @@ def main():
     check_ping_delay_thread.start()
 
     if config.current_platform == config.CurrentPlatform.pi:
+        change_pwm_thread.start()
         if os.path.exists(config.stc_port):
             get_com_data_thread.start()
         if os.path.exists(config.compass_port):
@@ -157,6 +160,11 @@ def main():
     while True:
         #  判断线程是否死亡并重启线程
         if config.current_platform == config.CurrentPlatform.pi:
+            if not change_pwm_thread.is_alive():
+                logger.error('restart get_com_data_thread')
+                change_pwm_thread = threading.Thread(target=data_manager_obj.pi_main_obj.loop_change_pwm)
+                change_pwm_thread.setDaemon(True)
+                change_pwm_thread.start()
             if os.path.exists(config.stc_port) and not get_com_data_thread.is_alive():
                 logger.error('restart get_com_data_thread')
                 try:

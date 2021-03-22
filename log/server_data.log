@@ -83,3 +83,27 @@
 2021-03-21 18:49:43,302 server_data.py[line:474] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
 2021-03-21 18:49:43,302 server_data.py[line:474] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
 2021-03-21 18:49:43,318 server_data.py[line:175] INFO Connected with result code:  0
+2021-03-22 13:01:02,740 server_data.py[line:474] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,740 server_data.py[line:474] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,741 server_data.py[line:474] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,741 server_data.py[line:474] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,741 server_data.py[line:474] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,741 server_data.py[line:474] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,742 server_data.py[line:474] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,742 server_data.py[line:474] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,742 server_data.py[line:474] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,743 server_data.py[line:474] INFO {'topic': 'status_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,743 server_data.py[line:474] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,743 server_data.py[line:474] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,743 server_data.py[line:474] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,743 server_data.py[line:474] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,744 server_data.py[line:474] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,744 server_data.py[line:474] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-03-22 13:01:02,782 server_data.py[line:175] INFO Connected with result code:  0
+2021-03-22 13:01:03,778 server_data.py[line:245] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.430855, 30.524986], 'zoom': 15}
+2021-03-22 13:01:08,588 server_data.py[line:245] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.524713, 30.505535], 'zoom': 15.5}
+2021-03-22 13:01:12,243 server_data.py[line:245] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.524196, 30.505632], 'zoom': 17.5}
+2021-03-22 13:01:17,955 server_data.py[line:245] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.524386, 30.506057], 'zoom': 17.5}
+2021-03-22 13:01:18,654 server_data.py[line:245] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.524424, 30.505789], 'zoom': 17.5}
+2021-03-22 13:01:31,832 server_data.py[line:245] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.523969, 30.505985], 'zoom': 17.5}
+2021-03-22 13:01:34,683 server_data.py[line:352] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1354291518018142209'}
