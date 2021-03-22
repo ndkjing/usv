@@ -54,7 +54,7 @@ class PiSoftuart(object):
                     distance = int(str_data[2:-2], 16) / 1000
                     # print(time.time(),'distance',distance)
                     # 太近进入了盲区 返回 -1
-                    if distance <= 0.30:
+                    if distance <= 0.25:
                         return -1
                     else:
                         return distance
@@ -65,7 +65,7 @@ class PiSoftuart(object):
                     # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
                     distance = int(str_data.split('ff')[0][:4], 16) / 1000
                     # print(str_data.split('ff')[0][:4])
-                    if distance <= 0.30:
+                    if distance <= 0.25:
                         return -1
                     else:
                         return distance
