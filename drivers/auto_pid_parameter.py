@@ -147,7 +147,7 @@ class AutoPidParameter:
             left_pwm, right_pwm = self.pid_obj.pid_pwm(distance=0,
                                                        theta_error=theta_error)
             self.pi_main_obj.set_pwm(left_pwm, right_pwm)
-            time.sleep(0.2)
+            time.sleep(config.pid_interval)
 
 
 if __name__ == '__main__':

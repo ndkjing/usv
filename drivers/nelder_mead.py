@@ -55,7 +55,7 @@ import tqdm
 
 
 def nelder_mead(f, x_start,
-                step=5, no_improve_thr=10e-6,
+                step=10, no_improve_thr=10e-6,
                 no_improv_break=100, max_iter=0,
                 alpha=1., gamma=2., rho=-0.5, sigma=0.5):
     '''
@@ -206,9 +206,10 @@ class AutoPidParameter:
                 else:
                     theta_error = 360 + theta_error
             print('theta_error',theta_error)
-            left_pwm, right_pwm = self.pid_obj.pid_pwm_2(distance=0,
+            left_pwm, right_pwm = self.pid_obj.pid_pwm_1(distance=0,
                                                          theta_error=theta_error)
             self.pi_main_obj.set_pwm(left_pwm, right_pwm)
+            time.sleep(config.pid_interval*2.5)
         return sum(self.theta_error_list)
 
 

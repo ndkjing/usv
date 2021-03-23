@@ -66,7 +66,7 @@ class PurePursuit:
         delta = math.atan2(2.0 * L * math.sin(alpha) / Lf, 1.0)
         return delta, ind
 
-    def pure_pwm(self,distance,theta_error):
+    def pid_pwm(self,distance,theta_error):
         left_pwm=0
         right_pwm=0
         return left_pwm,right_pwm

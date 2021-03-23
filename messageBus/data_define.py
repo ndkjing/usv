@@ -244,7 +244,9 @@ class DataDefine:
             ('refresh_%s' % (config.ship_code), 0),
             ('reset_pool_%s' % (config.ship_code), 0),
             ('heart_%s' % (config.ship_code), 0),
+            ('set_home_%s' % (config.ship_code), 0),
             ('path_planning_confirm_%s' % (config.ship_code), 0))
+
         self.pool_code = ''
         self.water = self.water_data()
         self.weather = self.weather_data()

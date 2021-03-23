@@ -39,11 +39,13 @@ class SimplePid:
         control = config.kp * theta_error + config.ki * errorSum + \
                   config.kd * (theta_error - self.previousError)
         self.previousError = theta_error
-        # 控制量归一化
-        pwm = int((control / 180.0) * config.motor_steer)
-        if pwm >= config.motor_steer:
-            pwm = config.motor_steer
-        return pwm
+        max_error_sum = 1000
+        if errorSum>max_error_sum:
+            errorSum = max_error_sum
+        elif errorSum<-max_error_sum:
+            errorSum = -max_error_sum
+        self.errorSum = errorSum
+        return control
 
     def update_steer_pid_1(self, theta_error):
         self.adjust_p_list.append(theta_error)
@@ -113,12 +115,12 @@ class SimplePid:
 
     @staticmethod
     def make_to_pwm(a):
-        d = ((a + 1) * 1000)
+        d = (0.5*a + 1.5) * 1000
         return d
 
     def pid_pwm_1(self, distance, theta_error):
-        steer_control = self.update_steer_pid_1(theta_error)
-        steer_uniform = 1.0 / (1.0 + e ** (-2 * steer_control))
+        steer_control = self.update_steer_pid(theta_error)
+        steer_uniform = 2.0 / (1.0 + e ** (-2 * steer_control))-1
         forward_pwm = SimplePid.make_to_pwm(1.0 / (1.0 + e ** (-0.3 * distance)))
         left_steer_pwm = SimplePid.make_to_pwm(steer_uniform)
         right_steer_pwm = SimplePid.make_to_pwm(-steer_uniform)
