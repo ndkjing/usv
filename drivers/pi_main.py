@@ -343,7 +343,7 @@ class PiMain:
                 self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
                 self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
                 time.sleep(sleep_time)
-                sleep_time = sleep_time + delta_time
+                # sleep_time = sleep_time + delta_time
             else:
                 time.sleep(0.01)
                 # if pwm_timeout and time.time()-start_pwm_time > pwm_timeout:
