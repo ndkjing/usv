@@ -327,7 +327,7 @@ class PiMain:
         一直修改输出pwm波到目标pwm波
         :return:
         """
-        sleep_time = 0.001
+        sleep_time = 0.02
         delta_time = 0.0001 / 500.0
         # start_pwm_time = time.time()
         while True:
@@ -335,17 +335,17 @@ class PiMain:
                 if abs(self.target_left_pwm - self.left_pwm) == 0:
                     pass
                 else:
-                    self.left_pwm = self.left_pwm + (self.target_left_pwm - self.left_pwm) // abs(self.target_left_pwm - self.left_pwm) * 1
+                    self.left_pwm = self.left_pwm + (self.target_left_pwm - self.left_pwm) // abs(self.target_left_pwm - self.left_pwm) * 5
                 if abs(self.target_right_pwm - self.right_pwm) == 0:
                     pass
                 else:
-                    self.right_pwm = self.right_pwm + (self.target_right_pwm - self.right_pwm) // abs(self.target_right_pwm - self.right_pwm) * 1
+                    self.right_pwm = self.right_pwm + (self.target_right_pwm - self.right_pwm) // abs(self.target_right_pwm - self.right_pwm) * 5
                 self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
                 self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
                 time.sleep(sleep_time)
-                sleep_time = sleep_time + delta_time
+                # sleep_time = sleep_time + delta_time
             else:
-                time.sleep(0.02)
+                time.sleep(0.01)
                 # if pwm_timeout and time.time()-start_pwm_time > pwm_timeout:
                 #     break
             # if time.time()-start_pwm_time<config.pid_interval:

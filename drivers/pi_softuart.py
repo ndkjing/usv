@@ -145,11 +145,21 @@ class PiSoftuart(object):
 if __name__ == '__main__':
     pi = pigpio.pi()
     b_compass = 0
-    compass_type = 0
+    b_ultrasonic = 0
+    b_com_data = 0
     b_gps = 0
-    b_ultrasonic = 1
+    check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  >')
+    if int(check_type) == 1:
+        b_compass = 1
+    elif int(check_type) == 2:
+        b_ultrasonic = 1
+    elif int(check_type) == 3:
+        b_com_data = 1
+    elif int(check_type) == 4:
+        b_gps = 1
     if b_compass:
-        compass_obj = PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx, baud=config.pin_compass_baud)
+        compass_obj = PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx,
+                                 baud=config.pin_compass_baud)
     if b_ultrasonic:
         left_distance_obj = PiSoftuart(pi=pi, rx_pin=config.left_rx, tx_pin=config.left_tx, baud=config.ultrasonic_baud)
         right_distance_obj = PiSoftuart(pi=pi, rx_pin=config.right_rx, tx_pin=config.right_tx,
@@ -167,9 +177,10 @@ if __name__ == '__main__':
             if r_distance is not None:
                 print('r_distance', r_distance)
         if b_compass:
-            if compass_type == 1:
+            key_input = input('input:  C0  开始  C1 结束 其他为读取 >')
+            if key_input == 'C0':
                 theta = compass_obj.read_compass(send_data='C0')
-            elif compass_type == 2:
+            elif key_input == 'C1':
                 theta = compass_obj.read_compass(send_data='C1')
             else:
                 theta = compass_obj.read_compass()

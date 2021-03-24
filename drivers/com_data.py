@@ -28,6 +28,7 @@ from utils import log
 
 logger = log.LogHandler('test_com')
 
+
 class ComData:
     def __init__(self, com, baud, timeout, logger=None):
         if logger is None:
@@ -147,32 +148,40 @@ class ComData:
 
 if __name__ == '__main__':
     import config
-
     b_compass = 0
     b_ultrasonic = 0
     b_com_data = 0
-    b_gps = 1
+    b_gps = 0
+    check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps   >')
+    if int(check_type) == 1:
+        b_compass = 1
+    elif int(check_type) == 2:
+        b_ultrasonic = 1
+    elif int(check_type) == 2:
+        b_com_data = 1
+    elif int(check_type) == 2:
+        b_gps = 1
     if b_compass:
         com_obj = ComData(config.compass_port,
-                                config.compass_baud,
-                                timeout=0.7,
-                                logger=logger)
+                          config.compass_baud,
+                          timeout=0.7,
+                          logger=logger)
         com_obj1 = ComData(config.compass_port1,
-                             config.compass_baud1,
-                             timeout=0.7,
-                             logger=logger)
+                           config.compass_baud1,
+                           timeout=0.7,
+                           logger=logger)
         while True:
             # 校准罗盘  C0  开始  C1 结束
-            key_input = input('input:')
+            key_input = input('input:  C0  开始  C1 结束 >')
             com_obj.send_data(key_input, b_hex=True)
             com_obj1.send_data(key_input, b_hex=True)
-            print('0号罗盘数据:',com_obj.readline(),com_obj.readline(),com_obj.readline(),com_obj.readline())
-            print('1号罗盘数据:',com_obj1.readline(),com_obj1.readline(),com_obj1.readline(),com_obj1.readline())
+            print('0号罗盘数据:', com_obj.readline(), com_obj.readline(), com_obj.readline(), com_obj.readline())
+            print('1号罗盘数据:', com_obj1.readline(), com_obj1.readline(), com_obj1.readline(), com_obj1.readline())
     elif b_com_data:
         serial_obj = ComData(config.stc_port,
-                                config.stc_baud,
-                                timeout=0.7,
-                                logger=logger)
+                             config.stc_baud,
+                             timeout=0.7,
+                             logger=logger)
         while True:
             print(serial_obj.readline())
             print(serial_obj.readline())
@@ -186,12 +195,12 @@ if __name__ == '__main__':
                 else:
                     serial_obj.send_data('A0Z')
             except Exception as e:
-                print({'error':e})
+                print({'error': e})
     elif b_ultrasonic:
         serial_obj = ComData('com3',
-                                '9600',
-                                timeout=0.7,
-                                logger=logger)
+                             '9600',
+                             timeout=0.7,
+                             logger=logger)
         while True:
             data = serial_obj.read_size(4)
             # print(time.time(),type(data),data)
@@ -200,9 +209,9 @@ if __name__ == '__main__':
             print(int(str_data[2:-2], 16) / 1000)
     elif b_gps:
         serial_obj1 = ComData('com4',
-                             115200,
-                             timeout=1,
-                             logger=logger)
+                              115200,
+                              timeout=1,
+                              logger=logger)
         serial_obj2 = ComData('com7',
                               9600,
                               timeout=1,
@@ -213,9 +222,10 @@ if __name__ == '__main__':
             if str_data1.startswith('$GNGGA'):
                 data_list1 = str_data1.split(',')
                 print(data_list1)
-                lng1,lat1 = float(data_list1[4][:3])+float(data_list1[4][3:])/60,float(data_list1[2][:2])+float(data_list1[2][2:])/60
-                print('经纬度1',lng1,lat1)
-                print('误差1',data_list1[8])
+                lng1, lat1 = float(data_list1[4][:3]) + float(data_list1[4][3:]) / 60, float(data_list1[2][:2]) + float(
+                    data_list1[2][2:]) / 60
+                print('经纬度1', lng1, lat1)
+                print('误差1', data_list1[8])
             time.sleep(0.2)
             data2 = serial_obj2.readline()
             str_data2 = bytes(data2).decode('ascii')

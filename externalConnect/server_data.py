@@ -89,7 +89,7 @@ class MqttSendGet:
         elif config.current_platform == config.CurrentPlatform.linux:
             client_id = client_id + 'linux'
             self.mqtt_user = 'linux'
-        else :
+        else:
             client_id = client_id + 'windows'
             self.mqtt_user = 'windows'
         self.mqtt_passwd = 'public'
@@ -163,6 +163,9 @@ class MqttSendGet:
         # 检查超过指定时间没有收到服务器数据就开启  断网返航
         self.last_command_time = time.time()
         self.b_network_backhome = 0
+
+        # 设置的返航点
+        self.set_home_gaode_lng_lat = None
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -442,6 +445,18 @@ class MqttSendGet:
                 self.logger.info({'topic': topic,
                                   'reset_pool': reset_pool_data.get('reset_pool'),
                                   })
+
+            # 处理设置返航点
+            elif topic == 'set_home_%s' % (config.ship_code):
+                set_home_data = json.loads(msg.payload)
+                if set_home_data.get('lng_lat') is None:
+                    self.logger.error('set_home_处理控制数据没有lng_lat')
+                    return
+                self.set_home_gaode_lng_lat = set_home_data.get('lng_lat')[0]
+                self.logger.info({'topic': topic,
+                                  'lng_lat': set_home_data.get('lng_lat'),
+                                  })
+
         except Exception as e:
             self.logger.error({'error': e})
 

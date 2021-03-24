@@ -650,7 +650,7 @@ import copy
 
 
 def nelder_mead(f, x_start,
-                step=10, no_improve_thr=10e-6,
+                step=1000, no_improve_thr=10e-6,
                 no_improv_break=100, max_iter=0,
                 alpha=1., gamma=2., rho=-0.5, sigma=0.5):
     '''

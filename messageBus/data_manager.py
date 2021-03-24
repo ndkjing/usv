@@ -313,18 +313,18 @@ class DataManager:
                 time.sleep(1)
 
     # 设置返航点经纬度
-    def set_home_location(self):
-        if self.lng_lat is None:
-            self.logger.error('当前无GPS信号，无法设置返航点')
-        else:
-            if abs(self.lng_lat[0]) < 10:
-                # gps为靠近0
-                self.logger.error('当前无GPS信号弱，无法设置返航点')
-            else:
-                self.home_lng_lat = copy.deepcopy(self.lng_lat)
-            # print({'保存路径':config.home_location_path})
-            # with open(config.home_location_path,'w') as f:
-            #     json.dump({'home_lng_lat':self.home_lng_lat},f)
+    # def set_home_location(self):
+    #     if self.lng_lat is None:
+    #         self.logger.error('当前无GPS信号，无法设置返航点')
+    #     else:
+    #         if abs(self.lng_lat[0]) < 10:
+    #             # gps为靠近0
+    #             self.logger.error('当前无GPS信号弱，无法设置返航点')
+    #         else:
+    #             self.home_lng_lat = copy.deepcopy(self.lng_lat)
+    #         # print({'保存路径':config.home_location_path})
+    #         # with open(config.home_location_path,'w') as f:
+    #         #     json.dump({'home_lng_lat':self.home_lng_lat},f)
 
     # 获取备份罗盘数据
     def get_compass1_data(self):
@@ -513,8 +513,8 @@ class DataManager:
                 self.pi_main_obj.stop()
         else:
             # 计算目标真实经纬度,将目标经纬度转换为真实经纬度
-            home_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.home_lng_lat)
-            self.points_arrive_control(home_gaode_lng_lat, True)
+            # home_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.home_lng_lat)
+            self.points_arrive_control(self.home_lng_lat, self.home_lng_lat, True)
             self.pi_main_obj.stop()
 
     # 平滑路径
@@ -697,7 +697,7 @@ class DataManager:
             self.theta_error = theta_error
             # print('point_theta,self.current_theta theta_error',point_theta,self.theta,self.current_theta,theta_error)
             if config.path_track_type == 2:
-                left_pwm, right_pwm = self.path_track_obj.pure_pwm(distance=all_distance,
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm(distance=all_distance,
                                                                    theta_error=theta_error)
             else:
                 # 计算前向距离与水平距离
@@ -874,9 +874,9 @@ class DataManager:
                     time.sleep(0.5)
                     self.clear_status()
                     continue
-                # 第一次进入路径规划时候的点设置为返航点
-                if self.home_lng_lat is None:
-                    self.set_home_location()
+                # 第一次进入路径规划时候的点设置为返航点  取消
+                # if self.home_lng_lat is None:
+                #     self.set_home_location()
                 if self.plan_start_time is None:
                     self.plan_start_time = time.time()
                 # 设置自动路径搜索为False
@@ -994,7 +994,7 @@ class DataManager:
                 if self.ship_status == ShipStatus.backhome:
                     self.back_home()
 
-    # 经纬度转换
+    # 将经纬度转换为高德经纬度
     def update_ship_gaode_lng_lat(self):
         # 更新经纬度为高德经纬度
         while True:
@@ -1003,12 +1003,15 @@ class DataManager:
                     self.lng_lat = config.ship_gaode_lng_lat
             if self.lng_lat is not None:
                 if self.use_true_gps or config.b_pin_gps:
-                    try:
-                        gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.lng_lat)
-                        if gaode_lng_lat:
-                            self.gaode_lng_lat = gaode_lng_lat
-                    except Exception as e:
-                        self.logger.error({'error': e})
+                    if not config.home_debug:
+                        try:
+                            gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.lng_lat)
+                            if gaode_lng_lat:
+                                self.gaode_lng_lat = gaode_lng_lat
+                        except Exception as e:
+                            self.logger.error({'error': e})
+                    else:
+                        self.gaode_lng_lat = self.lng_lat
             elif self.lng_lat is not None and not self.use_true_gps:
                 self.gaode_lng_lat = self.lng_lat
             time.sleep(config.pi2mqtt_interval)
@@ -1017,7 +1020,10 @@ class DataManager:
     def update_lng_lat(self):
         last_read_time = None
         while True:
-            if not config.home_debug and self.pi_main_obj.lng_lat and self.pi_main_obj.lng_lat[0] > 1 and self.pi_main_obj.lng_lat[1] > 1:
+            if not config.home_debug and \
+                    self.pi_main_obj.lng_lat and \
+                    self.pi_main_obj.lng_lat[0] > 1 and \
+                    self.pi_main_obj.lng_lat[1] > 1:
                 self.lng_lat = copy.deepcopy(self.pi_main_obj.lng_lat)
                 self.lng_lat_error = self.pi_main_obj.lng_lat_error
                 if not last_read_time:
@@ -1053,15 +1059,13 @@ class DataManager:
             status_data.update({'mapId': self.data_define_obj.pool_code})
             detect_data = self.data_define_obj.detect
             detect_data.update({'mapId': self.data_define_obj.pool_code})
-            status_data.update({'ping': self.ping})
+            status_data.update({'ping': round(self.ping,1)})
             status_data.update({'current_lng_lat': self.gaode_lng_lat})
-            if self.home_lng_lat is not None:
-                if config.home_debug:
-                    self.home_gaode_lng_lat = self.home_lng_lat
-                else:
-                    if not self.home_gaode_lng_lat:
-                        self.home_gaode_lng_lat = baidu_map.BaiduMap.gps_to_gaode_lng_lat(self.home_lng_lat)
-                status_data.update({'home_lng_lat': self.home_gaode_lng_lat})
+            if self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat:
+                status_data.update({'home_lng_lat': self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat})
+                self.home_lng_lat = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
+                                                                       self.gaode_lng_lat,
+                                                                       self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
             # 更新速度  更新里程
             if self.speed is not None:
                 status_data.update({'speed': self.speed})
@@ -1320,7 +1324,6 @@ class DataManager:
         while True:
             if config.b_check_network:
                 ping = check_network.get_ping_delay()
-                print('ping',ping)
                 if not check_network.get_ping_delay():
                     if config.b_play_audio:
                         audios_manager.play_audio(2, b_backend=False)
