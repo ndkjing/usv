@@ -56,13 +56,13 @@ class AutoPidParameter:
     """
 
     def __init__(self):
-        self.kp = 0.95
+        self.kp = 0.1
         self.best_kp = 0.73
         self.ki = 0
-        self.kd = 1.2
+        self.kd = 0.1
         self.best_kd = 1.2
         # p  0.68 --1.33    p 0.73  d 1.2
-        self.delta_kp = 0.05
+        self.delta_kp = 0.1
         self.delta_ki = 0
         self.delta_kd = 0.1
         self.pid_obj = simple_pid.SimplePid()
@@ -147,7 +147,7 @@ class AutoPidParameter:
             left_pwm, right_pwm = self.pid_obj.pid_pwm(distance=0,
                                                        theta_error=theta_error)
             self.pi_main_obj.set_pwm(left_pwm, right_pwm)
-            time.sleep(0.2)
+            time.sleep(config.pid_interval)
 
 
 if __name__ == '__main__':

@@ -719,7 +719,7 @@ class DataManager:
                         forward_distance,
                         steer_distance)
                 else:
-                    left_pwm, right_pwm = self.path_track_obj.pid_pwm(distance=all_distance,
+                    left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
                                                                       theta_error=theta_error)
                 # 在家调试模式下预测目标经纬度
                 if config.home_debug:

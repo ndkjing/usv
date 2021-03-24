@@ -47,8 +47,9 @@ class PiSoftuart(object):
         if len_data is None:
             len_data = 4
             try:
+                time.sleep(self._thread_ts/2)
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                # print(time.time(), 'count', count, 'data', data)
+                print(time.time(), 'count', count, 'data', data)
                 if count == len_data:
                     str_data = str(binascii.b2a_hex(data))[2:-1]
                     distance = int(str_data[2:-2], 16) / 1000
@@ -61,9 +62,12 @@ class PiSoftuart(object):
                 elif count > len_data:
                     str_data = str(binascii.b2a_hex(data))[2:-1]
                     # print('str_data', str_data)
-                    # print(r'str_data.split', str_data.split('ff')[0][:4])
+                    print(r'str_data.split', str_data.split('ff'))
                     # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
-                    distance = int(str_data.split('ff')[0][:4], 16) / 1000
+                    distance = 0
+                    for i in str_data.split('ff'):
+                        if i:
+                            distance = int(i[:4], 16) / 1000
                     # print(str_data.split('ff')[0][:4])
                     if distance <= 0.25:
                         return -1
@@ -71,6 +75,8 @@ class PiSoftuart(object):
                         return distance
                 time.sleep(self._thread_ts)
             except Exception as e:
+                print({'error':e})
+                time.sleep(self._thread_ts/2)
                 return None
 
     def read_compass(self, send_data='31', len_data=None):
@@ -153,10 +159,11 @@ if __name__ == '__main__':
     start_time = time.time()
     while True:
         if b_ultrasonic:
-            l_distance = left_distance_obj.read_ultrasonic()
+            # l_distance = left_distance_obj.read_ultrasonic()
+            time.sleep(0.2)
             r_distance = right_distance_obj.read_ultrasonic()
-            if l_distance is not None:
-                print('l_distance', l_distance)
+            # if l_distance is not None:
+            #     print('l_distance', l_distance)
             if r_distance is not None:
                 print('r_distance', r_distance)
         if b_compass:
