@@ -1,16 +1,4 @@
-2021-03-21 18:47:42,287 main.py[line:70] INFO {'binding status': 1}
-2021-03-21 18:47:43,296 main.py[line:264] ERROR restart check_status_thread
-2021-03-21 18:47:44,297 main.py[line:287] ERROR restart update_lng_lat_thread
-2021-03-21 18:47:45,299 main.py[line:264] ERROR restart check_status_thread
-2021-03-21 18:48:25,245 main.py[line:70] INFO {'binding status': 1}
-2021-03-21 18:48:26,248 main.py[line:264] ERROR restart check_status_thread
-2021-03-21 18:48:28,249 main.py[line:264] ERROR restart check_status_thread
-2021-03-21 18:49:00,101 main.py[line:70] INFO {'binding status': 1}
-2021-03-21 18:49:01,104 main.py[line:264] ERROR restart check_status_thread
-2021-03-21 18:49:15,440 main.py[line:70] INFO {'binding status': 1}
-2021-03-21 18:49:43,373 main.py[line:70] INFO {'binding status': 1}
-2021-03-22 13:01:02,831 main.py[line:70] INFO {'binding status': 1}
-2021-03-23 12:20:58,353 main.py[line:70] INFO {'binding status': 1}
-2021-03-23 12:21:27,815 main.py[line:70] INFO {'binding status': 1}
-2021-03-23 12:22:45,353 main.py[line:70] INFO {'binding status': 1}
-2021-03-23 12:23:49,107 main.py[line:70] INFO {'binding status': 1}
+2021-03-25 16:25:21,390 main.py[line:70] INFO {'binding status': 1}
+2021-03-25 16:29:23,537 main.py[line:280] ERROR restart send_com_data_thread
+2021-03-25 16:29:25,539 main.py[line:280] ERROR restart send_com_data_thread
+2021-03-25 16:33:13,531 main.py[line:72] ERROR {'binding_data error': JSONDecodeError('Expecting value: line 1 column 1 (char 0)')}
