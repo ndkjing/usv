@@ -89,6 +89,8 @@ def main():
         if config.b_pin_gps:
             soft_gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
             soft_compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
+        if config.b_laser:
+            get_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_distance_dict)
     else:
         pass
     send_com_data_thread = threading.Thread(target=data_manager_obj.send_com_data)
@@ -123,6 +125,8 @@ def main():
         if config.b_pin_gps:
             soft_compass_thread.setDaemon(True)
             soft_gps_thread.setDaemon(True)
+        if config.b_laser:
+            get_distance_thread.setDaemon(True)
     check_status_thread.start()
     send_mqtt_data_thread.start()
     send_com_data_thread.start()
@@ -148,6 +152,8 @@ def main():
         if config.b_pin_gps:
             soft_compass_thread.start()
             soft_gps_thread.start()
+        if config.b_laser:
+            get_distance_thread.start()
 
     # send_com_heart_thread.start()
     # get_com_data_thread.join()
@@ -235,7 +241,7 @@ def main():
                 soft_gps_thread.setDaemon(True)
                 soft_gps_thread.start()
                 time.sleep(thread_restart_time)
-            if config.b_pin_gps and not soft_compass_thread.is_alive():
+            if config.b_pin_compass and not soft_compass_thread.is_alive():
                 logger.error('restart soft_compass_thread')
                 try:
                     data_manager_obj.pi_main_obj.compass_obj = data_manager_obj.pi_main_obj.get_gps_obj()
@@ -244,6 +250,16 @@ def main():
                 soft_compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
                 soft_compass_thread.setDaemon(True)
                 soft_compass_thread.start()
+                time.sleep(thread_restart_time)
+            if config.b_laser and not get_distance_thread.is_alive():
+                logger.error('restart get_distance_thread')
+                try:
+                    data_manager_obj.pi_main_obj.laser_obj = data_manager_obj.pi_main_obj.get_laser_obj()
+                except Exception as e:
+                    logger.error({'restart soft_compass_thread': 111, 'error': e})
+                get_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_distance_dict)
+                get_distance_thread.setDaemon(True)
+                get_distance_thread.start()
                 time.sleep(thread_restart_time)
             if os.path.exists(config.compass_port):
                 if not gps_thread.is_alive():
@@ -316,9 +332,10 @@ def main():
 
 
 if __name__ == '__main__':
-    while True:
-        try:
-            main()
-        except Exception as e:
-            time.sleep(5)
-            logger.error({'main error': e})
+    main()
+    # while True:
+    #     try:
+    #         main()
+    #     except Exception as e:
+    #         time.sleep(5)
+    #         logger.error({'main error': e})

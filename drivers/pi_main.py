@@ -5,6 +5,7 @@ import time
 import json
 import os
 import sys
+
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root_dir)
 
@@ -14,6 +15,8 @@ from drivers import pi_softuart
 import config
 import pigpio
 import time
+import numpy as np
+import cv2
 logger = log.LogHandler('pi_log')
 
 
@@ -34,6 +37,9 @@ class PiMain:
         self.pi.set_PWM_range(config.left_pwm_pin, self.pice)
         self.pi.set_PWM_range(config.right_pwm_pin, self.pice)
         self.init_motor()
+        # 设置舵机输出
+        self.pi.set_PWM_frequency(config.steer_engine_pin, self.hz)  # 设定14号引脚产生的pwm波形的频率为50Hz
+        self.pi.set_PWM_range(config.steer_engine_pin, self.pice)
 
         self.save = [1, 161, 150, 157, 152, 142, 101]
         self.set = 1
@@ -54,8 +60,11 @@ class PiMain:
         if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             self.left_ultrasonic_obj = self.get_left_ultrasonic_obj()
             self.right_ultrasonic_obj = self.get_right_ultrasonic_obj()
+        if config.current_platform == config.CurrentPlatform.pi:
             self.gps_obj = self.get_gps_obj()
             self.compass_obj = self.get_compass_obj()
+        if config.b_laser and config.current_platform == config.CurrentPlatform.pi:
+            self.laser_obj = self.get_laser_obj()
         # 左右侧超声波距离，没有返回None  -1 表示距离过近
         self.left_distance = None
         self.right_distance = None
@@ -71,19 +80,28 @@ class PiMain:
         self.last_theta = None
         # 罗盘提示消息
         self.compass_notice_info = ''
+        # 距离矩阵
+        self.distance_dict = {}
 
     def get_left_ultrasonic_obj(self):
-        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.left_rx, tx_pin=config.left_tx, baud=config.ultrasonic_baud)
+        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.left_rx, tx_pin=config.left_tx,
+                                      baud=config.ultrasonic_baud)
 
     def get_right_ultrasonic_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.right_rx, tx_pin=config.right_tx,
                                       baud=config.ultrasonic_baud)
 
     def get_compass_obj(self):
-        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx, baud=config.pin_compass_baud)
+        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx,
+                                      baud=config.pin_compass_baud)
 
     def get_gps_obj(self):
-        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx, baud=config.pin_gps_baud)
+        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx,
+                                      baud=config.pin_gps_baud)
+
+    def get_laser_obj(self):
+        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx,
+                                               baud=config.laser_baud, time_out=0.01)
 
     # 对距离进行滤波处理
     def distance_filter(self, distance, left=1):
@@ -93,7 +111,7 @@ class PiMain:
                     self.last_left_distance = distance
                     return distance
                 else:
-                    if abs(distance-self.last_left_distance) > 1:
+                    if abs(distance - self.last_left_distance) > 1:
                         return self.last_left_distance
                     else:
                         self.last_left_distance = distance
@@ -106,7 +124,7 @@ class PiMain:
                     self.last_right_distance = distance
                     return distance
                 else:
-                    if abs(distance-self.last_right_distance) > 1:
+                    if abs(distance - self.last_right_distance) > 1:
                         return self.last_right_distance
                     else:
                         self.last_right_distance = distance
@@ -119,6 +137,7 @@ class PiMain:
         if theta:
             if not self.last_theta:
                 self.last_theta = theta
+                return theta
             else:
                 # if abs(theta-self.last_theta)>180:
                 #     return self.last_theta
@@ -126,7 +145,7 @@ class PiMain:
                 #     self.last_theta = theta
                 #     return theta
                 self.last_theta = theta
-            return theta
+                return theta
         else:
             return self.last_theta
 
@@ -149,7 +168,7 @@ class PiMain:
                     self.right_distance = r_distance
 
     def get_compass_data(self):
-        if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
+        if config.current_platform == config.CurrentPlatform.pi:
             # 记录上一次发送数据
             last_send_data = None
             while True:
@@ -178,7 +197,7 @@ class PiMain:
                         self.theta = theta_
 
     def get_gps_data(self):
-        if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
+        if config.current_platform == config.CurrentPlatform.pi:
             while True:
                 gps_data = self.gps_obj.read_gps()
                 if gps_data:
@@ -196,17 +215,17 @@ class PiMain:
                 remote_steer_pwm = int(self.channel_row_input_pwm)
                 # print('remote', remote_forward_pwm, remote_steer_pwm)
                 # 防止抖动
-                if remote_forward_pwm<1550 and remote_forward_pwm >1450:
-                    remote_forward_pwm=config.stop_pwm
+                if remote_forward_pwm < 1550 and remote_forward_pwm > 1450:
+                    remote_forward_pwm = config.stop_pwm
                 # 防止过大值
-                elif remote_forward_pwm>=1900:
-                    remote_forward_pwm=1900
+                elif remote_forward_pwm >= 1900:
+                    remote_forward_pwm = 1900
                 # 防止初始读取到0电机会转动， 设置为1500
-                elif remote_forward_pwm<1000 :
-                    remote_forward_pwm=config.stop_pwm
+                elif remote_forward_pwm < 1000:
+                    remote_forward_pwm = config.stop_pwm
                 # 防止过小值
-                elif remote_forward_pwm<=1100 and remote_forward_pwm>=1000:
-                    remote_forward_pwm=1100
+                elif remote_forward_pwm <= 1100 and remote_forward_pwm >= 1000:
+                    remote_forward_pwm = 1100
                 # 防止抖动
                 if remote_steer_pwm < 1550 and remote_steer_pwm > 1450:
                     remote_steer_pwm = config.stop_pwm
@@ -220,11 +239,11 @@ class PiMain:
                 elif remote_steer_pwm <= 1100 and remote_steer_pwm >= 1000:
                     remote_steer_pwm = 1100
                 # print('remote_forward_pwm,remote_steer_pwm',remote_forward_pwm,remote_steer_pwm)
-                remote_left_pwm = 1500 + (remote_forward_pwm-1500) + (remote_steer_pwm-1500)
-                remote_right_pwm = 1500 + (remote_forward_pwm-1500) - (remote_steer_pwm-1500)
+                remote_left_pwm = 1500 + (remote_forward_pwm - 1500) + (remote_steer_pwm - 1500)
+                remote_right_pwm = 1500 + (remote_forward_pwm - 1500) - (remote_steer_pwm - 1500)
                 # self.set_pwm(remote_left_pwm, remote_right_pwm)
                 time.sleep(0.1)
-            except Exception as e :
+            except Exception as e:
                 logger.error({'error': e})
 
     def mycallback(self, gpio, level, tick):
@@ -247,9 +266,9 @@ class PiMain:
                 self.tick_0[2] = tick
                 if self.tick_1[2] is not None:
                     diff = pigpio.tickDiff(self.tick_1[2], tick)
-                    if diff>1800:
+                    if diff > 1800:
                         self.b_start_remote = 1
-                    elif diff<1200:
+                    elif diff < 1200:
                         self.b_start_remote = 0
         else:
             if gpio == int(config.channel_1_pin):
@@ -261,16 +280,16 @@ class PiMain:
 
     def forward(self, left_pwm=None, right_pwm=None):
         if left_pwm is None:
-            left_pwm = config.stop_pwm+int(config.speed_grade)*100
+            left_pwm = config.stop_pwm + int(config.speed_grade) * 100
         if right_pwm is None:
-            right_pwm = config.stop_pwm+int(config.speed_grade)*100
+            right_pwm = config.stop_pwm + int(config.speed_grade) * 100
         self.set_pwm(left_pwm, right_pwm)
 
     def backword(self, left_pwm=None, right_pwm=None):
         if left_pwm is None:
-            left_pwm = config.stop_pwm-int(config.speed_grade)*100
+            left_pwm = config.stop_pwm - int(config.speed_grade) * 100
         if right_pwm is None:
-            right_pwm = config.stop_pwm-int(config.speed_grade)*100
+            right_pwm = config.stop_pwm - int(config.speed_grade) * 100
         self.set_pwm(left_pwm, right_pwm)
 
     def left(self, left_pwm=None, right_pwm=None):
@@ -326,29 +345,28 @@ class PiMain:
         一直修改输出pwm波到目标pwm波
         :return:
         """
-        sleep_time = 0.001
+        sleep_time = 0.02
         delta_time = 0.0001 / 500.0
-        start_pwm_time = time.time()
+        # start_pwm_time = time.time()
         while True:
-            if abs(self.target_left_pwm - self.left_pwm) == 0:
-                pass
+            if abs(self.left_pwm - self.target_left_pwm) != 0 or abs(self.right_pwm != self.target_right_pwm) != 0:
+                if abs(self.target_left_pwm - self.left_pwm) == 0:
+                    pass
+                else:
+                    self.left_pwm = self.left_pwm + (self.target_left_pwm - self.left_pwm) // abs(
+                        self.target_left_pwm - self.left_pwm) * 5
+                if abs(self.target_right_pwm - self.right_pwm) == 0:
+                    pass
+                else:
+                    self.right_pwm = self.right_pwm + (self.target_right_pwm - self.right_pwm) // abs(
+                        self.target_right_pwm - self.right_pwm) * 5
+                # print('self.left_pwm,self.target_left_pwm',self.left_pwm,self.target_left_pwm)
+                self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
+                self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
+                time.sleep(sleep_time)
+                # sleep_time = sleep_time + delta_time
             else:
-                b_add_l = 1 if (self.target_left_pwm - self.left_pwm)>0 else -1
-                self.left_pwm = self.left_pwm + b_add_l * 1
-            self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
-            if abs(self.target_right_pwm - self.right_pwm) == 0:
-                pass
-            else:
-                b_add_r = 1 if (self.target_right_pwm - self.right_pwm) > 0 else -1
-                self.right_pwm = self.right_pwm + b_add_r * 1
-            self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
-                # print('self.target_right_pwm,self.right_pwm,self.target_left_pwm,self.left_pwm',self.target_right_pwm,self.right_pwm,self.target_left_pwm,self.left_pwm)
-            time.sleep(sleep_time)
-            # if sleep_time>=0.1:
-            #     sleep_time = 0.001
-            # sleep_time = sleep_time + delta_time
-            # else:
-            #     time.sleep(0.01)
+                time.sleep(0.01)
                 # if pwm_timeout and time.time()-start_pwm_time > pwm_timeout:
                 #     break
             # if time.time()-start_pwm_time<config.pid_interval:
@@ -359,9 +377,61 @@ class PiMain:
         # print('left_pwm:',self.left_pwm,self.pi.get_PWM_dutycycle(config.left_pwm_pin),'right_pwm:',self.right_pwm,self.pi.get_PWM_dutycycle(config.right_pwm_pin))
         # print(time.time(), 'left_pwm:', self.left_pwm, 'right_pwm:', self.right_pwm)
 
+    def set_steer_engine(self, angle):
+        # print('angle_pwm', angle)
+        self.pi.set_PWM_dutycycle(config.steer_engine_pin, angle)
+
+    def get_distance_dict(self):
+        b_add = 1
+        # 角度限制
+        # steer_max_angle = 90
+        steer_max_angle = 9
+        min_i = 100 - int(steer_max_angle * 1000 / 900)
+        max_i = 100 + int(steer_max_angle * 1000 / 900)
+        i = min_i
+        while True:
+            if b_add == 1:
+                angle_pwm = 500 + i * 10
+                self.set_steer_engine(angle_pwm)
+            else:
+                angle_pwm = 2500 - i * 10
+                self.set_steer_engine(angle_pwm)
+            # 更新位置矩阵
+            for j in range(10):
+                laser_distance = self.laser_obj.read_laser()
+                # 角度左正右负
+                angle = (i-100)*0.9
+                # print(i,angle)
+                if laser_distance:
+                    self.distance_dict.update({angle: laser_distance})
+                    break
+                # 连续五次检查不到将该位置置位0表示该位置没有距离信息
+                self.distance_dict.update({angle: 0})
+            # if len(self.distance_dict.keys()) >= int(steer_max_angle / 0.9):
+            #     # print(self.distance_dict)
+            #     map_size = int(20 / 0.5)
+            #     obstacle_map = np.zeros((map_size, map_size))
+                # 判断前方距离是否有障碍物，根据障碍物改变目标点
+                # for k, v in self.distance_dict.items():
+                #     v = min(v, 20)
+                #     row = int(map_size - math.ceil(math.cos(math.radians(k)) * v / 0.5))
+                #     col = int((map_size / 2) - 1 - math.ceil(math.sin(math.radians(k)) * v / 0.5))
+                #     for row_index in range(row):
+                #         obstacle_map[row_index, col] = 1
+                #     print(i,k, v, row, col)
+                # print(obstacle_map)
+            i += 1*b_add
+            if i >= max_i or i <= min_i:
+                b_add = -1 if b_add==1 else 1
+                # if b_add:
+                #     b_add = 0
+                # else:
+                #     b_add = 1
+            time.sleep(0.01)
 
 if __name__ == '__main__':
     pi_main_obj = PiMain()
+    laser_obj = pi_softuart.PiSoftuart(pi=pi_main_obj.pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx, baud=config.laser_baud, time_out=0.01)
     while True:
         try:
             # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效
@@ -408,24 +478,15 @@ if __name__ == '__main__':
                     pi_main_obj.right()
             elif key_input == 'q':
                 pi_main_obj.stop()
-
-            # 获取当前GPS位置和船头朝向
-            elif key_input == 'l':
-                pi_main_obj.get_current_location()
-
-            # 设置当前GPS为返航点
-            elif key_input.startswith('h'):
-                pi_main_obj.set_home_location()
-
             # 返航
             elif key_input.startswith('b'):
                 if not os.path.exists(config.home_location_path):
                     print('不存在home点')
                     continue
-                with open(config.home_location_path,'r') as f:
+                with open(config.home_location_path, 'r') as f:
                     home_lng_lat_json = json.load(f)
                 home_lng_lat = home_lng_lat_json['home_lng_lat']
-                print('home_lng_lat',home_lng_lat)
+                print('home_lng_lat', home_lng_lat)
                 pi_main_obj.home_lng_lat = home_lng_lat
                 print('目标地点', pi_main_obj.home_lng_lat)
                 home_distance = lng_lat_calculate.distanceFromCoordinate(
@@ -439,34 +500,32 @@ if __name__ == '__main__':
                         pi_main_obj.lng_lat[1],
                         pi_main_obj.home_lng_lat[0],
                         pi_main_obj.home_lng_lat[1])
-                    if int(time.time())%2==0:
+                    if int(time.time()) % 2 == 0:
                         print('距离目标点距离: ', home_distance)
                     left_pwm, right_pwm = pi_main_obj.point_control(
                         pi_main_obj.home_lng_lat)
-                    print('left_pwm, right_pwm',left_pwm, right_pwm)
+                    print('left_pwm, right_pwm', left_pwm, right_pwm)
                     pi_main_obj.pi_obj.set_pwm(left_pwm, right_pwm)
                     time.sleep(config.pid_interval)
                 pi_main_obj.pi_obj.stop()
-
             # 角度控制
             elif key_input.startswith('r'):
                 try:
                     theta = int(key_input[1:])
                     print('theta:', theta)
-                    if theta>0:
-                        target_theta = (pi_main_obj.theta+theta)%360
+                    if theta > 0:
+                        target_theta = (pi_main_obj.theta + theta) % 360
                     else:
-                        target_theta = (pi_main_obj.theta + (360+theta)) % 360
-                    error_theta = abs(target_theta-pi_main_obj.theta)
-                    while error_theta>10:
-                        left_pwm, right_pwm =pi_main_obj.yaw_control(theta)
+                        target_theta = (pi_main_obj.theta + (360 + theta)) % 360
+                    error_theta = abs(target_theta - pi_main_obj.theta)
+                    while error_theta > 10:
+                        left_pwm, right_pwm = pi_main_obj.yaw_control(theta)
                         if int(time.time()) % 2 == 0:
                             print('left_pwm, right_pwm', left_pwm, right_pwm)
                         pi_main_obj.forward(left_pwm, right_pwm)
                         time.sleep(config.pid_interval)
                 except Exception as e:
                     print({'error': e})
-
             # 到达目标点控制
             elif key_input.startswith('t'):
                 point_x = None
@@ -511,22 +570,25 @@ if __name__ == '__main__':
                     print('left_pwm, right_pwm', left_pwm, right_pwm)
                     pi_main_obj.forward(left_pwm, right_pwm)
                     time.sleep(config.pid_interval)
-
             # 简单走矩形区域
             elif key_input.startswith('p'):
                 # 半边长
                 half_w = int(key_input[1:])
-                point_list_status = [0,0,0,0]
+                point_list_status = [0, 0, 0, 0]
                 point_list = []
-                p1 = lng_lat_calculate.one_point_diatance_to_end(pi_main_obj.lng_lat[0],pi_main_obj.lng_lat[1],45,half_w*2)
-                p2 = lng_lat_calculate.one_point_diatance_to_end(pi_main_obj.lng_lat[0],pi_main_obj.lng_lat[1],135,half_w*2)
-                p3 = lng_lat_calculate.one_point_diatance_to_end(pi_main_obj.lng_lat[0],pi_main_obj.lng_lat[1],225,half_w*2)
-                p4 = lng_lat_calculate.one_point_diatance_to_end(pi_main_obj.lng_lat[0],pi_main_obj.lng_lat[1],315,half_w*2)
+                p1 = lng_lat_calculate.one_point_diatance_to_end(pi_main_obj.lng_lat[0], pi_main_obj.lng_lat[1], 45,
+                                                                 half_w * 2)
+                p2 = lng_lat_calculate.one_point_diatance_to_end(pi_main_obj.lng_lat[0], pi_main_obj.lng_lat[1], 135,
+                                                                 half_w * 2)
+                p3 = lng_lat_calculate.one_point_diatance_to_end(pi_main_obj.lng_lat[0], pi_main_obj.lng_lat[1], 225,
+                                                                 half_w * 2)
+                p4 = lng_lat_calculate.one_point_diatance_to_end(pi_main_obj.lng_lat[0], pi_main_obj.lng_lat[1], 315,
+                                                                 half_w * 2)
                 point_list.append(p1)
                 point_list.append(p2)
                 point_list.append(p3)
                 point_list.append(p4)
-                while point_list_status.count(0)>0:
+                while point_list_status.count(0) > 0:
                     index = point_list_status.index(0)
                     distance = lng_lat_calculate.distanceFromCoordinate(
                         pi_main_obj.lng_lat[0],
@@ -545,14 +607,15 @@ if __name__ == '__main__':
                             print('left_pwm, right_pwm', left_pwm, right_pwm)
                         pi_main_obj.forward(left_pwm, right_pwm)
                         time.sleep(config.pid_interval)
-                    point_list_status[index]=1
+                    point_list_status[index] = 1
                 pi_main_obj.stop()
             # m 退出
             elif key_input.startswith('m'):
                 break
+            elif key_input.startswith('z'):
+                pi_main_obj.get_distance_dict()
         except KeyboardInterrupt:
             break
         except Exception as e:
             print({'error': e})
             continue
-

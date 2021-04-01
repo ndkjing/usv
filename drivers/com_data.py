@@ -145,6 +145,16 @@ class ComData:
             except Exception as e:
                 print("异常报错：", e)
 
+    def get_laser_data(self):
+        data = self.read_size(30)
+        # print(time.time(), type(data), data)
+        str_data = str(binascii.b2a_hex(data))[2:-1]
+        # print(str_data)
+        for i in str_data.split('aa'):
+            if len(i) == 14 and i.startswith('55'):
+                # print(i)
+                distance = int(i[6:12], 16) / 1000
+                return distance
 
 if __name__ == '__main__':
     import config
@@ -152,15 +162,18 @@ if __name__ == '__main__':
     b_ultrasonic = 0
     b_com_data = 0
     b_gps = 0
-    check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps   >')
+    b_laser = 0
+    check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  5 laser >')
     if int(check_type) == 1:
         b_compass = 1
     elif int(check_type) == 2:
         b_ultrasonic = 1
-    elif int(check_type) == 2:
+    elif int(check_type) == 3:
         b_com_data = 1
-    elif int(check_type) == 2:
+    elif int(check_type) == 4:
         b_gps = 1
+    elif int(check_type) == 5:
+        b_laser = 1
     if b_compass:
         com_obj = ComData(config.compass_port,
                           config.compass_baud,
@@ -237,6 +250,19 @@ if __name__ == '__main__':
                 print('经纬度2', lng2, lat2)
                 print('误差2', data_list2[8])
             time.sleep(0.2)
+    elif b_laser:
+        serial_obj_laser = ComData('com9',
+                             '115200',
+                             timeout=0.3,
+                             logger=logger)
+        while True:
+            # 控制到位置1 2 3 4 5获取距离
+            distance1 = serial_obj_laser.get_laser_data()
+            distance2 = serial_obj_laser.get_laser_data()
+            distance3 = serial_obj_laser.get_laser_data()
+            distance4 = serial_obj_laser.get_laser_data()
+            distance5 = serial_obj_laser.get_laser_data()
+            print('距离矩阵',distance1,distance2,distance3,distance4,distance5)
     # str_data = data.decode('ascii')[:-3]
     # # print('str_data',str_data,type(str_data))
     # if len(str_data)<2:

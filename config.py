@@ -247,7 +247,7 @@ pid_interval = 0.2
 # 开机前等待时间
 start_sleep_time = 6
 # 电机初始化时间
-motor_init_time = 4
+motor_init_time = 1
 # 检查网络连接状态间隔
 check_network_interval = 10
 # 断网返航 0关闭  1开启 大于1的数值表示断网超过该值就返航，默认100秒
@@ -267,7 +267,7 @@ if current_platform == CurrentPlatform.pi:
     home_debug = 0
 else:
     home_debug = 1
-# 添加避障方式设置 1 停止  2 绕行
+# 添加避障方式设置0 不避障 1 停止  2 绕行
 obstacle_avoid_type = 1
 # 路径规划方式
 path_plan_type = 1
@@ -278,7 +278,7 @@ calibration_compass = 0
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
 # 前视觉距离
-forward_see_distance = 5
+forward_see_distance = 9
 
 
 def update_height_setting():
@@ -662,7 +662,7 @@ b_use_start = False
 # 使用树莓派控制电机
 b_use_pi = True
 # 左侧电机信号输出控制口
-left_pwm_pin = 23
+left_pwm_pin = 18
 # 右侧电机信号输出控制口
 right_pwm_pin = 24
 
@@ -675,15 +675,13 @@ channel_1_pin = 26
 channel_3_pin = 19
 # 开启遥控器输入pin口
 start_remote_pin = 13
-
 # 是否使用超声波
-b_use_ultrasonic = 1
+b_use_ultrasonic = 0
 ultrasonic_baud = 9600
 left_rx = 22
 left_tx = 27
 right_rx = 17
 right_tx = 4
-
 # 软串口gps
 b_pin_gps = 1
 pin_gps_baud = 9600
@@ -694,6 +692,15 @@ b_pin_compass = 1
 pin_compass_baud = 9600
 pin_compass_rx = 12
 pin_compass_tx = 16
+# 激光雷达
+b_laser = 1
+laser_tx = 4
+laser_rx = 17
+laser_baud = 115200
+laser_hz = 40
+# 舵机输出
+steer_engine_pin = 27
+
 
 # 使用角度  1 使用罗盘1角度   2 使用罗盘2角度  3 使用经纬度移动计算角度
 if home_debug:
@@ -701,6 +708,6 @@ if home_debug:
 else:
     use_shape_theta_type = 1
 
-b_draw =0
+b_draw = 0
 if __name__ == '__main__':
     write_setting(True, True, True, True)

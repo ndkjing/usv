@@ -141,7 +141,7 @@ class DataManager:
         # 船手动控制提示信息
         self.control_info = ''
         # 网络延时
-        self.ping=0
+        self.ping = 0
 
     # 读取函数会阻塞 必须使用线程
     def get_com_data(self):
@@ -200,7 +200,7 @@ class DataManager:
 
     # 在线程中读取 gps
     def get_gps_data(self):
-        last_read_time=None
+        last_read_time = None
         while True:
             try:
                 data = self.gps_obj.readline()
@@ -299,7 +299,7 @@ class DataManager:
                         continue
                     float_data0 = float(str_data0)
                     self.theta = 360 - float_data0
-                    time.sleep(config.compass_timeout/4)
+                    time.sleep(config.compass_timeout / 4)
                     count = 50
                     last_send_data = None
                     # self.compass_notice_info = ''
@@ -436,7 +436,7 @@ class DataManager:
         """
         if not config.home_debug:
             self.pi_main_obj.stop()
-        self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
+        self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
         # 清空目标点和状态
         self.server_data_obj.mqtt_send_get_obj.sampling_points = []
         self.server_data_obj.mqtt_send_get_obj.path_planning_points = []
@@ -531,7 +531,7 @@ class DataManager:
                                                                     self.lng_lat[1],
                                                                     target_lng_lat[0],
                                                                     target_lng_lat[1])
-                for i in range(1, int((distance // config.forward_see_distance) + 1)):
+                for i in range(1, int((distance // (config.forward_see_distance/3)) + 1)):
                     cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                               self.lng_lat[1],
                                                                               theta,
@@ -560,7 +560,7 @@ class DataManager:
         return smooth_path_lng_lat
 
     # 计算下一个点经纬度
-    def calc_target_lng_lat(self,index):
+    def calc_target_lng_lat(self, index_):
         """
         根据当前点和路径计算下一个经纬度点
         :return:
@@ -570,7 +570,7 @@ class DataManager:
             self.smooth_path_lng_lat = self.smooth_path()
         # 搜索最临近的路点
         distance_list = []
-        del self.smooth_path_lng_lat[0:self.smooth_path_lng_lat_index[index]]
+        del self.smooth_path_lng_lat[0:self.smooth_path_lng_lat_index[index_]]
         for target_lng_lat in self.smooth_path_lng_lat:
             distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                 self.lng_lat[1],
@@ -578,7 +578,7 @@ class DataManager:
                                                                 target_lng_lat[1])
             distance_list.append(distance)
         index = distance_list.index(min(distance_list))
-        if index+1 == len(self.smooth_path_lng_lat):
+        if index + 1 == len(self.smooth_path_lng_lat):
             return self.smooth_path_lng_lat[-1]
         lng_lat = self.smooth_path_lng_lat[index]
         index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
@@ -601,22 +601,22 @@ class DataManager:
         根据超声波距离构建障碍物地图
         :return: 障碍物位置举证
         """
-        map_size = int(10 / 0.5)
-        obstacle_map = np.zeros((map_size, map_size))
-        # 判断前方距离是否有障碍物，根据障碍物改变目标点
-        if config.b_use_ultrasonic:
-            if self.l_distance <= 0.25:
-                self.l_distance = None
-            if self.r_distance <= 0.25:
-                self.r_distance = None
-            if self.l_distance:
-                y_l = int(map_size / 2) - 1
-                x_l = int(map_size / 2) - int(self.l_distance / 0.5)
-                obstacle_map[0:x_l][y_l] = 1
-            if self.r_distance:
-                y_l = int(map_size / 2) + 1
-                x_l = int(map_size / 2) - int(self.r_distance / 0.5)
-                obstacle_map[0:x_l][y_l] = 1
+        method = 1
+        if method==0:
+            map_size = int(20 / 0.5)
+            obstacle_map = np.zeros((map_size, map_size))
+            # 判断前方距离是否有障碍物，根据障碍物改变目标点
+            for k, v in self.pi_main_obj.distance_dict.items():
+                v = min(v, 20)
+                row = int(map_size - math.ceil(math.cos(math.radians(k)) * v / 0.5))
+                col = int((map_size / 2) - 1 - math.ceil(math.sin(math.radians(k)) * v / 0.5))
+                for row_index in range(row):
+                    obstacle_map[row_index, col] = 1
+        else:
+            obstacle_map = [0]*len(self.pi_main_obj.distance_dict.items())
+            for k, v in self.pi_main_obj.distance_dict.items():
+                if v<5:
+                    obstacle_map[10+int(k/0.9)]=1
         return obstacle_map
 
     # 计算障碍物下目标点
@@ -625,8 +625,40 @@ class DataManager:
         根据障碍物地图获取下一个运动点
         :return:
         """
-        # obstacle_map = self.build_obstacle_map()
         next_point_lng_lat = path_planning_point_gps
+        if config.b_laser:
+            if config.obstacle_avoid_type == 0:
+                return path_planning_point_gps,False
+            elif config.obstacle_avoid_type == 1:
+                obstacle_map = self.build_obstacle_map()
+                if 1 in obstacle_map[5:15]:
+                    b_stop = True
+                    return next_point_lng_lat, b_stop
+            # 根据障碍物计算下一个目标点
+            elif config.obstacle_avoid_type == 2:
+                obstacle_map = self.build_obstacle_map()
+                angle_point = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
+                                                                    self.lng_lat[1],
+                                                                    path_planning_point_gps[0],
+                                                                    path_planning_point_gps[1])
+                # 判断该角度范围内是否有障碍物
+                if 9 < angle_point < 351:
+                    return path_planning_point_gps,False
+                else:
+                    if angle_point >= 351:
+                        angle_point = angle_point - 360
+                    if 1 in obstacle_map[8+angle_point/0.9:12+angle_point/0.9]:
+                        if angle_point >= 351:
+                            next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                             self.lng_lat[1],
+                                                                                             angle_point+4,
+                                                                                             5)
+                        else:
+                            next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                             self.lng_lat[1],
+                                                                                             angle_point-4,
+                                                                                             5)
+                        return next_point_lng_lat, False
         if config.b_use_ultrasonic:
             if self.l_distance and self.r_distance:
                 if self.l_distance <= 1.5 or self.r_distance <= 1.5:
@@ -650,13 +682,12 @@ class DataManager:
                                                                                      self.lng_lat[1],
                                                                                      theta,
                                                                                      distance)
-        return next_point_lng_lat
 
     # 控制到达目标点
     def points_arrive_control(self, target_lng_lat_gps, sample_lng_lat_gps, b_force_arrive=False):
         """
-        :param sample_lng_lat_gps: 下一个采样点真实经纬度
         :param target_lng_lat_gps: 目标点真实经纬度
+        :param sample_lng_lat_gps: 下一个采样点真实经纬度
         :param b_force_arrive: 是否约束一定要到达
         :return:
         """
@@ -677,7 +708,7 @@ class DataManager:
                 sample_lng_lat_gps[1])
             self.distance_p = distance_sample
             # 避障判断下一个点
-            # path_planning_point_gps = self.get_avoid_obstacle_point(target_lng_lat_gps)
+            target_lng_lat_gps = self.get_avoid_obstacle_point(target_lng_lat_gps)
             # 计算到下一个点距离
             all_distance = lng_lat_calculate.distanceFromCoordinate(
                 self.lng_lat[0], self.lng_lat[1], target_lng_lat_gps[0],
@@ -698,8 +729,8 @@ class DataManager:
             # print('point_theta,self.current_theta theta_error',point_theta,self.theta,self.current_theta,theta_error)
             if config.path_track_type == 2:
                 left_pwm, right_pwm = self.path_track_obj.pid_pwm(distance=all_distance,
-                                                                   theta_error=theta_error)
-            else:
+                                                                  theta_error=theta_error)
+            elif config.path_track_type == 3:
                 # 计算前向距离与水平距离
                 if 0 <= theta_error < 90:
                     forward_distance = all_distance * math.cos(math.radians(theta_error))
@@ -713,48 +744,45 @@ class DataManager:
                 else:
                     forward_distance = -all_distance * math.cos(math.radians(theta_error + 180))
                     steer_distance = all_distance * math.sin(math.radians(theta_error + 180))
-
-                if config.path_track_type == 3:
-                    left_pwm, right_pwm = self.path_track_obj.pid_pwm_1(
-                        forward_distance,
-                        steer_distance)
-                else:
-                    left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
-                                                                      theta_error=theta_error)
-                # 在家调试模式下预测目标经纬度
-                if config.home_debug:
-                    time.sleep(0.5)
-                    # 计算当前行驶里程
-                    if self.last_lng_lat:
-                        speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
-                                                                                  self.last_lng_lat[1],
-                                                                                  self.lng_lat[0],
-                                                                                  self.lng_lat[1])
-                        self.run_distance += speed_distance
-                    left_delta_pwm = int(self.last_left_pwm + left_pwm) / 2 - config.stop_pwm
-                    right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
-                    steer_power = left_delta_pwm - right_delta_pwm
-                    forward_power = left_delta_pwm + right_delta_pwm
-                    delta_distance = forward_power * 0.01
-                    delta_theta = steer_power * 0.05
-                    # if time.time() % 2 < 1:
-                    # print('left_delta_pwm, right_delta_pwm left_pwm,right_pwm', left_delta_pwm, right_delta_pwm, left_pwm, right_pwm)
-                    # print('delta_distance,delta_theta, forward_power steer_power',
-                    #       delta_distance, delta_theta, forward_power,
-                    #       steer_power)
-                    self.last_lng_lat = copy.deepcopy(self.lng_lat)
-                    if self.current_theta is not None:
-                        self.current_theta = (self.current_theta - delta_theta / 2) % 360
-                    self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-                                                                               self.lng_lat[1],
-                                                                               self.current_theta,
-                                                                               delta_distance)
-                self.last_left_pwm = left_pwm
-                self.last_right_pwm = right_pwm
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm_1(
+                    forward_distance,
+                    steer_distance)
+            else:
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
+                                                                  theta_error=theta_error)
+            # 在家调试模式下预测目标经纬度
+            if config.home_debug:
+                time.sleep(0.5)
+                # 计算当前行驶里程
+                if self.last_lng_lat:
+                    speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
+                                                                              self.last_lng_lat[1],
+                                                                              self.lng_lat[0],
+                                                                              self.lng_lat[1])
+                    self.run_distance += speed_distance
+                left_delta_pwm = int(self.last_left_pwm + left_pwm) / 2 - config.stop_pwm
+                right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
+                steer_power = left_delta_pwm - right_delta_pwm
+                forward_power = left_delta_pwm + right_delta_pwm
+                delta_distance = forward_power * 0.01
+                delta_theta = steer_power * 0.05
+                # if time.time() % 2 < 1:
+                # print('left_delta_pwm, right_delta_pwm left_pwm,right_pwm', left_delta_pwm, right_delta_pwm, left_pwm, right_pwm)
+                # print('delta_distance,delta_theta, forward_power steer_power',
+                #       delta_distance, delta_theta, forward_power,
+                #       steer_power)
+                self.last_lng_lat = copy.deepcopy(self.lng_lat)
+                if self.current_theta is not None:
+                    self.current_theta = (self.current_theta - delta_theta / 2) % 360
+                self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                           self.lng_lat[1],
+                                                                           self.current_theta,
+                                                                           delta_distance)
+            self.last_left_pwm = left_pwm
+            self.last_right_pwm = right_pwm
             if not config.home_debug:
-                time.sleep(config.pid_interval*2)
                 self.pi_main_obj.set_pwm(left_pwm, right_pwm)
-                print('epoch time', time.time()-start_time)
+                print('epoch time', time.time() - start_time)
             # 清空规划点
             if int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == -1:
                 # 记录是因为按了暂停按钮而终止
@@ -792,12 +820,9 @@ class DataManager:
         b_log_points = 1
         while True:
             time.sleep(config.pi2com_timeout)
-            # if config.b_use_ultrasonic:
-            #     self.logger.info(
-            #         {'left_distance': self.pi_main_obj.left_distance, 'right_distance': self.pi_main_obj.left_distance})
             # 判断当前是手动控制还是自动控制
             d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
-            if d in [-1, 0, 90, 180, 270]:
+            if d in [-2,-1, 0, 90, 180, 270]:
                 manul_or_auto = 1
                 b_log_points = 1
             # 检查是否需要返航
@@ -846,21 +871,21 @@ class DataManager:
                         self.com_data_send_logger.info({'com pwm data': pwm_data})
                 # 使用树莓派
                 elif config.b_use_pi:
-                    if d == 0:
-                        self.control_info = '向前'
-                        self.pi_main_obj.forward()
-                    elif d == 90:
-                        self.control_info = '向左'
-                        self.pi_main_obj.left()
-                    elif d == 180:
-                        self.control_info = '向后'
-                        self.pi_main_obj.backword()
-                    elif d == 270:
-                        self.control_info = '向右'
-                        self.pi_main_obj.right()
-                    elif d == -1:
-                        self.control_info = '停止'
-                        if not config.home_debug:
+                    if not config.home_debug:
+                        if d == 0:
+                            self.control_info = '向前'
+                            self.pi_main_obj.forward()
+                        elif d == 90:
+                            self.control_info = '向左'
+                            self.pi_main_obj.left()
+                        elif d == 180:
+                            self.control_info = '向后'
+                            self.pi_main_obj.backword()
+                        elif d == 270:
+                            self.control_info = '向右'
+                            self.pi_main_obj.right()
+                        elif d == -1:
+                            self.control_info = '停止'
                             self.pi_main_obj.stop()
                     # 改变状态不再重复发送指令
                     self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
@@ -930,7 +955,7 @@ class DataManager:
                 print(self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
                 while self.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(0) > 0:
                     # 统计到一个目标点需要多少次调节
-                    change_count_list = [0]*len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)
+                    change_count_list = [0] * len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)
                     for index, sampling_point_gps in enumerate(
                             self.server_data_obj.mqtt_send_get_obj.sampling_points_gps):
                         # 判断该点是否已经到达
@@ -1044,7 +1069,7 @@ class DataManager:
                     else:
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
                         last_read_time = time.time()
-            time.sleep(1/config.gps_frequency)
+            time.sleep(1 / config.gps_frequency)
 
     # 读取函数会阻塞 必须使用线程发送mqtt状态数据和检测数据
     def send_mqtt_data(self):
@@ -1059,7 +1084,7 @@ class DataManager:
             status_data.update({'mapId': self.data_define_obj.pool_code})
             detect_data = self.data_define_obj.detect
             detect_data.update({'mapId': self.data_define_obj.pool_code})
-            status_data.update({'ping': round(self.ping,1)})
+            status_data.update({'ping': round(self.ping, 1)})
             status_data.update({'current_lng_lat': self.gaode_lng_lat})
             if self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat:
                 status_data.update({'home_lng_lat': self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat})
@@ -1232,7 +1257,7 @@ class DataManager:
     def check_status(self):
         while True:
             # 循环等待一定时间
-            time.sleep(config.check_status_interval/2)
+            time.sleep(config.check_status_interval / 2)
             # 检查当前状态
             # print('self.pi_main_obj.theta',self.pi_main_obj.theta, self.pi_main_obj.lng_lat_error, self.pi_main_obj.lng_lat,self.pi_main_obj.left_distance,self.pi_main_obj.right_distance)
             if config.home_debug:
@@ -1291,7 +1316,8 @@ class DataManager:
                 notice_info_data.update({"compass_notice_info": self.pi_main_obj.compass_notice_info})
             # 使用超声波时候更新超声波提示消息
             if config.b_use_ultrasonic and not config.home_debug:
-                notice_info_data.update({"ultrasonic_distance": str(self.pi_main_obj.left_distance) + '  ' + str(self.pi_main_obj.right_distance)})
+                notice_info_data.update({"ultrasonic_distance": str(self.pi_main_obj.left_distance) + '  ' + str(
+                    self.pi_main_obj.right_distance)})
             # 使用电量告警是提示消息
             if self.low_dump_energy_warnning:
                 notice_info_data.update({"low_dump_energy_warnning": self.low_dump_energy_warnning})
@@ -1331,6 +1357,7 @@ class DataManager:
                 else:
                     self.ping = ping
             time.sleep(1)
+
     # 重启电脑
     @staticmethod
     def reboot():
