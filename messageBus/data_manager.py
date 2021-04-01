@@ -531,7 +531,7 @@ class DataManager:
                                                                     self.lng_lat[1],
                                                                     target_lng_lat[0],
                                                                     target_lng_lat[1])
-                for i in range(1, int((distance // config.forward_see_distance) + 1)):
+                for i in range(1, int((distance // (config.forward_see_distance/3)) + 1)):
                     cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                               self.lng_lat[1],
                                                                               theta,
@@ -560,7 +560,7 @@ class DataManager:
         return smooth_path_lng_lat
 
     # 计算下一个点经纬度
-    def calc_target_lng_lat(self, index):
+    def calc_target_lng_lat(self, index_):
         """
         根据当前点和路径计算下一个经纬度点
         :return:
@@ -570,7 +570,7 @@ class DataManager:
             self.smooth_path_lng_lat = self.smooth_path()
         # 搜索最临近的路点
         distance_list = []
-        del self.smooth_path_lng_lat[0:self.smooth_path_lng_lat_index[index]]
+        del self.smooth_path_lng_lat[0:self.smooth_path_lng_lat_index[index_]]
         for target_lng_lat in self.smooth_path_lng_lat:
             distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                 self.lng_lat[1],
@@ -601,22 +601,22 @@ class DataManager:
         根据超声波距离构建障碍物地图
         :return: 障碍物位置举证
         """
-        map_size = int(10 / 0.5)
-        obstacle_map = np.zeros((map_size, map_size))
-        # 判断前方距离是否有障碍物，根据障碍物改变目标点
-        if config.b_use_ultrasonic:
-            if self.l_distance <= 0.25:
-                self.l_distance = None
-            if self.r_distance <= 0.25:
-                self.r_distance = None
-            if self.l_distance:
-                y_l = int(map_size / 2) - 1
-                x_l = int(map_size / 2) - int(self.l_distance / 0.5)
-                obstacle_map[0:x_l][y_l] = 1
-            if self.r_distance:
-                y_l = int(map_size / 2) + 1
-                x_l = int(map_size / 2) - int(self.r_distance / 0.5)
-                obstacle_map[0:x_l][y_l] = 1
+        method = 1
+        if method==0:
+            map_size = int(20 / 0.5)
+            obstacle_map = np.zeros((map_size, map_size))
+            # 判断前方距离是否有障碍物，根据障碍物改变目标点
+            for k, v in self.pi_main_obj.distance_dict.items():
+                v = min(v, 20)
+                row = int(map_size - math.ceil(math.cos(math.radians(k)) * v / 0.5))
+                col = int((map_size / 2) - 1 - math.ceil(math.sin(math.radians(k)) * v / 0.5))
+                for row_index in range(row):
+                    obstacle_map[row_index, col] = 1
+        else:
+            obstacle_map = [0]*len(self.pi_main_obj.distance_dict.items())
+            for k, v in self.pi_main_obj.distance_dict.items():
+                if v<5:
+                    obstacle_map[10+int(k/0.9)]=1
         return obstacle_map
 
     # 计算障碍物下目标点
@@ -625,8 +625,40 @@ class DataManager:
         根据障碍物地图获取下一个运动点
         :return:
         """
-        # obstacle_map = self.build_obstacle_map()
         next_point_lng_lat = path_planning_point_gps
+        if config.b_laser:
+            if config.obstacle_avoid_type == 0:
+                return path_planning_point_gps,False
+            elif config.obstacle_avoid_type == 1:
+                obstacle_map = self.build_obstacle_map()
+                if 1 in obstacle_map[5:15]:
+                    b_stop = True
+                    return next_point_lng_lat, b_stop
+            # 根据障碍物计算下一个目标点
+            elif config.obstacle_avoid_type == 2:
+                obstacle_map = self.build_obstacle_map()
+                angle_point = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
+                                                                    self.lng_lat[1],
+                                                                    path_planning_point_gps[0],
+                                                                    path_planning_point_gps[1])
+                # 判断该角度范围内是否有障碍物
+                if 9 < angle_point < 351:
+                    return path_planning_point_gps,False
+                else:
+                    if angle_point >= 351:
+                        angle_point = angle_point - 360
+                    if 1 in obstacle_map[8+angle_point/0.9:12+angle_point/0.9]:
+                        if angle_point >= 351:
+                            next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                             self.lng_lat[1],
+                                                                                             angle_point+4,
+                                                                                             5)
+                        else:
+                            next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                             self.lng_lat[1],
+                                                                                             angle_point-4,
+                                                                                             5)
+                        return next_point_lng_lat, False
         if config.b_use_ultrasonic:
             if self.l_distance and self.r_distance:
                 if self.l_distance <= 1.5 or self.r_distance <= 1.5:
@@ -650,13 +682,12 @@ class DataManager:
                                                                                      self.lng_lat[1],
                                                                                      theta,
                                                                                      distance)
-        return next_point_lng_lat
 
     # 控制到达目标点
     def points_arrive_control(self, target_lng_lat_gps, sample_lng_lat_gps, b_force_arrive=False):
         """
-        :param sample_lng_lat_gps: 下一个采样点真实经纬度
         :param target_lng_lat_gps: 目标点真实经纬度
+        :param sample_lng_lat_gps: 下一个采样点真实经纬度
         :param b_force_arrive: 是否约束一定要到达
         :return:
         """
@@ -677,7 +708,7 @@ class DataManager:
                 sample_lng_lat_gps[1])
             self.distance_p = distance_sample
             # 避障判断下一个点
-            # path_planning_point_gps = self.get_avoid_obstacle_point(target_lng_lat_gps)
+            target_lng_lat_gps = self.get_avoid_obstacle_point(target_lng_lat_gps)
             # 计算到下一个点距离
             all_distance = lng_lat_calculate.distanceFromCoordinate(
                 self.lng_lat[0], self.lng_lat[1], target_lng_lat_gps[0],
@@ -789,12 +820,9 @@ class DataManager:
         b_log_points = 1
         while True:
             time.sleep(config.pi2com_timeout)
-            # if config.b_use_ultrasonic:
-            #     self.logger.info(
-            #         {'left_distance': self.pi_main_obj.left_distance, 'right_distance': self.pi_main_obj.left_distance})
             # 判断当前是手动控制还是自动控制
             d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
-            if d in [-1, 0, 90, 180, 270]:
+            if d in [-2,-1, 0, 90, 180, 270]:
                 manul_or_auto = 1
                 b_log_points = 1
             # 检查是否需要返航

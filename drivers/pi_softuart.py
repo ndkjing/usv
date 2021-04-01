@@ -25,22 +25,25 @@ import config
 
 
 class PiSoftuart(object):
-    def __init__(self, pi, rx_pin, tx_pin, baud):
+    def __init__(self, pi, rx_pin, tx_pin, baud,time_out = 0.1):
         self._rx_pin = rx_pin
         self._tx_pin = tx_pin
+        self.baud = baud
         self._pi = pi
         self._pi.set_mode(self._rx_pin, pigpio.INPUT)
         self._pi.set_mode(self._tx_pin, pigpio.OUTPUT)
         self.distance = 0
         # ATTR
-        self._thread_ts = 0.1
+        self._thread_ts =time_out
         self.flushInput()
 
     def flushInput(self):
         pigpio.exceptions = False  # fatal exceptions off (so that closing an unopened gpio doesn't error)
         self._pi.bb_serial_read_close(self._rx_pin)
         pigpio.exceptions = True
-        self._pi.bb_serial_read_open(self._rx_pin, config.ultrasonic_baud,
+        # self._pi.bb_serial_read_open(self._rx_pin, config.ultrasonic_baud,
+        #                              8)  # open a gpio to bit bang read, 1 byte each time.
+        self._pi.bb_serial_read_open(self._rx_pin, self.baud,
                                      8)  # open a gpio to bit bang read, 1 byte each time.
 
     def read_ultrasonic(self, len_data=None):
@@ -95,6 +98,7 @@ class PiSoftuart(object):
             len_data = 4
             try:
                 count, data = self._pi.bb_serial_read(self._rx_pin)
+                # print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
                     str_data = data.decode('utf-8')
                     for i in str_data.split('$'):
@@ -120,6 +124,30 @@ class PiSoftuart(object):
                 print({'error read_gps': e})
                 return None
 
+    def read_laser(self):
+        try:
+            count, data = self._pi.bb_serial_read(self._rx_pin)
+            # print(time.time(), type(data), count, data)
+            if count == 0:
+                time.sleep(1/config.laser_hz)
+                return None
+            str_data = str(binascii.b2a_hex(data))[2:-1]
+            # print(str_data)
+            for i in str_data.split('aa'):
+                if len(i) == 14 and '07' in i:
+                    distance = int(i[6:12], 16) / 1000
+                    # 超出量程返回None
+                    if distance > 40:
+                        return None
+                        # print(time.time(), type(data), count, data)
+                        # print(str_data)
+                    return distance
+            time.sleep(1/config.laser_hz)
+        except Exception as e:
+            time.sleep(1/config.laser_hz)
+            # print({'error read_laser': e})
+            return None
+
     def write_data(self, msg):
         self._pi.wave_clear()
         self._pi.wave_add_serial(self._tx_pin, 9600, bytes.fromhex(msg))
@@ -142,7 +170,8 @@ if __name__ == '__main__':
     b_ultrasonic = 0
     b_com_data = 0
     b_gps = 0
-    check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  >')
+    b_laser = 0
+    check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  5 laser >:')
     if int(check_type) == 1:
         b_compass = 1
     elif int(check_type) == 2:
@@ -151,6 +180,8 @@ if __name__ == '__main__':
         b_com_data = 1
     elif int(check_type) == 4:
         b_gps = 1
+    elif int(check_type) == 5:
+        b_laser = 1
     if b_compass:
         compass_obj = PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx,
                                  baud=config.pin_compass_baud)
@@ -160,6 +191,8 @@ if __name__ == '__main__':
                                         baud=config.ultrasonic_baud)
     if b_gps:
         gps_obj = PiSoftuart(pi=pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx, baud=config.pin_gps_baud)
+    if b_laser:
+        laser_obj = PiSoftuart(pi=pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx, baud=config.laser_baud,time_out=0.01)
     start_time = time.time()
     while True:
         if b_ultrasonic:
@@ -181,6 +214,10 @@ if __name__ == '__main__':
         if b_gps:
             gps_data = gps_obj.read_gps()
             print('gps_data', gps_data)
+        if b_laser:
+            laser_data = laser_obj.read_laser()
+            if laser_data:
+                print('laser_data', laser_data)
     # while True:
     # if thread_left_distance.is_alive():
     #     print(time.time(),'softuart_obj', softuart_obj.left_distance)

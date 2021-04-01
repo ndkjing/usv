@@ -440,3 +440,488 @@
 2021-03-25 17:05:50,713 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': '1354291518018142209'}}
 2021-03-25 17:06:00,111 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': '1354291518018142209'}}
 2021-03-25 17:06:00,614 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': '1354291518018142209'}}
+2021-03-26 08:56:50,192 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-26 08:56:50,693 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-26 08:57:00,213 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-26 08:57:00,715 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-26 08:57:10,235 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-26 08:57:10,737 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-26 08:57:20,262 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': '1354291518018142209'}}
+2021-03-26 08:57:20,295 data_manager.py[line:882] INFO {'点击地点': [[114.524041, 30.506168]]}
+2021-03-26 08:57:20,295 data_manager.py[line:906] INFO {'全部距离': 76.3505592784683}
+2021-03-26 08:57:20,766 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '76.35 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 175.61, 'mapId': '1354291518018142209'}}
+2021-03-26 08:57:24,355 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,355 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,355 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:24,406 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,406 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,406 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:24,457 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,457 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,457 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:24,509 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,509 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,509 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:24,561 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,561 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,561 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:24,613 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,613 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,613 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:24,665 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,665 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,665 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:24,717 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,717 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,717 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:24,769 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,769 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,769 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:24,821 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,821 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,821 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:24,873 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,873 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,873 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:24,924 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,924 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,924 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:24,975 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:24,975 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:24,975 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,027 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,027 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,027 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,078 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,078 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,078 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,129 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,129 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,129 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,180 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,180 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,180 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,232 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,232 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,232 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,284 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,284 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,284 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,335 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,336 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,336 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,387 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,387 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,387 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,439 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,439 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,439 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,490 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,490 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,490 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,542 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,542 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,542 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,594 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,594 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,594 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,645 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,645 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,645 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,696 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,696 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,696 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,748 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,748 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,748 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,799 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,799 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,799 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,851 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,851 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,851 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,903 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,903 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,903 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:25,954 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:25,954 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:25,954 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,005 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,005 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,005 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,057 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,057 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,057 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,109 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,109 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,109 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,160 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,160 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,160 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,212 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,212 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,212 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,263 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,263 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,263 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,315 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,315 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,315 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,366 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,366 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,366 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,418 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,418 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,418 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,470 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,470 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,470 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,522 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,522 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,523 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,574 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,574 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,574 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,625 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,625 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,625 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,677 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,677 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,677 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,728 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,728 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,728 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,780 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,780 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,780 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,831 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,831 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,831 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,883 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,883 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,883 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,935 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,935 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,935 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:26,986 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:26,986 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:26,986 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,037 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,037 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,037 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,088 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,088 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,088 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,140 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,140 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,140 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,192 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,192 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,192 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,243 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,243 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,243 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,294 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,294 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,294 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,346 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,346 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,346 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,397 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,397 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,397 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,449 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,449 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,449 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,500 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,500 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,500 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,551 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,551 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,551 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,603 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,603 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,603 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,655 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,655 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,655 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,707 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,707 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,707 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,758 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,758 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,758 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,809 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,809 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,809 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,861 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,861 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,862 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,913 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,913 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,913 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:27,965 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:27,965 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:27,965 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,017 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,017 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,017 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,069 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,069 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,069 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,120 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,120 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,120 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,171 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,171 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,171 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,223 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,223 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,223 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,274 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,274 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,274 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,325 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,325 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,325 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,377 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,382 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,383 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,434 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,434 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,434 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,485 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,485 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,485 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,536 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,536 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,536 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,587 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,587 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,587 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,639 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,639 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,639 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,690 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,690 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,690 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,741 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,741 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,741 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,793 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,793 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,793 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,845 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,845 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,845 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,897 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,897 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,897 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:28,949 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:28,949 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:28,949 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,001 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,001 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,001 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,052 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,052 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,052 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,103 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,103 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,103 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,155 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,155 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,155 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,206 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,206 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,206 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,257 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,257 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,257 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,309 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,309 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,309 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,360 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,360 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,360 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,411 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,411 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,412 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,463 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,463 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,463 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,515 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,515 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,515 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,567 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,567 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,567 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,619 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,619 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,619 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,670 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,670 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,670 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,722 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,722 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,722 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,773 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,773 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,773 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,824 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,824 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,824 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,875 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,875 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,876 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,927 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,927 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,928 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:29,979 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:29,979 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:29,979 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:30,030 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:30,030 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:30,030 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:30,081 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:30,081 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:30,081 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:30,133 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:30,133 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:30,133 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:30,185 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:30,185 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:30,185 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:30,236 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:30,236 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:30,236 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:30,288 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:30,288 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:30,289 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:30,340 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:30,340 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:30,340 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:30,392 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:30,392 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:30,392 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:30,430 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 457.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 142.1, 'mapId': '1354291518018142209'}}
+2021-03-26 08:57:30,443 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:30,443 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:30,443 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:30,494 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:30,494 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:30,495 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:30,546 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:30,546 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:30,546 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:57:30,597 data_manager.py[line:882] INFO {'点击地点': []}
+2021-03-26 08:57:30,597 data_manager.py[line:906] INFO {'全部距离': 0}
+2021-03-26 08:57:30,597 data_manager.py[line:986] ERROR {'error': ZeroDivisionError('float division by zero')}
+2021-03-26 08:59:10,424 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-26 08:59:10,926 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-03-26 08:59:13,936 data_manager.py[line:882] INFO {'点击地点': [[114.523973, 30.506005]]}
+2021-03-26 08:59:13,936 data_manager.py[line:906] INFO {'全部距离': 95.0267417645664}
+2021-03-26 08:59:20,473 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 1194.5', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 153.48, 'mapId': '1354291518018142209'}}
+2021-03-26 08:59:20,978 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 1194.5', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 153.48, 'mapId': '1354291518018142209'}}
+2021-03-26 08:59:26,180 data_manager.py[line:882] INFO {'点击地点': [[114.524519, 30.505619]]}
+2021-03-26 08:59:26,180 data_manager.py[line:906] INFO {'全部距离': 153.07928716070197}
+2021-03-26 08:59:30,389 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 700.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 135.86, 'mapId': '1354291518018142209'}}
+2021-03-26 08:59:30,892 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 700.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 135.86, 'mapId': '1354291518018142209'}}
+2021-03-26 08:59:35,387 data_manager.py[line:882] INFO {'点击地点': [[114.523138, 30.50573]]}
+2021-03-26 08:59:35,387 data_manager.py[line:906] INFO {'全部距离': 144.88315770686503}
+2021-03-26 08:59:40,447 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '93.45 s 700.0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': -4.51, 'mapId': '1354291518018142209'}}
+2021-03-26 08:59:40,950 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '87.85 s 700.0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': -5.28, 'mapId': '1354291518018142209'}}
+2021-03-26 08:59:50,004 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 08:59:50,506 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:00:00,062 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:00:00,564 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:00:10,122 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:00:10,626 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:00:20,181 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:00:20,685 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:00:30,240 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:00:30,744 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:00:40,252 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:00:40,756 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:00:50,097 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:00:50,601 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:01:00,155 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:01:00,659 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:01:10,210 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:01:10,712 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:01:20,268 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:01:20,771 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:01:30,326 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:01:30,830 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:01:40,297 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:01:40,801 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:01:50,317 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:01:50,820 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:02:00,379 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:02:00,883 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:02:10,439 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:02:10,943 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:02:20,501 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:02:30,055 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:02:30,558 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:02:40,113 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:02:40,616 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:02:50,171 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:02:50,675 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:03:00,230 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:03:00,733 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:03:10,288 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:03:10,790 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:03:20,346 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:03:20,850 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:03:30,436 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:03:30,938 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:03:40,492 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:03:40,994 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:03:50,065 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:03:50,569 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:04:00,217 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:04:00,721 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:04:10,901 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:04:20,455 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:04:20,958 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:04:30,012 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:04:30,514 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:04:40,071 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:04:40,574 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:04:50,131 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:04:50,635 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:05:00,192 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:05:00,696 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:05:10,252 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:05:10,756 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:05:20,313 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:05:20,817 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:05:30,374 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:05:30,878 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:05:40,435 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:05:40,939 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:05:50,027 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:05:50,529 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:06:00,087 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:06:00,591 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:06:10,147 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:06:10,651 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:06:20,207 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:06:20,711 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:06:30,267 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:06:30,771 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:06:40,327 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:06:40,831 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:06:50,317 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:06:50,821 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:07:00,415 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:07:00,919 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:07:10,482 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:07:10,986 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:07:20,036 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:07:20,540 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:07:30,094 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:07:30,598 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:07:40,154 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
+2021-03-26 09:07:40,659 data_manager.py[line:1302] INFO {'notice_info_': {'distance': '0 s 188.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.58, 'mapId': '1354291518018142209'}}
