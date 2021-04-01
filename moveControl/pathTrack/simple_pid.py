@@ -121,12 +121,19 @@ class SimplePid:
     def pid_pwm_1(self, distance, theta_error):
         steer_control = self.update_steer_pid(theta_error)
         steer_uniform = 2.0 / (1.0 + e ** (-2 * steer_control))-1
-        forward_pwm = SimplePid.make_to_pwm(1.0 / (1.0 + e ** (-0.3 * distance)))
+        forward_pwm = SimplePid.make_to_pwm(2.0 / (1.0 + e ** (-0.3 * distance))-1)
         left_steer_pwm = SimplePid.make_to_pwm(steer_uniform)
         right_steer_pwm = SimplePid.make_to_pwm(-steer_uniform)
-        steer_ratio = 0.9 * abs(left_steer_pwm - 1500) / (abs(right_steer_pwm - 1500) + abs(forward_pwm - 1500))
-        left_pwm = (left_steer_pwm - 1500) * steer_ratio + (forward_pwm - 1500) * (1 - steer_ratio) + 1500
-        right_pwm = (right_steer_pwm - 1500) * steer_ratio + (forward_pwm - 1500) * (1 - steer_ratio) + 1500
+        # steer_ratio = 0.9 * abs(left_steer_pwm - 1500) / (abs(right_steer_pwm - 1500) + abs(forward_pwm - 1500))
+        steer_ratio = 1
+        # left_pwm = (left_steer_pwm - 1500) * steer_ratio + (forward_pwm - 1500) * (1 - steer_ratio) + 1500
+        left_pwm = 1500-(left_steer_pwm - 1500) * steer_ratio + (forward_pwm - 1500) * (1 - steer_ratio)
+        # right_pwm = (right_steer_pwm - 1500) * steer_ratio + (forward_pwm - 1500) * (1 - steer_ratio) + 1500
+        right_pwm = 1500+(left_steer_pwm - 1500) * steer_ratio + (forward_pwm - 1500) * (1 - steer_ratio)
+        # if not left_pwm:
+        #     left_pwm = 1500
+        # if not right_pwm:
+        #     right_pwm =1500
         print('steer_uniform,forward_pwm,left_steer_pwm,left_pwm,right_pwm', steer_uniform, forward_pwm, left_steer_pwm,
               left_pwm, right_pwm)
         return left_pwm, right_pwm
@@ -138,7 +145,8 @@ class SimplePid:
         forward_pwm = (1.0 / (1.0 + e ** (-0.2 * distance)) - 0.5) * 1000
         # 缩放到指定最大值范围内
         # print('steer_control,forward_pwm,steer_pwm', steer_control, forward_pwm, steer_pwm)
-        max_control = config.max_pwm-config.stop_pwm
+        # max_control = config.max_pwm-config.stop_pwm
+        max_control = 200
         if forward_pwm+abs(steer_pwm) > max_control:
             temp_forward_pwm = forward_pwm
             forward_pwm = max_control*(temp_forward_pwm)/(temp_forward_pwm+abs(steer_pwm))

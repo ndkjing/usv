@@ -55,8 +55,8 @@ import tqdm
 
 
 def nelder_mead(f, x_start,
-                step=2, no_improve_thr=10e-6,
-                no_improv_break=20, max_iter=0,
+                step=1.0, no_improve_thr=10e-6,
+                no_improv_break=10, max_iter=0,
                 alpha=1., gamma=2., rho=-0.5, sigma=0.5):
     '''
         @param f (function): function to optimize, must return a scalar score
@@ -173,7 +173,7 @@ class AutoPidParameter:
         # 总共测试次数
         self.loop_count = 100
         # 一个角度调节时间
-        self.change_count = 10
+        self.change_count = 20
         self.best_error = 180 * (self.change_count + 1)
         pi = pigpio.pi()
         self.compass_obj = pi_softuart.PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx,
@@ -198,6 +198,7 @@ class AutoPidParameter:
             self.pi_main_obj.theta = 0
         self.target_theta = (self.pi_main_obj.theta + 180) % 360
         for i in range(self.change_count):
+            start_time = time.time()
             theta_error = self.target_theta - self.pi_main_obj.theta
             self.theta_error_list.append(abs(theta_error))
             if abs(theta_error) > 180:
@@ -206,10 +207,12 @@ class AutoPidParameter:
                 else:
                     theta_error = 360 + theta_error
             print('theta_error',theta_error)
-            left_pwm, right_pwm = self.pid_obj.pid_pwm_2(distance=0,
+            left_pwm, right_pwm = self.pid_obj.pid_pwm_1(distance=0,
                                                          theta_error=theta_error)
+
             self.pi_main_obj.set_pwm(left_pwm, right_pwm)
-            time.sleep(config.pid_interval*2)
+            time.sleep(0.3)
+            print('epoch time:',time.time()-start_time)
         return sum(self.theta_error_list)
 
 

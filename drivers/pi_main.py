@@ -119,7 +119,6 @@ class PiMain:
         if theta:
             if not self.last_theta:
                 self.last_theta = theta
-                return theta
             else:
                 # if abs(theta-self.last_theta)>180:
                 #     return self.last_theta
@@ -127,7 +126,7 @@ class PiMain:
                 #     self.last_theta = theta
                 #     return theta
                 self.last_theta = theta
-                return theta
+            return theta
         else:
             return self.last_theta
 
@@ -327,25 +326,29 @@ class PiMain:
         一直修改输出pwm波到目标pwm波
         :return:
         """
-        sleep_time = 0.02
+        sleep_time = 0.001
         delta_time = 0.0001 / 500.0
-        # start_pwm_time = time.time()
+        start_pwm_time = time.time()
         while True:
-            if abs(self.left_pwm - self.target_left_pwm) != 0 or abs(self.right_pwm != self.target_right_pwm) != 0:
-                if abs(self.target_left_pwm - self.left_pwm) == 0:
-                    pass
-                else:
-                    self.left_pwm = self.left_pwm + (self.target_left_pwm - self.left_pwm) // abs(self.target_left_pwm - self.left_pwm) * 5
-                if abs(self.target_right_pwm - self.right_pwm) == 0:
-                    pass
-                else:
-                    self.right_pwm = self.right_pwm + (self.target_right_pwm - self.right_pwm) // abs(self.target_right_pwm - self.right_pwm) * 5
-                self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
-                self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
-                time.sleep(sleep_time)
-                # sleep_time = sleep_time + delta_time
+            if abs(self.target_left_pwm - self.left_pwm) == 0:
+                pass
             else:
-                time.sleep(0.01)
+                b_add_l = 1 if (self.target_left_pwm - self.left_pwm)>0 else -1
+                self.left_pwm = self.left_pwm + b_add_l * 1
+            self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
+            if abs(self.target_right_pwm - self.right_pwm) == 0:
+                pass
+            else:
+                b_add_r = 1 if (self.target_right_pwm - self.right_pwm) > 0 else -1
+                self.right_pwm = self.right_pwm + b_add_r * 1
+            self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
+                # print('self.target_right_pwm,self.right_pwm,self.target_left_pwm,self.left_pwm',self.target_right_pwm,self.right_pwm,self.target_left_pwm,self.left_pwm)
+            time.sleep(sleep_time)
+            # if sleep_time>=0.1:
+            #     sleep_time = 0.001
+            # sleep_time = sleep_time + delta_time
+            # else:
+            #     time.sleep(0.01)
                 # if pwm_timeout and time.time()-start_pwm_time > pwm_timeout:
                 #     break
             # if time.time()-start_pwm_time<config.pid_interval:

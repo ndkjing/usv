@@ -141,7 +141,6 @@ class PiSoftuart(object):
     def get_thread_ts(self):
         return self._thread_ts
 
-
 if __name__ == '__main__':
     pi = pigpio.pi()
     b_compass = 0

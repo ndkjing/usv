@@ -756,4 +756,5 @@ if __name__ == "__main__":
     def f(x):
         return -math.sin(x[0]) * math.cos(x[1]) * (1. / (abs(x[2]) + 1))
 
-    print(nelder_mead(f, np.array([0., 0., 0.])))
+    # print(nelder_mead(f, np.array([0., 0., 0.])))
+    print( 1 if 2>1 else -1)
