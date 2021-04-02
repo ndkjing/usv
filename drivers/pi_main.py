@@ -83,7 +83,7 @@ class PiMain:
         self.compass_notice_info = ''
         # 距离矩阵
         self.distance_dict = {}
-        self.obstacle_list = [0,0,0,0,0]
+        self.obstacle_list = [0, 0, 0, 0, 0]
 
     def get_left_ultrasonic_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.left_rx, tx_pin=config.left_tx,
@@ -386,19 +386,18 @@ class PiMain:
     def get_distance_dict(self):
         b_add = 1
         # 角度限制
-        # steer_max_angle = 90
-        steer_max_angle = 9
+        steer_max_angle = config.steer_max_angle
         min_i = 100 - int(steer_max_angle * 1000 / 900)
         max_i = 100 + int(steer_max_angle * 1000 / 900)
         i = min_i
         start_time = time.time()
         while True:
-            if b_add == 1:
-                angle_pwm = 500 + i * 10
-                self.set_steer_engine(angle_pwm)
-            else:
-                angle_pwm = 2500 - i * 10
-                self.set_steer_engine(angle_pwm)
+            # if b_add == 1:
+            angle_pwm = 500 + i * 10
+            self.set_steer_engine(angle_pwm)
+            # else:
+            #     angle_pwm = 2500 - i * 10
+            #     self.set_steer_engine(angle_pwm)
             # 更新位置矩阵 连续五次检查不到将该位置置位0表示该位置没有距离信息
             laser_distance = 0
             for j in range(5):
@@ -407,27 +406,27 @@ class PiMain:
                     break
                 else:
                     laser_distance = 0
-                # 角度左正右负
+            # 角度左正右负
             angle = (i - 100) * 0.9
+            print(i, angle)
             self.distance_dict.update({angle: laser_distance})
-            # 将21个角度归结无五个方向 0 1 2 3 4
+            # 将21个角度归结无五个方向 0 1 2 3 4 ，右 右前 前 左前 左
             if -steer_max_angle <= angle < -steer_max_angle * 3 / 5:
                 obstacle_index = 0
-            elif -steer_max_angle* 3 / 5 <= angle < -steer_max_angle * 1 / 5:
+            elif -steer_max_angle * 3 / 5 <= angle < -steer_max_angle * 1 / 5:
                 obstacle_index = 1
-            elif -steer_max_angle* 1 / 5 <= angle < steer_max_angle * 1/ 5:
+            elif -steer_max_angle * 1 / 5 <= angle < steer_max_angle * 1 / 5:
                 obstacle_index = 2
-            elif steer_max_angle * 1/ 5 <= angle < steer_max_angle * 3/ 5:
+            elif steer_max_angle * 1 / 5 <= angle < steer_max_angle * 3 / 5:
                 obstacle_index = 3
             else:
                 obstacle_index = 4
-            if laser_distance == 0 or laser_distance > 6:
+            if laser_distance == 0 or laser_distance > config.min_steer_distance:
                 b_obstacle = 0
             else:
                 b_obstacle = 1
             self.obstacle_list[obstacle_index] = b_obstacle
             if time.time() - start_time >= 5:
-                # print(i,angle)
                 print('self.distance_dict', self.distance_dict)
                 print('self.obstacle_list', self.obstacle_list)
                 start_time = time.time()

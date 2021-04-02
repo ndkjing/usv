@@ -142,6 +142,8 @@ class DataManager:
         self.control_info = ''
         # 网络延时
         self.ping = 0
+        # 避障提示消息
+        self.obstacle_info = ''
 
     # 读取函数会阻塞 必须使用线程
     def get_com_data(self):
@@ -520,6 +522,7 @@ class DataManager:
     # 平滑路径
     def smooth_path(self):
         smooth_path_lng_lat = []
+        self.smooth_path_lng_lat_index = []
         for index, target_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps):
             self.smooth_path_lng_lat_index.append(len(smooth_path_lng_lat))
             if index == 0:
@@ -531,32 +534,33 @@ class DataManager:
                                                                     self.lng_lat[1],
                                                                     target_lng_lat[0],
                                                                     target_lng_lat[1])
-                for i in range(1, int((distance // (config.forward_see_distance/3)) + 1)):
+                for i in range(1, int((distance /config.smooth_path_ceil_size) + 1)):
                     cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                               self.lng_lat[1],
                                                                               theta,
-                                                                              config.forward_see_distance * i)
+                                                                              config.smooth_path_ceil_size * i)
                     smooth_path_lng_lat.append(cal_lng_lat)
             else:
                 theta = lng_lat_calculate.angleFromCoordinate(
-                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][0],
-                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][1],
+                    self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
+                    self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
                     target_lng_lat[0],
                     target_lng_lat[1])
                 distance = lng_lat_calculate.distanceFromCoordinate(
-                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][0],
-                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][1],
+                    self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
+                    self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
                     target_lng_lat[0],
                     target_lng_lat[1])
-                for i in range(1, int((distance // config.forward_see_distance) + 1)):
+                for i in range(1, int(distance /config.smooth_path_ceil_size + 1)):
                     cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(
-                        self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][0],
-                        self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][1],
+                        self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
+                        self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
                         theta,
-                        config.forward_see_distance * i)
+                        config.smooth_path_ceil_size * i)
                     smooth_path_lng_lat.append(cal_lng_lat)
-                if distance < config.forward_see_distance:
+                if distance < config.smooth_path_ceil_size:
                     smooth_path_lng_lat.append(target_lng_lat)
+            smooth_path_lng_lat.append(target_lng_lat)
         return smooth_path_lng_lat
 
     # 计算下一个点经纬度
@@ -570,30 +574,35 @@ class DataManager:
             self.smooth_path_lng_lat = self.smooth_path()
         # 搜索最临近的路点
         distance_list = []
-        del self.smooth_path_lng_lat[0:self.smooth_path_lng_lat_index[index_]]
-        for target_lng_lat in self.smooth_path_lng_lat:
+        # if index_ > 0:
+        #     del self.smooth_path_lng_lat[0:self.smooth_path_lng_lat_index[index_]-self.smooth_path_lng_lat_index[index_-1]]
+        # else:
+        #     del self.smooth_path_lng_lat[0:self.smooth_path_lng_lat_index[index_]]
+        # if len(self.smooth_path_lng_lat)==0:
+        print('self.smooth_path_lng_lat_index len  self.smooth_path_lng_lat', self.smooth_path_lng_lat_index, len(self.smooth_path_lng_lat), self.smooth_path_lng_lat)
+        for target_lng_lat in self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index_]:]:
             distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                 self.lng_lat[1],
                                                                 target_lng_lat[0],
                                                                 target_lng_lat[1])
             distance_list.append(distance)
         index = distance_list.index(min(distance_list))
-        if index + 1 == len(self.smooth_path_lng_lat):
-            return self.smooth_path_lng_lat[-1]
-        lng_lat = self.smooth_path_lng_lat[index]
+        if index + 1 == len(self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index_]:]):
+            return self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index_]:][-1]
+        lng_lat = self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index_]:][index]
         index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                         self.lng_lat[1],
                                                                         lng_lat[0],
                                                                         lng_lat[1])
-        while config.forward_see_distance > index_point_distance and (index + 1) < len(self.smooth_path_lng_lat):
-            lng_lat = self.smooth_path_lng_lat[index]
+        while config.smooth_path_ceil_size > index_point_distance and (index + 1) < len(self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index_]:]):
+            lng_lat = self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index_]:][index]
             index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                             self.lng_lat[1],
                                                                             lng_lat[0],
                                                                             lng_lat[1])
             index += 1
         # print('index,len(self.smooth_path_lng_lat) index_point_distance',index,len(self.smooth_path_lng_lat),index_point_distance)
-        return self.smooth_path_lng_lat[index]
+        return self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index_]:][index]
 
     # 构建障碍物地图
     def build_obstacle_map(self):
@@ -602,7 +611,7 @@ class DataManager:
         :return: 障碍物位置举证
         """
         method = 1
-        if method==0:
+        if method == 0:
             map_size = int(20 / 0.5)
             obstacle_map = np.zeros((map_size, map_size))
             # 判断前方距离是否有障碍物，根据障碍物改变目标点
@@ -613,10 +622,10 @@ class DataManager:
                 for row_index in range(row):
                     obstacle_map[row_index, col] = 1
         else:
-            obstacle_map = [0]*len(self.pi_main_obj.distance_dict.items())
+            obstacle_map = [0] * len(self.pi_main_obj.distance_dict.items())
             for k, v in self.pi_main_obj.distance_dict.items():
-                if v<5:
-                    obstacle_map[10+int(k/0.9)]=1
+                if v < 5:
+                    obstacle_map[10 + int(k / 0.9)] = 1
         return obstacle_map
 
     # 计算障碍物下目标点
@@ -627,38 +636,92 @@ class DataManager:
         """
         next_point_lng_lat = path_planning_point_gps
         if config.b_laser:
+            # 不避障
             if config.obstacle_avoid_type == 0:
-                return path_planning_point_gps,False
+                return path_planning_point_gps, False
+            # 避障停止
             elif config.obstacle_avoid_type == 1:
-                obstacle_map = self.build_obstacle_map()
-                if 1 in obstacle_map[5:15]:
-                    b_stop = True
-                    return next_point_lng_lat, b_stop
-            # 根据障碍物计算下一个目标点
+                # obstacle_map = self.build_obstacle_map()
+                # if 1 in obstacle_map[5:15]:
+                if 1 in self.pi_main_obj.obstacle_list[1:4]:
+                    return next_point_lng_lat, True
+            # 避障绕行，根据障碍物计算下一个目标点
             elif config.obstacle_avoid_type == 2:
-                obstacle_map = self.build_obstacle_map()
+                # obstacle_map = self.build_obstacle_map()
                 angle_point = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
                                                                     self.lng_lat[1],
                                                                     path_planning_point_gps[0],
                                                                     path_planning_point_gps[1])
-                # 判断该角度范围内是否有障碍物
-                if 9 < angle_point < 351:
-                    return path_planning_point_gps,False
+                if angle_point > 180:
+                    angle_point_temp = angle_point - 360
                 else:
-                    if angle_point >= 351:
-                        angle_point = angle_point - 360
-                    if 1 in obstacle_map[8+angle_point/0.9:12+angle_point/0.9]:
-                        if angle_point >= 351:
-                            next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-                                                                                             self.lng_lat[1],
-                                                                                             angle_point+4,
-                                                                                             5)
+                    angle_point_temp = angle_point
+                # 判断该角度范围内是否有障碍物
+                if -config.steer_max_angle <= angle_point_temp < -config.steer_max_angle * 3 / 5:
+                    point_angle_index = 0
+                elif -config.steer_max_angle * 3 / 5 <= angle_point_temp < -config.steer_max_angle * 1 / 5:
+                    point_angle_index = 1
+                elif -config.steer_max_angle * 1 / 5 <= angle_point_temp < config.steer_max_angle * 1 / 5:
+                    point_angle_index = 2
+                elif config.steer_max_angle * 1 / 5 <= angle_point_temp < config.steer_max_angle * 3 / 5:
+                    point_angle_index = 3
+                elif config.steer_max_angle * 3 / 5 <= angle_point_temp < config.steer_max_angle :
+                    point_angle_index = 4
+                else:
+                    point_angle_index = 5
+                # 到目标点角度不在指定避障范围内，不用避障
+                if point_angle_index == 5:
+                    return next_point_lng_lat, False
+                else:
+                    if self.pi_main_obj.obstacle_list[point_angle_index] == 1:
+                        if point_angle_index == len(self.pi_main_obj.obstacle_list):
+                            if self.pi_main_obj.obstacle_list[point_angle_index - 1] == 0:
+                                next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                                 self.lng_lat[1],
+                                                                                                 angle_point - config.steer_max_angle * 1 / 5,
+                                                                                                 config.min_steer_distance)
+                            else:
+                                next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                                 self.lng_lat[1],
+                                                                                                 angle_point + config.steer_max_angle * 1 / 5,
+                                                                                                 config.min_steer_distance)
+                        elif point_angle_index == 0:
+                            if self.pi_main_obj.obstacle_list[point_angle_index + 1] == 0:
+                                next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                                 self.lng_lat[1],
+                                                                                                 angle_point + config.steer_max_angle * 1 / 5,
+                                                                                                 config.min_steer_distance)
+                            else:
+                                next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                                 self.lng_lat[1],
+                                                                                                 angle_point - config.steer_max_angle * 1 / 5,
+                                                                                                 config.min_steer_distance)
                         else:
-                            next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-                                                                                             self.lng_lat[1],
-                                                                                             angle_point-4,
-                                                                                             5)
-                        return next_point_lng_lat, False
+                            if self.pi_main_obj.obstacle_list[point_angle_index - 1] == 0 and \
+                                    self.pi_main_obj.obstacle_list[point_angle_index + 1] == 0:
+                                next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                                 self.lng_lat[1],
+                                                                                                 angle_point + config.steer_max_angle * 1 / 5,
+                                                                                                 config.min_steer_distance)
+                            elif self.pi_main_obj.obstacle_list[point_angle_index - 1] == 0 and \
+                                    self.pi_main_obj.obstacle_list[point_angle_index + 1] == 1:
+                                next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                                 self.lng_lat[1],
+                                                                                                 angle_point - config.steer_max_angle * 1 / 5,
+                                                                                                 config.min_steer_distance)
+                            elif self.pi_main_obj.obstacle_list[point_angle_index - 1] == 1 and \
+                                    self.pi_main_obj.obstacle_list[point_angle_index + 1] == 0:
+                                next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                                 self.lng_lat[1],
+                                                                                                 angle_point + config.steer_max_angle * 1 / 5,
+                                                                                                 config.min_steer_distance)
+                            else:
+                                # 两边都有障碍物直接将目标角度复制为背后180度
+                                next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                                 self.lng_lat[1],
+                                                                                                 ((angle_point - 180)+360)%360,
+                                                                                                 config.min_steer_distance)
+                    return next_point_lng_lat, False
         if config.b_use_ultrasonic:
             if self.l_distance and self.r_distance:
                 if self.l_distance <= 1.5 or self.r_distance <= 1.5:
@@ -708,7 +771,9 @@ class DataManager:
                 sample_lng_lat_gps[1])
             self.distance_p = distance_sample
             # 避障判断下一个点
-            target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point(target_lng_lat_gps)
+            b_stop = False
+            if not config.home_debug:
+                target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point(target_lng_lat_gps)
             # 计算到下一个点距离
             all_distance = lng_lat_calculate.distanceFromCoordinate(
                 self.lng_lat[0], self.lng_lat[1], target_lng_lat_gps[0],
@@ -752,7 +817,7 @@ class DataManager:
                                                                     theta_error=theta_error)
             # 在家调试模式下预测目标经纬度
             if config.home_debug:
-                time.sleep(0.5)
+                time.sleep(0.1)
                 # 计算当前行驶里程
                 if self.last_lng_lat:
                     speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
@@ -764,7 +829,7 @@ class DataManager:
                 right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
                 steer_power = left_delta_pwm - right_delta_pwm
                 forward_power = left_delta_pwm + right_delta_pwm
-                delta_distance = forward_power * 0.01
+                delta_distance = forward_power * 0.005
                 delta_theta = steer_power * 0.05
                 # if time.time() % 2 < 1:
                 # print('left_delta_pwm, right_delta_pwm left_pwm,right_pwm', left_delta_pwm, right_delta_pwm, left_pwm, right_pwm)
@@ -781,7 +846,12 @@ class DataManager:
             self.last_left_pwm = left_pwm
             self.last_right_pwm = right_pwm
             if not config.home_debug:
-                self.pi_main_obj.set_pwm(left_pwm, right_pwm)
+                if b_stop:
+                    self.obstacle_info = '1'
+                    self.pi_main_obj.stop()
+                else:
+                    self.obstacle_info = '0'
+                    self.pi_main_obj.set_pwm(left_pwm, right_pwm)
                 # print('epoch time', time.time() - start_time)
             # 清空规划点
             if int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == -1:
@@ -822,7 +892,7 @@ class DataManager:
             time.sleep(config.pi2com_timeout)
             # 判断当前是手动控制还是自动控制
             d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
-            if d in [-2,-1, 0, 90, 180, 270]:
+            if d in [-2, -1, 0, 90, 180, 270]:
                 manul_or_auto = 1
                 b_log_points = 1
             # 检查是否需要返航
@@ -968,8 +1038,7 @@ class DataManager:
                         if self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] == 1:
                             continue
                         # 计算下一个目标点经纬度
-                        b_smooth_path = 0
-                        if b_smooth_path:
+                        if config.b_smooth_path:
                             next_lng_lat = self.calc_target_lng_lat(index)
                             # 如果当前点靠近采样点指定范围就停止并采样
                             sample_distance = lng_lat_calculate.distanceFromCoordinate(
@@ -1001,7 +1070,8 @@ class DataManager:
                                 self.b_draw_over_send_data = True
                                 self.draw()
                             elif not config.b_draw:
-                                self.pi_main_obj.stop()
+                                if not config.home_debug:
+                                    self.pi_main_obj.stop()
                         else:
                             break
                     if self.b_stop_path_track:
@@ -1324,6 +1394,8 @@ class DataManager:
                 for i in self.pi_main_obj.obstacle_list:
                     obstacle_str += str(i)
                     obstacle_str += '  '
+                obstacle_str += '避障'
+                obstacle_str += self.obstacle_info
                 notice_info_data.update({"ultrasonic_distance": obstacle_str})
             # 使用电量告警是提示消息
             if self.low_dump_energy_warnning:
@@ -1375,6 +1447,52 @@ class DataManager:
 if __name__ == '__main__':
     obj = DataManager()
     obj.send_mqtt_data()
+    # 114.523792, 30.506471;
+    # 114.524232, 30.506255;
+    # 114.523823, 30.505948
+    ############
+    114.524039, 30.506789;
+    114.523982, 30.506724;
+    114.523925, 30.50666;
+    114.523868, 30.506596;
+    114.523811, 30.506532;
+    114.523754, 30.506467;
+
+    114.523698, 30.506403;
+    114.523641, 30.506339;
+    114.523584, 30.506274;
+    114.523527, 30.50621;
+    114.52347, 30.506146;
+    114.523413, 30.506082;
+
+    114.523356, 30.506017;
+    114.523299, 30.505953;
+    114.523242, 30.505889;
+    114.523185, 30.505825;
+    114.523128, 30.50576;
+    114.523071, 30.505696;
+
+    114.523015, 30.505632;
+    114.522958, 30.505567;
+    114.523701, 30.506406;
+    114.523786, 30.506372;
+    114.523871, 30.506337;
+    114.523956, 30.506303;
+
+    114.524041, 30.506269;
+    114.524126, 30.506235;
+    114.524211, 30.5062;
+    114.524296, 30.506166;
+    114.524381, 30.506132;
+    114.524414, 30.506118;
+
+    114.524324, 30.506096;
+    114.524233, 30.506075;
+    114.524143, 30.506053;
+    114.524052, 30.506032;
+    114.523962, 30.50601;
+    114.523871, 30.505989;
+    114.523785, 30.505968
     while True:
         # move_direction = obj.server_data_obj.mqtt_send_get_obj.control_move_direction
         # obj.logger.info('move_direction: %f' % (float(move_direction)))

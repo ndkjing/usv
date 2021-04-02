@@ -1,6 +1,41 @@
-2021-03-25 16:25:21,390 main.py[line:70] INFO {'binding status': 1}
-2021-03-25 16:29:23,537 main.py[line:280] ERROR restart send_com_data_thread
-2021-03-25 16:29:25,539 main.py[line:280] ERROR restart send_com_data_thread
-2021-03-25 16:33:13,531 main.py[line:72] ERROR {'binding_data error': JSONDecodeError('Expecting value: line 1 column 1 (char 0)')}
-2021-03-26 08:56:48,187 main.py[line:70] INFO {'binding status': 1}
-2021-03-26 08:59:01,906 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 13:30:02,213 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 13:30:23,227 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 13:30:25,228 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 13:31:07,668 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 13:33:28,040 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 13:34:43,092 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 13:35:59,053 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 13:36:14,064 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 13:36:48,412 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 13:37:32,442 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 13:39:46,206 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 13:40:59,681 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 13:47:35,689 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 13:48:13,017 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 13:49:12,165 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 14:12:11,818 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 14:16:30,179 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 14:16:36,934 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 14:18:11,817 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 17:11:48,465 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 17:14:39,882 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 17:20:52,623 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 17:27:36,988 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 17:28:06,003 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:28:08,004 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:28:10,006 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:28:12,008 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:28:14,010 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:28:16,011 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:28:18,012 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:30:11,733 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 17:30:32,745 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:31:03,451 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 17:33:34,740 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 17:33:59,754 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:34:01,756 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:34:03,757 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:34:05,758 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:42:42,061 main.py[line:70] INFO {'binding status': 1}
+2021-04-02 17:45:46,161 main.py[line:296] ERROR restart send_com_data_thread
+2021-04-02 17:46:20,009 main.py[line:70] INFO {'binding status': 1}

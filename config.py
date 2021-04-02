@@ -223,9 +223,9 @@ motor_forward = 200
 # 电机转弯分量
 motor_steer = 200
 # pid三参数
-kp = 0.8
-ki = 0.0
-kd = 0.0
+kp = 2.0
+ki = 0.3
+kd = 1.0
 # 大于多少米全速
 full_speed_meter = 6.0
 # 发送状态数据时间间隔
@@ -277,9 +277,16 @@ path_track_type = 3
 calibration_compass = 0
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
+# 是否使用平滑路径
+b_smooth_path = 1
+# 平滑路径最小单位 m
+smooth_path_ceil_size = 5
 # 前视觉距离
 forward_see_distance = 9
-
+# 舵机最大扫描角度单侧 左边为正右边为负
+steer_max_angle = 30
+# 最小转向距离
+min_steer_distance = 6
 
 def update_height_setting():
     global motor_forward
