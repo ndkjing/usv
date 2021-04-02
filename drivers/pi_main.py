@@ -17,6 +17,7 @@ import pigpio
 import time
 import numpy as np
 import cv2
+
 logger = log.LogHandler('pi_log')
 
 
@@ -82,6 +83,7 @@ class PiMain:
         self.compass_notice_info = ''
         # 距离矩阵
         self.distance_dict = {}
+        self.obstacle_list = [0,0,0,0,0]
 
     def get_left_ultrasonic_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.left_rx, tx_pin=config.left_tx,
@@ -101,7 +103,7 @@ class PiMain:
 
     def get_laser_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx,
-                                               baud=config.laser_baud, time_out=0.01)
+                                      baud=config.laser_baud, time_out=0.01)
 
     # 对距离进行滤波处理
     def distance_filter(self, distance, left=1):
@@ -389,6 +391,7 @@ class PiMain:
         min_i = 100 - int(steer_max_angle * 1000 / 900)
         max_i = 100 + int(steer_max_angle * 1000 / 900)
         i = min_i
+        start_time = time.time()
         while True:
             if b_add == 1:
                 angle_pwm = 500 + i * 10
@@ -396,42 +399,48 @@ class PiMain:
             else:
                 angle_pwm = 2500 - i * 10
                 self.set_steer_engine(angle_pwm)
-            # 更新位置矩阵
-            for j in range(10):
+            # 更新位置矩阵 连续五次检查不到将该位置置位0表示该位置没有距离信息
+            laser_distance = 0
+            for j in range(5):
                 laser_distance = self.laser_obj.read_laser()
-                # 角度左正右负
-                angle = (i-100)*0.9
-                # print(i,angle)
                 if laser_distance:
-                    self.distance_dict.update({angle: laser_distance})
                     break
-                # 连续五次检查不到将该位置置位0表示该位置没有距离信息
-                self.distance_dict.update({angle: 0})
-            # if len(self.distance_dict.keys()) >= int(steer_max_angle / 0.9):
-            #     # print(self.distance_dict)
-            #     map_size = int(20 / 0.5)
-            #     obstacle_map = np.zeros((map_size, map_size))
-                # 判断前方距离是否有障碍物，根据障碍物改变目标点
-                # for k, v in self.distance_dict.items():
-                #     v = min(v, 20)
-                #     row = int(map_size - math.ceil(math.cos(math.radians(k)) * v / 0.5))
-                #     col = int((map_size / 2) - 1 - math.ceil(math.sin(math.radians(k)) * v / 0.5))
-                #     for row_index in range(row):
-                #         obstacle_map[row_index, col] = 1
-                #     print(i,k, v, row, col)
-                # print(obstacle_map)
-            i += 1*b_add
+                else:
+                    laser_distance = 0
+                # 角度左正右负
+            angle = (i - 100) * 0.9
+            self.distance_dict.update({angle: laser_distance})
+            # 将21个角度归结无五个方向 0 1 2 3 4
+            if -steer_max_angle <= angle < -steer_max_angle * 3 / 5:
+                obstacle_index = 0
+            elif -steer_max_angle* 3 / 5 <= angle < -steer_max_angle * 1 / 5:
+                obstacle_index = 1
+            elif -steer_max_angle* 1 / 5 <= angle < steer_max_angle * 1/ 5:
+                obstacle_index = 2
+            elif steer_max_angle * 1/ 5 <= angle < steer_max_angle * 3/ 5:
+                obstacle_index = 3
+            else:
+                obstacle_index = 4
+            if laser_distance == 0 or laser_distance > 6:
+                b_obstacle = 0
+            else:
+                b_obstacle = 1
+            self.obstacle_list[obstacle_index] = b_obstacle
+            if time.time() - start_time >= 5:
+                # print(i,angle)
+                print('self.distance_dict', self.distance_dict)
+                print('self.obstacle_list', self.obstacle_list)
+                start_time = time.time()
+            i += 1 * b_add
             if i >= max_i or i <= min_i:
-                b_add = -1 if b_add==1 else 1
-                # if b_add:
-                #     b_add = 0
-                # else:
-                #     b_add = 1
+                b_add = -1 if b_add == 1 else 1
             time.sleep(0.01)
+
 
 if __name__ == '__main__':
     pi_main_obj = PiMain()
-    laser_obj = pi_softuart.PiSoftuart(pi=pi_main_obj.pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx, baud=config.laser_baud, time_out=0.01)
+    laser_obj = pi_softuart.PiSoftuart(pi=pi_main_obj.pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx,
+                                       baud=config.laser_baud, time_out=0.01)
     while True:
         try:
             # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效

@@ -136,7 +136,7 @@ class PiSoftuart(object):
             # print(time.time(), type(data), count, data)
             if count == 0:
                 time.sleep(1/config.laser_hz)
-                return None
+                return 0
             str_data = str(binascii.b2a_hex(data))[2:-1]
             # print(str_data)
             for i in str_data.split('aa'):
@@ -144,7 +144,7 @@ class PiSoftuart(object):
                     distance = int(i[6:12], 16) / 1000
                     # 超出量程返回None
                     if distance > 40:
-                        return None
+                        return 0
                         # print(time.time(), type(data), count, data)
                         # print(str_data)
                     return distance
@@ -152,7 +152,7 @@ class PiSoftuart(object):
         except Exception as e:
             time.sleep(1/config.laser_hz)
             # print({'error read_laser': e})
-            return None
+            return 0
 
     def write_data(self, msg):
         self._pi.wave_clear()

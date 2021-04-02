@@ -708,7 +708,7 @@ class DataManager:
                 sample_lng_lat_gps[1])
             self.distance_p = distance_sample
             # 避障判断下一个点
-            target_lng_lat_gps = self.get_avoid_obstacle_point(target_lng_lat_gps)
+            target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point(target_lng_lat_gps)
             # 计算到下一个点距离
             all_distance = lng_lat_calculate.distanceFromCoordinate(
                 self.lng_lat[0], self.lng_lat[1], target_lng_lat_gps[0],
@@ -749,7 +749,7 @@ class DataManager:
                     steer_distance)
             else:
                 left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
-                                                                  theta_error=theta_error)
+                                                                    theta_error=theta_error)
             # 在家调试模式下预测目标经纬度
             if config.home_debug:
                 time.sleep(0.5)
@@ -782,7 +782,7 @@ class DataManager:
             self.last_right_pwm = right_pwm
             if not config.home_debug:
                 self.pi_main_obj.set_pwm(left_pwm, right_pwm)
-                print('epoch time', time.time() - start_time)
+                # print('epoch time', time.time() - start_time)
             # 清空规划点
             if int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == -1:
                 # 记录是因为按了暂停按钮而终止
@@ -968,7 +968,7 @@ class DataManager:
                         if self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] == 1:
                             continue
                         # 计算下一个目标点经纬度
-                        b_smooth_path = 1
+                        b_smooth_path = 0
                         if b_smooth_path:
                             next_lng_lat = self.calc_target_lng_lat(index)
                             # 如果当前点靠近采样点指定范围就停止并采样
@@ -1318,6 +1318,13 @@ class DataManager:
             if config.b_use_ultrasonic and not config.home_debug:
                 notice_info_data.update({"ultrasonic_distance": str(self.pi_main_obj.left_distance) + '  ' + str(
                     self.pi_main_obj.right_distance)})
+            if config.b_laser and config.current_platform == config.CurrentPlatform.pi:
+                # 归类为五个距离
+                obstacle_str = ''
+                for i in self.pi_main_obj.obstacle_list:
+                    obstacle_str += str(i)
+                    obstacle_str += '  '
+                notice_info_data.update({"ultrasonic_distance": obstacle_str})
             # 使用电量告警是提示消息
             if self.low_dump_energy_warnning:
                 notice_info_data.update({"low_dump_energy_warnning": self.low_dump_energy_warnning})
