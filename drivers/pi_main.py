@@ -20,7 +20,6 @@ import cv2
 
 logger = log.LogHandler('pi_log')
 
-
 class PiMain:
     def __init__(self):
         # 树莓派pwm波控制对象
@@ -53,11 +52,9 @@ class PiMain:
         self.channel_col_input_pwm = 0
         # 当前是否是遥控器控制
         self.b_start_remote = 0
-
         self.cb1 = self.pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, self.mycallback)
         self.cb2 = self.pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, self.mycallback)
         self.cb3 = self.pi.callback(config.start_remote_pin, pigpio.EITHER_EDGE, self.mycallback)
-
         if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             self.left_ultrasonic_obj = self.get_left_ultrasonic_obj()
             self.right_ultrasonic_obj = self.get_right_ultrasonic_obj()
@@ -84,6 +81,8 @@ class PiMain:
         # 距离矩阵
         self.distance_dict = {}
         self.obstacle_list = [0, 0, 0, 0, 0]
+        # 设置为GPIO输出模式 输出高低电平
+        self.pi.set_mode(config.gpio_output_1, pigpio.OUTPUT)
 
     def get_left_ultrasonic_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.left_rx, tx_pin=config.left_tx,
@@ -435,11 +434,17 @@ class PiMain:
                 b_add = -1 if b_add == 1 else 1
             time.sleep(0.01)
 
+    def set_high(self):
+        while True:
+            self.pi.write(config.gpio_output_1,pigpio.HIGH)
+            time.sleep(1)
+            self.pi.write(config.gpio_output_1,pigpio.LOW)
+            time.sleep(1)
 
 if __name__ == '__main__':
     pi_main_obj = PiMain()
-    laser_obj = pi_softuart.PiSoftuart(pi=pi_main_obj.pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx,
-                                       baud=config.laser_baud, time_out=0.01)
+    # laser_obj = pi_softuart.PiSoftuart(pi=pi_main_obj.pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx,
+    #                                    baud=config.laser_baud, time_out=0.01)
     while True:
         try:
             # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效
@@ -620,6 +625,8 @@ if __name__ == '__main__':
             # m 退出
             elif key_input.startswith('m'):
                 break
+            elif key_input.startswith('i'):
+                pi_main_obj.set_high()
             elif key_input.startswith('z'):
                 pi_main_obj.get_distance_dict()
         except KeyboardInterrupt:

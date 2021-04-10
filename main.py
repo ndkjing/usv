@@ -176,7 +176,7 @@ def main():
                 try:
                     if data_manager_obj.com_data_obj.uart.is_open():
                         data_manager_obj.com_data_obj.uart.close()
-                    data_manager_obj.com_data_obj = data_manager_obj.get_com_obj(port=config.port, baud=config.baud)
+                    data_manager_obj.com_data_obj = data_manager_obj.get_com_obj(port=config.stc_port, baud=config.stc_baud)
                 except Exception as e1:
                     logger.error({'串口关闭失败': 111, 'error': e1})
                 get_com_data_thread = threading.Thread(target=data_manager_obj.get_com_data)

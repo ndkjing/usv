@@ -452,6 +452,7 @@ class DataManager:
         self.distance_p = 0
         # 清空路径
         self.smooth_path_lng_lat = None
+        b_log_points = 1
 
     # 检查遥控器输入
     def check_remote_pwm(self):
@@ -579,7 +580,7 @@ class DataManager:
         # else:
         #     del self.smooth_path_lng_lat[0:self.smooth_path_lng_lat_index[index_]]
         # if len(self.smooth_path_lng_lat)==0:
-        print('self.smooth_path_lng_lat_index len  self.smooth_path_lng_lat', self.smooth_path_lng_lat_index, len(self.smooth_path_lng_lat), self.smooth_path_lng_lat)
+        # print('self.smooth_path_lng_lat_index len  self.smooth_path_lng_lat', self.smooth_path_lng_lat_index, len(self.smooth_path_lng_lat), self.smooth_path_lng_lat)
         for target_lng_lat in self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index_]:]:
             distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                 self.lng_lat[1],
@@ -894,7 +895,8 @@ class DataManager:
             d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
             if d in [-2, -1, 0, 90, 180, 270]:
                 manul_or_auto = 1
-                b_log_points = 1
+                if d in [-1, 0, 90, 180, 270]:
+                    b_log_points = 1
             # 检查是否需要返航
             self.check_backhome()
             if self.ship_status == ShipStatus.backhome:

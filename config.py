@@ -707,6 +707,12 @@ laser_baud = 115200
 laser_hz = 40
 # 舵机输出
 steer_engine_pin = 27
+# gpio高低电平控制
+gpio_output_1 = 7
+gpio_output_2 = 8
+gpio_output_3 = 9
+gpio_output_4 = 9
+gpio_output_5 = 10
 
 
 # 使用角度  1 使用罗盘1角度   2 使用罗盘2角度  3 使用经纬度移动计算角度
