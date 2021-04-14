@@ -361,7 +361,7 @@ class PiMain:
                 else:
                     self.right_pwm = self.right_pwm + (self.target_right_pwm - self.right_pwm) // abs(
                         self.target_right_pwm - self.right_pwm) * 5
-                # print('self.left_pwm,self.target_left_pwm',self.left_pwm,self.target_left_pwm)
+                print('self.left_pwm,self.target_left_pwm',self.left_pwm,self.target_left_pwm)
                 self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
                 self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
                 time.sleep(sleep_time)
@@ -437,14 +437,19 @@ class PiMain:
     def set_high(self):
         while True:
             self.pi.write(config.gpio_output_1,pigpio.HIGH)
-            time.sleep(1)
-            self.pi.write(config.gpio_output_1,pigpio.LOW)
-            time.sleep(1)
+            self.pi.write(config.gpio_output_2, pigpio.HIGH)
+            time.sleep(2)
+            self.pi.write(config.gpio_output_1, pigpio.LOW)
+            self.pi.write(config.gpio_output_2, pigpio.LOW)
+            time.sleep(2)
 
 if __name__ == '__main__':
     pi_main_obj = PiMain()
     # laser_obj = pi_softuart.PiSoftuart(pi=pi_main_obj.pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx,
     #                                    baud=config.laser_baud, time_out=0.01)
+    loop_change_pwm_thread = threading.Thread(target=pi_main_obj.loop_change_pwm)
+    loop_change_pwm_thread.start()
+    # loop_change_pwm_thread.join()
     while True:
         try:
             # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效
