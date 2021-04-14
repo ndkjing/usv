@@ -1,21 +1,25 @@
-import logging
-import requests
+import enum
 import json
-import random
-import cv2
-import numpy as np
+import logging
 import math
 import os
-import enum
+import random
+import time
+import copy
+import cv2
+import numpy as np
+import requests
+
 import config
 from utils import lng_lat_calculate
+
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 # 方法一：找所有点
 method_0 = cv2.CHAIN_APPROX_NONE
 # 方法二：找最简单包围的点，多点共线就省略点
 method_1 = cv2.CHAIN_APPROX_SIMPLE
-
+pool_x, pool_y, pool_w, pool_h = 0,0,0,0
 
 def color_block_finder(img, lowerb, upperb,
                        min_w=0, max_w=None, min_h=0, max_h=None, map_type=None,
@@ -176,7 +180,8 @@ class BaiduMap(object):
         self.init_ship_pix = None
 
         self.scale = scale
-
+        # 障碍物地图
+        self.obstacle_map=None
         # 请求地图位置经纬度
         self.lng_lat = lng_lat
         self.lng_lat_pix = (512 * self.scale, 512 * self.scale)
@@ -229,20 +234,38 @@ class BaiduMap(object):
                 if os.path.exists(self.save_img_path):
                     os.remove(self.save_img_path)
 
-    def bulid_map(self,cell_size):
-        (x, y, w, h) = cv2.boundingRect(self.pool_cnts)
-        scale = cell_size/self.pix_2_meter
-        map_width = w/scale
-        map_height = h/scale
-        map_data = np.ones((map_height,map_width))
-        for i in range(map_height):
-            for j in range(map_width):
-                point = (i, j)
-                # 对应原图上坐标点
-                pix_point = (round(i*scale), round(j*scale))
-                in_cnt = cv2.pointPolygonTest(self.pool_cnts, pix_point, True)
-                if in_cnt > 0:
-                    map_data[i][j]=0
+    def build_obstacle_map(self, b_show=False):
+        """
+        构建obstacle地图
+        :param cell_size: 单位m
+        :param cell_hw 地图长宽
+        :return:
+        """
+        h, w = self.row_img.shape[:2]
+        # scale = cell_size / self.pix_2_meter
+        # map_width = int(w / scale)
+        # map_height = int(h / scale)
+        # map_height, map_width = min(map_height,cell_hw),min(map_width,cell_hw)
+        # print('map_height, map_width', map_height, map_width)
+        # print('湖泊宽长',w*self.pix_2_meter, h*self.pix_2_meter)
+        if self.pool_cnts is not None:
+            self.obstacle_map = np.zeros((h,w))
+            for i in range(w):
+                for j in range(h):
+                    # 对应原图上坐标点
+                    pix_point = (i,j)
+
+                    in_cnt = cv2.pointPolygonTest(self.pool_cnts, pix_point, True)
+                    if in_cnt > 0:
+                        self.obstacle_map[j,i] = 1
+                    # else:
+                    #     row_map_data[j, i] = 0
+            if b_show:
+                cv2.imshow('obstacle_map', self.obstacle_map)
+                cv2.waitKey(0)
+
+    def update_obstacle_map(self, b_show=False):
+        pass
 
     # 获取地址的url
     def get_url(self, addr):
@@ -303,13 +326,12 @@ class BaiduMap(object):
         address_url = self.get_address_url()
         response = requests.get(address_url)
         address_response_data = json.loads(response.content)
-        if int(address_response_data.get('status'))==1:
-            if len(address_response_data.get('regeocode').get('pois'))>0:
+        if int(address_response_data.get('status')) == 1:
+            if len(address_response_data.get('regeocode').get('pois')) > 0:
                 pool_name = address_response_data.get('regeocode').get('pois')[0].get('name')
             address = address_response_data.get('regeocode').get('formatted_address')
         self.pool_name = pool_name
         self.address = address
-        # return address,pool_name
 
     # 按照经纬度url获取静态图
     def draw_image(self, ):
@@ -325,7 +347,7 @@ class BaiduMap(object):
     # 静态图蓝色护坡区域抠图
     def get_pool_pix(self, b_show=False):
         """
-        查找点击位置湖泊锁在的轮廓
+        查找点击位置湖泊所在的轮廓
         :param b_show: True显示轮廓图像
         :return:
         """
@@ -335,12 +357,10 @@ class BaiduMap(object):
             self.logger.error('no image')
             return None, (1003, 1003)
         self.row_img = cv2.imread(self.save_img_path)
-
         # 检查图片是否读取成功
         if self.row_img is None:
             self.logger.error("Error: 无法找到保存的地图图片,请检查图片文件路径")
             return None, (1004, 1004)
-
         # 为了点击位置层次过大没有找到全部湖轮廓或报错，手动给图片边缘添加一个边框
         h, w = self.row_img.shape[:2]
         self.row_img[0, :, :] = [0, 0, 0]
@@ -363,11 +383,15 @@ class BaiduMap(object):
         if pool_cnts is None:
             self.logger.info('无法在点击处找到湖')
             return None, (1001, 1001)
-
+        pool_cnts = np.squeeze(pool_cnts)
+        self.pool_cnts = pool_cnts
+        (pool_x, pool_y, pool_w, pool_h) = cv2.boundingRect(self.pool_cnts)
+        print((pool_x, pool_y, pool_w, pool_h))
+        print('湖泊宽长', pool_w * self.pix_2_meter, pool_h * self.pix_2_meter)
         # 绘制色块的矩形区域
         cv2.circle(
-            self.show_img, (contours_cx, contours_cy), 5, [
-                255, 255, 0], -1)
+            self.show_img, (self.center_cnt[0], self.center_cnt[1]), 5, [
+                0, 255, 0], -1)
         if b_show:
             cv2.namedWindow(
                 'result', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
@@ -376,8 +400,6 @@ class BaiduMap(object):
             cv2.waitKey(0)
             # 关闭其他窗口
             cv2.destroyAllWindows()
-        pool_cnts = np.squeeze(pool_cnts)
-        self.pool_cnts = pool_cnts
         return self.pool_cnts, self.center_cnt
 
     @staticmethod
@@ -407,6 +429,9 @@ class BaiduMap(object):
             self.lng_lat[0], self.lng_lat[1], gaode_lng_lat[0], gaode_lng_lat[1])
         # theta = 360 - theta
         print('theta', theta)
+        theta1 = lng_lat_calculate.angleFromCoordinate(
+            gaode_lng_lat[0], gaode_lng_lat[1],self.lng_lat[0], self.lng_lat[1])
+        print('theta1', theta1)
         if theta >= 0 and theta < 90:
             delta_x_distance = math.sin(math.radians(theta)) * distance
             delta_y_distance = math.cos(math.radians(theta)) * distance
@@ -430,9 +455,9 @@ class BaiduMap(object):
             delta_y_pix = delta_y_distance / (self.pix_2_meter)
             pix = [int(self.width * self.scale / 2 + delta_x_pix),
                    int(self.height * self.scale / 2 + delta_y_pix)]
-        # theta >= 270 and theta <= 360
         else:
             t4_theta = 360 - theta
+            print('t4_theta', t4_theta)
             delta_x_distance = math.sin(math.radians(t4_theta)) * distance
             delta_y_distance = math.cos(math.radians(t4_theta)) * distance
             delta_x_pix = delta_x_distance / (self.pix_2_meter)
@@ -472,7 +497,6 @@ class BaiduMap(object):
             # 方法一：直接计算
             # 方法二：当做圆球计算
             method = 0
-
             if method == 1:
                 L = 6381372 * math.pi * 2
                 W = L
@@ -493,7 +517,6 @@ class BaiduMap(object):
 
                 point_gps = [self.lng_lat[0] + gpx_x, self.lng_lat[1] + gpx_y]
                 return_gps.append({"lat": point_gps[1], "lng": point_gps[0]})
-
             elif method == 2:
                 """
                     地理中常用的数学计算，把地球简化成了一个标准球形，如果想要推广到任意星球可以改成类的写法，然后修改半径即可
@@ -519,7 +542,7 @@ class BaiduMap(object):
                 theta = round(
                     math.degrees(
                         math.atan2(
-                            delta_meter_x, -delta_meter_y)), 1)
+                            delta_meter_x, -delta_meter_y)), 3)
                 theta = theta if theta > 0 else 360 + theta
                 theta = 360 - theta
                 point_gps = lng_lat_calculate.one_point_diatance_to_end(
@@ -581,7 +604,6 @@ class BaiduMap(object):
             else:
                 current_x += pix_gap
                 b_add_or_sub = True
-
         if b_show:
             for point in scan_points:
                 cv2.circle(self.show_img, tuple(point), 5, (0, 255, 255), -1)
@@ -617,47 +639,49 @@ class BaiduMap(object):
 
 
 if __name__ == '__main__':
-    # obj = BaiduMap([114.432092, 30.522893], zoom=16,map_type=MapType.gaode)
-    # obj = BaiduMap([114.431529, 30.524413], zoom=15, scale=1, map_type=MapType.gaode)
-    # obj = BaiduMap([114.438009, 30.540082], zoom=14, scale=1, map_type=MapType.gaode)
-    # obj = BaiduMap([114.373904, 30.540625], zoom=14, scale=1, map_type=MapType.gaode)
-    import time
-    obj = BaiduMap([114.539241,30.253357], zoom=15,
+    # src_point = [114.4314,30.523558]  喻家湖
+    src_point = [114.4314, 30.523558]
+    obj = BaiduMap(src_point, zoom=15,
                    scale=1, map_type=MapType.gaode)
-    a = BaiduMap.gps_to_gaode_lng_lat([114.000, 12.33213])
-    print(a)
-    print(obj.get_pool_name())
-    # import time
-    time.sleep(1000)
+    # print(obj.get_pool_name())
     pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=False)
     scan_cnts = obj.scan_pool(meter_gap=50, safe_meter_distance=10, b_show=False)
+    obj.build_obstacle_map(True)
     return_gps, return_gps_list = obj.pix_to_gps(scan_cnts)
-
-    obj.surround_pool(b_show=True)
+    print(return_gps, return_gps_list)
+    # obj.surround_pool(b_show=True)
     # obj = BaiduMap([114.393142, 30.558963], zoom=15,map_type=MapType.baidu)
     # obj = BaiduMap([114.718257,30.648004],zoom=14)
     # obj = BaiduMap([114.566767,30.541689],zoom=14)
     # obj = BaiduMap([114.565976,30.541317],zoom=15.113213)
     # obj = BaiduMap([114.393142,30.558981],zoom=14)
-
-    # 计算目标真实经纬度
-    current_lng_lat = [114.432018, 30.521631]
-    gaode_lng_lat = obj.gps_to_gaode_lng_lat(current_lng_lat)
-    target_lng_lat_gps = lng_lat_calculate.gps_gaode_to_gps(current_lng_lat,
-                                                            gaode_lng_lat,
-                                                            [114.442018, 30.521631])
-
-    print('current_lng_lat', current_lng_lat)
-    print('gaode_lng_lat', gaode_lng_lat)
-    print('target_lng_lat_gps', target_lng_lat_gps)
-
-    pix = obj.gaode_lng_lat_to_pix([114.431529, 30.525413])
-    print('pix', pix)
-    print(type(gaode_lng_lat), gaode_lng_lat)
-    pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=False)
-    print('pool_cnts', len(pool_cnts))
-
-    obj.pix_to_gps(obj.pool_cnts)
+    pix_src = obj.gaode_lng_lat_to_pix(src_point)
+    gaode_point2 = [114.429812,30.526649]
+    gaode_point3 = [114.428895,30.520323]
+    gaode_point4 = [114.433235,30.520342]
+    gaode_point1 = [114.432303,30.530362]
+    gaode_point = gaode_point1
+    pix_target = obj.gaode_lng_lat_to_pix(gaode_point)
+    print('pix_src', pix_src,'pix_target', pix_target)
+    b_show =1
+    cv2.circle(
+        obj.show_img, (pix_src[0], pix_src[1]), 5, [
+            255, 0, 0], -1)
+    cv2.circle(
+        obj.show_img, (pix_target[0], pix_target[1]), 5, [
+            0, 0, 255], -1)
+    if b_show:
+        cv2.namedWindow(
+            'result', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
+        cv2.imshow('result', obj.show_img)
+        # 等待任意按键按下
+        cv2.waitKey(0)
+        # 关闭其他窗口
+        cv2.destroyAllWindows()
+    return_gps, return_gps_list = obj.pix_to_gps([pix_target])
+    print(return_gps, return_gps_list)
+    print(lng_lat_calculate.distanceFromCoordinate(114.439899,30.526094,return_gps_list[0][0],return_gps_list[0][1]))
+    # obj.pix_to_gps(obj.pool_cnts)
     if pool_cnts is None:
         pass
     else:

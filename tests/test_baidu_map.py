@@ -1,18 +1,28 @@
 from unittest import TestCase
+from externalConnect import baidu_map
 
 
 class Test(TestCase):
-    def test_color_block_finder(self):
-        self.fail()
 
-    def test_draw_color_block_rect(self):
-        self.fail()
+    def test_get_pool_name(self):
+        src_point = [114.4314, 30.523558]
+        self.baidu_obj = baidu_map.BaiduMap(src_point, zoom=15,
+                                            scale=1, map_type=baidu_map.MapType.gaode)
+        self.baidu_obj.get_pool_name()
+        self.assertEqual(type(self.baidu_obj.pool_name),str)
+        self.assertEqual(type(self.baidu_obj.address),str)
 
-    def test_is_in_contours(self):
-        self.fail()
+    def test_get_pool_pix(self):
+        src_point = [114.4314, 30.523558]
+        self.baidu_obj = baidu_map.BaiduMap(src_point, zoom=15,
+                                            scale=1, map_type=baidu_map.MapType.gaode)
+        pool_cnts, (pool_cx, pool_cy) = self.baidu_obj.get_pool_pix(b_show=False)
+        self.assertIsNot(pool_cnts,None)
 
-    def test_map_type(self):
-        self.fail()
-
-    def test_baidu_map(self):
-        self.fail()
+    def test_scan_pool(self):
+        src_point = [114.4314, 30.523558]
+        self.baidu_obj = baidu_map.BaiduMap(src_point, zoom=15,
+                                            scale=1, map_type=baidu_map.MapType.gaode)
+        pool_cnts, (pool_cx, pool_cy) = self.baidu_obj.get_pool_pix(b_show=False)
+        scan_cnts = self.baidu_obj.scan_pool(meter_gap=50, safe_meter_distance=10, b_show=False)
+        self.assertFalse(len(scan_cnts)<0)

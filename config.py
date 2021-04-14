@@ -713,8 +713,9 @@ gpio_output_2 = 8
 gpio_output_3 = 9
 gpio_output_4 = 9
 gpio_output_5 = 10
-
-
+# 云台
+pin_pan = 21
+pin_tilt = 20
 # 使用角度  1 使用罗盘1角度   2 使用罗盘2角度  3 使用经纬度移动计算角度
 if home_debug:
     use_shape_theta_type = 3

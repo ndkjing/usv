@@ -83,7 +83,9 @@ class PiMain:
         self.obstacle_list = [0, 0, 0, 0, 0]
         # 设置为GPIO输出模式 输出高低电平
         self.pi.set_mode(config.gpio_output_1, pigpio.OUTPUT)
-
+        # 云台舵机角度
+        self.pan_angle_pwm = 1500
+        self.tilt_angle = 1500
     def get_left_ultrasonic_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.left_rx, tx_pin=config.left_tx,
                                       baud=config.ultrasonic_baud)
@@ -435,11 +437,36 @@ class PiMain:
             time.sleep(0.01)
 
     def set_high(self):
+
         while True:
             self.pi.write(config.gpio_output_1,pigpio.HIGH)
             time.sleep(1)
             self.pi.write(config.gpio_output_1,pigpio.LOW)
             time.sleep(1)
+
+    def set_ptz_camera(self,pan_angle_pwm=1500,tilt_angle_pwm=1500):
+        """
+        设置云台舵机角度
+        :param pan_angle: 500-2500
+        :param tilt_angle: 500-2500
+        :return:
+        """
+        self.pi.set_servo_pulsewidth(config.pin_pan, pan_angle_pwm)
+        self.pi.set_servo_pulsewidth(config.pin_tilt,tilt_angle_pwm)
+        self.pan_angle_pwm = pan_angle_pwm
+        self.tilt_angle_pwm = tilt_angle_pwm
+        # i = 0
+        # b_add = 1
+        # min_i = 0
+        # max_i = 10
+        # while True:
+        #     angle_pwm = 500 + i * 200
+        #     self.pi.set_servo_pulsewidth(config.pin_pan,angle_pwm)
+        #     self.pi.set_servo_pulsewidth(config.pin_tilt,angle_pwm)
+        #     i += 1 * b_add
+        #     if i >= max_i or i <= min_i:
+        #         b_add = -1 if b_add == 1 else 1
+        #     time.sleep(0.3)
 
 if __name__ == '__main__':
     pi_main_obj = PiMain()
@@ -447,6 +474,7 @@ if __name__ == '__main__':
     #                                    baud=config.laser_baud, time_out=0.01)
     while True:
         try:
+            # 已经使用w,a,s,d,q,b,r,t,p,m,i,z,y,u,
             # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效
             key_input = input('please input:')
             # 前 后 左 右 停止  右侧电机是反桨叶 左侧电机是正桨叶
@@ -625,8 +653,31 @@ if __name__ == '__main__':
             # m 退出
             elif key_input.startswith('m'):
                 break
-            elif key_input.startswith('i'):
+            elif key_input.startswith('o'):
                 pi_main_obj.set_high()
+            # 设置云台相机角度
+            elif key_input.startswith('y'):
+                pi_main_obj.set_ptz_camera(1500, 1500)
+            elif key_input.startswith('u'):
+                pan_angle_pwm = pi_main_obj.pan_angle_pwm + 200
+                if pan_angle_pwm>2500:
+                    pan_angle_pwm=2500
+                pi_main_obj.set_ptz_camera(pan_angle_pwm, pi_main_obj.tilt_angle_pwm)
+            elif key_input.startswith('i'):
+                pan_angle_pwm = pi_main_obj.pan_angle_pwm - 200
+                if pan_angle_pwm < 500:
+                    pan_angle_pwm = 500
+                pi_main_obj.set_ptz_camera(pan_angle_pwm, pi_main_obj.tilt_angle_pwm)
+            elif key_input.startswith('j'):
+                tilt_angle_pwm = pi_main_obj.tilt_angle_pwm + 200
+                if tilt_angle_pwm > 2500:
+                    tilt_angle_pwm = 2500
+                pi_main_obj.set_ptz_camera(pi_main_obj.pan_angle_pwm, tilt_angle_pwm)
+            elif key_input.startswith('k'):
+                tilt_angle_pwm = pi_main_obj.tilt_angle_pwm - 200
+                if tilt_angle_pwm < 500:
+                    tilt_angle_pwm = 500
+                pi_main_obj.set_ptz_camera(pi_main_obj.pan_angle_pwm, tilt_angle_pwm)
             elif key_input.startswith('z'):
                 pi_main_obj.get_distance_dict()
         except KeyboardInterrupt:
