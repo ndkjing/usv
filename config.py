@@ -708,8 +708,8 @@ laser_hz = 40
 # 舵机输出
 steer_engine_pin = 27
 # gpio高低电平控制
-gpio_output_1 = 7
-gpio_output_2 = 8
+gpio_output_1 = 27
+gpio_output_2 = 22
 gpio_output_3 = 9
 gpio_output_4 = 9
 gpio_output_5 = 10
