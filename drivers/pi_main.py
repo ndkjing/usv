@@ -1,24 +1,17 @@
-import copy
-import threading
-import math
-import time
-import json
 import os
 import sys
+import threading
 
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root_dir)
-
-from utils import lng_lat_calculate
 from utils import log
 from drivers import pi_softuart
 import config
 import pigpio
 import time
-import numpy as np
-import cv2
 
 logger = log.LogHandler('pi_log')
+
 
 class PiMain:
     def __init__(self):
@@ -86,6 +79,13 @@ class PiMain:
         # 云台舵机角度
         self.pan_angle_pwm = 1500
         self.tilt_angle = 1500
+        # 记录继电器输出电平 1 高电平 0 低电平
+        self.left_motor_output = 0
+        self.right_motor_output = 0
+        self.alarm_light_output = 0
+        self.left_sidelight_output = 0
+        self.right_sidelight_output = 0
+
     def get_left_ultrasonic_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.left_rx, tx_pin=config.left_tx,
                                       baud=config.ultrasonic_baud)
@@ -363,7 +363,7 @@ class PiMain:
                 else:
                     self.right_pwm = self.right_pwm + (self.target_right_pwm - self.right_pwm) // abs(
                         self.target_right_pwm - self.right_pwm) * 5
-                print('self.left_pwm,self.target_left_pwm',self.left_pwm,self.target_left_pwm)
+                print('self.left_pwm,self.target_left_pwm', self.left_pwm, self.target_left_pwm)
                 self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
                 self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
                 time.sleep(sleep_time)
@@ -381,7 +381,6 @@ class PiMain:
         # print(time.time(), 'left_pwm:', self.left_pwm, 'right_pwm:', self.right_pwm)
 
     def set_steer_engine(self, angle):
-        # print('angle_pwm', angle)
         self.pi.set_PWM_dutycycle(config.steer_engine_pin, angle)
 
     def get_distance_dict(self):
@@ -436,25 +435,57 @@ class PiMain:
                 b_add = -1 if b_add == 1 else 1
             time.sleep(0.01)
 
-    def set_high(self):
+    def set_gpio(self, control_left_motor=False,
+                  control_right_motor=False,
+                  control_alarm_light=False,
+                  control_left_sidelight=False,
+                  control_right_sidelight=False
+                  ):
+        if control_left_motor:
+            if self.left_motor_output:
+                self.pi.write(config.gpio_output_1, pigpio.LOW)
+                self.left_motor_output = 0
+            else:
+                self.pi.write(config.gpio_output_1, pigpio.HIGH)
+                self.left_motor_output = 1
+        if control_right_motor:
+            if self.right_motor_output:
+                self.pi.write(config.gpio_output_2, pigpio.LOW)
+                self.right_motor_output = 0
+            else:
+                self.pi.write(config.gpio_output_2, pigpio.HIGH)
+                self.right_motor_output = 1
+        if control_alarm_light:
+            if self.alarm_light_output:
+                self.pi.write(config.gpio_output_3, pigpio.LOW)
+                self.alarm_light_output = 0
+            else:
+                self.pi.write(config.gpio_output_3, pigpio.HIGH)
+                self.alarm_light_output = 1
+        if control_left_sidelight:
+            if self.left_sidelight_output:
+                self.pi.write(config.gpio_output_4, pigpio.LOW)
+                self.left_sidelight_output = 0
+            else:
+                self.pi.write(config.gpio_output_4, pigpio.HIGH)
+                self.left_sidelight_output = 1
+        if control_right_sidelight:
+            if self.right_sidelight_output:
+                self.pi.write(config.gpio_output_5, pigpio.LOW)
+                self.right_sidelight_output = 0
+            else:
+                self.pi.write(config.gpio_output_5, pigpio.HIGH)
+                self.right_sidelight_output = 1
 
-        while True:
-            self.pi.write(config.gpio_output_1,pigpio.HIGH)
-            self.pi.write(config.gpio_output_2, pigpio.HIGH)
-            time.sleep(2)
-            self.pi.write(config.gpio_output_1, pigpio.LOW)
-            self.pi.write(config.gpio_output_2, pigpio.LOW)
-            time.sleep(2)
-
-    def set_ptz_camera(self,pan_angle_pwm=1500,tilt_angle_pwm=1500):
+    def set_ptz_camera(self, pan_angle_pwm=1500, tilt_angle_pwm=1500):
         """
         设置云台舵机角度
-        :param pan_angle: 500-2500
-        :param tilt_angle: 500-2500
+        :param pan_angle_pwm: 500-2500 设置水平角度
+        :param tilt_angle_pwm: 500-2500  设置垂直角度
         :return:
         """
         self.pi.set_servo_pulsewidth(config.pin_pan, pan_angle_pwm)
-        self.pi.set_servo_pulsewidth(config.pin_tilt,tilt_angle_pwm)
+        self.pi.set_servo_pulsewidth(config.pin_tilt, tilt_angle_pwm)
         self.pan_angle_pwm = pan_angle_pwm
         self.tilt_angle_pwm = tilt_angle_pwm
         # i = 0
@@ -470,17 +501,28 @@ class PiMain:
         #         b_add = -1 if b_add == 1 else 1
         #     time.sleep(0.3)
 
+
 if __name__ == '__main__':
     pi_main_obj = PiMain()
-    # laser_obj = pi_softuart.PiSoftuart(pi=pi_main_obj.pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx,
-    #                                    baud=config.laser_baud, time_out=0.01)
     loop_change_pwm_thread = threading.Thread(target=pi_main_obj.loop_change_pwm)
     loop_change_pwm_thread.start()
-    # loop_change_pwm_thread.join()
     while True:
         try:
-            # 已经使用w,a,s,d,q,b,r,t,p,m,i,z,y,u,
-            # w,a,s,d 为前后左右，q为后退 按键后需要按回车才能生效
+            # 已经使用w,a,s,d,q,  r,t  ,y,u,i,o,p,  f
+            # w,a,s,d 为前后左右，q为停止 按键后需要按回车才能生效
+            print('w,a,s,d 为前后左右，q为停止\n'
+                  'r,t 左右抽水泵\n'
+                  'y,u,i,o,p 摄像头舵机 y回中 u右  i左  o上   p下\n'
+                  'f  测距\n'
+                  'g  获取gps数据\n'
+                  'h  获取罗盘数据\n'
+                  'j  声光报警器\n'
+                  'k  左舷灯\n'
+                  'l  右舷灯\n'
+                  'z 退出\n'
+                  'x  接受遥控器输入\n'
+                  'c  声呐数据\n'
+                  '')
             key_input = input('please input:')
             # 前 后 左 右 停止  右侧电机是反桨叶 左侧电机是正桨叶
             gear = None
@@ -524,167 +566,71 @@ if __name__ == '__main__':
                     pi_main_obj.right()
             elif key_input == 'q':
                 pi_main_obj.stop()
-            # 返航
-            elif key_input.startswith('b'):
-                if not os.path.exists(config.home_location_path):
-                    print('不存在home点')
-                    continue
-                with open(config.home_location_path, 'r') as f:
-                    home_lng_lat_json = json.load(f)
-                home_lng_lat = home_lng_lat_json['home_lng_lat']
-                print('home_lng_lat', home_lng_lat)
-                pi_main_obj.home_lng_lat = home_lng_lat
-                print('目标地点', pi_main_obj.home_lng_lat)
-                home_distance = lng_lat_calculate.distanceFromCoordinate(
-                    pi_main_obj.lng_lat[0],
-                    pi_main_obj.lng_lat[1],
-                    pi_main_obj.home_lng_lat[0],
-                    pi_main_obj.home_lng_lat[1])
-                while home_distance > config.arrive_distance:
-                    home_distance = lng_lat_calculate.distanceFromCoordinate(
-                        pi_main_obj.lng_lat[0],
-                        pi_main_obj.lng_lat[1],
-                        pi_main_obj.home_lng_lat[0],
-                        pi_main_obj.home_lng_lat[1])
-                    if int(time.time()) % 2 == 0:
-                        print('距离目标点距离: ', home_distance)
-                    left_pwm, right_pwm = pi_main_obj.point_control(
-                        pi_main_obj.home_lng_lat)
-                    print('left_pwm, right_pwm', left_pwm, right_pwm)
-                    pi_main_obj.pi_obj.set_pwm(left_pwm, right_pwm)
-                    time.sleep(config.pid_interval)
-                pi_main_obj.pi_obj.stop()
-            # 角度控制
             elif key_input.startswith('r'):
-                try:
-                    theta = int(key_input[1:])
-                    print('theta:', theta)
-                    if theta > 0:
-                        target_theta = (pi_main_obj.theta + theta) % 360
-                    else:
-                        target_theta = (pi_main_obj.theta + (360 + theta)) % 360
-                    error_theta = abs(target_theta - pi_main_obj.theta)
-                    while error_theta > 10:
-                        left_pwm, right_pwm = pi_main_obj.yaw_control(theta)
-                        if int(time.time()) % 2 == 0:
-                            print('left_pwm, right_pwm', left_pwm, right_pwm)
-                        pi_main_obj.forward(left_pwm, right_pwm)
-                        time.sleep(config.pid_interval)
-                except Exception as e:
-                    print({'error': e})
-            # 到达目标点控制
+                pi_main_obj.set_gpio(control_left_motor=True)
             elif key_input.startswith('t'):
-                point_x = None
-                point_y = None
-                try:
-                    str_x, str_y = key_input[1:].split(',')
-                    point_x = int(str_x)
-                    point_y = int(str_y)
-                    print(point_x, point_y)
-                    theta = math.atan2(point_x, point_y)
-                except Exception as e:
-                    print({'error': e})
-                    continue
-                if theta >= 0:
-                    theta = (360 + theta - 90) % 360
-                else:
-                    theta = (360 - abs(theta) + 90) % 360
-                # 距离转换为经纬度
-                target_lng_lat = lng_lat_calculate.one_point_diatance_to_end(
-                    pi_main_obj.lng_lat[0],
-                    pi_main_obj.lng_lat[1],
-                    math.sqrt(
-                        math.pow(
-                            point_x,
-                            point_y)),
-                    theta)
-                distance = lng_lat_calculate.distanceFromCoordinate(
-                    pi_main_obj.lng_lat[0],
-                    pi_main_obj.lng_lat[1],
-                    target_lng_lat[0],
-                    target_lng_lat[1])
-                while distance > config.arrive_distance:
-                    distance = lng_lat_calculate.distanceFromCoordinate(
-                        pi_main_obj.lng_lat[0],
-                        pi_main_obj.lng_lat[1],
-                        target_lng_lat[0],
-                        target_lng_lat[1])
-                    if int(time.time()) % 2 == 0:
-                        print('距离目标点距离: ', distance)
-                    left_pwm, right_pwm = pi_main_obj.point_control(
-                        target_lng_lat)
-                    print('left_pwm, right_pwm', left_pwm, right_pwm)
-                    pi_main_obj.forward(left_pwm, right_pwm)
-                    time.sleep(config.pid_interval)
-            # 简单走矩形区域
-            elif key_input.startswith('p'):
-                # 半边长
-                half_w = int(key_input[1:])
-                point_list_status = [0, 0, 0, 0]
-                point_list = []
-                p1 = lng_lat_calculate.one_point_diatance_to_end(pi_main_obj.lng_lat[0], pi_main_obj.lng_lat[1], 45,
-                                                                 half_w * 2)
-                p2 = lng_lat_calculate.one_point_diatance_to_end(pi_main_obj.lng_lat[0], pi_main_obj.lng_lat[1], 135,
-                                                                 half_w * 2)
-                p3 = lng_lat_calculate.one_point_diatance_to_end(pi_main_obj.lng_lat[0], pi_main_obj.lng_lat[1], 225,
-                                                                 half_w * 2)
-                p4 = lng_lat_calculate.one_point_diatance_to_end(pi_main_obj.lng_lat[0], pi_main_obj.lng_lat[1], 315,
-                                                                 half_w * 2)
-                point_list.append(p1)
-                point_list.append(p2)
-                point_list.append(p3)
-                point_list.append(p4)
-                while point_list_status.count(0) > 0:
-                    index = point_list_status.index(0)
-                    distance = lng_lat_calculate.distanceFromCoordinate(
-                        pi_main_obj.lng_lat[0],
-                        pi_main_obj.lng_lat[1],
-                        point_list[index][0],
-                        point_list[index][1])
-                    while distance > config.arrive_distance:
-                        distance = lng_lat_calculate.distanceFromCoordinate(
-                            pi_main_obj.lng_lat[0],
-                            pi_main_obj.lng_lat[1],
-                            point_list[index][0],
-                            point_list[index][1])
-                        left_pwm, right_pwm = pi_main_obj.point_control(point_list[index])
-                        if int(time.time()) % 2 == 0:
-                            print('距离目标点距离: ', distance)
-                            print('left_pwm, right_pwm', left_pwm, right_pwm)
-                        pi_main_obj.forward(left_pwm, right_pwm)
-                        time.sleep(config.pid_interval)
-                    point_list_status[index] = 1
-                pi_main_obj.stop()
-            # m 退出
-            elif key_input.startswith('m'):
-                break
-            elif key_input.startswith('o'):
-                pi_main_obj.set_high()
+                pi_main_obj.set_gpio(control_right_motor=True)
             # 设置云台相机角度
             elif key_input.startswith('y'):
                 pi_main_obj.set_ptz_camera(1500, 1500)
             elif key_input.startswith('u'):
-                pan_angle_pwm = pi_main_obj.pan_angle_pwm + 200
-                if pan_angle_pwm>2500:
-                    pan_angle_pwm=2500
+                pan_angle_pwm = pi_main_obj.pan_angle_pwm + 100
+                if pan_angle_pwm > 2500:
+                    pan_angle_pwm = 2500
                 pi_main_obj.set_ptz_camera(pan_angle_pwm, pi_main_obj.tilt_angle_pwm)
             elif key_input.startswith('i'):
-                pan_angle_pwm = pi_main_obj.pan_angle_pwm - 200
+                pan_angle_pwm = pi_main_obj.pan_angle_pwm - 100
                 if pan_angle_pwm < 500:
                     pan_angle_pwm = 500
                 pi_main_obj.set_ptz_camera(pan_angle_pwm, pi_main_obj.tilt_angle_pwm)
-            elif key_input.startswith('j'):
-                tilt_angle_pwm = pi_main_obj.tilt_angle_pwm + 200
+            elif key_input.startswith('o'):
+                tilt_angle_pwm = pi_main_obj.tilt_angle_pwm + 100
                 if tilt_angle_pwm > 2500:
                     tilt_angle_pwm = 2500
                 pi_main_obj.set_ptz_camera(pi_main_obj.pan_angle_pwm, tilt_angle_pwm)
-            elif key_input.startswith('k'):
-                tilt_angle_pwm = pi_main_obj.tilt_angle_pwm - 200
+            elif key_input.startswith('p'):
+                tilt_angle_pwm = pi_main_obj.tilt_angle_pwm - 100
                 if tilt_angle_pwm < 500:
                     tilt_angle_pwm = 500
                 pi_main_obj.set_ptz_camera(pi_main_obj.pan_angle_pwm, tilt_angle_pwm)
-            elif key_input.startswith('z'):
+            # 获取激光雷达测距数据
+            elif key_input.startswith('f'):
                 pi_main_obj.get_distance_dict()
+            elif key_input.startswith('g'):
+                key_input = input('input:  C0  开始  C1 结束 其他为读取 >')
+                if key_input == 'C0':
+                    theta = pi_main_obj.compass_obj.read_compass(send_data='C0')
+                elif key_input == 'C1':
+                    theta = pi_main_obj.compass_obj.read_compass(send_data='C1')
+                else:
+                    theta = pi_main_obj.compass_obj.read_compass()
+                print('theta', theta)
+            elif key_input.startswith('h'):
+                gps_data = pi_main_obj.gps_obj.read_gps()
+                print('gps_data', gps_data)
+            # 控制声光报警器
+            elif key_input.startswith('j'):
+                pi_main_obj.set_gpio(control_alarm_light=True)
+            # 控制左舷灯
+            elif key_input.startswith('k'):
+                pi_main_obj.set_gpio(control_left_sidelight=True)
+            # 控制右舷灯
+            elif key_input.startswith('l'):
+                pi_main_obj.set_gpio(control_right_sidelight=True)
+            elif key_input.startswith('x'):
+                while True:
+                    try:
+                        pi_main_obj.set_pwm(set_left_pwm=pi_main_obj.channel_row_input_pwm, set_right_pwm=pi_main_obj.channel_col_input_pwm)
+                    except KeyboardInterrupt:
+                        break
+            # TODO
+            # 返航
+            # 角度控制
+            # 到达目标点控制
+            # 简单走矩形区域
+            # m 退出
+            elif key_input.startswith('z'):
+                break
         except KeyboardInterrupt:
             break
         except Exception as e:
