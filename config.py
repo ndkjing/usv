@@ -235,7 +235,7 @@ max_pwm = 1800
 # 最小pwm值
 min_pwm = 1200
 # 停止中位pwm
-stop_pwm = 1510
+stop_pwm = 1500
 # 左侧电机正反桨  0 正桨叶   1 反桨叶
 left_motor_cw = 1
 # 右侧电机正反桨  0 正桨叶   1 反桨叶
