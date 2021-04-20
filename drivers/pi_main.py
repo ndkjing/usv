@@ -9,7 +9,7 @@ from drivers import pi_softuart
 import config
 import pigpio
 import time
-
+import copy
 logger = log.LogHandler('pi_log')
 
 
@@ -212,6 +212,40 @@ class PiMain:
         遥控器输入
         :return:
         """
+        remote_forward_pwm = copy.deepcopy(int(self.channel_col_input_pwm))
+        remote_steer_pwm = copy.deepcopy(int(self.channel_row_input_pwm))
+        # print('remote', remote_forward_pwm, remote_steer_pwm)
+        # 防止抖动
+        if 1600 > remote_forward_pwm > 1400:
+            remote_forward_pwm = config.stop_pwm
+        # 防止过大值
+        elif remote_forward_pwm >= 1900:
+            remote_forward_pwm = 1900
+        # 防止初始读取到0电机会转动， 设置为1500
+        elif remote_forward_pwm < 1000:
+            remote_forward_pwm = config.stop_pwm
+        # 防止过小值
+        elif 1100 >= remote_forward_pwm >= 1000:
+            remote_forward_pwm = 1100
+        # 防止抖动
+        if 1600 > remote_steer_pwm > 1400:
+            remote_steer_pwm = config.stop_pwm
+        # 防止过大值
+        elif remote_steer_pwm >= 1900:
+            remote_steer_pwm = 1900
+        # 防止初始读取到0电机会转动， 设置为1500
+        elif remote_steer_pwm < 1000:
+            remote_steer_pwm = config.stop_pwm
+        # 防止过小值
+        elif 1100 >= remote_steer_pwm >= 1000:
+            remote_steer_pwm = 1100
+        if remote_forward_pwm == config.stop_pwm and remote_steer_pwm == config.stop_pwm:
+            remote_left_pwm = config.stop_pwm
+            remote_right_pwm = config.stop_pwm
+        else:
+            remote_left_pwm = 1500 + (remote_forward_pwm - 1500) + (remote_steer_pwm - 1500)
+            remote_right_pwm = 1500 + (remote_forward_pwm - 1500) - (remote_steer_pwm - 1500)
+        return remote_left_pwm, remote_right_pwm
         while True:
             try:
                 remote_forward_pwm = int(self.channel_col_input_pwm)
@@ -435,25 +469,26 @@ class PiMain:
                 b_add = -1 if b_add == 1 else 1
             time.sleep(0.01)
 
-    def set_gpio(self, control_left_motor=False,
-                  control_right_motor=False,
-                  control_alarm_light=False,
-                  control_left_sidelight=False,
-                  control_right_sidelight=False
-                  ):
+    def set_gpio(self,
+                 control_left_motor=False,
+                 control_right_motor=False,
+                 control_alarm_light=False,
+                 control_left_sidelight=False,
+                 control_right_sidelight=False
+                 ):
         if control_left_motor:
             if self.left_motor_output:
-                self.pi.write(config.gpio_output_1, pigpio.LOW)
+                self.pi.write(config.draw_left_gpio_pin, pigpio.LOW)
                 self.left_motor_output = 0
             else:
-                self.pi.write(config.gpio_output_1, pigpio.HIGH)
+                self.pi.write(config.draw_left_gpio_pin, pigpio.HIGH)
                 self.left_motor_output = 1
         if control_right_motor:
             if self.right_motor_output:
-                self.pi.write(config.gpio_output_2, pigpio.LOW)
+                self.pi.write(config.draw_right_gpio_pin, pigpio.LOW)
                 self.right_motor_output = 0
             else:
-                self.pi.write(config.gpio_output_2, pigpio.HIGH)
+                self.pi.write(config.draw_right_gpio_pin, pigpio.HIGH)
                 self.right_motor_output = 1
         if control_alarm_light:
             if self.alarm_light_output:
@@ -620,7 +655,8 @@ if __name__ == '__main__':
             elif key_input.startswith('x'):
                 while True:
                     try:
-                        pi_main_obj.set_pwm(set_left_pwm=pi_main_obj.channel_row_input_pwm, set_right_pwm=pi_main_obj.channel_col_input_pwm)
+                        pi_main_obj.set_pwm(set_left_pwm=pi_main_obj.channel_row_input_pwm,
+                                            set_right_pwm=pi_main_obj.channel_col_input_pwm)
                     except KeyboardInterrupt:
                         break
             # TODO

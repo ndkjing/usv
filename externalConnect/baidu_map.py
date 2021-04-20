@@ -254,19 +254,22 @@ class BaiduMap(object):
                 for j in range(h):
                     # 对应原图上坐标点
                     pix_point = (i,j)
-
                     in_cnt = cv2.pointPolygonTest(self.pool_cnts, pix_point, True)
                     if in_cnt > 0:
-                        self.obstacle_map[j,i] = 1
+                        self.obstacle_map[j,i] = 255
                     # else:
                     #     row_map_data[j, i] = 0
             if b_show:
                 cv2.imshow('obstacle_map', self.obstacle_map)
                 cv2.waitKey(0)
 
-    def update_obstacle_map(self, b_show=False):
-        pass
-
+    def update_obstacle_map(self, gaode_point,b_show=False):
+        pix_target = obj.gaode_lng_lat_to_pix(gaode_point)
+        print('pix_target',pix_target)
+        self.obstacle_map[pix_target[1], pix_target[0]] = 0
+        if b_show:
+            cv2.imshow('obstacle_map', self.obstacle_map)
+            cv2.waitKey(0)
     # 获取地址的url
     def get_url(self, addr):
         self.addr = addr
@@ -469,7 +472,7 @@ class BaiduMap(object):
     # 区域像素点转换为经纬度坐标点
     def pix_to_gps(self, cnts):
         """
-        :param cnt:
+        :param cnt:二维矩阵
         :return:
         """
         self.logger.debug({'pix_to_gps len(cnts)': len(cnts)})
@@ -640,15 +643,19 @@ class BaiduMap(object):
 
 if __name__ == '__main__':
     # src_point = [114.4314,30.523558]  喻家湖
-    src_point = [114.4314, 30.523558]
+    src_point = [114.431400, 30.523558]
     obj = BaiduMap(src_point, zoom=15,
                    scale=1, map_type=MapType.gaode)
     # print(obj.get_pool_name())
     pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=False)
     scan_cnts = obj.scan_pool(meter_gap=50, safe_meter_distance=10, b_show=False)
-    obj.build_obstacle_map(True)
     return_gps, return_gps_list = obj.pix_to_gps(scan_cnts)
+    return_gps1, return_gps_list1 = obj.pix_to_gps([obj.center_cnt])
     print(return_gps, return_gps_list)
+    print(return_gps1, return_gps_list1)
+    obj.build_obstacle_map(False)
+    point = [src_point[0]+0.001,src_point[1]+0.002]
+    obj.update_obstacle_map(point,True)
     # obj.surround_pool(b_show=True)
     # obj = BaiduMap([114.393142, 30.558963], zoom=15,map_type=MapType.baidu)
     # obj = BaiduMap([114.718257,30.648004],zoom=14)
@@ -695,3 +702,4 @@ if __name__ == '__main__':
         # 求坐标点最大外围矩阵
         (x, y, w, h) = cv2.boundingRect(pool_cnts)
         print('(x, y, w, h)', (x, y, w, h))
+

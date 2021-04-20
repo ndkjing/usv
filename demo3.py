@@ -66,4 +66,13 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    from scipy.stats import norm
+    a = np.array([0.1,0.2,0.3])
+    b = np.array([3,2,1])
+    print(a.dot(b))
+    print(a*b)
+    print(norm.cdf(10,0,2))
+    print(norm.pdf(10,0,2))
+    print(norm.pdf(0,0,2))
+    print(math.hypot(3, 4))
