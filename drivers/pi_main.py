@@ -45,9 +45,9 @@ class PiMain:
         self.channel_col_input_pwm = 0
         # 当前是否是遥控器控制
         self.b_start_remote = 0
+        self.cb3 = self.pi.callback(11, pigpio.EITHER_EDGE, self.mycallback)
         self.cb1 = self.pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, self.mycallback)
         self.cb2 = self.pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, self.mycallback)
-        self.cb3 = self.pi.callback(config.start_remote_pin, pigpio.EITHER_EDGE, self.mycallback)
         if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             self.left_ultrasonic_obj = self.get_left_ultrasonic_obj()
             self.right_ultrasonic_obj = self.get_right_ultrasonic_obj()
@@ -75,7 +75,12 @@ class PiMain:
         self.distance_dict = {}
         self.obstacle_list = [0, 0, 0, 0, 0]
         # 设置为GPIO输出模式 输出高低电平
-        self.pi.set_mode(config.gpio_output_1, pigpio.OUTPUT)
+        # self.pi.set_mode(config.side_left_gpio_pin, pigpio.OUTPUT)
+        # self.pi.set_mode(config.side_right_gpio_pin, pigpio.OUTPUT)
+        # self.pi.set_mode(config.headlight_gpio_pin, pigpio.OUTPUT)
+        # self.pi.set_mode(config.audio_light_alarm_gpio_pin, pigpio.OUTPUT)
+        self.pi.set_mode(config.draw_left_gpio_pin, pigpio.OUTPUT)
+        self.pi.set_mode(config.draw_right_gpio_pin, pigpio.OUTPUT)
         # 云台舵机角度
         self.pan_angle_pwm = 1500
         self.tilt_angle = 1500
@@ -207,89 +212,92 @@ class PiMain:
                     self.lng_lat = gps_data[0:2]
                     self.lng_lat_error = gps_data[2]
 
-    def remote_control(self):
-        """
-        遥控器输入
-        :return:
-        """
-        remote_forward_pwm = copy.deepcopy(int(self.channel_col_input_pwm))
-        remote_steer_pwm = copy.deepcopy(int(self.channel_row_input_pwm))
-        # print('remote', remote_forward_pwm, remote_steer_pwm)
-        # 防止抖动
-        if 1600 > remote_forward_pwm > 1400:
-            remote_forward_pwm = config.stop_pwm
-        # 防止过大值
-        elif remote_forward_pwm >= 1900:
-            remote_forward_pwm = 1900
-        # 防止初始读取到0电机会转动， 设置为1500
-        elif remote_forward_pwm < 1000:
-            remote_forward_pwm = config.stop_pwm
-        # 防止过小值
-        elif 1100 >= remote_forward_pwm >= 1000:
-            remote_forward_pwm = 1100
-        # 防止抖动
-        if 1600 > remote_steer_pwm > 1400:
-            remote_steer_pwm = config.stop_pwm
-        # 防止过大值
-        elif remote_steer_pwm >= 1900:
-            remote_steer_pwm = 1900
-        # 防止初始读取到0电机会转动， 设置为1500
-        elif remote_steer_pwm < 1000:
-            remote_steer_pwm = config.stop_pwm
-        # 防止过小值
-        elif 1100 >= remote_steer_pwm >= 1000:
-            remote_steer_pwm = 1100
-        if remote_forward_pwm == config.stop_pwm and remote_steer_pwm == config.stop_pwm:
-            remote_left_pwm = config.stop_pwm
-            remote_right_pwm = config.stop_pwm
-        else:
-            remote_left_pwm = 1500 + (remote_forward_pwm - 1500) + (remote_steer_pwm - 1500)
-            remote_right_pwm = 1500 + (remote_forward_pwm - 1500) - (remote_steer_pwm - 1500)
-        return remote_left_pwm, remote_right_pwm
-        while True:
-            try:
-                remote_forward_pwm = int(self.channel_col_input_pwm)
-                remote_steer_pwm = int(self.channel_row_input_pwm)
-                # print('remote', remote_forward_pwm, remote_steer_pwm)
-                # 防止抖动
-                if remote_forward_pwm < 1550 and remote_forward_pwm > 1450:
-                    remote_forward_pwm = config.stop_pwm
-                # 防止过大值
-                elif remote_forward_pwm >= 1900:
-                    remote_forward_pwm = 1900
-                # 防止初始读取到0电机会转动， 设置为1500
-                elif remote_forward_pwm < 1000:
-                    remote_forward_pwm = config.stop_pwm
-                # 防止过小值
-                elif remote_forward_pwm <= 1100 and remote_forward_pwm >= 1000:
-                    remote_forward_pwm = 1100
-                # 防止抖动
-                if remote_steer_pwm < 1550 and remote_steer_pwm > 1450:
-                    remote_steer_pwm = config.stop_pwm
-                # 防止过大值
-                elif remote_steer_pwm >= 1900:
-                    remote_steer_pwm = 1900
-                # 防止初始读取到0电机会转动， 设置为1500
-                elif remote_steer_pwm < 1000:
-                    remote_steer_pwm = config.stop_pwm
-                # 防止过小值
-                elif remote_steer_pwm <= 1100 and remote_steer_pwm >= 1000:
-                    remote_steer_pwm = 1100
-                # print('remote_forward_pwm,remote_steer_pwm',remote_forward_pwm,remote_steer_pwm)
-                remote_left_pwm = 1500 + (remote_forward_pwm - 1500) + (remote_steer_pwm - 1500)
-                remote_right_pwm = 1500 + (remote_forward_pwm - 1500) - (remote_steer_pwm - 1500)
-                # self.set_pwm(remote_left_pwm, remote_right_pwm)
-                time.sleep(0.1)
-            except Exception as e:
-                logger.error({'error': e})
+    # def remote_control(self):
+    #     """
+    #     遥控器输入
+    #     :return:
+    #     """
+    #     remote_forward_pwm = copy.deepcopy(int(self.channel_col_input_pwm))
+    #     remote_steer_pwm = copy.deepcopy(int(self.channel_row_input_pwm))
+    #     # print('remote', remote_forward_pwm, remote_steer_pwm)
+    #     # 防止抖动
+    #     if 1600 > remote_forward_pwm > 1400:
+    #         remote_forward_pwm = config.stop_pwm
+    #     # 防止过大值
+    #     elif remote_forward_pwm >= 1900:
+    #         remote_forward_pwm = 1900
+    #     # 防止初始读取到0电机会转动， 设置为1500
+    #     elif remote_forward_pwm < 1000:
+    #         remote_forward_pwm = config.stop_pwm
+    #     # 防止过小值
+    #     elif 1100 >= remote_forward_pwm >= 1000:
+    #         remote_forward_pwm = 1100
+    #     # 防止抖动
+    #     if 1600 > remote_steer_pwm > 1400:
+    #         remote_steer_pwm = config.stop_pwm
+    #     # 防止过大值
+    #     elif remote_steer_pwm >= 1900:
+    #         remote_steer_pwm = 1900
+    #     # 防止初始读取到0电机会转动， 设置为1500
+    #     elif remote_steer_pwm < 1000:
+    #         remote_steer_pwm = config.stop_pwm
+    #     # 防止过小值
+    #     elif 1100 >= remote_steer_pwm >= 1000:
+    #         remote_steer_pwm = 1100
+    #     if remote_forward_pwm == config.stop_pwm and remote_steer_pwm == config.stop_pwm:
+    #         remote_left_pwm = config.stop_pwm
+    #         remote_right_pwm = config.stop_pwm
+    #     else:
+    #         remote_left_pwm = 1500 + (remote_forward_pwm - 1500) + (remote_steer_pwm - 1500)
+    #         remote_right_pwm = 1500 + (remote_forward_pwm - 1500) - (remote_steer_pwm - 1500)
+    #     return remote_left_pwm, remote_right_pwm
+    #     while True:
+    #         try:
+    #             remote_forward_pwm = int(self.channel_col_input_pwm)
+    #             remote_steer_pwm = int(self.channel_row_input_pwm)
+    #             # print('remote', remote_forward_pwm, remote_steer_pwm)
+    #             # 防止抖动
+    #             if remote_forward_pwm < 1550 and remote_forward_pwm > 1450:
+    #                 remote_forward_pwm = config.stop_pwm
+    #             # 防止过大值
+    #             elif remote_forward_pwm >= 1900:
+    #                 remote_forward_pwm = 1900
+    #             # 防止初始读取到0电机会转动， 设置为1500
+    #             elif remote_forward_pwm < 1000:
+    #                 remote_forward_pwm = config.stop_pwm
+    #             # 防止过小值
+    #             elif remote_forward_pwm <= 1100 and remote_forward_pwm >= 1000:
+    #                 remote_forward_pwm = 1100
+    #             # 防止抖动
+    #             if remote_steer_pwm < 1550 and remote_steer_pwm > 1450:
+    #                 remote_steer_pwm = config.stop_pwm
+    #             # 防止过大值
+    #             elif remote_steer_pwm >= 1900:
+    #                 remote_steer_pwm = 1900
+    #             # 防止初始读取到0电机会转动， 设置为1500
+    #             elif remote_steer_pwm < 1000:
+    #                 remote_steer_pwm = config.stop_pwm
+    #             # 防止过小值
+    #             elif remote_steer_pwm <= 1100 and remote_steer_pwm >= 1000:
+    #                 remote_steer_pwm = 1100
+    #             # print('remote_forward_pwm,remote_steer_pwm',remote_forward_pwm,remote_steer_pwm)
+    #             remote_left_pwm = 1500 + (remote_forward_pwm - 1500) + (remote_steer_pwm - 1500)
+    #             remote_right_pwm = 1500 + (remote_forward_pwm - 1500) - (remote_steer_pwm - 1500)
+    #             # self.set_pwm(remote_left_pwm, remote_right_pwm)
+    #             time.sleep(0.1)
+    #         except Exception as e:
+    #             logger.error({'error': e})
 
     def mycallback(self, gpio, level, tick):
+        # if int(gpio) == int(config.channel_1_pin):
+        # print('gpio', gpio)
         if level == 0:
             if int(gpio) == int(config.channel_1_pin):
                 self.tick_0[0] = tick
                 if self.tick_1[0] is not None:
                     diff = pigpio.tickDiff(self.tick_1[0], tick)
                     self.channel_row_input_pwm = int(diff)
+                    # print('self.channel_row_input_pwm ', self.channel_row_input_pwm ,diff)
                     self.temp_read[0][self.count[0]] = diff
                     self.save[0] = int(self.temp_read[0][self.count[0]])
             if int(gpio) == int(config.channel_3_pin):
@@ -299,7 +307,7 @@ class PiMain:
                     self.channel_col_input_pwm = int(diff)
                     self.temp_read[1][self.count[1]] = diff
                     self.save[1] = int(self.temp_read[1][self.count[1]])
-            if int(gpio) == int(config.start_remote_pin):
+            if int(gpio) == 11:
                 self.tick_0[2] = tick
                 if self.tick_1[2] is not None:
                     diff = pigpio.tickDiff(self.tick_1[2], tick)
@@ -312,7 +320,7 @@ class PiMain:
                 self.tick_1[0] = tick
             if gpio == int(config.channel_3_pin):
                 self.tick_1[1] = tick
-            if gpio == int(config.start_remote_pin):
+            if gpio == 11:
                 self.tick_1[2] = tick
 
     def forward(self, left_pwm=None, right_pwm=None):
@@ -397,8 +405,8 @@ class PiMain:
                 else:
                     self.right_pwm = self.right_pwm + (self.target_right_pwm - self.right_pwm) // abs(
                         self.target_right_pwm - self.right_pwm) * 5
-                print('self.left_pwm,self.target_left_pwm', self.left_pwm, self.target_left_pwm)
-                print('config.right_pwm_pin', config.left_pwm_pin, config.right_pwm_pin)
+                # print('self.left_pwm,self.target_left_pwm', self.left_pwm, self.target_left_pwm)
+                # print('config.right_pwm_pin', config.left_pwm_pin, config.right_pwm_pin)
                 self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
                 self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
                 time.sleep(sleep_time)
@@ -493,21 +501,21 @@ class PiMain:
                 self.right_motor_output = 1
         if control_alarm_light:
             if self.alarm_light_output:
-                self.pi.write(config.gpio_output_3, pigpio.LOW)
+                self.pi.write(config.audio_light_alarm_gpio_pin, pigpio.LOW)
                 self.alarm_light_output = 0
             else:
-                self.pi.write(config.gpio_output_3, pigpio.HIGH)
+                self.pi.write(config.audio_light_alarm_gpio_pin, pigpio.HIGH)
                 self.alarm_light_output = 1
         if control_left_sidelight:
             if self.left_sidelight_output:
-                self.pi.write(config.gpio_output_4, pigpio.LOW)
+                self.pi.write(config.side_left_gpio_pin, pigpio.LOW)
                 self.left_sidelight_output = 0
             else:
-                self.pi.write(config.gpio_output_4, pigpio.HIGH)
+                self.pi.write(config.side_left_gpio_pin, pigpio.HIGH)
                 self.left_sidelight_output = 1
         if control_right_sidelight:
             if self.right_sidelight_output:
-                self.pi.write(config.gpio_output_5, pigpio.LOW)
+                self.pi.write(config.side_right_gpio_pin, pigpio.LOW)
                 self.right_sidelight_output = 0
             else:
                 self.pi.write(config.gpio_output_5, pigpio.HIGH)
@@ -632,7 +640,7 @@ if __name__ == '__main__':
             # 获取激光雷达测距数据
             elif key_input.startswith('f'):
                 pi_main_obj.get_distance_dict()
-            elif key_input.startswith('g'):
+            elif key_input.startswith('h'):
                 key_input = input('input:  C0  开始  C1 结束 其他为读取 >')
                 if key_input == 'C0':
                     theta = pi_main_obj.compass_obj.read_compass(send_data='C0')
@@ -641,7 +649,7 @@ if __name__ == '__main__':
                 else:
                     theta = pi_main_obj.compass_obj.read_compass()
                 print('theta', theta)
-            elif key_input.startswith('h'):
+            elif key_input.startswith('g'):
                 gps_data = pi_main_obj.gps_obj.read_gps()
                 print('gps_data', gps_data)
             # 控制声光报警器
@@ -656,6 +664,10 @@ if __name__ == '__main__':
             elif key_input.startswith('x'):
                 while True:
                     try:
+                        time.sleep(0.1)
+                        print('b_start_remote', pi_main_obj.b_start_remote)
+                        print('channel_row_input_pwm',pi_main_obj.channel_row_input_pwm)
+                        print('channel_col_input_pwm',pi_main_obj.channel_col_input_pwm)
                         pi_main_obj.set_pwm(set_left_pwm=pi_main_obj.channel_row_input_pwm,
                                             set_right_pwm=pi_main_obj.channel_col_input_pwm)
                     except KeyboardInterrupt:

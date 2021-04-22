@@ -106,9 +106,14 @@ class PiSoftuart(object):
                 count, data = self._pi.bb_serial_read(self._rx_pin)
                 # print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
-                    str_data = data.decode('utf-8')
+                    # str = (str, errors='ignore')
+                    str_data = data.decode('utf-8', errors='ignore')
+                    # print('str_data', str_data)
                     for i in str_data.split('$'):
-                        if i.startswith('GPGGA'):
+                        # print('i',i)
+                        i = i.strip()
+                        # print('i',i)
+                        if i.startswith('GPGGA')or i.startswith('$GPGGA') or i.startswith('GNGGA')or i.startswith('$GNGGA'):
                             gps_data = i
                             data_list = gps_data.split(',')
                             if len(data_list) < 8:

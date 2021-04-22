@@ -7,7 +7,8 @@ import platform
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
-    os.mkdir(maps_dir)
+    os.mkdir(os.path.join(root_path, 'statics'))
+    os.mkdir(os.path.join(root_path, 'statics', 'mapsData'))
 
 # 保存所有地图湖泊信息位置
 # map_data_path = os.path.join(maps_dir, 'map.json')
@@ -666,7 +667,10 @@ home_location_path = os.path.join(root_path, 'home_location.json')
 b_use_start = False
 
 ########### 树莓派GPIO端口相关设置 均使用BCM编码端口
-old_pin=True
+# 是否使用超声波
+b_use_ultrasonic = 0
+old_pin=False
+"""
 if old_pin:
     # 使用树莓派控制电机
     b_use_pi = True
@@ -674,7 +678,6 @@ if old_pin:
     left_pwm_pin = 18
     # 右侧电机信号输出控制口
     right_pwm_pin = 24
-
     # 是否使用遥控器
     b_use_remote_control = True
     # usv a 遥控器  水平是1通道   垂直是2通道
@@ -684,8 +687,6 @@ if old_pin:
     channel_3_pin = 19
     # 开启遥控器输入pin口
     start_remote_pin = 13
-    # 是否使用超声波
-    b_use_ultrasonic = 0
     ultrasonic_baud = 9600
     left_rx = 22
     left_tx = 27
@@ -719,61 +720,62 @@ if old_pin:
     pin_pan = 21
     pin_tilt = 20
 else:
-    # 使用树莓派控制电机
-    b_use_pi = True
-    # 左侧电机信号输出控制口
-    left_pwm_pin = 4
-    # 右侧电机信号输出控制口
-    right_pwm_pin = 17
-    # 软串口罗盘
-    b_pin_compass = 1
-    pin_compass_baud = 9600
-    pin_compass_tx = 27
-    pin_compass_rx = 22
-    # 软串口gps
-    b_pin_gps = 1
-    pin_gps_baud = 9600
-    pin_gps_tx = 10
-    pin_gps_rx = 9
-    # 是否使用遥控器
-    b_use_remote_control = True
-    # usv a 遥控器  水平是1通道   垂直是2通道
-    # 水平
-    channel_1_pin = 11
-    # 垂直
-    channel_3_pin = 5
-    # 开启遥控器输入pin口
-    start_remote_pin = 6
-    # 激光雷达
-    b_laser = 1
-    laser_tx = 13
-    laser_rx = 19
-    laser_baud = 115200
-    laser_hz = 40
-    # 激光雷达舵机输出
-    steer_engine_pin = 26
-    # 舷灯 左舷灯 右舷灯
-    side_left_gpio_pin = 18
-    side_right_gpio_pin = 23
-    # 前大灯 和舷灯共用
-    headlight_gpio_pin = 23
-    # 声光报警器
-    audio_light_alarm_gpio_pin = 24
-    # 左抽水泵  右抽水泵
-    draw_left_gpio_pin = 25
-    draw_right_gpio_pin = 8
-    # 水下摄像头云台水平和俯仰
-    pin_pan = 7
-    pin_tilt = 12
-    ## 声呐
-    # RX
-    sonar_rx = 16
-    # TX
-    sonar_tx = 20
-    # 声呐舵机
-    sonar_steer = 21
-    # 漏水传感器
-    leak_gpio_pin = 21
+"""
+# 使用树莓派控制电机
+b_use_pi = True
+# 左侧电机信号输出控制口
+left_pwm_pin = 4
+# 右侧电机信号输出控制口
+right_pwm_pin = 17
+# 软串口罗盘
+b_pin_compass = 1
+pin_compass_baud = 9600
+pin_compass_tx = 27
+pin_compass_rx = 22
+# 软串口gps
+b_pin_gps = 1
+pin_gps_baud = 115200
+pin_gps_tx = 10
+pin_gps_rx = 9
+# 是否使用遥控器
+b_use_remote_control = True
+# usv a 遥控器  水平是1通道   垂直是2通道
+# 水平
+channel_1_pin = 5
+# 垂直
+channel_3_pin = 6
+# 开启遥控器输入pin口
+channel_remote_pin = 11
+# 激光雷达
+b_laser = 1
+laser_tx = 13
+laser_rx = 19
+laser_baud = 115200
+laser_hz = 40
+# 激光雷达舵机输出
+steer_engine_pin = 26
+# 舷灯 左舷灯 右舷灯
+side_left_gpio_pin = 18
+side_right_gpio_pin = 23
+# 前大灯 和舷灯共用
+headlight_gpio_pin = 23
+# 声光报警器
+audio_light_alarm_gpio_pin = 24
+# 左抽水泵  右抽水泵
+draw_left_gpio_pin = 25
+draw_right_gpio_pin = 8
+# 水下摄像头云台水平和俯仰
+pin_pan = 16
+pin_tilt = 16
+## 声呐
+# RX
+sonar_rx = 16
+# TX
+sonar_tx = 20
+# 声呐舵机
+sonar_steer = 21
+# 漏水传感器
+leak_gpio_pin = 21
 
 # 使用角度  1 使用罗盘1角度   2 使用罗盘2角度  3 使用经纬度移动计算角度
 if home_debug:
