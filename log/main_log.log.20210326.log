@@ -1,0 +1,6 @@
+2021-03-25 16:25:21,390 main.py[line:70] INFO {'binding status': 1}
+2021-03-25 16:29:23,537 main.py[line:280] ERROR restart send_com_data_thread
+2021-03-25 16:29:25,539 main.py[line:280] ERROR restart send_com_data_thread
+2021-03-25 16:33:13,531 main.py[line:72] ERROR {'binding_data error': JSONDecodeError('Expecting value: line 1 column 1 (char 0)')}
+2021-03-26 08:56:48,187 main.py[line:70] INFO {'binding status': 1}
+2021-03-26 08:59:01,906 main.py[line:70] INFO {'binding status': 1}
