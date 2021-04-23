@@ -20,7 +20,7 @@ from utils import check_network
 from storage import save_data
 import config
 from moveControl.pathTrack import simple_pid, pure_pursuit
-
+from dataAnalyze import utils
 
 class ShipStatus(enum.Enum):
     """
@@ -144,6 +144,8 @@ class DataManager:
         self.ping = 0
         # 避障提示消息
         self.obstacle_info = ''
+        self.lng_lat_list = []
+        self.deep_list = []
 
     # 读取函数会阻塞 必须使用线程
     def get_com_data(self):
@@ -314,20 +316,6 @@ class DataManager:
                 self.logger.error({'error': e})
                 time.sleep(1)
 
-    # 设置返航点经纬度
-    # def set_home_location(self):
-    #     if self.lng_lat is None:
-    #         self.logger.error('当前无GPS信号，无法设置返航点')
-    #     else:
-    #         if abs(self.lng_lat[0]) < 10:
-    #             # gps为靠近0
-    #             self.logger.error('当前无GPS信号弱，无法设置返航点')
-    #         else:
-    #             self.home_lng_lat = copy.deepcopy(self.lng_lat)
-    #         # print({'保存路径':config.home_location_path})
-    #         # with open(config.home_location_path,'w') as f:
-    #         #     json.dump({'home_lng_lat':self.home_lng_lat},f)
-
     # 获取备份罗盘数据
     def get_compass1_data(self):
         if os.path.exists(config.compass_port1):
@@ -401,6 +389,22 @@ class DataManager:
 
     # 抽水
     def draw(self):
+        """
+        接受mqtt抽水开始
+            当前在抽水：
+                已经超时：
+                    停止抽水并更新发送数据标志位
+                未超时：
+                    继续抽水
+            未抽水：
+                开始抽水并开始计时
+        接受mqtt停止抽水：
+            当前在抽水：
+                发送停止
+        :return:无
+        """
+        # 判断开关是否需要打开或者关闭
+        self.check_switch()
         # 判断是否抽水
         if self.server_data_obj.mqtt_send_get_obj.b_draw:
             if self.draw_start_time is None or self.current_b_draw == 0:
@@ -425,7 +429,7 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.b_draw = 0
                     self.draw_start_time = None
         else:
-            if self.current_b_draw is None or self.current_b_draw == 1:
+            if self.current_b_draw == 1:
                 self.com_data_obj.send_data('A0Z')
                 self.current_b_draw = 0
                 self.draw_start_time = None
@@ -453,47 +457,6 @@ class DataManager:
         # 清空路径
         self.smooth_path_lng_lat = None
         b_log_points = 1
-
-    # 检查遥控器输入
-    def check_remote_pwm(self):
-        """
-        检查遥控器PWM波值
-        :return:
-        """
-        remote_forward_pwm = copy.deepcopy(int(self.pi_main_obj.channel_col_input_pwm))
-        remote_steer_pwm = copy.deepcopy(int(self.pi_main_obj.channel_row_input_pwm))
-        # print('remote', remote_forward_pwm, remote_steer_pwm)
-        # 防止抖动
-        if 1600 > remote_forward_pwm > 1400:
-            remote_forward_pwm = config.stop_pwm
-        # 防止过大值
-        elif remote_forward_pwm >= 1900:
-            remote_forward_pwm = 1900
-        # 防止初始读取到0电机会转动， 设置为1500
-        elif remote_forward_pwm < 1000:
-            remote_forward_pwm = config.stop_pwm
-        # 防止过小值
-        elif 1100 >= remote_forward_pwm >= 1000:
-            remote_forward_pwm = 1100
-        # 防止抖动
-        if 1600 > remote_steer_pwm > 1400:
-            remote_steer_pwm = config.stop_pwm
-        # 防止过大值
-        elif remote_steer_pwm >= 1900:
-            remote_steer_pwm = 1900
-        # 防止初始读取到0电机会转动， 设置为1500
-        elif remote_steer_pwm < 1000:
-            remote_steer_pwm = config.stop_pwm
-        # 防止过小值
-        elif 1100 >= remote_steer_pwm >= 1000:
-            remote_steer_pwm = 1100
-        if remote_forward_pwm == config.stop_pwm and remote_steer_pwm == config.stop_pwm:
-            remote_left_pwm = config.stop_pwm
-            remote_right_pwm = config.stop_pwm
-        else:
-            remote_left_pwm = 1500 + (remote_forward_pwm - 1500) + (remote_steer_pwm - 1500)
-            remote_right_pwm = 1500 + (remote_forward_pwm - 1500) - (remote_steer_pwm - 1500)
-        return remote_left_pwm, remote_right_pwm
 
     # 检查是否需要返航
     def check_backhome(self):
@@ -909,34 +872,29 @@ class DataManager:
                 self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
             # 调试模式下无法使用遥控器
             if not config.home_debug and config.current_platform == config.CurrentPlatform.pi:
-                remote_left_pwm, remote_right_pwm = self.check_remote_pwm()
+                remote_left_pwm, remote_right_pwm = self.pi_main_obj.check_remote_pwm()
             else:
                 remote_left_pwm, remote_right_pwm = config.stop_pwm, config.stop_pwm
             # 遥控器模式
-            if not config.home_debug and config.current_platform == config.CurrentPlatform.pi and self.pi_main_obj.b_start_remote:
+            if not config.home_debug and config.current_platform == config.CurrentPlatform.pi and \
+                    self.pi_main_obj.b_start_remote:
                 self.pi_main_obj.set_pwm(set_left_pwm=remote_left_pwm, set_right_pwm=remote_right_pwm)
             # 手动模式
             elif manul_or_auto == 1:
-                if d == 0:
-                    temp_com_data = 1
-                    pwm_data = {'1': 1900, '3': 1900}
-                elif d == 90:
-                    temp_com_data = 3
-                    pwm_data = {'1': 1900, '3': 1100}
-                elif d == 180:
-                    temp_com_data = 2
-                    pwm_data = {'1': 1100, '3': 1100}
-                elif d == 270:
-                    temp_com_data = 4
-                    pwm_data = {'1': 1100, '3': 1900}
-                elif d == -1:
-                    temp_com_data = 5
-                    pwm_data = {'1': 1500, '3': 1500}
-                else:
-                    temp_com_data = None
-                    pwm_data = None
                 # 使用飞控
-                if config.b_use_pix and pwm_data is not None:
+                if config.b_use_pix:
+                    if d == 0:
+                        pwm_data = {'1': 1900, '3': 1900}
+                    elif d == 90:
+                        pwm_data = {'1': 1900, '3': 1100}
+                    elif d == 180:
+                        pwm_data = {'1': 1100, '3': 1100}
+                    elif d == 270:
+                        pwm_data = {'1': 1100, '3': 1900}
+                    elif d == -1:
+                        pwm_data = {'1': 1500, '3': 1500}
+                    else:
+                        pwm_data = None
                     if last_control is None or last_control != pwm_data:
                         last_control = pwm_data
                         self.drone_obj.channel_control(pwm_data)
@@ -971,9 +929,6 @@ class DataManager:
                     time.sleep(0.5)
                     self.clear_status()
                     continue
-                # 第一次进入路径规划时候的点设置为返航点  取消
-                # if self.home_lng_lat is None:
-                #     self.set_home_location()
                 if self.plan_start_time is None:
                     self.plan_start_time = time.time()
                 # 设置自动路径搜索为False
@@ -986,6 +941,7 @@ class DataManager:
                 if self.server_data_obj.mqtt_send_get_obj.row_gap:
                     if not self.server_data_obj.mqtt_send_get_obj.b_start:
                         b_log_points = 0
+                        time.sleep(0.2)
                         continue
                 # 计算总里程
                 for index, gaode_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points):
@@ -1030,10 +986,6 @@ class DataManager:
                     change_count_list = [0] * len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)
                     for index, sampling_point_gps in enumerate(
                             self.server_data_obj.mqtt_send_get_obj.sampling_points_gps):
-                        # 判断该点是否已经到达
-                        # print('sampling_points',self.server_data_obj.mqtt_send_get_obj.sampling_points)
-                        # print('sampling_points_gps',self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)
-                        # print('sampling_points_status',self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
                         # 如果状态清空则跳出
                         if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) <= 0:
                             break
@@ -1058,7 +1010,6 @@ class DataManager:
                             b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
                                                                          b_force_arrive=True)
                         change_count_list[index] += 1
-                        # print('sample_distance b_arrive_sample',sample_distance,b_arrive_sample)
                         if b_arrive_sample:
                             # 更新目标点提示消息
                             self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] = 1
@@ -1158,6 +1109,14 @@ class DataManager:
             detect_data.update({'mapId': self.data_define_obj.pool_code})
             status_data.update({'ping': round(self.ping, 1)})
             status_data.update({'current_lng_lat': self.gaode_lng_lat})
+            if config.b_sonar:
+                self.lng_lat_list.append(self.gaode_lng_lat)
+                deep_ = self.pi_main_obj.get_sonar_data()
+                deep = deep_ if deep_ else 0
+                self.deep_list.append(deep)
+                assert len(self.deep_list)==len(self.lng_lat_list)
+                if len(self.deep_list)%20==0:
+                    utils.generate_geojson(self.lng_lat_list,self.deep_list,b_save_data=True)
             if self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat:
                 status_data.update({'home_lng_lat': self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat})
                 self.home_lng_lat = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
@@ -1438,6 +1397,20 @@ class DataManager:
                 else:
                     self.ping = ping
             time.sleep(1)
+
+    # 检查开关相关信息
+    def check_switch(self):
+        """
+        对应继电器均需要高电平触发
+        :return:
+        """
+        if self.server_data_obj.mqtt_send_get_obj.headlight:
+            self.pi_main_obj.set_gpio(control_headlight=1)
+        if self.server_data_obj.mqtt_send_get_obj.audio_light:
+            self.pi_main_obj.set_gpio(control_alarm_light=1)
+        if self.server_data_obj.mqtt_send_get_obj.side_light:
+            self.pi_main_obj.set_gpio(control_left_sidelight=1,
+                                      control_right_sidelight=1)
 
     # 重启电脑
     @staticmethod

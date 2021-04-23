@@ -143,6 +143,12 @@ class MqttSendGet:
         self.b_sampling = 0
         # 抽水控制位  0为不抽水　1为抽水
         self.b_draw = 0
+        # 前大灯 1 打开前大灯 没有该键表示不打开
+        self.headlight = 0
+        # 声光报警器 1 打开声光报警器 没有该键表示不打开
+        self.audio_light = 0
+        # 舷灯 1 允许打开舷灯 没有该键表示不打开
+        self.side_light = 1
         # 启动还是停止
         self.b_start = 0
         # 基础设置数据
@@ -221,13 +227,26 @@ class MqttSendGet:
                 switch_data = json.loads(msg.payload)
                 if switch_data.get('b_draw') is None:
                     self.logger.error('switch_data_处理控制数据没有b_draw b_sampling')
+                # 改变了暂时没用
                 if switch_data.get('b_sampling') is not None:
                     self.b_sampling = int(switch_data.get('b_sampling'))
                 if switch_data.get('b_draw') is not None:
                     self.b_draw = int(switch_data.get('b_draw'))
+                # 前大灯 1 打开前大灯 没有该键表示不打开
+                if switch_data.get('headlight') is not None:
+                    self.headlight = int(switch_data.get('headlight'))
+                # 声光报警器 1 打开声光报警器 没有该键表示不打开
+                if switch_data.get('audio_light') is not None:
+                    self.audio_light = int(switch_data.get('audio_light'))
+                # 舷灯 1 允许打开舷灯 没有该键表示不打开
+                if switch_data.get('side_light') is not None:
+                    self.side_light = int(switch_data.get('side_light'))
                 self.logger.info({'topic': topic,
                                   'b_sampling': switch_data.get('b_sampling'),
-                                  'b_draw': switch_data.get('b_draw')
+                                  'b_draw': switch_data.get('b_draw'),
+                                  'headlight': switch_data.get('headlight'),
+                                  'audio_light': switch_data.get('audio_light'),
+                                  'side_light': switch_data.get('side_light'),
                                   })
 
             # 处理初始点击确定湖数据

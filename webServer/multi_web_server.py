@@ -142,7 +142,6 @@ class WebServer:
         while True:
             # 循环等待一定时间
             time.sleep(config.check_status_interval)
-
             for ship_code in server_config.ship_code_list:
                 # 若是用户没有点击点
                 if self.server_data_obj_dict.get(
@@ -159,7 +158,6 @@ class WebServer:
                     for i in save_img_name_list:
                         print(os.path.join(save_img_dir, i))
                         os.remove(os.path.join(save_img_dir, i))
-
                 if self.current_map_type == baidu_map.MapType.gaode:
                     save_img_path = os.path.join(
                         save_img_dir, 'gaode_%f_%f_%i_%i.png' %
@@ -222,7 +220,6 @@ class WebServer:
                             self.logger.debug({'pool_info_data': pool_info_data})
                             continue
                     # 获取湖泊轮廓与中心点经纬度位置 _位置为提供前端直接绘图使用
-
                     _, self.baidu_map_obj_dict.get(ship_code).pool_lng_lats = self.baidu_map_obj_dict.get(
                         ship_code).pix_to_gps(pool_cnts)
                     _, self.baidu_map_obj_dict.get(ship_code).pool_center_lng_lat = self.baidu_map_obj_dict.get(
@@ -252,7 +249,6 @@ class WebServer:
                     # 本地保存经纬度信息，放大1000000倍 用来只保存整数
                     save_pool_lng_lats = [[int(i[0] * 1000000), int(i[1] * 1000000)]
                                           for i in self.baidu_map_obj_dict.get(ship_code).pool_lng_lats]
-
                     if not os.path.exists(config.local_map_data_path):
                         # 发送请求获取湖泊ID
                         self.logger.debug({'send_data': send_data})
@@ -479,6 +475,7 @@ class WebServer:
                 b_plan_path = True
 
         # 进行路径规划
+        print('server_config.b_use_path_planning and b_plan_path', server_config.b_use_path_planning and b_plan_path)
         if server_config.b_use_path_planning and b_plan_path:
             return_gaode_lng_lat_path = a_star.get_path(
                 baidu_map_obj=self.baidu_map_obj_dict.get(ship_code),
@@ -529,6 +526,7 @@ class WebServer:
             data=mqtt_send_path_planning_data,
             qos=1)
         self.logger.info({'mqtt_send_path_planning_data': mqtt_send_path_planning_data})
+
 
 if __name__ == '__main__':
     while True:

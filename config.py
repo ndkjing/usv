@@ -24,7 +24,8 @@ height_setting_path = os.path.join(root_path, 'statics', 'configs', 'height_sett
 height_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'height_setting_default.json')
 # 保存湖号和路径数据
 save_plan_path = os.path.join(root_path, 'statics', 'configs', 'save_plan_path.json')
-
+# 保存声呐信息路径
+save_sonar_path = os.path.join(root_path, 'statics', 'geojeson_data.json')
 
 class CurrentPlatform(enum.Enum):
     windwos = 1
@@ -669,9 +670,7 @@ b_use_start = False
 ########### 树莓派GPIO端口相关设置 均使用BCM编码端口
 # 是否使用超声波
 b_use_ultrasonic = 0
-old_pin=False
 """
-if old_pin:
     # 使用树莓派控制电机
     b_use_pi = True
     # 左侧电机信号输出控制口
@@ -723,6 +722,9 @@ else:
 """
 # 使用树莓派控制电机
 b_use_pi = True
+# 水下摄像头云台水平和俯仰
+pin_pan = 2
+pin_tilt = 3
 # 左侧电机信号输出控制口
 left_pwm_pin = 4
 # 右侧电机信号输出控制口
@@ -754,28 +756,31 @@ laser_baud = 115200
 laser_hz = 40
 # 激光雷达舵机输出
 steer_engine_pin = 26
+# 单片机串口
+stc_tx = 14
+stc_rx = 15
 # 舷灯 左舷灯 右舷灯
 side_left_gpio_pin = 18
 side_right_gpio_pin = 23
-# 前大灯 和舷灯共用
-headlight_gpio_pin = 23
-# 声光报警器
-audio_light_alarm_gpio_pin = 24
+# 前大灯
+headlight_gpio_pin = 24
 # 左抽水泵  右抽水泵
 draw_left_gpio_pin = 25
 draw_right_gpio_pin = 8
-# 水下摄像头云台水平和俯仰
-pin_pan = 16
-pin_tilt = 16
-## 声呐
+# 声光报警器
+audio_light_alarm_gpio_pin = 7
+# 漏水传感器
+leak_gpio_pin = 12
+# 声呐
+b_sonar = 0
 # RX
 sonar_rx = 16
 # TX
 sonar_tx = 20
+sonar_baud = 9600
 # 声呐舵机
 sonar_steer = 21
-# 漏水传感器
-leak_gpio_pin = 21
+
 
 # 使用角度  1 使用罗盘1角度   2 使用罗盘2角度  3 使用经纬度移动计算角度
 if home_debug:

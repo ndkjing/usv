@@ -1,9 +1,3 @@
-2021-04-09 14:11:24,121 main.py[line:70] INFO {'binding status': 1}
-2021-04-09 14:11:43,563 main.py[line:70] INFO {'binding status': 1}
-2021-04-10 14:04:57,272 main.py[line:70] INFO {'binding status': 1}
-2021-04-10 14:08:26,587 main.py[line:70] INFO {'binding status': 1}
-2021-04-10 14:08:57,681 main.py[line:70] INFO {'binding status': 1}
-2021-04-10 14:12:16,180 main.py[line:72] ERROR {'binding_data error': ConnectionError(MaxRetryError("HTTPConnectionPool(host='wuhanligong.xxlun.com', port=80): Max retries exceeded with url: /union/admin/xxl/device/binding/3c50f4c3-a9c1-4872-9f18-883af014380a (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001CD5A61A708>: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。'))"))}
-2021-04-10 15:51:37,264 main.py[line:70] INFO {'binding status': 1}
-2021-04-10 16:12:55,323 main.py[line:70] INFO {'binding status': 1}
-2021-04-10 16:13:12,976 main.py[line:70] INFO {'binding status': 1}
+2021-04-23 12:57:22,680 main.py[line:70] INFO {'binding status': 1}
+2021-04-23 13:14:40,285 main.py[line:70] INFO {'binding status': 1}
+2021-04-23 13:19:12,664 main.py[line:70] INFO {'binding status': 1}

@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
 import cv2
+import json
 import tqdm
 from externalConnect import baidu_map
 from utils import lng_lat_calculate
@@ -10,6 +11,7 @@ from utils import lng_lat_calculate
 EXTEND_AREA = 10.0  # [m] grid map extention length
 
 show_animation = True
+
 class SonarMap:
     """
     根据声呐检测深度构建地图
@@ -102,7 +104,40 @@ class SonarMap:
         cv2.imshow('sonar', self.sonar_map)
         cv2.waitKey(0)
 
+    @staticmethod
+    def generate_geojson(point_gps_list, deep_list=None, b_save_data=True):
+        """
+        传入经纬度，生成深度信息，结合在一起转化为geojson格式
+        :param point_gps_list 经纬度列表
+        ：param 深度信息列表 或者其他需要展示的数据列表
+        :return: geojson data
+        """
+        if not deep_list:
+            deep_list = [random.randrange(10, 50)/10.0 for i in point_gps_list]
+        return_json_data = {"type": "FeatureCollection","features":[]}
+        for deep,lng_lat in zip(deep_list,point_gps_list):
+            feature = {
+                  "type": "Feature",
+                  "properties": {
+                    "count": deep
+                  },
+                  # "std": 5,
+                  "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                      lng_lat[0],
+                      lng_lat[1]
+                    ]
+                  }
+            }
+            return_json_data.get("features").append(feature)
+        if b_save_data:
+            with open('geojeson_data.json','w') as f:
+                json.dump(return_json_data,f)
+        return return_json_data
 
 if __name__ == '__main__':
     sonar_obj = SonarMap()
-    sonar_obj.show_map()
+    import random
+    # sonar_obj.show_map()
+    print(random.randrange(1,5))

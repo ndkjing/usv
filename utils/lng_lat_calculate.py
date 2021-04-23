@@ -31,7 +31,7 @@ def angleFromCoordinate(long1, lat1, long2, lat2):
     deltaLon = long2 - long1
     theta = math.atan2(y, x)
     theta = math.degrees(theta)
-    print('row_theta',theta,'y, x',y, x)
+    # print('row_theta',theta,'y, x',y, x)
     if theta>0:
         theta = 360-theta
     else:

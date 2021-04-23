@@ -640,6 +640,37 @@ class BaiduMap(object):
             cv2.waitKey(0)
             cv2.destroyAllWindows()
 
+    @staticmethod
+    def generate_geojson(point_gps_list, deep_list=None):
+        """
+        传入经纬度，生成深度信息，结合在一起转化为geojson格式
+        :param point_gps_list 经纬度列表
+        ：param 深度信息列表 或者其他需要展示的数据列表
+        :return: geojson data
+        """
+        if not deep_list:
+            deep_list = [random.randrange(10, 50)/10.0 for i in point_gps_list]
+        return_json_data = {"type": "FeatureCollection","features":[]}
+        for deep,lng_lat in zip(deep_list,point_gps_list):
+            feature = {
+                  "type": "Feature",
+                  "properties": {
+                    "count": deep
+                  },
+                  # "std": 5,
+                  "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                      lng_lat[0],
+                      lng_lat[1]
+                    ]
+                  }
+            }
+            return_json_data.get("features").append(feature)
+        with open('geojeson_data.json','w') as f:
+            json.dump(return_json_data,f)
+        return return_json_data
+
 
 if __name__ == '__main__':
     # src_point = [114.4314,30.523558]  喻家湖
@@ -653,9 +684,13 @@ if __name__ == '__main__':
     return_gps1, return_gps_list1 = obj.pix_to_gps([obj.center_cnt])
     print(return_gps, return_gps_list)
     print(return_gps1, return_gps_list1)
-    obj.build_obstacle_map(False)
+    # obj.build_obstacle_map(False)
     point = [src_point[0]+0.001,src_point[1]+0.002]
-    obj.update_obstacle_map(point,True)
+    obj.scan_pool(meter_gap=50)
+    scan_point_gps1, scan_point_gps_list1 = obj.pix_to_gps(obj.scan_point_cnts)
+    print(len(scan_point_gps_list1),scan_point_gps_list1)
+    obj.generate_geojson(scan_point_gps_list1)
+    # obj.update_obstacle_map(point,True)
     # obj.surround_pool(b_show=True)
     # obj = BaiduMap([114.393142, 30.558963], zoom=15,map_type=MapType.baidu)
     # obj = BaiduMap([114.718257,30.648004],zoom=14)
@@ -670,7 +705,7 @@ if __name__ == '__main__':
     gaode_point = gaode_point1
     pix_target = obj.gaode_lng_lat_to_pix(gaode_point)
     print('pix_src', pix_src,'pix_target', pix_target)
-    b_show =1
+    b_show =0
     cv2.circle(
         obj.show_img, (pix_src[0], pix_src[1]), 5, [
             255, 0, 0], -1)

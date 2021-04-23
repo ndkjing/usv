@@ -159,6 +159,41 @@ class PiSoftuart(object):
             # print({'error read_laser': e})
             return 0
 
+    def read_sonar(self):
+        len_data = 10
+        try:
+            time.sleep(self._thread_ts / 2)
+            count, data = self._pi.bb_serial_read(self._rx_pin)
+            print(time.time(), 'count', count, 'data', data)
+            if count == len_data:
+                str_data = str(binascii.b2a_hex(data))[2:-1]
+                distance = int(str_data[2:-2], 16) / 1000
+                # print(time.time(),'distance',distance)
+                # 太近进入了盲区 返回 -1
+                if distance <= 0.25:
+                    return -1
+                else:
+                    return distance
+            elif count > len_data:
+                str_data = str(binascii.b2a_hex(data))[2:-1]
+                # print('str_data', str_data)
+                print(r'str_data.split', str_data.split('ff'))
+                # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
+                distance = 0
+                for i in str_data.split('ff'):
+                    if i:
+                        distance = int(i[:4], 16) / 1000
+                # print(str_data.split('ff')[0][:4])
+                if distance <= 0.25:
+                    return -1
+                else:
+                    return distance
+            time.sleep(self._thread_ts)
+        except Exception as e:
+            print({'error': e})
+            time.sleep(self._thread_ts / 2)
+            return None
+
     def write_data(self, msg):
         self._pi.wave_clear()
         self._pi.wave_add_serial(self._tx_pin, 9600, bytes.fromhex(msg))
