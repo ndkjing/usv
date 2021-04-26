@@ -780,7 +780,7 @@ sonar_tx = 20
 sonar_baud = 9600
 # 声呐舵机
 sonar_steer = 21
-
+test_all=0
 
 # 使用角度  1 使用罗盘1角度   2 使用罗盘2角度  3 使用经纬度移动计算角度
 if home_debug:

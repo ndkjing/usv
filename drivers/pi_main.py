@@ -11,10 +11,11 @@ import pigpio
 import time
 import copy
 logger = log.LogHandler('pi_log')
-
+b_sonar = 0
 
 class PiMain:
     def __init__(self):
+        import config
         # 树莓派pwm波控制对象
         self.left_pwm = config.stop_pwm
         self.right_pwm = config.stop_pwm
@@ -56,7 +57,7 @@ class PiMain:
             self.compass_obj = self.get_compass_obj()
         if config.b_laser and config.current_platform == config.CurrentPlatform.pi:
             self.laser_obj = self.get_laser_obj()
-        if config.b_sonar and config.current_platform == config.CurrentPlatform.pi:
+        if b_sonar and config.current_platform == config.CurrentPlatform.pi:
             self.sonar_obj = self.get_sonar_obj()
         # 左右侧超声波距离，没有返回None  -1 表示距离过近
         self.left_distance = None

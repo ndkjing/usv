@@ -809,6 +809,7 @@ class DataManager:
                                                                            delta_distance)
             self.last_left_pwm = left_pwm
             self.last_right_pwm = right_pwm
+            # 判断是否需要避障处理
             if not config.home_debug:
                 if b_stop:
                     self.obstacle_info = '1'
