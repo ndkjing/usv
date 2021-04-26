@@ -32,8 +32,8 @@ class PiMain:
         self.pi.set_PWM_range(config.right_pwm_pin, self.pice)
         self.init_motor()
         # 设置舵机输出
-        self.pi.set_PWM_frequency(config.steer_engine_pin, self.hz)  # 设定14号引脚产生的pwm波形的频率为50Hz
-        self.pi.set_PWM_range(config.steer_engine_pin, self.pice)
+        self.pi.set_PWM_frequency(26, self.hz)  # 设定引脚产生的pwm波形的频率为50Hz
+        self.pi.set_PWM_range(26, self.pice)
 
         self.save = [1, 161, 150, 157, 152, 142, 101]
         self.set = 1
@@ -46,9 +46,10 @@ class PiMain:
         self.channel_col_input_pwm = 0
         # 当前是否是遥控器控制
         self.b_start_remote = 0
-        self.cb3 = self.pi.callback(11, pigpio.EITHER_EDGE, self.mycallback)
         self.cb1 = self.pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, self.mycallback)
         self.cb2 = self.pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, self.mycallback)
+        self.cb3 = self.pi.callback(config.channel_remote_pin, pigpio.EITHER_EDGE, self.mycallback)
+
         if config.b_use_ultrasonic and config.current_platform == config.CurrentPlatform.pi:
             self.left_ultrasonic_obj = self.get_left_ultrasonic_obj()
             self.right_ultrasonic_obj = self.get_right_ultrasonic_obj()
@@ -56,9 +57,11 @@ class PiMain:
             self.gps_obj = self.get_gps_obj()
             self.compass_obj = self.get_compass_obj()
         if config.b_laser and config.current_platform == config.CurrentPlatform.pi:
-            self.laser_obj = self.get_laser_obj()
+            pass
+            # self.laser_obj = self.get_laser_obj()
         if b_sonar and config.current_platform == config.CurrentPlatform.pi:
-            self.sonar_obj = self.get_sonar_obj()
+            pass
+            # self.sonar_obj = self.get_sonar_obj()
         # 左右侧超声波距离，没有返回None  -1 表示距离过近
         self.left_distance = None
         self.right_distance = None
@@ -112,8 +115,7 @@ class PiMain:
                                       baud=config.pin_gps_baud)
 
     def get_laser_obj(self):
-        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx,
-                                      baud=config.laser_baud, time_out=0.01)
+        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=19, tx_pin=13, baud=115200,time_out=0.01)
 
     def get_sonar_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.sonar_rx, tx_pin=config.sonar_tx,
@@ -404,9 +406,10 @@ class PiMain:
         # print(time.time(), 'left_pwm:', self.left_pwm, 'right_pwm:', self.right_pwm)
 
     def set_steer_engine(self, angle):
-        self.pi.set_PWM_dutycycle(config.steer_engine_pin, angle)
+        self.pi.set_PWM_dutycycle(26, angle)
 
     def get_distance_dict(self):
+        self.laser_obj = self.get_laser_obj()
         b_add = 1
         # 角度限制
         steer_max_angle = config.steer_max_angle
@@ -425,10 +428,12 @@ class PiMain:
             laser_distance = 0
             for j in range(5):
                 laser_distance = self.laser_obj.read_laser()
+                print('laser_distance',laser_distance)
                 if laser_distance:
                     break
                 else:
                     laser_distance = 0
+                    time.sleep(0.05)
             # 角度左正右负
             angle = (i - 100) * 0.9
             print(i, angle)
@@ -456,7 +461,7 @@ class PiMain:
             i += 1 * b_add
             if i >= max_i or i <= min_i:
                 b_add = -1 if b_add == 1 else 1
-            time.sleep(0.01)
+            time.sleep(0.02)
 
     def set_gpio(self,
                  control_left_motor=0,
@@ -619,6 +624,9 @@ if __name__ == '__main__':
                 pi_main_obj.set_ptz_camera(pi_main_obj.pan_angle_pwm, tilt_angle_pwm)
             # 获取激光雷达测距数据
             elif key_input.startswith('f'):
+                # print('sad')
+                # pi_main_obj.set_steer_engine(1500)
+                # laser_distance = pi_main_obj.laser_obj.read_laser()
                 pi_main_obj.get_distance_dict()
             elif key_input.startswith('h'):
                 key_input = input('input:  C0  开始  C1 结束 其他为读取 >')
@@ -657,8 +665,9 @@ if __name__ == '__main__':
                         print('b_start_remote', pi_main_obj.b_start_remote)
                         print('channel_row_input_pwm',pi_main_obj.channel_row_input_pwm)
                         print('channel_col_input_pwm',pi_main_obj.channel_col_input_pwm)
-                        pi_main_obj.set_pwm(set_left_pwm=pi_main_obj.channel_row_input_pwm,
-                                            set_right_pwm=pi_main_obj.channel_col_input_pwm)
+                        if pi_main_obj.b_start_remote:
+                            pi_main_obj.set_pwm(set_left_pwm=pi_main_obj.channel_row_input_pwm,
+                                                set_right_pwm=pi_main_obj.channel_col_input_pwm)
                     except KeyboardInterrupt:
                         break
             # TODO

@@ -135,15 +135,18 @@ class PiSoftuart(object):
                 print({'error read_gps': e})
                 return None
 
-    def read_laser(self):
+    def read_laser(self, send_data=None):
         try:
+            if send_data:
+                self.write_data(send_data,baud=115200)
+                time.sleep(self._thread_ts*4)
             count, data = self._pi.bb_serial_read(self._rx_pin)
             # print(time.time(), type(data), count, data)
-            if count == 0:
+            if count == 0 :
                 time.sleep(1/config.laser_hz)
                 return 0
             str_data = str(binascii.b2a_hex(data))[2:-1]
-            # print(str_data)
+            # print('str_data', str_data, 'len(str_data)', len(str_data))
             for i in str_data.split('aa'):
                 if len(i) == 14 and '07' in i:
                     distance = int(i[6:12], 16) / 1000
@@ -156,7 +159,7 @@ class PiSoftuart(object):
             time.sleep(1/config.laser_hz)
         except Exception as e:
             time.sleep(1/config.laser_hz)
-            # print({'error read_laser': e})
+            print({'error read_laser': e})
             return 0
 
     def read_sonar(self):
@@ -194,9 +197,12 @@ class PiSoftuart(object):
             time.sleep(self._thread_ts / 2)
             return None
 
-    def write_data(self, msg):
+    def write_data(self, msg,baud=None):
         self._pi.wave_clear()
-        self._pi.wave_add_serial(self._tx_pin, 9600, bytes.fromhex(msg))
+        if baud:
+            self._pi.wave_add_serial(self._tx_pin, baud, bytes.fromhex(msg))
+        else:
+            self._pi.wave_add_serial(self._tx_pin, 9600, bytes.fromhex(msg))
         data = self._pi.wave_create()
         self._pi.wave_send_once(data)
         if self._pi.wave_tx_busy():
@@ -208,6 +214,7 @@ class PiSoftuart(object):
 
     def get_thread_ts(self):
         return self._thread_ts
+
 
 if __name__ == '__main__':
     pi = pigpio.pi()
@@ -237,7 +244,7 @@ if __name__ == '__main__':
     if b_gps:
         gps_obj = PiSoftuart(pi=pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx, baud=config.pin_gps_baud)
     if b_laser:
-        laser_obj = PiSoftuart(pi=pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx, baud=config.laser_baud,time_out=0.01)
+        laser_obj = PiSoftuart(pi=pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx, baud=115200,time_out=0.1)
     start_time = time.time()
     while True:
         if b_ultrasonic:
@@ -261,6 +268,10 @@ if __name__ == '__main__':
             gps_data = gps_obj.read_gps()
             print('gps_data', gps_data)
         if b_laser:
+            # key_input = input('input:  C0  开始  其他为读取 >')
+            # if key_input == 'C0':
+            #     theta = compass_obj.read_laser(send_data='C0')
+            # else:
             laser_data = laser_obj.read_laser()
             if laser_data:
                 print('laser_data', laser_data)

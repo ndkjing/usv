@@ -7,7 +7,7 @@ import math
 from enum import IntEnum
 
 import numpy as np
-from scipy.spatial.transform import Rotation as Rot
+# from scipy.spatial.transform import Rotation as Rot
 import matplotlib.pyplot as plt
 
 """
@@ -568,4 +568,5 @@ def main():  # pragma: no cover
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    print(bytes.fromhex('05'))
