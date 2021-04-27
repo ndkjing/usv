@@ -274,7 +274,7 @@ obstacle_avoid_type = 1
 # 路径规划方式
 path_plan_type = 1
 # 路径跟踪方式  1 pid    2 pure pursuit  3 宫凯调试的pid
-path_track_type = 3
+path_track_type = 1
 # 校准罗盘  0 不校准 1 开始校准 2 结束校准
 calibration_compass = 0
 # 地图规划最小单位，米

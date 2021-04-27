@@ -596,7 +596,7 @@ class DataManager:
     def get_avoid_obstacle_point(self, path_planning_point_gps):
         """
         根据障碍物地图获取下一个运动点
-        :return:
+        :return: 下一个目标点，是否需要紧急停止
         """
         next_point_lng_lat = path_planning_point_gps
         if config.b_laser:
@@ -1405,13 +1405,14 @@ class DataManager:
         对应继电器均需要高电平触发
         :return:
         """
-        if self.server_data_obj.mqtt_send_get_obj.headlight:
-            self.pi_main_obj.set_gpio(control_headlight=1)
-        if self.server_data_obj.mqtt_send_get_obj.audio_light:
-            self.pi_main_obj.set_gpio(control_alarm_light=1)
-        if self.server_data_obj.mqtt_send_get_obj.side_light:
-            self.pi_main_obj.set_gpio(control_left_sidelight=1,
-                                      control_right_sidelight=1)
+        if not config.home_debug:
+            if self.server_data_obj.mqtt_send_get_obj.headlight:
+                self.pi_main_obj.set_gpio(control_headlight=1)
+            if self.server_data_obj.mqtt_send_get_obj.audio_light:
+                self.pi_main_obj.set_gpio(control_alarm_light=1)
+            if self.server_data_obj.mqtt_send_get_obj.side_light:
+                self.pi_main_obj.set_gpio(control_left_sidelight=1,
+                                          control_right_sidelight=1)
 
     # 重启电脑
     @staticmethod
