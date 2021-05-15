@@ -126,7 +126,6 @@ while (np.linalg.norm(np.array(robot) - np.array(endpoint), 2) != 0):
                 while ((q <= n) and (his[q] < threshold)):
                     kl = q
                     q = q + 1
-                # print(kl,kr)
                 if (kl - kr > smax):   # 判断是否是宽波谷
                     c[j] = Round(kl - smax / 2)
                     c[j + 1] = Round(kr + smax / 2)

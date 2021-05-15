@@ -756,6 +756,11 @@ laser_baud = 115200
 laser_hz = 40
 # 激光雷达舵机输出
 steer_engine_pin = 26
+# 毫米波雷达 millimeter wave radar
+b_millimeter_wave = 0
+angle_ceil_size = 5
+detect_angle = 45
+ceil_max = 3 #  可以通过扇区阈值
 # 单片机串口
 stc_tx = 14
 stc_rx = 15

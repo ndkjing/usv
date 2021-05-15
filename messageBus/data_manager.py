@@ -629,14 +629,17 @@ class DataManager:
                     point_angle_index = 2
                 elif config.steer_max_angle * 1 / 5 <= angle_point_temp < config.steer_max_angle * 3 / 5:
                     point_angle_index = 3
-                elif config.steer_max_angle * 3 / 5 <= angle_point_temp < config.steer_max_angle :
+                elif config.steer_max_angle * 3 / 5 <= angle_point_temp < config.steer_max_angle:
                     point_angle_index = 4
+                elif angle_point_temp < -config.steer_max_angle :
+                    point_angle_index = -1
                 else:
                     point_angle_index = 5
                 # 到目标点角度不在指定避障范围内，不用避障
-                if point_angle_index == 5:
+                if point_angle_index == 5 or point_angle_index == -1:
                     return next_point_lng_lat, False
                 else:
+                    # 如果最近的两个扇区没有障碍物则可以通过，否则往没有障碍物扇区偏移
                     if self.pi_main_obj.obstacle_list[point_angle_index] == 1:
                         if point_angle_index == len(self.pi_main_obj.obstacle_list):
                             if self.pi_main_obj.obstacle_list[point_angle_index - 1] == 0:
@@ -686,7 +689,61 @@ class DataManager:
                                                                                                  ((angle_point - 180)+360)%360,
                                                                                                  config.min_steer_distance)
                     return next_point_lng_lat, False
-        if config.b_use_ultrasonic:
+        elif config.b_millimeter_wave:
+            # 不避障
+            if config.obstacle_avoid_type == 0:
+                return path_planning_point_gps, False
+            # 避障停止
+            elif config.obstacle_avoid_type == 1:
+                if 1 in self.pi_main_obj.obstacle_list[int(len(self.pi_main_obj.obstacle_list)/2)-1:int(len(self.pi_main_obj.obstacle_list)/2)+2]:
+                    return next_point_lng_lat, True
+            # 避障绕行，根据障碍物计算下一个目标点
+            elif config.obstacle_avoid_type == 2:
+                index_i = 0
+                j = 0
+                angle_point = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
+                                                                    self.lng_lat[1],
+                                                                    path_planning_point_gps[0],
+                                                                    path_planning_point_gps[1])
+                if angle_point > 180:
+                    angle_point_temp = angle_point - 360
+                else:
+                    angle_point_temp = angle_point
+                point_angle_index = int((angle_point_temp + config.detect_angle) / config.angle_ceil_size)
+                print('point_angle_index', point_angle_index)
+                c = np.zeros(len(self.pi_main_obj.obstacle_list))
+                while index_i < len(self.pi_main_obj.obstacle_list):
+                    kr = index_i
+                    index_j = index_i
+                    while index_j < len(self.pi_main_obj.obstacle_list) and self.pi_main_obj.obstacle_list[index_j] == 0:
+                        kl = index_j
+                        if (kl - kr >= config.ceil_max):  # 判断是否是宽波谷
+                            print(self.pi_main_obj.obstacle_list, round(kl - config.ceil_max / 2))
+                            v = round(kl - config.ceil_max / 2)
+                            c[j] = v
+                            j = j + 1
+                            break
+                        index_j = index_j + 1
+                    index_i += 1
+                # 没有可以通过通道
+                if j == 0:
+                    angle = (angle_point+180)%360
+                else:
+                    g = np.zeros(j)
+                    how = []
+                    for i in range(j):
+                        g[i] = c[i]
+                        howtemp = abs(g[i] - point_angle_index)
+                        how.append(howtemp)
+                    ft = how.index(min(how))
+                    kb = g[int(ft)]
+                    angle = kb * config.angle_ceil_size
+                next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                 self.lng_lat[1],
+                                                                                 angle,
+                                                                                 config.min_steer_distance)
+                return next_point_lng_lat, False
+        elif config.b_use_ultrasonic:
             if self.l_distance and self.r_distance:
                 if self.l_distance <= 1.5 or self.r_distance <= 1.5:
                     distance = 1.5
