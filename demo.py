@@ -747,14 +747,33 @@ def nelder_mead(f, x_start,
             nres.append([redx, score])
         res = nres
 
+def f(angle):
+    angle_key = int((angle - angle % 2))
+    print(angle % 2)
+    print(angle_key)
+
+class A:
+    def __init__(self):
+        self.a =1
+        self.b_obj =B(self)
+        print(self.b_obj.b)
+
+class B:
+    def __init__(self,obj=None):
+        if obj:
+            self.b = obj.a
+        else:
+            self.b = 2
+
 
 if __name__ == "__main__":
+    A()
     # test
-    import math
-    import numpy as np
-
-    def f(x):
-        return -math.sin(x[0]) * math.cos(x[1]) * (1. / (abs(x[2]) + 1))
-
-    # print(nelder_mead(f, np.array([0., 0., 0.])))
-    print( 1 if 2>1 else -1)
+    # import math
+    # import numpy as np
+    #
+    # def f(x):
+    #     return -math.sin(x[0]) * math.cos(x[1]) * (1. / (abs(x[2]) + 1))
+    #
+    # # print(nelder_mead(f, np.array([0., 0., 0.])))
+    # print( 1 if 2>1 else -1)

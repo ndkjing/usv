@@ -138,7 +138,7 @@ class MqttSendGet:
         self.path_id_confirm = None
 
         # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　360为停止
-        self.control_move_direction = str(360)
+        self.control_move_direction = 360
         # 测量控制位　0为不采样　1为采样
         self.b_sampling = 0
         # 抽水控制位  0为不抽水　1为抽水
@@ -213,7 +213,7 @@ class MqttSendGet:
                         self.use_col_gap = False
                         self.row_gap = 0
                 self.control_move_direction = int(control_data.get('move_direction'))
-                if self.control_move_direction ==-1:
+                if self.control_move_direction == -1:
                     self.sampling_points = []
                     self.path_planning_points = []
                     self.sampling_points_status = []

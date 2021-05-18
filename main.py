@@ -65,7 +65,6 @@ def main():
         if int(binding_data['flag']) != 1:
             if config.b_play_audio:
                 audios_manager.play_audio('register.mp3')
-            # TODO 未注册暂时跳过
             logger.error({'binding status': binding_data['flag']})
         logger.info({'binding status': binding_data['flag']})
     except Exception as e1:
@@ -76,23 +75,18 @@ def main():
         change_pwm_thread = threading.Thread(target=data_manager_obj.pi_main_obj.loop_change_pwm)
         if os.path.exists(config.stc_port):
             get_com_data_thread = threading.Thread(target=data_manager_obj.get_com_data)
-        if os.path.exists(config.compass_port):
-            compass_thread = threading.Thread(target=data_manager_obj.get_compass_data)
-        if os.path.exists(config.compass_port1):
-            compass_thread1 = threading.Thread(target=data_manager_obj.get_compass1_data)
-        if os.path.exists(config.gps_port):
-            gps_thread = threading.Thread(target=data_manager_obj.get_gps_data)
         # 树莓派对象数据处理
-        if config.b_use_ultrasonic:
-            left_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_left_distance)
-            right_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_right_distance)
         if config.b_pin_gps:
             soft_gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
+        if config.b_pin_compass:
             soft_compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
         if config.b_laser:
             get_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_distance_dict)
-    else:
-        pass
+        elif config.b_millimeter_wave:
+            get_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_distance_dict_millimeter)
+        if config.b_laser or config.b_millimeter_wave:
+            send_distacne_thread = threading.Thread(target=data_manager_obj.send_distacne)
+
     send_com_data_thread = threading.Thread(target=data_manager_obj.send_com_data)
     check_status_thread = threading.Thread(target=data_manager_obj.check_status)
     send_mqtt_data_thread = threading.Thread(target=data_manager_obj.send_mqtt_data)
@@ -101,32 +95,33 @@ def main():
     update_config_thread = threading.Thread(target=data_manager_obj.update_config)
     check_ping_delay_thread = threading.Thread(target=data_manager_obj.check_ping_delay)
 
-    check_status_thread.setDaemon(True)
-    send_com_data_thread.setDaemon(True)
-    send_mqtt_data_thread.setDaemon(True)
-    update_ship_gaode_thread.setDaemon(True)
-    update_lng_lat_thread.setDaemon(True)
-    update_config_thread.setDaemon(True)
-    check_ping_delay_thread.setDaemon(True)
+    # check_status_thread.setDaemon(True)
+    # send_com_data_thread.setDaemon(True)
+    # send_mqtt_data_thread.setDaemon(True)
+    # update_ship_gaode_thread.setDaemon(True)
+    # update_lng_lat_thread.setDaemon(True)
+    # update_config_thread.setDaemon(True)
+    # check_ping_delay_thread.setDaemon(True)
+    # send_distacne_thread.setDaemon(True)
 
-    if config.current_platform == config.CurrentPlatform.pi:
-        change_pwm_thread.setDaemon(True)
-        if os.path.exists(config.stc_port):
-            get_com_data_thread.setDaemon(True)
-        if os.path.exists(config.compass_port):
-            compass_thread.setDaemon(True)
-        if os.path.exists(config.compass_port1):
-            compass_thread1.setDaemon(True)
-        if os.path.exists(config.gps_port):
-            gps_thread.setDaemon(True)
-        if config.b_use_ultrasonic:
-            left_distance_thread.setDaemon(True)
-            right_distance_thread.setDaemon(True)
-        if config.b_pin_gps:
-            soft_compass_thread.setDaemon(True)
-            soft_gps_thread.setDaemon(True)
-        if config.b_laser:
-            get_distance_thread.setDaemon(True)
+    # if config.current_platform == config.CurrentPlatform.pi:
+    #     change_pwm_thread.setDaemon(True)
+    #     if os.path.exists(config.stc_port):
+    #         get_com_data_thread.setDaemon(True)
+    #     if os.path.exists(config.compass_port):
+    #         compass_thread.setDaemon(True)
+    #     if os.path.exists(config.compass_port1):
+    #         compass_thread1.setDaemon(True)
+    #     if os.path.exists(config.gps_port):
+    #         gps_thread.setDaemon(True)
+    #     if config.b_use_ultrasonic:
+    #         left_distance_thread.setDaemon(True)
+    #         right_distance_thread.setDaemon(True)
+    #     if config.b_pin_gps:
+    #         soft_compass_thread.setDaemon(True)
+    #         soft_gps_thread.setDaemon(True)
+    #     if config.b_laser:
+    #         get_distance_thread.setDaemon(True)
     check_status_thread.start()
     send_mqtt_data_thread.start()
     send_com_data_thread.start()
@@ -135,32 +130,19 @@ def main():
     update_config_thread.start()
     check_ping_delay_thread.start()
 
+
     if config.current_platform == config.CurrentPlatform.pi:
         change_pwm_thread.start()
         if os.path.exists(config.stc_port):
             get_com_data_thread.start()
-        if os.path.exists(config.compass_port):
-            compass_thread.start()
-        if os.path.exists(config.compass_port1):
-            time.sleep(0.15)
-            compass_thread1.start()
-        if os.path.exists(config.gps_port):
-            gps_thread.start()
-        if config.b_use_ultrasonic:
-            left_distance_thread.start()
-            right_distance_thread.start()
         if config.b_pin_gps:
             soft_compass_thread.start()
             soft_gps_thread.start()
-        if config.b_laser:
+        if config.b_laser or config.b_millimeter_wave:
             get_distance_thread.start()
+        if config.b_millimeter_wave:
+            send_distacne_thread.start()
 
-    # send_com_heart_thread.start()
-    # get_com_data_thread.join()
-    # send_mqtt_data_thread.join()
-    # send_com_data_thread.join()
-    # check_status_thread.join()
-    # send_com_heart_thread.join()
     print('home_debug', config.home_debug)
     thread_restart_time = 1
     while True:
@@ -171,66 +153,22 @@ def main():
                 change_pwm_thread = threading.Thread(target=data_manager_obj.pi_main_obj.loop_change_pwm)
                 change_pwm_thread.setDaemon(True)
                 change_pwm_thread.start()
+
             if os.path.exists(config.stc_port) and not get_com_data_thread.is_alive():
                 logger.error('restart get_com_data_thread')
                 try:
                     if data_manager_obj.com_data_obj.uart.is_open():
                         data_manager_obj.com_data_obj.uart.close()
-                    data_manager_obj.com_data_obj = data_manager_obj.get_com_obj(port=config.stc_port, baud=config.stc_baud)
+                    data_manager_obj.com_data_obj = data_manager_obj.get_com_obj(port=config.stc_port,
+                                                                                 baud=config.stc_baud,
+                                                                                 logger=None)
                 except Exception as e1:
                     logger.error({'串口关闭失败': 111, 'error': e1})
                 get_com_data_thread = threading.Thread(target=data_manager_obj.get_com_data)
                 get_com_data_thread.setDaemon(True)
                 get_com_data_thread.start()
                 time.sleep(thread_restart_time)
-            if os.path.exists(config.compass_port):
-                if not compass_thread.is_alive():
-                    logger.error('restart compass_thread')
-                    try:
-                        if data_manager_obj.pi_main_obj.compass_obj.uart.is_open():
-                            data_manager_obj.pi_main_obj.compass_obj.uart.close()
-                        data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_compass_obj(
-                            port=config.compass_port, baud=config.compass_baud)
-                    except Exception as e2:
-                        logger.error({'串口关闭失败': 111, 'error': e2})
-                    compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
-                    compass_thread.setDaemon(True)
-                    compass_thread.start()
-                    time.sleep(thread_restart_time)
-            if os.path.exists(config.compass_port1):
-                if not compass_thread1.is_alive():
-                    logger.error('restart compass_thread1')
-                    try:
-                        if data_manager_obj.pi_main_obj.compass_obj1.uart.is_open():
-                            data_manager_obj.pi_main_obj.compass_obj1.uart.close()
-                        data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_compass_obj(
-                            port=config.compass_port1, baud=config.compass_baud1)
-                    except Exception as e3:
-                        logger.error({'串口关闭失败': 111, 'error': e3})
-                    compass_thread1 = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass1_data)
-                    compass_thread1.setDaemon(True)
-                    compass_thread1.start()
-                    time.sleep(thread_restart_time)
-            if config.b_use_ultrasonic and not left_distance_thread.is_alive():
-                logger.error('restart left_distance_thread')
-                try:
-                    data_manager_obj.pi_main_obj.left_ultrasonic_obj = data_manager_obj.pi_main_obj.get_left_ultrasonic_obj()
-                except Exception as e:
-                    logger.error({'restart left_distance_thread失败': 111, 'error': e})
-                left_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_left_distance)
-                left_distance_thread.setDaemon(True)
-                left_distance_thread.start()
-                time.sleep(thread_restart_time)
-            if config.b_use_ultrasonic and not right_distance_thread.is_alive():
-                logger.error('restart left_distance_thread')
-                try:
-                    data_manager_obj.pi_main_obj.right_ultrasonic_obj = data_manager_obj.pi_main_obj.get_left_ultrasonic_obj()
-                except Exception as e:
-                    logger.error({'restart left_distance_thread失败': 111, 'error': e})
-                right_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_right_distance)
-                right_distance_thread.setDaemon(True)
-                right_distance_thread.start()
-                time.sleep(thread_restart_time)
+
             if config.b_pin_gps and not soft_gps_thread.is_alive():
                 logger.error('restart soft_gps_thread')
                 try:
@@ -241,6 +179,7 @@ def main():
                 soft_gps_thread.setDaemon(True)
                 soft_gps_thread.start()
                 time.sleep(thread_restart_time)
+
             if config.b_pin_compass and not soft_compass_thread.is_alive():
                 logger.error('restart soft_compass_thread')
                 try:
@@ -251,31 +190,27 @@ def main():
                 soft_compass_thread.setDaemon(True)
                 soft_compass_thread.start()
                 time.sleep(thread_restart_time)
-            if config.b_laser and not get_distance_thread.is_alive():
+
+            if not get_distance_thread.is_alive():
                 logger.error('restart get_distance_thread')
                 try:
                     data_manager_obj.pi_main_obj.laser_obj = data_manager_obj.pi_main_obj.get_laser_obj()
                 except Exception as e:
-                    logger.error({'restart soft_compass_thread': 111, 'error': e})
-                get_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_distance_dict)
+                    logger.error({'restart get_distance_thread': 111, 'error': e})
+                if config.b_laser:
+                    get_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_distance_dict)
+                elif config.b_millimeter_wave:
+                    get_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_distance_dict_millimeter)
                 get_distance_thread.setDaemon(True)
                 get_distance_thread.start()
                 time.sleep(thread_restart_time)
-            if os.path.exists(config.compass_port):
-                if not gps_thread.is_alive():
-                    logger.error('restart gps_thread')
-                    try:
-                        if data_manager_obj.pi_main_obj.gps_obj.uart.is_open():
-                            data_manager_obj.pi_main_obj.gps_obj.uart.close()
-                        data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_gps_obj(port=config.gps_port,
-                                                                                                 baud=config.gps_baud)
-                    except Exception as e:
-                        logger.error({'串口关闭失败': 111, 'error': e})
-                    gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
-                    gps_thread.setDaemon(True)
-                    gps_thread.start()
-                    time.sleep(thread_restart_time)
 
+            if not send_distacne_thread.is_alive():
+                logger.error('restart send_distacne_thread')
+                send_distacne_thread = threading.Thread(
+                    target=data_manager_obj.send_distacne)
+                send_distacne_thread.setDaemon(True)
+                send_distacne_thread.start()
         if not send_mqtt_data_thread.is_alive():
             logger.error('restart send_mqtt_data_thread')
             send_mqtt_data_thread = threading.Thread(
@@ -327,15 +262,11 @@ def main():
                 target=data_manager_obj.check_ping_delay)
             check_ping_delay_thread.setDaemon(True)
             check_ping_delay_thread.start()
+
+
         else:
-            time.sleep(1)
+            time.sleep(thread_restart_time)
 
 
 if __name__ == '__main__':
     main()
-    # while True:
-    #     try:
-    #         main()
-    #     except Exception as e:
-    #         time.sleep(5)
-    #         logger.error({'main error': e})

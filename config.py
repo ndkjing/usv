@@ -670,56 +670,6 @@ b_use_start = False
 ########### 树莓派GPIO端口相关设置 均使用BCM编码端口
 # 是否使用超声波
 b_use_ultrasonic = 0
-"""
-    # 使用树莓派控制电机
-    b_use_pi = True
-    # 左侧电机信号输出控制口
-    left_pwm_pin = 18
-    # 右侧电机信号输出控制口
-    right_pwm_pin = 24
-    # 是否使用遥控器
-    b_use_remote_control = True
-    # usv a 遥控器  水平是1通道   垂直是2通道
-    # 水平
-    channel_1_pin = 26
-    # 垂直
-    channel_3_pin = 19
-    # 开启遥控器输入pin口
-    start_remote_pin = 13
-    ultrasonic_baud = 9600
-    left_rx = 22
-    left_tx = 27
-    right_rx = 17
-    right_tx = 4
-    # 软串口gps
-    b_pin_gps = 1
-    pin_gps_baud = 9600
-    pin_gps_rx = 21
-    pin_gps_tx = 20
-    # 软串口罗盘
-    b_pin_compass = 1
-    pin_compass_baud = 9600
-    pin_compass_rx = 12
-    pin_compass_tx = 16
-    # 激光雷达
-    b_laser = 1
-    laser_tx = 4
-    laser_rx = 17
-    laser_baud = 115200
-    laser_hz = 40
-    # 舵机输出
-    steer_engine_pin = 27
-    # gpio高低电平控制
-    gpio_output_1 = 27
-    gpio_output_2 = 22
-    gpio_output_3 = 9
-    gpio_output_4 = 9
-    gpio_output_5 = 10
-    # 云台
-    pin_pan = 21
-    pin_tilt = 20
-else:
-"""
 # 使用树莓派控制电机
 b_use_pi = True
 # 水下摄像头云台水平和俯仰
@@ -749,7 +699,7 @@ channel_3_pin = 6
 # 开启遥控器输入pin口
 channel_remote_pin = 11
 # 激光雷达
-b_laser = 1
+b_laser = 0
 laser_tx = 13
 laser_rx = 19
 laser_baud = 115200
@@ -757,10 +707,14 @@ laser_hz = 40
 # 激光雷达舵机输出
 steer_engine_pin = 26
 # 毫米波雷达 millimeter wave radar
-b_millimeter_wave = 0
+b_millimeter_wave = 1
 angle_ceil_size = 5
 detect_angle = 45
 ceil_max = 3 #  可以通过扇区阈值
+millimeter_wave_tx = 13
+millimeter_wave_rx = 19
+millimeter_wave_baud = 115200
+millimeter_wave_hz = 40
 # 单片机串口
 stc_tx = 14
 stc_rx = 15

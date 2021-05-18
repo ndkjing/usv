@@ -144,18 +144,13 @@ class SimplePid:
         steer_pwm = (1.0 / (1.0 + e ** (-0.02 * steer_control)) - 0.5) * 1000
         forward_pwm = (1.0 / (1.0 + e ** (-0.2 * distance)) - 0.5) * 1000
         # 缩放到指定最大值范围内
-        # print('steer_control,forward_pwm,steer_pwm', steer_control, forward_pwm, steer_pwm)
-        # max_control = config.max_pwm-config.stop_pwm
-        max_control = 200
+        max_control = config.max_pwm-config.stop_pwm
         if forward_pwm+abs(steer_pwm) > max_control:
             temp_forward_pwm = forward_pwm
             forward_pwm = max_control*(temp_forward_pwm)/(temp_forward_pwm+abs(steer_pwm))
             steer_pwm = max_control*(steer_pwm/(temp_forward_pwm+abs(steer_pwm)))
-        # print(forward_pwm+abs(steer_pwm),max_control)
         left_pwm = config.stop_pwm + int(forward_pwm) - int(steer_pwm)
         right_pwm = config.stop_pwm + int(forward_pwm) + int(steer_pwm)
-        # print('steer_control,forward_pwm,steer_pwm,left_pwm,right_pwm', steer_control, forward_pwm, steer_pwm,left_pwm,
-        #       right_pwm)
         return left_pwm, right_pwm
 
     def yaw_control(self, yaw):

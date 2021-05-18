@@ -1,4 +1,2 @@
-2021-04-27 10:29:10,690 main.py[line:70] INFO {'binding status': 1}
-2021-04-27 10:29:11,696 main.py[line:296] ERROR restart send_com_data_thread
-2021-04-27 10:29:13,698 main.py[line:296] ERROR restart send_com_data_thread
-2021-04-27 10:29:45,442 main.py[line:70] INFO {'binding status': 1}
+2021-05-18 17:50:55,828 main.py[line:69] INFO {'binding status': 1}
+2021-05-18 17:51:44,995 main.py[line:69] INFO {'binding status': 1}

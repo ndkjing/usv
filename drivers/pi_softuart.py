@@ -110,9 +110,7 @@ class PiSoftuart(object):
                     str_data = data.decode('utf-8', errors='ignore')
                     # print('str_data', str_data)
                     for i in str_data.split('$'):
-                        # print('i',i)
                         i = i.strip()
-                        # print('i',i)
                         if i.startswith('GPGGA')or i.startswith('$GPGGA') or i.startswith('GNGGA')or i.startswith('$GNGGA'):
                             gps_data = i
                             data_list = gps_data.split(',')
@@ -215,6 +213,43 @@ class PiSoftuart(object):
     def get_thread_ts(self):
         return self._thread_ts
 
+    def read_millimeter_wave(self, len_data=None):
+        if len_data is None:
+            len_data = 4
+            try:
+                time.sleep(self._thread_ts)
+                count, data = self._pi.bb_serial_read(self._rx_pin)
+                # print(time.time(), 'count', count, 'data', data)
+                if count == len_data:
+                    str_data = str(binascii.b2a_hex(data))[2:-1]
+                    distance = int(str_data[2:-2], 16) / 1000
+                    # print(time.time(),'distance',distance)
+                    # 太近进入了盲区 返回 -1
+                    if distance <= 0.25:
+                        return -1
+                    else:
+                        return distance
+                elif count > len_data:
+                    str_data = str(binascii.b2a_hex(data))[2:-1]
+                    # print(r'str_data', str_data)
+                    split_str = 'aaaa'
+                    distance_list = []
+                    angle_list = []
+                    distance_list = []
+                    for i in str_data.split(split_str):
+                        if i.startswith('0c07'):
+                            distance = 0.01 * (int(i[8:10], 16)*256+int(i[10:12], 16))
+                            angle = 2 * int(i[12:14], 16)-90
+                            speed = 0.05 * (int(i[14:16], 16)*256+int(i[16:18], 16)) - 35
+                            print('distance:{},angle:{},speed:{}'.format(distance,angle,speed))
+                            distance_list.append(distance)
+                            angle_list.append(angle)
+                    return distance_list,angle_list
+                    # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
+                    distance = 0
+            except Exception as e:
+                print({'error':e})
+                time.sleep(self._thread_ts)
 
 if __name__ == '__main__':
     pi = pigpio.pi()
