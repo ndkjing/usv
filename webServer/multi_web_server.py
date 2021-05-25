@@ -360,7 +360,6 @@ class WebServer:
                 time.sleep(0.1)
                 # 配置判断
                 len_target_lng_lat = len(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.target_lng_lat)
-
                 if len_target_lng_lat >= 0:
                     # 单点航行模式
                     if len_target_lng_lat == 1:

@@ -54,6 +54,8 @@ class PiMain:
         if config.current_platform == config.CurrentPlatform.pi:
             self.gps_obj = self.get_gps_obj()
             self.compass_obj = self.get_compass_obj()
+        if config.b_pin_stc and config.current_platform == config.CurrentPlatform.pi:
+            self.stc_obj = self.get_stc_obj()
         if config.b_laser and config.current_platform == config.CurrentPlatform.pi:
             self.laser_obj = self.get_laser_obj()
         if config.b_sonar and config.current_platform == config.CurrentPlatform.pi:
@@ -71,7 +73,9 @@ class PiMain:
         self.compass_notice_info = ''
         # 距离矩阵
         self.distance_dict = {}
-        self.obstacle_list = [0, 0, 0, 0, 0]
+        self.field_of_view = 90  # 视场角
+        self.view_cell = 5          # 量化角度单元格
+        self.obstacle_list = [0]*int(self.field_of_view/self.view_cell)
         # 设置为GPIO输出模式 输出高低电平
         self.pi.set_mode(config.side_left_gpio_pin, pigpio.OUTPUT)
         self.pi.set_mode(config.side_right_gpio_pin, pigpio.OUTPUT)
@@ -108,6 +112,19 @@ class PiMain:
     def get_sonar_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.sonar_rx, tx_pin=config.sonar_tx,
                                       baud=config.sonar_baud, time_out=0.01)
+
+    def get_stc_obj(self):
+        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.stc_rx, tx_pin=config.stc_tx,
+                                      baud=config.sonar_baud, time_out=0.1)
+
+    def get_stc_data(self):
+        """
+        读取单片机数据
+        :return:
+        """
+        data = self.stc_obj.read_stc_data()
+
+
 
     def get_sonar_data(self):
         """
@@ -406,28 +423,30 @@ class PiMain:
     def get_distance_dict_millimeter(self):
         # 角度限制
         steer_max_angle = config.steer_max_angle
+        count=0
         while True:
-            distance_list, angle_list = self.millimeter_wave_obj.read_millimeter_wave()
-            for distance, angle in zip(distance_list, angle_list):
-                # 将21个角度归结无五个方向 0 1 2 3 4 ，右 右前 前 左前 左
-                if -steer_max_angle <= angle < -steer_max_angle * 3 / 5:
-                    obstacle_index = 0
-                elif -steer_max_angle * 3 / 5 <= angle < -steer_max_angle * 1 / 5:
-                    obstacle_index = 1
-                elif -steer_max_angle * 1 / 5 <= angle < steer_max_angle * 1 / 5:
-                    obstacle_index = 2
-                elif steer_max_angle * 1 / 5 <= angle < steer_max_angle * 3 / 5:
-                    obstacle_index = 3
-                else:
-                    obstacle_index = 4
-                if distance > config.min_steer_distance:
-                    b_obstacle = 0
-                else:
-                    b_obstacle = 1
-                self.obstacle_list[obstacle_index] = b_obstacle
-                angle_key = int((angle - angle % 2))
-                self.distance_dict.update({angle_key: distance})
-                time.sleep(0.02)
+            data_dict = self.millimeter_wave_obj.read_millimeter_wave()
+            if data_dict is not None:
+                for index in data_dict:
+                    angle = data_dict[index][1]
+                    distance = data_dict[index][0]
+                    # 丢弃大于视场角范围的数据
+                    if abs(angle) >= (self.field_of_view/2):
+                        continue
+                    obstacle_index = angle//self.view_cell + 9
+                    if distance > config.min_steer_distance:
+                        b_obstacle = 0
+                    else:
+                        b_obstacle = 1
+                    self.obstacle_list[obstacle_index] = b_obstacle
+                    angle_key = int((angle - angle % 2))
+                    if count == 49:
+                        self.distance_dict.clear()
+                    self.distance_dict.update({angle_key: distance})
+                    # print('self.distance_dict', self.distance_dict)
+                    count += 1
+                    count %= 50
+                    time.sleep(0.02)
 
     def set_gpio(self,
                  control_left_motor=0,
@@ -518,6 +537,7 @@ if __name__ == '__main__':
                   'x  接受遥控器输入\n'
                   'c  声呐数据\n'
                   'b  毫米波数据\n'
+                  'n  距离字典\n'
                   '')
             key_input = input('please input:')
             # 前 后 左 右 停止  右侧电机是反桨叶 左侧电机是正桨叶
@@ -532,6 +552,9 @@ if __name__ == '__main__':
                     gear = None
             if key_input.startswith('w'):
                 if gear is not None:
+                    if gear >= 4:
+                        gear = 4
+                    print(1600 + 100 * gear, 1600 + 100 * gear)
                     pi_main_obj.forward(
                         1600 + 100 * gear, 1600 + 100 * gear)
                 else:
@@ -548,6 +571,7 @@ if __name__ == '__main__':
                 if gear is not None:
                     if gear >= 4:
                         gear = 4
+                    print(1400 - 100 * gear, 1400 - 100 * gear)
                     pi_main_obj.backword(
                         1400 - 100 * gear, 1400 - 100 * gear)
                 else:
@@ -641,6 +665,8 @@ if __name__ == '__main__':
             elif key_input.startswith('b'):
                 millimeter_wave_data = pi_main_obj.millimeter_wave_obj.read_millimeter_wave()
                 print('millimeter_wave', millimeter_wave_data)
+            elif key_input.startswith('n'):
+                pi_main_obj.get_distance_dict_millimeter()
             # TODO
             # 返航
             # 角度控制

@@ -1,2 +1,13 @@
-2021-05-18 17:50:55,828 main.py[line:69] INFO {'binding status': 1}
-2021-05-18 17:51:44,995 main.py[line:69] INFO {'binding status': 1}
+2021-05-24 14:22:30,101 main.py[line:69] INFO {'binding status': 1}
+2021-05-24 14:22:31,107 main.py[line:245] ERROR restart send_com_data_thread
+2021-05-24 14:22:33,109 main.py[line:245] ERROR restart send_com_data_thread
+2021-05-24 14:23:27,499 main.py[line:69] INFO {'binding status': 1}
+2021-05-24 14:26:49,656 main.py[line:69] INFO {'binding status': 1}
+2021-05-24 14:38:55,896 main.py[line:245] ERROR restart send_com_data_thread
+2021-05-24 14:38:57,897 main.py[line:245] ERROR restart send_com_data_thread
+2021-05-24 14:38:59,898 main.py[line:245] ERROR restart send_com_data_thread
+2021-05-24 14:41:40,144 main.py[line:69] INFO {'binding status': 1}
+2021-05-24 14:48:19,556 main.py[line:69] INFO {'binding status': 1}
+2021-05-24 14:51:01,526 main.py[line:69] INFO {'binding status': 1}
+2021-05-24 14:54:07,281 main.py[line:69] INFO {'binding status': 1}
+2021-05-24 16:13:09,912 main.py[line:69] INFO {'binding status': 1}

@@ -86,6 +86,8 @@ def main():
             get_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_distance_dict_millimeter)
         if config.b_laser or config.b_millimeter_wave:
             send_distacne_thread = threading.Thread(target=data_manager_obj.send_distacne)
+        if config.b_laser or config.b_pin_stc:
+            stc_data_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_stc_data)
 
     send_com_data_thread = threading.Thread(target=data_manager_obj.send_com_data)
     check_status_thread = threading.Thread(target=data_manager_obj.check_status)
@@ -142,6 +144,8 @@ def main():
             get_distance_thread.start()
         if config.b_millimeter_wave:
             send_distacne_thread.start()
+        if config.b_pin_stc:
+            stc_data_thread.start()
 
     print('home_debug', config.home_debug)
     thread_restart_time = 1
@@ -189,6 +193,16 @@ def main():
                 soft_compass_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_compass_data)
                 soft_compass_thread.setDaemon(True)
                 soft_compass_thread.start()
+                time.sleep(thread_restart_time)
+
+            if config.b_pin_stc and not stc_data_thread.is_alive():
+                logger.error('restart stc_data_thread')
+                try:
+                    data_manager_obj.pi_main_obj.stc_obj = data_manager_obj.pi_main_obj.get_stc_obj()
+                except Exception as e:
+                    logger.error({'restart stc_data_thread': 111, 'error': e})
+                stc_data_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_stc_data)
+                stc_data_thread.start()
                 time.sleep(thread_restart_time)
 
             if not get_distance_thread.is_alive():

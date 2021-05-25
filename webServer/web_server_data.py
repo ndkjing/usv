@@ -187,10 +187,10 @@ class MqttSendGet:
             if switch_data.get('b_sampling') is not None:
                     self.b_sampling = int(switch_data.get('b_sampling'))
             if switch_data.get('b_draw') is not None:
-                    self.b_draw = int(switch_data['b_draw'])
+                    self.b_draw = int(switch_data.get('b_draw'))
             self.logger.info({'topic':topic,
                                 'b_sampling':switch_data.get('b_sampling'),
-                             'b_draw':switch_data['b_draw']
+                             'b_draw':switch_data.get('b_draw')
                               })
 
         # 处理初始点击确定湖数据

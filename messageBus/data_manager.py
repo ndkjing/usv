@@ -22,6 +22,7 @@ import config
 from moveControl.pathTrack import simple_pid, pure_pursuit
 from dataAnalyze import utils
 
+
 class ShipStatus(enum.Enum):
     """
     船当前状态
@@ -29,6 +30,15 @@ class ShipStatus(enum.Enum):
     manual = 1
     auto = 2
     backhome = 3
+
+
+class RelayType(enum.Enum):
+    """
+    控制继电器种类
+    """
+    headlight = 0
+    audio_light = 0
+    side_light = 0
 
 
 class DataManager:
@@ -59,8 +69,6 @@ class DataManager:
                 self.gps_obj = self.get_com_obj(config.gps_port, config.gps_baud, self.gps_log)
             if os.path.exists(config.compass_port):
                 self.compass_obj = self.get_com_obj(config.compass_port, config.compass_baud, self.compass_log)
-            if os.path.exists(config.compass_port1):
-                self.compass_obj1 = self.get_com_obj(config.compass_port1, config.compass_baud1, self.compass_log1)
             self.pi_main_obj = pi_main.PiMain()
             if config.b_use_pix:
                 self.drone_obj = drone_kit_control.DroneKitControl(config.pix_port)
@@ -143,7 +151,10 @@ class DataManager:
         self.obstacle_info = ''
         self.lng_lat_list = []
         self.deep_list = []
-
+        # 记录上一次控制的单片机继电器状态
+        self.last_side_light = 0
+        self.last_headlight = 0
+        self.last_audio_light = 0
     # 读取函数会阻塞 必须使用线程
     def get_com_data(self):
         last_read_time = time.time()
@@ -313,77 +324,6 @@ class DataManager:
                 self.logger.error({'error': e})
                 time.sleep(1)
 
-    # 获取备份罗盘数据
-    def get_compass1_data(self):
-        if os.path.exists(config.compass_port1):
-            # 累计50次出错则记为None
-            count = 50
-            # 记录上一次发送数据
-            last_send_data = None
-            while True:
-                try:
-                    # 检查罗盘是否需要校准 # 开始校准
-                    if int(config.calibration_compass) == 1:
-                        if last_send_data != 'C0':
-                            self.compass_obj1.send_data('C0', b_hex=True)
-                            time.sleep(0.05)
-                            data0 = self.compass_obj1.readline()
-                            str_data0 = data0.decode('ascii')
-                            if len(str_data0) > 3:
-                                self.compass_notice_info1 += str_data0
-                            data0 = self.compass_obj1.readline()
-                            str_data0 = data0.decode('ascii')
-                            if len(str_data0) > 3:
-                                self.compass_notice_info1 += str_data0
-                            data0 = self.compass_obj1.readline()
-                            str_data0 = data0.decode('ascii')
-                            if len(str_data0) > 3:
-                                self.compass_notice_info1 += str_data0
-                            last_send_data = 'C0'
-                    # 结束校准
-                    elif int(config.calibration_compass) == 2:
-                        if last_send_data != 'C1':
-                            self.compass_notice_info1 = ''
-                            self.compass_obj1.send_data('C1', b_hex=True)
-                            time.sleep(0.05)
-                            data0 = self.compass_obj1.readline()
-                            str_data0 = data0.decode('ascii')
-                            if len(str_data0) > 3:
-                                self.compass_notice_info1 += str_data0
-                            data0 = self.compass_obj1.readline()
-                            str_data0 = data0.decode('ascii')
-                            if len(str_data0) > 3:
-                                self.compass_notice_info1 += str_data0
-                            data0 = self.compass_obj1.readline()
-                            str_data0 = data0.decode('ascii')
-                            if len(str_data0) > 3:
-                                self.compass_notice_info1 += str_data0
-                            last_send_data = 'C1'
-                    # 隐藏修改 设置为10 改为启用gps计算角度  设置为9 改为启用二号罗盘
-                    elif int(config.calibration_compass) in [10]:
-                        self.theta1 = None
-                    else:
-                        self.compass_obj1.send_data('31', b_hex=True)
-                        time.sleep(0.05)
-                        data0 = self.compass_obj1.readline()
-                        # 角度
-                        str_data0 = data0.decode('ascii')[:-3]
-                        if len(str_data0) < 1:
-                            continue
-                        float_data0 = float(str_data0)
-                        self.theta1 = 360 - float_data0
-                        time.sleep(config.compass_timeout)
-                        count = 50
-                        last_send_data = None
-                        # self.compass_notice_info1 = ''
-                except Exception as e:
-                    if count > 0:
-                        count = count - 1
-                    else:
-                        self.theta1 = None
-                    self.logger.error({'error': e})
-                    time.sleep(1)
-
     # 抽水
     def draw(self):
         """
@@ -401,35 +341,79 @@ class DataManager:
         :return:无
         """
         # 判断开关是否需要打开或者关闭
-        self.check_switch()
-        # 判断是否抽水
-        if self.server_data_obj.mqtt_send_get_obj.b_draw:
-            if self.draw_start_time is None or self.current_b_draw == 0:
-                if self.draw_start_time is not None:
+        if config.home_debug:
+            pass
+        else:
+            # self.check_switch()
+            # 判断是否抽水
+            if self.server_data_obj.mqtt_send_get_obj.b_draw:
+                if self.draw_start_time is None or self.current_b_draw == 0:
+                    if self.draw_start_time is not None:
+                        # 超时中断抽水
+                        if time.time() - self.draw_start_time > config.draw_time:
+                            self.b_draw_over_send_data = True
+                            self.com_data_obj.send_data('A0Z')
+                            self.current_b_draw = 0
+                            self.draw_start_time = None
+                    else:
+                        self.com_data_obj.send_data('A1Z')
+                        self.current_b_draw = 1
+                        self.draw_start_time = time.time()
+                elif self.draw_start_time is not None and self.current_b_draw == 1:
                     # 超时中断抽水
+                    print(time.time() - self.draw_start_time)
                     if time.time() - self.draw_start_time > config.draw_time:
                         self.b_draw_over_send_data = True
                         self.com_data_obj.send_data('A0Z')
                         self.current_b_draw = 0
+                        self.server_data_obj.mqtt_send_get_obj.b_draw = 0
                         self.draw_start_time = None
-                else:
-                    self.com_data_obj.send_data('A1Z')
-                    self.current_b_draw = 1
-                    self.draw_start_time = time.time()
-            elif self.draw_start_time is not None and self.current_b_draw == 1:
-                # 超时中断抽水
-                print(time.time() - self.draw_start_time)
-                if time.time() - self.draw_start_time > config.draw_time:
-                    self.b_draw_over_send_data = True
+            else:
+                if self.current_b_draw == 1:
                     self.com_data_obj.send_data('A0Z')
                     self.current_b_draw = 0
-                    self.server_data_obj.mqtt_send_get_obj.b_draw = 0
                     self.draw_start_time = None
+
+    def control_relay(self):
+        """
+        控制继电器
+        :return:
+        """
+        if self.server_data_obj.mqtt_send_get_obj.side_light:
+            if self.last_side_light:
+                pass
+            else:
+                self.pi_main_obj.stc_obj.send_stc_data('B1Z')
         else:
-            if self.current_b_draw == 1:
-                self.com_data_obj.send_data('A0Z')
-                self.current_b_draw = 0
-                self.draw_start_time = None
+            if self.last_side_light:
+                self.pi_main_obj.stc_obj.send_stc_data('B0Z')
+            else:
+                pass
+        self.last_side_light = self.server_data_obj.mqtt_send_get_obj.side_light
+
+        if self.server_data_obj.mqtt_send_get_obj.headlight:
+            if self.last_headlight:
+                pass
+            else:
+                self.pi_main_obj.stc_obj.send_stc_data('B1Z')
+        else:
+            if self.last_headlight:
+                self.pi_main_obj.stc_obj.send_stc_data('B0Z')
+            else:
+                pass
+        self.last_headlight = self.server_data_obj.mqtt_send_get_obj.headlight
+
+        if self.server_data_obj.mqtt_send_get_obj.audio_light:
+            if self.last_audio_light:
+                pass
+            else:
+                self.pi_main_obj.stc_obj.send_stc_data('B1Z')
+        else:
+            if self.last_audio_light:
+                self.pi_main_obj.stc_obj.send_stc_data('B0Z')
+            else:
+                pass
+        self.last_audio_light = self.server_data_obj.mqtt_send_get_obj.audio_light
 
     # 清除状态
     def clear_status(self):
@@ -453,6 +437,8 @@ class DataManager:
         self.distance_p = 0
         # 清空路径
         self.smooth_path_lng_lat = None
+        self.server_data_obj.mqtt_send_get_obj.b_start=0
+        self.server_data_obj.mqtt_send_get_obj.back_home=0
         b_log_points = 1
 
     # 检查是否需要返航
@@ -495,7 +481,7 @@ class DataManager:
                                                                     self.lng_lat[1],
                                                                     target_lng_lat[0],
                                                                     target_lng_lat[1])
-                for i in range(1, int((distance /config.smooth_path_ceil_size) + 1)):
+                for i in range(1, int((distance / config.smooth_path_ceil_size) + 1)):
                     cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                               self.lng_lat[1],
                                                                               theta,
@@ -512,7 +498,7 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
                     target_lng_lat[0],
                     target_lng_lat[1])
-                for i in range(1, int(distance /config.smooth_path_ceil_size + 1)):
+                for i in range(1, int(distance / config.smooth_path_ceil_size + 1)):
                     cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(
                         self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
                         self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
@@ -555,7 +541,8 @@ class DataManager:
                                                                         self.lng_lat[1],
                                                                         lng_lat[0],
                                                                         lng_lat[1])
-        while config.smooth_path_ceil_size > index_point_distance and (index + 1) < len(self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index_]:]):
+        while config.smooth_path_ceil_size > index_point_distance and (index + 1) < len(
+                self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index_]:]):
             lng_lat = self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index_]:][index]
             index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                             self.lng_lat[1],
@@ -595,14 +582,18 @@ class DataManager:
         根据障碍物地图获取下一个运动点
         :return: 下一个目标点，是否需要紧急停止
         """
-        next_point_lng_lat = path_planning_point_gps
+        next_point_lng_lat = copy.deepcopy(path_planning_point_gps)
         if config.b_laser:
             # 不避障
             if config.obstacle_avoid_type == 0:
                 return path_planning_point_gps, False
             # 避障停止
             elif config.obstacle_avoid_type == 1:
-                if 1 in self.pi_main_obj.obstacle_list[1:4]:
+                len_obstacle_list = len(self.pi_main_obj.obstacle_list)
+                # 中间可以通过区域单元数量(单边)
+                min_through_cell = 2
+                if 1 in self.pi_main_obj.obstacle_list[
+                        len_obstacle_list - min_through_cell:len_obstacle_list + min_through_cell]:
                     return next_point_lng_lat, True
             # 避障绕行，根据障碍物计算下一个目标点
             elif config.obstacle_avoid_type == 2:
@@ -614,6 +605,10 @@ class DataManager:
                     angle_point_temp = angle_point - 360
                 else:
                     angle_point_temp = angle_point
+                point_angle_index = angle_point_temp // self.pi_main_obj.view_cell + 9
+                # 目标区域超出避障范围，当前正在转弯不必进行避障
+                if point_angle_index < 0 or point_angle_index >= len(self.pi_main_obj.obstacle_list):
+                    return next_point_lng_lat, False
                 # 判断该角度范围内是否有障碍物
                 if -config.steer_max_angle <= angle_point_temp < -config.steer_max_angle * 3 / 5:
                     point_angle_index = 0
@@ -625,7 +620,7 @@ class DataManager:
                     point_angle_index = 3
                 elif config.steer_max_angle * 3 / 5 <= angle_point_temp < config.steer_max_angle:
                     point_angle_index = 4
-                elif angle_point_temp < -config.steer_max_angle :
+                elif angle_point_temp < -config.steer_max_angle:
                     point_angle_index = -1
                 else:
                     point_angle_index = 5
@@ -680,21 +675,22 @@ class DataManager:
                                 # 两边都有障碍物直接将目标角度复制为背后180度
                                 next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                                                  self.lng_lat[1],
-                                                                                                 ((angle_point - 180)+360)%360,
+                                                                                                 ((
+                                                                                                              angle_point - 180) + 360) % 360,
                                                                                                  config.min_steer_distance)
                     return next_point_lng_lat, False
         elif config.b_millimeter_wave:
+            print('config.obstacle_avoid_type', config.obstacle_avoid_type)
             # 不避障
             if config.obstacle_avoid_type == 0:
                 return path_planning_point_gps, False
             # 避障停止
             elif config.obstacle_avoid_type == 1:
-                if 1 in self.pi_main_obj.obstacle_list[int(len(self.pi_main_obj.obstacle_list)/2)-1:int(len(self.pi_main_obj.obstacle_list)/2)+2]:
+                if 1 in self.pi_main_obj.obstacle_list[int(len(self.pi_main_obj.obstacle_list) / 2) - 1:int(
+                        len(self.pi_main_obj.obstacle_list) / 2) + 2]:
                     return next_point_lng_lat, True
             # 避障绕行，根据障碍物计算下一个目标点
             elif config.obstacle_avoid_type == 2:
-                index_i = 0
-                j = 0
                 angle_point = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
                                                                     self.lng_lat[1],
                                                                     path_planning_point_gps[0],
@@ -703,35 +699,38 @@ class DataManager:
                     angle_point_temp = angle_point - 360
                 else:
                     angle_point_temp = angle_point
-                point_angle_index = int((angle_point_temp + config.detect_angle) / config.angle_ceil_size)
-                print('point_angle_index', point_angle_index)
-                c = np.zeros(len(self.pi_main_obj.obstacle_list))
+                point_angle_index = angle_point_temp // self.pi_main_obj.view_cell + 9
+                # 目标区域超出避障范围，当前正在转弯不必进行避障
+                if point_angle_index < 0 or point_angle_index >= len(self.pi_main_obj.obstacle_list):
+                    return next_point_lng_lat, False
+                index_i = 0
+                value_list = []
                 while index_i < len(self.pi_main_obj.obstacle_list):
                     kr = index_i
                     index_j = index_i
-                    while index_j < len(self.pi_main_obj.obstacle_list) and self.pi_main_obj.obstacle_list[index_j] == 0:
+                    while index_j < len(self.pi_main_obj.obstacle_list) and self.pi_main_obj.obstacle_list[
+                        index_j] == 0:
                         kl = index_j
                         if (kl - kr >= config.ceil_max):  # 判断是否是宽波谷
-                            print(self.pi_main_obj.obstacle_list, round(kl - config.ceil_max / 2))
-                            v = round(kl - config.ceil_max / 2)
-                            c[j] = v
-                            j = j + 1
+                            print(self.pi_main_obj.obstacle_list, round(kl - config.ceil_max // 2))
+                            v = round((kl + kr) / 2)
+                            value_list.append(v)
                             break
                         index_j = index_j + 1
                     index_i += 1
                 # 没有可以通过通道
-                if j == 0:
-                    angle = (angle_point+180)%360
+                if len(value_list) == 0:
+                    return next_point_lng_lat, True
                 else:
-                    g = np.zeros(j)
                     how = []
-                    for i in range(j):
-                        g[i] = c[i]
-                        howtemp = abs(g[i] - point_angle_index)
+                    for value_i in (value_list):
+                        howtemp = abs(value_i - point_angle_index)
                         how.append(howtemp)
                     ft = how.index(min(how))
-                    kb = g[int(ft)]
-                    angle = kb * config.angle_ceil_size
+                    kb = value_list[int(ft)]
+                    angle = kb * config.view_cell - (config.field_of_view) / 2
+                    if angle < 0:
+                        angle += 360
                 next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                                  self.lng_lat[1],
                                                                                  angle,
@@ -785,6 +784,9 @@ class DataManager:
             self.theta_error = theta_error
             left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
                                                                 theta_error=theta_error)
+            self.last_left_pwm = left_pwm
+            self.last_right_pwm = right_pwm
+            # self.pi_main_obj.set_pwm(left_pwm, right_pwm)
             # 在家调试模式下预测目标经纬度
             if config.home_debug:
                 time.sleep(0.1)
@@ -813,17 +815,17 @@ class DataManager:
                                                                            self.lng_lat[1],
                                                                            self.current_theta,
                                                                            delta_distance)
-            self.last_left_pwm = left_pwm
-            self.last_right_pwm = right_pwm
-            # 判断是否需要避障处理
-            if not config.home_debug:
-                if b_stop:
-                    self.obstacle_info = '1'
-                    self.pi_main_obj.stop()
-                else:
-                    self.obstacle_info = '0'
-                    self.pi_main_obj.set_pwm(left_pwm, right_pwm)
-                # print('epoch time', time.time() - start_time)
+            else:
+                # 判断是否需要避障处理
+                print('b_stop', b_stop)
+                self.pi_main_obj.set_pwm(left_pwm, right_pwm)
+                # if b_stop:
+                #     self.obstacle_info = '1'
+                #     self.pi_main_obj.stop()
+                # else:
+                #     self.obstacle_info = '0'
+                #     self.pi_main_obj.set_pwm(left_pwm, right_pwm)
+
             # 清空规划点
             if int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == -1:
                 # 记录是因为按了暂停按钮而终止
@@ -877,10 +879,9 @@ class DataManager:
                 # 此时为自动模式清除d控制状态
                 self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
             # 使用遥控器  调试模式下无法使用
-            if not config.home_debug and config.current_platform == config.CurrentPlatform.pi:
+            if not config.home_debug and config.current_platform == config.CurrentPlatform.pi and self.pi_main_obj.b_start_remote:
                 remote_left_pwm, remote_right_pwm = self.pi_main_obj.check_remote_pwm()
-                if self.pi_main_obj.b_start_remote:
-                    self.pi_main_obj.set_pwm(set_left_pwm=remote_left_pwm, set_right_pwm=remote_right_pwm)
+                self.pi_main_obj.set_pwm(set_left_pwm=remote_left_pwm, set_right_pwm=remote_right_pwm)
             # 手动模式
             elif manul_or_auto == 1:
                 # 使用飞控
@@ -922,7 +923,11 @@ class DataManager:
                     # 改变状态不再重复发送指令
                     self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
                 # 手动模式下判断是否抽水
-                self.draw()
+                if not config.home_debug:
+                    if config.b_pin_stc:
+                        self.control_relay()
+                        self.draw()
+
             # 自动模式计算角度
             elif manul_or_auto == 0:
                 self.control_info = ''
@@ -965,6 +970,10 @@ class DataManager:
                 # 将目标点转换为真实经纬度
                 self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps = []
                 self.server_data_obj.mqtt_send_get_obj.sampling_points_gps = []
+                if self.server_data_obj.mqtt_send_get_obj.back_home:
+                    if self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat:
+                        self.server_data_obj.mqtt_send_get_obj.path_planning_points.append(self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
+                        self.server_data_obj.mqtt_send_get_obj.sampling_points.append(self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
                 if config.home_debug:
                     self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps = copy.deepcopy(
                         self.server_data_obj.mqtt_send_get_obj.path_planning_points)
@@ -982,6 +991,8 @@ class DataManager:
                                                                                 sampling_point)
                         self.server_data_obj.mqtt_send_get_obj.sampling_points_gps.append(sampling_point_gps)
                 self.path_info = [0, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
+                print('self.server_data_obj.mqtt_send_get_obj.sampling_points_status',
+                      self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
                 while self.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(0) > 0:
                     # 统计到一个目标点需要多少次调节
                     change_count_list = [0] * len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)
@@ -1019,10 +1030,14 @@ class DataManager:
                                 # 开始抽水并等待
                                 self.server_data_obj.mqtt_send_get_obj.b_draw = 1
                                 self.pi_main_obj.stop()
-                                self.draw()
+                                if not config.home_debug:
+                                    if config.b_pin_stc:
+                                        self.draw()
                                 time.sleep(config.draw_time)
                                 self.b_draw_over_send_data = True
-                                self.draw()
+                                if not config.home_debug:
+                                    if config.b_pin_stc:
+                                        self.draw()
                             elif not config.b_draw:
                                 if not config.home_debug:
                                     self.pi_main_obj.stop()
@@ -1116,9 +1131,9 @@ class DataManager:
                 deep_ = self.pi_main_obj.get_sonar_data()
                 deep = deep_ if deep_ else 0
                 self.deep_list.append(deep)
-                assert len(self.deep_list)==len(self.lng_lat_list)
-                if len(self.deep_list)%20==0:
-                    utils.generate_geojson(self.lng_lat_list,self.deep_list,b_save_data=True)
+                assert len(self.deep_list) == len(self.lng_lat_list)
+                if len(self.deep_list) % 20 == 0:
+                    utils.generate_geojson(self.lng_lat_list, self.deep_list, b_save_data=True)
             if self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat:
                 status_data.update({'home_lng_lat': self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat})
                 self.home_lng_lat = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
@@ -1290,7 +1305,7 @@ class DataManager:
     def check_status(self):
         while True:
             # 循环等待一定时间
-            time.sleep(config.check_status_interval / 2)
+            time.sleep(config.check_status_interval)
             # 检查当前状态
             # print('self.pi_main_obj.theta',self.pi_main_obj.theta, self.pi_main_obj.lng_lat_error, self.pi_main_obj.lng_lat,self.pi_main_obj.left_distance,self.pi_main_obj.right_distance)
             if config.home_debug:
@@ -1305,6 +1320,7 @@ class DataManager:
             else:
                 ship_theta = 0
             # 船头角度
+            # print(config.use_shape_theta_type ,config.b_pin_compass ,self.current_theta , self.pi_main_obj.theta)
             if config.use_shape_theta_type == 1:
                 if config.b_pin_compass:
                     self.current_theta = self.pi_main_obj.theta
@@ -1335,6 +1351,12 @@ class DataManager:
                 "control_info": self.control_info,
                 # 水泵开关状态消息
                 "draw_info": self.server_data_obj.mqtt_send_get_obj.b_draw,
+                # 声光报警器
+                "audio_light_info": self.server_data_obj.mqtt_send_get_obj.audio_light,
+                # 大灯
+                "headlight_info": self.server_data_obj.mqtt_send_get_obj.headlight,
+                # 舷灯
+                "side_light_info": self.server_data_obj.mqtt_send_get_obj.side_light,
                 # 自动巡航下角度偏差
                 "theta_error": round(self.theta_error, 2),
             }
@@ -1390,17 +1412,23 @@ class DataManager:
     # 发送障碍物信息
     def send_distacne(self):
         while True:
-            distance_data = copy.deepcopy(self.pi_main_obj.distance_dict)
-            distance_data.update({'deviceId': config.ship_code})
-            if self.current_theta :
-                distance_data.update({'direction' : round(self.current_theta)})
-            else:
-                distance_data.update({'direction': 0})
-            self.send(method='mqtt',
-                      topic='distance_info_%s' % (config.ship_code),
-                      data=distance_data,
-                      qos=0)
-            time.sleep(1)
+            distance_info_data = {}
+            if len(self.pi_main_obj.distance_dict) > 0:
+                distance_info_data.update({'deviceId': config.ship_code})
+                distance_info_data.update({'distance_info': []})
+                for k in self.pi_main_obj.distance_dict.copy():
+                    distance_info_data['distance_info'].append(
+                        {'distance': self.pi_main_obj.distance_dict[k], 'angle': k})
+                if self.current_theta:
+                    distance_info_data.update({'direction': round(self.current_theta)})
+                else:
+                    distance_info_data.update({'direction': 0})
+                # print('distance_data',distance_info_data)
+                self.send(method='mqtt',
+                          topic='distance_info_%s' % (config.ship_code),
+                          data=distance_info_data,
+                          qos=0)
+                time.sleep(1)
 
     # 检查开关相关信息
     def check_switch(self):

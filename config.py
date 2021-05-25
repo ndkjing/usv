@@ -513,7 +513,6 @@ def update_height_setting():
                         pass
                     else:
                         s_home_debug = 0
-
                     home_debug = s_home_debug
                     # 如果在树莓派上不能使用调试模式
                     if current_platform == CurrentPlatform.pi:
@@ -523,10 +522,10 @@ def update_height_setting():
             if height_setting_data.get('obstacle_avoid_type'):
                 try:
                     s_obstacle_avoid_type = int(height_setting_data.get('obstacle_avoid_type'))
-                    if s_obstacle_avoid_type in [1, 2, 3, 4]:
+                    if s_obstacle_avoid_type in [0, 1, 2, 3, 4]:
                         pass
                     else:
-                        s_obstacle_avoid_type = 1
+                        s_obstacle_avoid_type = 0
                     obstacle_avoid_type = s_obstacle_avoid_type
                 except Exception as e:
                     print({'error': e})
@@ -676,9 +675,9 @@ b_use_pi = True
 pin_pan = 2
 pin_tilt = 3
 # 左侧电机信号输出控制口
-left_pwm_pin = 4
+left_pwm_pin = 20
 # 右侧电机信号输出控制口
-right_pwm_pin = 17
+right_pwm_pin = 21
 # 软串口罗盘
 b_pin_compass = 1
 pin_compass_baud = 9600
@@ -710,14 +709,18 @@ steer_engine_pin = 26
 b_millimeter_wave = 1
 angle_ceil_size = 5
 detect_angle = 45
+field_of_view = 90
+view_cell = 5
 ceil_max = 3 #  可以通过扇区阈值
 millimeter_wave_tx = 13
 millimeter_wave_rx = 19
 millimeter_wave_baud = 115200
 millimeter_wave_hz = 40
 # 单片机串口
+b_pin_stc = 0
 stc_tx = 14
 stc_rx = 15
+stc_baud = 9600
 # 舷灯 左舷灯 右舷灯
 side_left_gpio_pin = 18
 side_right_gpio_pin = 23
@@ -740,6 +743,8 @@ sonar_baud = 9600
 # 声呐舵机
 sonar_steer = 21
 test_all=0
+
+
 
 # 使用角度  1 使用罗盘1角度   2 使用罗盘2角度  3 使用经纬度移动计算角度
 if home_debug:

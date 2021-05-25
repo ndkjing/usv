@@ -84,7 +84,7 @@ class MqttSendGet:
         self.mqtt_host = mqtt_host
         self.mqtt_port = mqtt_port
         if config.current_platform == config.CurrentPlatform.pi:
-            client_id = client_id + 'pi'
+            client_id = client_id + 'windows'
             self.mqtt_user = 'linux2'
         elif config.current_platform == config.CurrentPlatform.linux:
             client_id = client_id + 'linux'
@@ -99,8 +99,14 @@ class MqttSendGet:
         self.mqtt_client.on_publish = self.on_publish_callback
         # self.mqtt_client.on_subscribe = self.on_message_come
         self.mqtt_client.on_message = self.on_message_callback
-        self.mqtt_connect()
-
+        while True:
+            try:
+                self.mqtt_connect()
+                break
+            except Exception:
+                logger.error('链接mqtt失败')
+                time.sleep(10)
+                continue
         # 湖泊初始点击点信息
         self.pool_click_lng_lat = None
         self.pool_click_zoom = None
@@ -225,6 +231,7 @@ class MqttSendGet:
             # 处理开关信息
             if topic == 'switch_%s' % (config.ship_code):
                 switch_data = json.loads(msg.payload)
+                print(switch_data)
                 if switch_data.get('b_draw') is None:
                     self.logger.error('switch_data_处理控制数据没有b_draw b_sampling')
                 # 改变了暂时没用
