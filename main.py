@@ -89,7 +89,7 @@ def main():
         if config.b_laser or config.b_pin_stc:
             stc_data_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_stc_data)
 
-    send_com_data_thread = threading.Thread(target=data_manager_obj.send_com_data)
+    move_control_thread = threading.Thread(target=data_manager_obj.move_control)
     check_status_thread = threading.Thread(target=data_manager_obj.check_status)
     send_mqtt_data_thread = threading.Thread(target=data_manager_obj.send_mqtt_data)
     update_ship_gaode_thread = threading.Thread(target=data_manager_obj.update_ship_gaode_lng_lat)
@@ -98,7 +98,7 @@ def main():
     check_ping_delay_thread = threading.Thread(target=data_manager_obj.check_ping_delay)
 
     # check_status_thread.setDaemon(True)
-    # send_com_data_thread.setDaemon(True)
+    # move_control_thread.setDaemon(True)
     # send_mqtt_data_thread.setDaemon(True)
     # update_ship_gaode_thread.setDaemon(True)
     # update_lng_lat_thread.setDaemon(True)
@@ -126,7 +126,7 @@ def main():
     #         get_distance_thread.setDaemon(True)
     check_status_thread.start()
     send_mqtt_data_thread.start()
-    send_com_data_thread.start()
+    move_control_thread.start()
     update_ship_gaode_thread.start()
     update_lng_lat_thread.start()
     update_config_thread.start()
@@ -241,17 +241,17 @@ def main():
             check_status_thread.start()
             time.sleep(thread_restart_time)
 
-        if not send_com_data_thread.is_alive():
-            logger.error('restart send_com_data_thread')
-            send_com_data_thread = threading.Thread(
-                target=data_manager_obj.send_com_data)
-            send_com_data_thread.setDaemon(True)
-            send_com_data_thread.start()
+        if not move_control_thread.is_alive():
+            logger.error('restart move_control_thread')
+            move_control_thread = threading.Thread(
+                target=data_manager_obj.move_control)
+            move_control_thread.setDaemon(True)
+            move_control_thread.start()
             time.sleep(thread_restart_time)
 
         if not update_ship_gaode_thread.is_alive():
             logger.error('restart update_ship_gaode_thread')
-            send_com_data_thread = threading.Thread(
+            update_ship_gaode_thread = threading.Thread(
                 target=data_manager_obj.update_ship_gaode_lng_lat)
             update_ship_gaode_thread.setDaemon(True)
             update_ship_gaode_thread.start()

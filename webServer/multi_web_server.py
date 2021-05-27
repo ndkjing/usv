@@ -231,6 +231,11 @@ class WebServer:
                         config.pool_name = self.baidu_map_obj_dict.get(ship_code).pool_name
                     else:
                         config.pool_name = self.baidu_map_obj_dict.get(ship_code).address
+                    try:
+                        if len(config.pool_name)>=10:
+                            config.pool_name=config.pool_name[:7]
+                    except Exception:
+                        config.pool_name='123'
                     self.logger.info({'config.pool_name': config.pool_name})
                     # 判断当前湖泊是否曾经出现，出现过则获取的ID 没出现过发送请求获取新ID
                     if isinstance(self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
@@ -366,15 +371,15 @@ class WebServer:
                         target_lng_lats = copy.deepcopy(
                             self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.target_lng_lat)
                         # 是否返航
-                        if int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.back_home) == 1:
-                            if config.home_debug:
-                                target_lng_lats.append(config.ship_gaode_lng_lat)
-                            else:
-                                # 添加当前经纬度作为返航点
-                                if self.baidu_map_obj_dict.get(ship_code) is not None and self.server_data_obj_dict.get(
-                                        ship_code).mqtt_send_get_obj.home_lng_lat is not None:
-                                    target_lng_lats.append(
-                                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat)
+                        # if int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.back_home) == 1:
+                        #     if config.home_debug:
+                        #         target_lng_lats.append(config.ship_gaode_lng_lat)
+                        #     else:
+                        #         # 添加当前经纬度作为返航点
+                        #         if self.baidu_map_obj_dict.get(ship_code) is not None and self.server_data_obj_dict.get(
+                        #                 ship_code).mqtt_send_get_obj.home_lng_lat is not None:
+                        #             target_lng_lats.append(
+                        #                 self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat)
 
                         # 判断是否是上次的点
                         if self.current_target_gaode_lng_lats_dict.get(ship_code) == target_lng_lats:
@@ -391,15 +396,15 @@ class WebServer:
                         target_lng_lats = copy.deepcopy(
                             self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.target_lng_lat)
                         # 是否返航
-                        if int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.back_home) == 1:
-                            if config.home_debug:
-                                target_lng_lats.append(config.ship_gaode_lng_lat)
-                            else:
-                                # 添加当前经纬度作为返航点
-                                if self.baidu_map_obj_dict.get(ship_code) is not None and self.server_data_obj_dict.get(
-                                        ship_code).mqtt_send_get_obj.home_lng_lat is not None:
-                                    target_lng_lats.append(
-                                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat)
+                        # if int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.back_home) == 1:
+                        #     if config.home_debug:
+                        #         target_lng_lats.append(config.ship_gaode_lng_lat)
+                        #     else:
+                        #         # 添加当前经纬度作为返航点
+                        #         if self.baidu_map_obj_dict.get(ship_code) is not None and self.server_data_obj_dict.get(
+                        #                 ship_code).mqtt_send_get_obj.home_lng_lat is not None:
+                        #             target_lng_lats.append(
+                        #                 self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat)
 
                         if self.current_target_gaode_lng_lats_dict.get(ship_code) == target_lng_lats:
                             pass
@@ -472,7 +477,6 @@ class WebServer:
                 self.baidu_map_obj_dict.get(ship_code).ship_gaode_lng_lat = self.server_data_obj_dict.get(
                     ship_code).mqtt_send_get_obj.current_lng_lat
                 b_plan_path = True
-
         # 进行路径规划
         print('server_config.b_use_path_planning and b_plan_path', server_config.b_use_path_planning and b_plan_path)
         if server_config.b_use_path_planning and b_plan_path:
@@ -481,7 +485,6 @@ class WebServer:
                 target_lng_lats=target_lng_lats,
                 b_show=False,
             )
-
             # 当查找不成功时
             if isinstance(return_gaode_lng_lat_path, str) or return_gaode_lng_lat_path is None:
                 self.logger.error(return_gaode_lng_lat_path)
@@ -523,7 +526,7 @@ class WebServer:
             topic='path_planning_%s' % ship_code,
             ship_code=ship_code,
             data=mqtt_send_path_planning_data,
-            qos=1)
+            qos=0)
         self.logger.info({'mqtt_send_path_planning_data': mqtt_send_path_planning_data})
 
 
@@ -536,9 +539,13 @@ if __name__ == '__main__':
             find_pool_thread.start()
             get_plan_path_thread.start()
             while True:
+                if not find_pool_thread.is_alive():
+                    find_pool_thread = threading.Thread(target=web_server_obj.find_pool)
+                    find_pool_thread.start()
+                if not get_plan_path_thread.is_alive():
+                    get_plan_path_thread = threading.Thread(target=web_server_obj.get_plan_path)
+                    get_plan_path_thread.start()
                 time.sleep(1)
         except Exception as e:
             print({'error': e})
             time.sleep(1)
-    # find_pool_thread.start()
-    # find_pool_thread.start()

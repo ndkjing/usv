@@ -104,7 +104,7 @@ class PiSoftuart(object):
             len_data = 4
             try:
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                print(time.time(), 'count', count, 'data', data)
+                # print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
                     # str = (str, errors='ignore')
                     str_data = data.decode('utf-8', errors='ignore')
@@ -219,7 +219,7 @@ class PiSoftuart(object):
             try:
                 time.sleep(self._thread_ts)
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                print(time.time(), 'count', count, 'data', data)
+                # print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
                     str_data = str(binascii.b2a_hex(data))[2:-1]
                     # print(r'str_data', str_data)
@@ -243,12 +243,12 @@ class PiSoftuart(object):
 
     def send_stc_data(self, send_data):
         try:
-            self.write_data(send_data)
+            self.write_data(send_data, baud=115200)
             time.sleep(self._thread_ts)
             return None
             # time.sleep(self._thread_ts)
         except Exception as e:
-            print({'error read_compass': e})
+            print({'error send_stc_data': e})
             return None
 
     def read_stc_data(self):

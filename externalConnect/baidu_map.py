@@ -109,7 +109,6 @@ def is_in_contours(point, local_map_data):
         return None
     else:
         # 判断是否在轮廓内部
-        # for index, cnt in enumerate(local_map_data['mapList']):
         for index, cnt in enumerate(local_map_data['mapList']):
             # 直接使用像素位置判断
             in_cnt = cv2.pointPolygonTest(

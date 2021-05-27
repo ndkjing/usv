@@ -104,6 +104,7 @@ class ComData:
 
     # 发数据
     def send_data(self, data, b_hex=False):
+        print('com send_data',data)
         if b_hex:
             self.uart.write(bytes.fromhex(data))
         else:

@@ -336,7 +336,7 @@ class PiMain:
         一直修改输出pwm波到目标pwm波
         :return:
         """
-        sleep_time = 0.02
+        sleep_time = 0.01
         change_pwm_ceil = 5
         while True:
             if abs(self.left_pwm - self.target_left_pwm) != 0 or abs(self.right_pwm != self.target_right_pwm) != 0:
@@ -355,7 +355,7 @@ class PiMain:
                 self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
                 time.sleep(sleep_time)
             else:
-                time.sleep(0.01)
+                time.sleep(sleep_time)
         # 不支持输出获取pwm状态，以后再调试
         # print('left_pwm:',self.left_pwm,self.pi.get_PWM_dutycycle(config.left_pwm_pin),'right_pwm:',self.right_pwm,self.pi.get_PWM_dutycycle(config.right_pwm_pin))
 
@@ -517,6 +517,13 @@ class PiMain:
 
 if __name__ == '__main__':
     pi_main_obj = PiMain()
+    from drivers import com_data
+    if os.path.exists(config.stc_port):
+        com_data_obj = com_data.ComData(
+                config.stc_port,
+                config.stc_baud,
+                timeout=config.stc2pi_timeout,
+                logger=logger)
     loop_change_pwm_thread = threading.Thread(target=pi_main_obj.loop_change_pwm)
     loop_change_pwm_thread.start()
     while True:
@@ -538,7 +545,12 @@ if __name__ == '__main__':
                   'c  声呐数据\n'
                   'b  毫米波数据\n'
                   'n  距离字典\n'
-                  '')
+                  'A0 A1  关闭和开启水泵'
+                  'B0 B1  关闭和开启舷灯'
+                  'C0 C1  关闭和开启前面大灯'
+                  'D0 D1  关闭和开启声光报警器'
+                  'E0 E1 E2 E3 E4  状态灯'
+                  )
             key_input = input('please input:')
             # 前 后 左 右 停止  右侧电机是反桨叶 左侧电机是正桨叶
             gear = None
@@ -667,6 +679,14 @@ if __name__ == '__main__':
                 print('millimeter_wave', millimeter_wave_data)
             elif key_input.startswith('n'):
                 pi_main_obj.get_distance_dict_millimeter()
+            elif key_input[0] in ['A','B','C','D','E']:
+                print('len(key_input)',len(key_input))
+                if len(key_input) == 2 and key_input[1] in ['0', '1', '2', '3', '4']:
+                    send_data = key_input+'Z'
+                    print('send_data',send_data)
+                    com_data_obj.send_data(send_data)
+                    row_com_data_read = com_data_obj.readline()
+                    print('row_com_data_read',row_com_data_read)
             # TODO
             # 返航
             # 角度控制

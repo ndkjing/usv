@@ -155,6 +155,8 @@ class MqttSendGet:
         self.audio_light = 0
         # 舷灯 1 允许打开舷灯 没有该键表示不打开
         self.side_light = 1
+        # 状态灯
+        self.status_light = 3
         # 启动还是停止
         self.b_start = 0
         # 基础设置数据
@@ -201,7 +203,7 @@ class MqttSendGet:
             # 判断topic
             topic = msg.topic
             if config.network_backhome:
-                if time.time()-self.last_command_time>min(config.network_backhome,300):
+                if time.time()-self.last_command_time>300:
                     self.b_network_backhome=1
             self.last_command_time = time.time()
             # 处理控制数据
@@ -232,8 +234,6 @@ class MqttSendGet:
             if topic == 'switch_%s' % (config.ship_code):
                 switch_data = json.loads(msg.payload)
                 print(switch_data)
-                if switch_data.get('b_draw') is None:
-                    self.logger.error('switch_data_处理控制数据没有b_draw b_sampling')
                 # 改变了暂时没用
                 if switch_data.get('b_sampling') is not None:
                     self.b_sampling = int(switch_data.get('b_sampling'))
