@@ -456,13 +456,13 @@ class DataManager:
                 pass
         self.last_audio_light = self.server_data_obj.mqtt_send_get_obj.audio_light
 
-        if self.server_data_obj.mqtt_send_get_obj.status_light!=self.last_status_light:
-            send_stc_data = 'E%sZ'%(str(self.server_data_obj.mqtt_send_get_obj.status_light))
+        if self.server_data_obj.mqtt_send_get_obj.status_light != self.last_status_light:
+            send_stc_data = 'E%sZ' % (str(self.server_data_obj.mqtt_send_get_obj.status_light))
             if config.b_pin_stc:
                 self.pi_main_obj.stc_obj.send_stc_data(send_stc_data)
             elif os.path.exists(config.stc_port):
                 self.com_data_obj.send_data(send_stc_data)
-        if random.random()>0.8:
+        if random.random() > 0.8:
             self.last_status_light = 4
         self.last_status_light = self.server_data_obj.mqtt_send_get_obj.status_light
 
@@ -488,8 +488,8 @@ class DataManager:
         self.distance_p = 0
         # 清空路径
         self.smooth_path_lng_lat = None
-        self.server_data_obj.mqtt_send_get_obj.b_start=0
-        self.server_data_obj.mqtt_send_get_obj.back_home=0
+        self.server_data_obj.mqtt_send_get_obj.b_start = 0
+        self.server_data_obj.mqtt_send_get_obj.back_home = 0
 
     # 检查是否需要返航
     def check_backhome(self):
@@ -562,24 +562,17 @@ class DataManager:
     #     return smooth_path_lng_lat
     def smooth_path(self):
         smooth_path_lng_lat = []
-        self.smooth_path_lng_lat_index = []
         sample_index = 0
+        distance_matrix = []
         for index, target_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps):
-            if index==0:
-                s_d_1 =
-                s_d_2 =
-            elif index == len(self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps)-1:
-
-            else:
-                s_d_0 = lng_lat_calculate.distanceFromCoordinate(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[sample_index][0],
-                                                            self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[sample_index][1],
-                                                            target_lng_lat[0],
-                                                            target_lng_lat[1])
-                s_d_1 =
-                s_d_2 =
-            if sample_index < len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps) and s_d < config.smooth_path_ceil_size / 2:
-                self.smooth_path_lng_lat_index.append(len(smooth_path_lng_lat))
-                sample_index += 1
+            distance_list = []
+            for sampling_points_gps_i in self.server_data_obj.mqtt_send_get_obj.sampling_points_gps:
+                s_d = lng_lat_calculate.distanceFromCoordinate(sampling_points_gps_i[0],
+                                                               sampling_points_gps_i[1],
+                                                               target_lng_lat[0],
+                                                               target_lng_lat[1])
+                distance_list.append(s_d)
+            distance_matrix.append(distance_list)
             if index == 0:
                 theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
                                                               self.lng_lat[1],
@@ -621,6 +614,12 @@ class DataManager:
                             config.smooth_path_ceil_size * i)
                         smooth_path_lng_lat.append(cal_lng_lat)
                     smooth_path_lng_lat.append(target_lng_lat)
+        a_d_m = np.asarray(distance_matrix)
+        for k in range(len(distance_matrix[0])):
+            temp_a = a_d_m[:, k]
+            temp_list = temp_a.tolist()
+            index_l = temp_list.index(min(temp_list))
+            self.smooth_path_lng_lat_index.append(index_l)
         print('self.smooth_path_lng_lat_index', self.smooth_path_lng_lat_index)
         return smooth_path_lng_lat
 
@@ -635,12 +634,12 @@ class DataManager:
         # 搜索最临近的路点
         distance_list = []
         start_index = self.smooth_path_lng_lat_index[index_]
-        self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:])
-        # if index_ == len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)-1:
-        #     self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:])
-        # else:
-        #     self.search_list = copy.deepcopy(
-        #         self.smooth_path_lng_lat[start_index:self.smooth_path_lng_lat_index[index_ + 1]])
+        # self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:])
+        if index_ == len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)-1:
+            self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:])
+        else:
+            self.search_list = copy.deepcopy(
+                self.smooth_path_lng_lat[start_index:self.smooth_path_lng_lat_index[index_ + 1]])
         #     self.search_list = copy.deepcopy(
         #         self.smooth_path_lng_lat[start_index:self.smooth_path_lng_lat_index[index_ + 1]])
         #     distance_s = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
@@ -660,10 +659,13 @@ class DataManager:
                                                                 target_lng_lat[0],
                                                                 target_lng_lat[1])
             distance_list.append(distance)
+        if len(distance_list)==0:
+            return self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[index_]
         index = distance_list.index(min(distance_list))
         if index + 1 == len(self.search_list):
             print(self.search_list[-1])
-            return self.search_list[-1]
+            # return self.search_list[-1]
+            return self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[index_]
         lng_lat = self.search_list[index]
         index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                         self.lng_lat[1],
@@ -805,7 +807,7 @@ class DataManager:
                                 next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                                                  self.lng_lat[1],
                                                                                                  ((
-                                                                                                              angle_point - 180) + 360) % 360,
+                                                                                                          angle_point - 180) + 360) % 360,
                                                                                                  config.min_steer_distance)
                     return next_point_lng_lat, False
         elif config.b_millimeter_wave:
@@ -1095,8 +1097,10 @@ class DataManager:
                 # 如果勾选了返航且存在返航点
                 if self.server_data_obj.mqtt_send_get_obj.back_home:
                     if self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat:
-                        self.server_data_obj.mqtt_send_get_obj.path_planning_points.append(self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
-                        self.server_data_obj.mqtt_send_get_obj.sampling_points.append(self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
+                        self.server_data_obj.mqtt_send_get_obj.path_planning_points.append(
+                            self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
+                        self.server_data_obj.mqtt_send_get_obj.sampling_points.append(
+                            self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
                         self.server_data_obj.mqtt_send_get_obj.sampling_points_status.append(0)
                 if config.home_debug:
                     self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps = copy.deepcopy(
@@ -1126,7 +1130,10 @@ class DataManager:
                         if self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] == 1:
                             continue
                         # 计算下一个目标点经纬度
-                        if config.b_smooth_path:
+                        # print('config.b_smooth_path',config.b_smooth_path)
+                        # print('config.path_plan_type',config.path_plan_type)
+                        # if config.b_smooth_path:
+                        if config.path_plan_type:
                             next_lng_lat = self.calc_target_lng_lat(index)
                             # 如果当前点靠近采样点指定范围就停止并采样
                             sample_distance = lng_lat_calculate.distanceFromCoordinate(
@@ -1534,17 +1541,17 @@ class DataManager:
 
     # 测试发送障碍物数据
     def send_test_distance(self):
-        direction = int(random.random()*360)
+        direction = int(random.random() * 360)
         distance_info_data = {
-                        # 设备号
-                        "deviceId": "3c50f4c3-a9c1-4872-9f18-883af014380a",
-                        # 船头角度  以北为0度 ，逆时针方向为正
-                         "direction": direction,
-                        # 距离信息 内部为列表，列中中元素为字典，distance为距离单位米  angle为角度单位度，以船头角度为0度 左正右负
-                        "distance_info":[{"distance":4.5, "angle":20},
-                                        {"distance":7.5, "angle":-20},
-                                        {"distance":6, "angle":0}],
-                        }
+            # 设备号
+            "deviceId": "3c50f4c3-a9c1-4872-9f18-883af014380a",
+            # 船头角度  以北为0度 ，逆时针方向为正
+            "direction": direction,
+            # 距离信息 内部为列表，列中中元素为字典，distance为距离单位米  angle为角度单位度，以船头角度为0度 左正右负
+            "distance_info": [{"distance": 4.5, "angle": 20},
+                              {"distance": 7.5, "angle": -20},
+                              {"distance": 6, "angle": 0}],
+        }
 
         self.send(method='mqtt',
                   topic='distance_info_%s' % (config.ship_code),

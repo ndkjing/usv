@@ -110,5 +110,24 @@ def func4():
     print(int(3/4))
     for i in range(1,1):
         print(i)
+
+def func5():
+    d_m = []
+    for i in range(5):
+        d_list = []
+        for j in range(3):
+            d_list.append(random.random())
+        d_m.append(d_list)
+    print(len(d_m),len(d_m[0]))
+    min_index_list = []
+    a_d_m = np.asarray(d_m)
+    for k in range(len(d_m[0])):
+        temp_a = a_d_m[:,k]
+        temp_list = temp_a.tolist()
+        index = temp_list.index(min(temp_list))
+        min_index_list.append(index)
+    print(a_d_m)
+    print(min_index_list)
+
 if __name__ == '__main__':
-    func4()
+    func5()

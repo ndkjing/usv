@@ -273,7 +273,7 @@ else:
     home_debug = 1
 # 添加避障方式设置0 不避障 1 停止  2 绕行
 obstacle_avoid_type = 0
-# 路径规划方式
+# 路径规划方式  0 不平滑路径 1 平滑路径
 path_plan_type = 1
 # 路径跟踪方式  1 pid    2 pure pursuit  3 宫凯调试的pid
 path_track_type = 1
@@ -281,8 +281,8 @@ path_track_type = 1
 calibration_compass = 0
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
-# 是否使用平滑路径
-b_smooth_path = 1
+# 是否使用平滑路径  1 平滑路径 0 不平滑
+b_smooth_path = path_plan_type
 # 平滑路径最小单位 m
 smooth_path_ceil_size = 5
 # 前视觉距离
@@ -746,14 +746,12 @@ sonar_baud = 9600
 sonar_steer = 21
 test_all=0
 
-
-
 # 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
 if home_debug:
     use_shape_theta_type = 3
 else:
     use_shape_theta_type = 1
 
-b_draw = 0
+b_draw = 1
 if __name__ == '__main__':
     write_setting(True, True, True, True)
