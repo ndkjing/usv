@@ -486,13 +486,13 @@ def get_path(baidu_map_obj,
     if baidu_map_obj.ship_gaode_lng_lat is None:
         return 'no ship gps'
     # 单点
+    print('mode', mode)
     if mode == 1:
         if target_lng_lats is None:
             return 'target_pixs is None'
         elif len(target_lng_lats) > 1:
             return 'len(target_pixs) is >1 choose mode 1'
-        if baidu_map_obj.ship_pix is None:
-            baidu_map_obj.ship_pix = baidu_map_obj.gaode_lng_lat_to_pix(baidu_map_obj.ship_gaode_lng_lat)
+        baidu_map_obj.ship_pix = baidu_map_obj.gaode_lng_lat_to_pix(baidu_map_obj.ship_gaode_lng_lat)
         row_start = tuple(baidu_map_obj.ship_pix)
         row_goal = tuple(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lats[0]))
         s_start = mod_point(row_start)
@@ -549,9 +549,7 @@ def get_path(baidu_map_obj,
             return 'target_pixs is None'
         elif len(target_lng_lats) <= 1:
             return 'len(target_pixs) is<=1 choose mode 0'
-        if baidu_map_obj.ship_pix is None:
-            baidu_map_obj.ship_pix = baidu_map_obj.gaode_lng_lat_to_pix(baidu_map_obj.ship_gaode_lng_lat)
-
+        baidu_map_obj.ship_pix = baidu_map_obj.gaode_lng_lat_to_pix(baidu_map_obj.ship_gaode_lng_lat)
         target_pixs = []
         for target_lng_lat in target_lng_lats:
             target_pixs.append(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lat))

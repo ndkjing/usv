@@ -518,11 +518,68 @@ class DataManager:
             self.pi_main_obj.stop()
 
     # 平滑路径
+    # def smooth_path(self):
+    #     smooth_path_lng_lat = []
+    #     self.smooth_path_lng_lat_index = []
+    #     for index, target_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps):
+    #         self.smooth_path_lng_lat_index.append(len(smooth_path_lng_lat))
+    #         if index == 0:
+    #             theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
+    #                                                           self.lng_lat[1],
+    #                                                           target_lng_lat[0],
+    #                                                           target_lng_lat[1])
+    #             distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+    #                                                                 self.lng_lat[1],
+    #                                                                 target_lng_lat[0],
+    #                                                                 target_lng_lat[1])
+    #             for i in range(1, int((distance / config.smooth_path_ceil_size) + 1)):
+    #                 cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+    #                                                                           self.lng_lat[1],
+    #                                                                           theta,
+    #                                                                           config.smooth_path_ceil_size * i)
+    #                 smooth_path_lng_lat.append(cal_lng_lat)
+    #         else:
+    #             theta = lng_lat_calculate.angleFromCoordinate(
+    #                 self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
+    #                 self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
+    #                 target_lng_lat[0],
+    #                 target_lng_lat[1])
+    #             distance = lng_lat_calculate.distanceFromCoordinate(
+    #                 self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
+    #                 self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
+    #                 target_lng_lat[0],
+    #                 target_lng_lat[1])
+    #             for i in range(1, int(distance / config.smooth_path_ceil_size + 1)):
+    #                 cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(
+    #                     self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
+    #                     self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
+    #                     theta,
+    #                     config.smooth_path_ceil_size * i)
+    #                 smooth_path_lng_lat.append(cal_lng_lat)
+    #             if distance < config.smooth_path_ceil_size:
+    #                 smooth_path_lng_lat.append(target_lng_lat)
+    #         smooth_path_lng_lat.append(target_lng_lat)
+    #     return smooth_path_lng_lat
     def smooth_path(self):
         smooth_path_lng_lat = []
         self.smooth_path_lng_lat_index = []
+        sample_index = 0
         for index, target_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps):
-            self.smooth_path_lng_lat_index.append(len(smooth_path_lng_lat))
+            if index==0:
+                s_d_1 =
+                s_d_2 =
+            elif index == len(self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps)-1:
+
+            else:
+                s_d_0 = lng_lat_calculate.distanceFromCoordinate(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[sample_index][0],
+                                                            self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[sample_index][1],
+                                                            target_lng_lat[0],
+                                                            target_lng_lat[1])
+                s_d_1 =
+                s_d_2 =
+            if sample_index < len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps) and s_d < config.smooth_path_ceil_size / 2:
+                self.smooth_path_lng_lat_index.append(len(smooth_path_lng_lat))
+                sample_index += 1
             if index == 0:
                 theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
                                                               self.lng_lat[1],
@@ -532,12 +589,16 @@ class DataManager:
                                                                     self.lng_lat[1],
                                                                     target_lng_lat[0],
                                                                     target_lng_lat[1])
-                for i in range(1, int((distance / config.smooth_path_ceil_size) + 1)):
-                    cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-                                                                              self.lng_lat[1],
-                                                                              theta,
-                                                                              config.smooth_path_ceil_size * i)
-                    smooth_path_lng_lat.append(cal_lng_lat)
+                if distance < config.smooth_path_ceil_size:
+                    smooth_path_lng_lat.append(target_lng_lat)
+                else:
+                    for i in range(1, int((distance / config.smooth_path_ceil_size) + 1)):
+                        cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                  self.lng_lat[1],
+                                                                                  theta,
+                                                                                  config.smooth_path_ceil_size * i)
+                        smooth_path_lng_lat.append(cal_lng_lat)
+                    smooth_path_lng_lat.append(target_lng_lat)
             else:
                 theta = lng_lat_calculate.angleFromCoordinate(
                     self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
@@ -549,19 +610,20 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
                     target_lng_lat[0],
                     target_lng_lat[1])
-                for i in range(1, int(distance / config.smooth_path_ceil_size + 1)):
-                    cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(
-                        self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
-                        self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
-                        theta,
-                        config.smooth_path_ceil_size * i)
-                    smooth_path_lng_lat.append(cal_lng_lat)
                 if distance < config.smooth_path_ceil_size:
                     smooth_path_lng_lat.append(target_lng_lat)
-            smooth_path_lng_lat.append(target_lng_lat)
+                else:
+                    for i in range(1, int(distance / config.smooth_path_ceil_size + 1)):
+                        cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(
+                            self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
+                            self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
+                            theta,
+                            config.smooth_path_ceil_size * i)
+                        smooth_path_lng_lat.append(cal_lng_lat)
+                    smooth_path_lng_lat.append(target_lng_lat)
+        print('self.smooth_path_lng_lat_index', self.smooth_path_lng_lat_index)
         return smooth_path_lng_lat
 
-    # 计算下一个点经纬度
     def calc_target_lng_lat(self, index_):
         """
         根据当前点和路径计算下一个经纬度点
@@ -573,10 +635,25 @@ class DataManager:
         # 搜索最临近的路点
         distance_list = []
         start_index = self.smooth_path_lng_lat_index[index_]
-        if index_ == len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)-1:
-            self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:])
-        else:
-            self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:self.smooth_path_lng_lat_index[index_+1]])
+        self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:])
+        # if index_ == len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)-1:
+        #     self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:])
+        # else:
+        #     self.search_list = copy.deepcopy(
+        #         self.smooth_path_lng_lat[start_index:self.smooth_path_lng_lat_index[index_ + 1]])
+        #     self.search_list = copy.deepcopy(
+        #         self.smooth_path_lng_lat[start_index:self.smooth_path_lng_lat_index[index_ + 1]])
+        #     distance_s = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+        #                                                           self.lng_lat[1],
+        #                                                           self.search_list[-1][0],
+        #                                                           self.search_list[-1][1])
+        #     while distance_s < config.smooth_path_ceil_size and index_ < len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)-1:
+        #         self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:self.smooth_path_lng_lat_index[index_+1]])
+        #         distance_s = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+        #                                                             self.lng_lat[1],
+        #                                                             self.search_list[-1][0],
+        #                                                             self.search_list[-1][1])
+        #         index_+=1
         for target_lng_lat in self.search_list:
             distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                 self.lng_lat[1],
@@ -585,6 +662,7 @@ class DataManager:
             distance_list.append(distance)
         index = distance_list.index(min(distance_list))
         if index + 1 == len(self.search_list):
+            print(self.search_list[-1])
             return self.search_list[-1]
         lng_lat = self.search_list[index]
         index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
@@ -599,6 +677,7 @@ class DataManager:
                                                                             lng_lat[0],
                                                                             lng_lat[1])
             index += 1
+        print('index', index)
         # print('index,len(self.smooth_path_lng_lat) index_point_distance',index,len(self.smooth_path_lng_lat),index_point_distance)
         return self.search_list[index]
 
@@ -816,7 +895,6 @@ class DataManager:
             b_stop = False
             if not config.home_debug:
                 target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point(target_lng_lat_gps)
-            # 计算到下一个点距离
             all_distance = lng_lat_calculate.distanceFromCoordinate(
                 self.lng_lat[0], self.lng_lat[1], target_lng_lat_gps[0],
                 target_lng_lat_gps[1])
@@ -825,7 +903,6 @@ class DataManager:
                                                                 self.lng_lat[1],
                                                                 target_lng_lat_gps[0],
                                                                 target_lng_lat_gps[1])
-
             theta_error = point_theta - self.current_theta
             if abs(theta_error) > 180:
                 if theta_error > 0:
@@ -851,8 +928,8 @@ class DataManager:
                 right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
                 steer_power = left_delta_pwm - right_delta_pwm
                 forward_power = left_delta_pwm + right_delta_pwm
-                delta_distance = forward_power * 0.005
-                delta_theta = steer_power * 0.05
+                delta_distance = forward_power * 0.002
+                delta_theta = steer_power * 0.08
                 # if time.time() % 2 < 1:
                 # print('left_delta_pwm, right_delta_pwm left_pwm,right_pwm', left_delta_pwm, right_delta_pwm, left_pwm, right_pwm)
                 # print('delta_distance,delta_theta, forward_power steer_power',
@@ -1057,7 +1134,7 @@ class DataManager:
                                 next_lng_lat[1],
                                 sampling_point_gps[0],
                                 sampling_point_gps[1])
-                            # print('sample_distance', sample_distance)
+                            print('sample_distance', sample_distance)
                             if sample_distance < config.forward_see_distance:
                                 b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
                                                                              b_force_arrive=True)

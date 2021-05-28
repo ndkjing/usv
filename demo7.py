@@ -106,5 +106,9 @@ def func3():
     c = str(b)
     print(a,b,c)
 
+def func4():
+    print(int(3/4))
+    for i in range(1,1):
+        print(i)
 if __name__ == '__main__':
-    func3()
+    func4()

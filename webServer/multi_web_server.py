@@ -288,10 +288,9 @@ class WebServer:
                                 (self.baidu_map_obj_dict.get(ship_code).lng_lat[0] * 1000000,
                                  self.baidu_map_obj_dict.get(ship_code).lng_lat[1] * 1000000),
                                 local_map_data)
-
+                            print('pool_id',pool_id)
                         if pool_id is not None:
                             self.logger.info({'在本地找到湖泊 poolid': pool_id})
-
                         # 不存在获取新的id
                         else:
                             try:
@@ -461,24 +460,17 @@ class WebServer:
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.col_gap = None
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.safe_gap = None
 
-    # 路径规划
     def path_planning(self, target_lng_lats, ship_code):
         """
-
+        路径规划模块
         """
         b_plan_path = False
-        if config.home_debug:
-            self.baidu_map_obj.ship_gaode_lng_lat = config.ship_gaode_lng_lat
+        if self.baidu_map_obj_dict.get(ship_code) is not None and self.server_data_obj_dict.get(
+                ship_code).mqtt_send_get_obj.current_lng_lat is not None:
+            self.baidu_map_obj_dict.get(ship_code).ship_gaode_lng_lat = self.server_data_obj_dict.get(
+                ship_code).mqtt_send_get_obj.current_lng_lat
             b_plan_path = True
-        else:
-            # 在服务器上运行不考虑船的位置
-            if self.baidu_map_obj_dict.get(ship_code) is not None and self.server_data_obj_dict.get(
-                    ship_code).mqtt_send_get_obj.current_lng_lat is not None:
-                self.baidu_map_obj_dict.get(ship_code).ship_gaode_lng_lat = self.server_data_obj_dict.get(
-                    ship_code).mqtt_send_get_obj.current_lng_lat
-                b_plan_path = True
         # 进行路径规划
-        print('server_config.b_use_path_planning and b_plan_path', server_config.b_use_path_planning and b_plan_path)
         if server_config.b_use_path_planning and b_plan_path:
             return_gaode_lng_lat_path = a_star.get_path(
                 baidu_map_obj=self.baidu_map_obj_dict.get(ship_code),

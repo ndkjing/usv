@@ -174,7 +174,7 @@ pi2mqtt_interval = 1
 # 上传给单片机心跳时间间隔 单位秒
 # com_heart_time = 1 * 60
 # 船编号
-ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380a'
+ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380c'
 
 # 串口位置和波特率
 # 单片机
@@ -220,6 +220,7 @@ mqtt_port = 1884
 mod = 'auto'
 
 ship_gaode_lng_lat = [114.524096, 30.506853]
+# ship_gaode_lng_lat = [117.202177,39.901856]
 
 # 电机前进分量
 motor_forward = 200

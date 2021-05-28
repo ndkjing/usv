@@ -116,6 +116,7 @@ def is_in_contours(point, local_map_data):
             # 使用经纬度判断 大于0说明属于该轮廓
             print('in_cnt', in_cnt)
             if in_cnt >= 0:
+                print(r'cnt id ', cnt['id'])
                 return cnt['id']
         # 循环结束返回None
         return None
