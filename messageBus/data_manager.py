@@ -182,11 +182,13 @@ class DataManager:
             # 水质数据 b''BBD:0,R:158,Z:36,P:0,T:16.1,V:92.08,x1:0,x2:2,x3:1,x4:0\r\n'
             # 经纬度数据 b'AA2020.2354804,N,11425.41234568896,E\r\n'
             try:
+                time.sleep(0.5)
                 row_com_data_read = self.com_data_obj.readline()
+                print('row_com_data_read', row_com_data_read)
                 com_data_read = str(row_com_data_read)[2:-5]
-                # if time.time()-last_read_time>3:
-                #     last_read_time = time.time()
-                #     self.com_data_read_logger.info({'str com_data_read': com_data_read})
+                if time.time() - last_read_time > 3:
+                    last_read_time = time.time()
+                    self.com_data_read_logger.info({'str com_data_read': com_data_read})
                 # 解析串口发送过来的数据
                 if com_data_read is None:
                     continue
@@ -635,7 +637,7 @@ class DataManager:
         distance_list = []
         start_index = self.smooth_path_lng_lat_index[index_]
         # self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:])
-        if index_ == len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)-1:
+        if index_ == len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps) - 1:
             self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:])
         else:
             self.search_list = copy.deepcopy(
@@ -659,7 +661,7 @@ class DataManager:
                                                                 target_lng_lat[0],
                                                                 target_lng_lat[1])
             distance_list.append(distance)
-        if len(distance_list)==0:
+        if len(distance_list) == 0:
             return self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[index_]
         index = distance_list.index(min(distance_list))
         if index + 1 == len(self.search_list):
@@ -708,7 +710,7 @@ class DataManager:
         return obstacle_map
 
     # 计算障碍物下目标点
-    def get_avoid_obstacle_point(self, path_planning_point_gps):
+    def get_avoid_obstacle_point(self, path_planning_point_gps=None):
         """
         根据障碍物地图获取下一个运动点
         :return: 下一个目标点，是否需要紧急停止
@@ -817,8 +819,8 @@ class DataManager:
                 return path_planning_point_gps, False
             # 避障停止
             elif config.obstacle_avoid_type == 1:
-                if 1 in self.pi_main_obj.obstacle_list[int(len(self.pi_main_obj.obstacle_list) / 2) - 1:int(
-                        len(self.pi_main_obj.obstacle_list) / 2) + 2]:
+                if 1 in self.pi_main_obj.obstacle_list[
+                        int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
                     return next_point_lng_lat, True
                 else:
                     return path_planning_point_gps, False
@@ -947,13 +949,16 @@ class DataManager:
             else:
                 # 判断是否需要避障处理
                 print('b_stop', b_stop)
-                self.pi_main_obj.set_pwm(left_pwm, right_pwm)
-                # if b_stop:
-                #     self.obstacle_info = '1'
-                #     self.pi_main_obj.stop()
-                # else:
-                #     self.obstacle_info = '0'
-                #     self.pi_main_obj.set_pwm(left_pwm, right_pwm)
+                # self.pi_main_obj.set_pwm(left_pwm, right_pwm)
+                if b_stop:
+                    self.obstacle_info = '1'
+                    self.pi_main_obj.stop()
+                    # 记录是因为按了暂停按钮而终止
+                    self.b_stop_path_track = True
+                    return False
+                else:
+                    self.obstacle_info = '0'
+                    self.pi_main_obj.set_pwm(left_pwm, right_pwm)
 
             # 清空规划点
             if int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == -1:
@@ -1012,6 +1017,11 @@ class DataManager:
                 self.pi_main_obj.set_pwm(set_left_pwm=remote_left_pwm, set_right_pwm=remote_right_pwm)
             # 手动模式
             elif self.ship_status == ShipStatus.computer_control:
+                if config.obstacle_avoid_type == 3:
+                    if 1 in self.pi_main_obj.obstacle_list[
+                            int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
+                        print('self.pi_main_obj.obstacle_list', self.pi_main_obj.obstacle_list)
+                        d = -1
                 # 使用飞控
                 if config.b_use_pix:
                     if d == 0:

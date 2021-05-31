@@ -271,7 +271,7 @@ if current_platform == CurrentPlatform.pi:
     home_debug = 0
 else:
     home_debug = 1
-# 添加避障方式设置0 不避障 1 停止  2 绕行
+# 添加避障方式设置0 不避障 1 停止  2 绕行 3 手动模式下避障
 obstacle_avoid_type = 0
 # 路径规划方式  0 不平滑路径 1 平滑路径
 path_plan_type = 1

@@ -86,3 +86,7 @@
 2021-05-28 20:54:31,779 main.py[line:237] ERROR restart check_status_thread
 2021-05-28 20:54:32,796 main.py[line:260] ERROR restart update_lng_lat_thread
 2021-05-28 20:54:35,796 main.py[line:69] INFO {'binding status': 1}
+2021-05-31 08:39:31,792 main.py[line:69] INFO {'binding status': 1}
+2021-05-31 08:44:00,043 main.py[line:69] INFO {'binding status': 1}
+2021-05-31 09:14:26,657 main.py[line:69] INFO {'binding status': 1}
+2021-05-31 09:31:07,646 main.py[line:69] INFO {'binding status': 1}

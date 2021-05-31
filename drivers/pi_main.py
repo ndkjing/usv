@@ -75,7 +75,8 @@ class PiMain:
         self.distance_dict = {}
         self.field_of_view = 90  # 视场角
         self.view_cell = 5          # 量化角度单元格
-        self.obstacle_list = [0]*int(self.field_of_view/self.view_cell)
+        self.cell_size = int(self.field_of_view/self.view_cell)
+        self.obstacle_list = [0]*self.cell_size
         # 设置为GPIO输出模式 输出高低电平
         self.pi.set_mode(config.side_left_gpio_pin, pigpio.OUTPUT)
         self.pi.set_mode(config.side_right_gpio_pin, pigpio.OUTPUT)
@@ -423,9 +424,12 @@ class PiMain:
     def get_distance_dict_millimeter(self):
         # 角度限制
         steer_max_angle = config.steer_max_angle
-        count=0
+        count = 0
         while True:
             data_dict = self.millimeter_wave_obj.read_millimeter_wave()
+            print('data_dict', data_dict)
+            print('self.distance_dict', self.distance_dict)
+            print('self.obstacle_list', self.obstacle_list)
             if data_dict is not None:
                 for index in data_dict:
                     angle = data_dict[index][1]
@@ -440,13 +444,14 @@ class PiMain:
                         b_obstacle = 1
                     self.obstacle_list[obstacle_index] = b_obstacle
                     angle_key = int((angle - angle % 2))
-                    if count == 49:
-                        self.distance_dict.clear()
                     self.distance_dict.update({angle_key: distance})
                     # print('self.distance_dict', self.distance_dict)
-                    count += 1
-                    count %= 50
-                    time.sleep(0.02)
+            if count == 29:
+                self.distance_dict.clear()
+                self.obstacle_list = [0] * int(self.field_of_view / self.view_cell)
+            count += 1
+            count %= 30
+            time.sleep(0.1)
 
     def set_gpio(self,
                  control_left_motor=0,

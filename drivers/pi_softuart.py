@@ -104,7 +104,7 @@ class PiSoftuart(object):
             len_data = 4
             try:
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                # print(time.time(), 'count', count, 'data', data)
+                print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
                     # str = (str, errors='ignore')
                     str_data = data.decode('utf-8', errors='ignore')
