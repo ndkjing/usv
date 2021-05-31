@@ -464,9 +464,9 @@ class DataManager:
                 self.pi_main_obj.stc_obj.send_stc_data(send_stc_data)
             elif os.path.exists(config.stc_port):
                 self.com_data_obj.send_data(send_stc_data)
+        self.last_status_light = self.server_data_obj.mqtt_send_get_obj.status_light
         if random.random() > 0.8:
             self.last_status_light = 4
-        self.last_status_light = self.server_data_obj.mqtt_send_get_obj.status_light
 
     # 清除状态
     def clear_status(self):
