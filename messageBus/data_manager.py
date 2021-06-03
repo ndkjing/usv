@@ -105,8 +105,12 @@ class DataManager:
         self.dump_energy = None
         # 求剩余电量均值
         self.dump_energy_deque = deque(maxlen=20)
-        # 电量告警
+        # 电量告警 是否是低电量返航
         self.low_dump_energy_warnning = 0
+        #是否是断网返航
+        self.b_network_backhome = 0
+        # 是否已经返航在家
+        self.b_at_home=0
         # 返航点
         self.home_lng_lat = None
         # 返航点高德经纬度
@@ -482,6 +486,7 @@ class DataManager:
         self.server_data_obj.mqtt_send_get_obj.path_planning_points = []
         self.server_data_obj.mqtt_send_get_obj.sampling_points_status = []
         self.server_data_obj.mqtt_send_get_obj.sampling_points_gps = []
+        self.smooth_path_lng_lat_index = []
         # 清空里程和时间
         self.totle_distance = 0
         self.plan_start_time = None
@@ -495,17 +500,19 @@ class DataManager:
 
     # 检查是否需要返航
     def check_backhome(self):
-        if self.server_data_obj.mqtt_send_get_obj.b_network_backhome:
-            # 记录是因为按了长时间没操作判断为返航
-            self.ship_status = ShipStatus.backhome
+        if config.network_backhome:
+            if int(config.network_backhome) > 100:
+                network_backhome_time = int(config.network_backhome)
+            else:
+                network_backhome_time = 100
+            if time.time() - self.server_data_obj.mqtt_send_get_obj.last_command_time > network_backhome_time:
+                self.b_network_backhome = 1
+                self.ship_status = ShipStatus.backhome
+                self.back_home()
         if self.low_dump_energy_warnning:
             # 记录是因为按了低电量判断为返航
-            self.ship_status = ShipStatus.backhome
-        if self.ship_status == ShipStatus.backhome:
-            self.clear_status()
             self.back_home()
 
-    # 返航
     def back_home(self):
         """
         紧急情况下返航
@@ -516,65 +523,18 @@ class DataManager:
             if not config.home_debug:
                 self.pi_main_obj.stop()
         else:
-            self.points_arrive_control(self.home_lng_lat, self.home_lng_lat, True)
-            self.pi_main_obj.stop()
+            print('back home')
+            self.points_arrive_control(self.home_lng_lat, self.home_lng_lat, True, True)
+            # self.pi_main_obj.stop()
 
-    # 平滑路径
-    # def smooth_path(self):
-    #     smooth_path_lng_lat = []
-    #     self.smooth_path_lng_lat_index = []
-    #     for index, target_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps):
-    #         self.smooth_path_lng_lat_index.append(len(smooth_path_lng_lat))
-    #         if index == 0:
-    #             theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
-    #                                                           self.lng_lat[1],
-    #                                                           target_lng_lat[0],
-    #                                                           target_lng_lat[1])
-    #             distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
-    #                                                                 self.lng_lat[1],
-    #                                                                 target_lng_lat[0],
-    #                                                                 target_lng_lat[1])
-    #             for i in range(1, int((distance / config.smooth_path_ceil_size) + 1)):
-    #                 cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-    #                                                                           self.lng_lat[1],
-    #                                                                           theta,
-    #                                                                           config.smooth_path_ceil_size * i)
-    #                 smooth_path_lng_lat.append(cal_lng_lat)
-    #         else:
-    #             theta = lng_lat_calculate.angleFromCoordinate(
-    #                 self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
-    #                 self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
-    #                 target_lng_lat[0],
-    #                 target_lng_lat[1])
-    #             distance = lng_lat_calculate.distanceFromCoordinate(
-    #                 self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
-    #                 self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
-    #                 target_lng_lat[0],
-    #                 target_lng_lat[1])
-    #             for i in range(1, int(distance / config.smooth_path_ceil_size + 1)):
-    #                 cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(
-    #                     self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][0],
-    #                     self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps[index - 1][1],
-    #                     theta,
-    #                     config.smooth_path_ceil_size * i)
-    #                 smooth_path_lng_lat.append(cal_lng_lat)
-    #             if distance < config.smooth_path_ceil_size:
-    #                 smooth_path_lng_lat.append(target_lng_lat)
-    #         smooth_path_lng_lat.append(target_lng_lat)
-    #     return smooth_path_lng_lat
     def smooth_path(self):
+        """
+        平滑路径
+        :return:平滑路径线路
+        """
         smooth_path_lng_lat = []
-        sample_index = 0
         distance_matrix = []
         for index, target_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps):
-            distance_list = []
-            for sampling_points_gps_i in self.server_data_obj.mqtt_send_get_obj.sampling_points_gps:
-                s_d = lng_lat_calculate.distanceFromCoordinate(sampling_points_gps_i[0],
-                                                               sampling_points_gps_i[1],
-                                                               target_lng_lat[0],
-                                                               target_lng_lat[1])
-                distance_list.append(s_d)
-            distance_matrix.append(distance_list)
             if index == 0:
                 theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
                                                               self.lng_lat[1],
@@ -616,13 +576,21 @@ class DataManager:
                             config.smooth_path_ceil_size * i)
                         smooth_path_lng_lat.append(cal_lng_lat)
                     smooth_path_lng_lat.append(target_lng_lat)
+        for smooth_lng_lat_i in smooth_path_lng_lat:
+            distance_list = []
+            for sampling_points_gps_i in self.server_data_obj.mqtt_send_get_obj.sampling_points_gps:
+                s_d = lng_lat_calculate.distanceFromCoordinate(sampling_points_gps_i[0],
+                                                               sampling_points_gps_i[1],
+                                                               smooth_lng_lat_i[0],
+                                                               smooth_lng_lat_i[1])
+                distance_list.append(s_d)
+            distance_matrix.append(distance_list)
         a_d_m = np.asarray(distance_matrix)
         for k in range(len(distance_matrix[0])):
             temp_a = a_d_m[:, k]
             temp_list = temp_a.tolist()
             index_l = temp_list.index(min(temp_list))
             self.smooth_path_lng_lat_index.append(index_l)
-        print('self.smooth_path_lng_lat_index', self.smooth_path_lng_lat_index)
         return smooth_path_lng_lat
 
     def calc_target_lng_lat(self, index_):
@@ -636,37 +604,22 @@ class DataManager:
         # 搜索最临近的路点
         distance_list = []
         start_index = self.smooth_path_lng_lat_index[index_]
-        # self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:])
-        if index_ == len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps) - 1:
-            self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:])
+        if index_ == 0:
+            self.search_list = copy.deepcopy(self.smooth_path_lng_lat[:start_index])
         else:
             self.search_list = copy.deepcopy(
-                self.smooth_path_lng_lat[start_index:self.smooth_path_lng_lat_index[index_ + 1]])
-        #     self.search_list = copy.deepcopy(
-        #         self.smooth_path_lng_lat[start_index:self.smooth_path_lng_lat_index[index_ + 1]])
-        #     distance_s = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
-        #                                                           self.lng_lat[1],
-        #                                                           self.search_list[-1][0],
-        #                                                           self.search_list[-1][1])
-        #     while distance_s < config.smooth_path_ceil_size and index_ < len(self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)-1:
-        #         self.search_list = copy.deepcopy(self.smooth_path_lng_lat[start_index:self.smooth_path_lng_lat_index[index_+1]])
-        #         distance_s = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
-        #                                                             self.lng_lat[1],
-        #                                                             self.search_list[-1][0],
-        #                                                             self.search_list[-1][1])
-        #         index_+=1
+                self.smooth_path_lng_lat[self.smooth_path_lng_lat_index[index_ - 1]:start_index])
         for target_lng_lat in self.search_list:
             distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                 self.lng_lat[1],
                                                                 target_lng_lat[0],
                                                                 target_lng_lat[1])
             distance_list.append(distance)
+        # 如果没有可以去路径
         if len(distance_list) == 0:
             return self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[index_]
         index = distance_list.index(min(distance_list))
         if index + 1 == len(self.search_list):
-            print(self.search_list[-1])
-            # return self.search_list[-1]
             return self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[index_]
         lng_lat = self.search_list[index]
         index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
@@ -681,8 +634,6 @@ class DataManager:
                                                                             lng_lat[0],
                                                                             lng_lat[1])
             index += 1
-        print('index', index)
-        # print('index,len(self.smooth_path_lng_lat) index_point_distance',index,len(self.smooth_path_lng_lat),index_point_distance)
         return self.search_list[index]
 
     # 构建障碍物地图
@@ -873,11 +824,12 @@ class DataManager:
                 return next_point_lng_lat, False
 
     # 控制到达目标点
-    def points_arrive_control(self, target_lng_lat_gps, sample_lng_lat_gps, b_force_arrive=False):
+    def points_arrive_control(self, target_lng_lat_gps, sample_lng_lat_gps, b_force_arrive=False, b_back_home=False):
         """
         :param target_lng_lat_gps: 目标点真实经纬度
         :param sample_lng_lat_gps: 下一个采样点真实经纬度
         :param b_force_arrive: 是否约束一定要到达
+        :param b_back_home 是否是正在返航
         :return:
         """
         distance = lng_lat_calculate.distanceFromCoordinate(
@@ -889,6 +841,8 @@ class DataManager:
         if distance < config.arrive_distance:
             return True
         while distance >= config.arrive_distance:
+            if not b_back_home and not self.b_at_home:
+                self.check_backhome()
             distance_sample = lng_lat_calculate.distanceFromCoordinate(
                 self.lng_lat[0],
                 self.lng_lat[1],
@@ -969,21 +923,13 @@ class DataManager:
                 # 记录是因为按了遥控而终止
                 self.b_stop_path_track = True
                 break
-            if self.server_data_obj.mqtt_send_get_obj.b_network_backhome:
-                # 记录是因为按了长时间没操作判断为返航
-                self.b_stop_path_track = True
-                self.ship_status = ShipStatus.backhome
-                break
-            if self.low_dump_energy_warnning:
-                # 记录是因为按了低电量判断为返航
-                self.b_stop_path_track = True
-                self.ship_status = ShipStatus.backhome
-                break
             # 如果目标点改变并且不是强制到达 b_force_arrive
             if not b_force_arrive:
                 break
             else:
                 if distance_sample < config.arrive_distance:
+                    if b_back_home:
+                        self.b_at_home = 1
                     return True
 
     # 处理电机控制 必须使用线程
@@ -997,7 +943,8 @@ class DataManager:
         while True:
             time.sleep(config.pi2com_timeout)
             # 检查是否需要返航
-            self.check_backhome()
+            if not self.b_at_home:
+                self.check_backhome()
             # 判断当前是手动控制还是自动控制
             d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
             if d in [-2, -1, 0, 90, 180, 270]:
@@ -1005,6 +952,8 @@ class DataManager:
                 # 改变状态不再重复发送指令
                 self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
                 if d in [-1, 0, 90, 180, 270]:
+                    # 手动控制下设置在家状态为0
+                    self.b_at_home = 0
                     b_log_points = 1
             # 使用路径规划
             if len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
@@ -1140,9 +1089,6 @@ class DataManager:
                         if self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] == 1:
                             continue
                         # 计算下一个目标点经纬度
-                        # print('config.b_smooth_path',config.b_smooth_path)
-                        # print('config.path_plan_type',config.path_plan_type)
-                        # if config.b_smooth_path:
                         if config.path_plan_type:
                             next_lng_lat = self.calc_target_lng_lat(index)
                             # 如果当前点靠近采样点指定范围就停止并采样
@@ -1151,10 +1097,11 @@ class DataManager:
                                 next_lng_lat[1],
                                 sampling_point_gps[0],
                                 sampling_point_gps[1])
-                            print('sample_distance', sample_distance)
+                            # print('sample_distance', sample_distance)
                             if sample_distance < config.forward_see_distance:
                                 b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
                                                                              b_force_arrive=True)
+                                print('b_arrive_sample',b_arrive_sample)
                             else:
                                 b_arrive_sample = self.points_arrive_control(next_lng_lat, sampling_point_gps,
                                                                              b_force_arrive=False)
@@ -1193,9 +1140,6 @@ class DataManager:
                 # 清除状态
                 self.totle_distance = 0
                 self.clear_status()
-                # 检查是否需要返航
-                if self.ship_status == ShipStatus.backhome:
-                    self.back_home()
 
     # 将经纬度转换为高德经纬度
     def update_ship_gaode_lng_lat(self):
@@ -1473,7 +1417,7 @@ class DataManager:
                 self.current_theta = ship_theta
             # 检查电量 如果连续20次检测电量平均值低于电量阈值就报警
             if config.energy_backhome:
-                if sum(list(self.dump_energy_deque)) / len(list(self.dump_energy_deque)) < config.energy_backhome:
+                if len(list(self.dump_energy_deque))>0 and sum(list(self.dump_energy_deque)) / len(list(self.dump_energy_deque)) < config.energy_backhome:
                     self.low_dump_energy_warnning = 1
                 else:
                     self.low_dump_energy_warnning = 0
@@ -1603,12 +1547,6 @@ class DataManager:
             if self.server_data_obj.mqtt_send_get_obj.side_light:
                 self.pi_main_obj.set_gpio(control_left_sidelight=1,
                                           control_right_sidelight=1)
-
-    # 重启电脑
-    @staticmethod
-    def reboot():
-        from os import system
-        system('reboot')
 
 
 if __name__ == '__main__':

@@ -25,7 +25,13 @@ class PiMain:
         self.pice = 20000
         self.diff = int(20000 / self.pice)
         self.hz = 50
-        self.pi = pigpio.pi()
+        while True:
+            try:
+                self.pi = pigpio.pi()
+                break
+            except Exception:
+                time.sleep(5)
+                continue
         # gpio脚的编号顺序依照Broadcom number顺序，请自行参照gpio引脚图里面的“BCM编码”，
         self.pi.set_PWM_frequency(config.left_pwm_pin, self.hz)  # 设定左侧电机引脚产生的pwm波形的频率为50Hz
         self.pi.set_PWM_frequency(config.right_pwm_pin, self.hz)  # 设定右侧电机引脚产生的pwm波形的频率为50Hz

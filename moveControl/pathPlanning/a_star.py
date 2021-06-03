@@ -201,7 +201,9 @@ class AStar:
         point2 = (s_end[0], s_end[1])
         in_cnt1 = cv2.pointPolygonTest(np.asarray([self.env.outpool_points]), point1, True)
         in_cnt2 = cv2.pointPolygonTest(np.asarray([self.env.outpool_points]), point2, True)
-        if in_cnt1 < config.path_search_safe_distance or in_cnt2 < config.path_search_safe_distance:
+        # 安全距离
+        path_search_safe_distance = 20
+        if in_cnt1 < path_search_safe_distance or in_cnt2 < path_search_safe_distance:
             return True
         else:
             return False

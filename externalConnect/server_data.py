@@ -5,6 +5,7 @@ from messageBus.data_define import DataDefine
 import config
 from messageBus import data_define
 from utils import log
+from utils import poweroff_restart
 import copy
 import paho.mqtt.client as mqtt
 import time
@@ -84,8 +85,8 @@ class MqttSendGet:
         self.mqtt_host = mqtt_host
         self.mqtt_port = mqtt_port
         if config.current_platform == config.CurrentPlatform.pi:
-            client_id = client_id + 'windows'
-            self.mqtt_user = 'linux2'
+            client_id = client_id + '_pi'
+            self.mqtt_user = 'linux_pi'
         elif config.current_platform == config.CurrentPlatform.linux:
             client_id = client_id + 'linux'
             self.mqtt_user = 'linux'
@@ -171,15 +172,16 @@ class MqttSendGet:
         self.height_setting_default_data = None
         # 刷新后请求数据
         self.refresh_info_type = 0
-
         # 重置湖泊
         self.reset_pool_click = 0
         # 检查超过指定时间没有收到服务器数据就开启  断网返航
         self.last_command_time = time.time()
         self.b_network_backhome = 0
-
         # 设置的返航点
         self.set_home_gaode_lng_lat = None
+        # 定点和返航
+        self.back_home = 0
+        self.fix_point = 0
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -202,9 +204,6 @@ class MqttSendGet:
             # 回调更新控制数据
             # 判断topic
             topic = msg.topic
-            if config.network_backhome:
-                if time.time()-self.last_command_time>300:
-                    self.b_network_backhome=1
             self.last_command_time = time.time()
             # 处理控制数据
             if topic == 'control_data_%s' % (config.ship_code):
@@ -482,6 +481,21 @@ class MqttSendGet:
                 self.logger.info({'topic': topic,
                                   'lng_lat': set_home_data.get('lng_lat'),
                                   })
+
+            # 处理关机和重启
+            elif topic == 'poweroff_restart_%s' % (config.ship_code):
+                poweroff_restart_data = json.loads(msg.payload)
+                if poweroff_restart_data.get('poweroff_restart') is None:
+                    self.logger.error('poweroff_restart_处理控制数据没有lng_lat')
+                    return
+                poweroff_restart_type = int(poweroff_restart_data.get('poweroff_restart'))
+                self.logger.info({'topic': topic,
+                                  'poweroff_restart': poweroff_restart_data.get('poweroff_restart'),
+                                  })
+                if poweroff_restart_type == 2:
+                    poweroff_restart.restart()
+                elif poweroff_restart_type == 1:
+                    poweroff_restart.poweroff()
 
         except Exception as e:
             self.logger.error({'error': e})

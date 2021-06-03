@@ -238,13 +238,14 @@ class DataDefine:
             ('pool_info_%s' % (config.ship_code), 0),
             ('auto_lng_lat_%s' % (config.ship_code), 0),
             ('path_planning_%s' % (config.ship_code), 0),
-            ('status_data_%s' % (config.ship_code), 0),
+            # ('status_data_%s' % (config.ship_code), 0),
             ('base_setting_%s' % (config.ship_code), 0),
             ('height_setting_%s' % (config.ship_code), 0),
             ('refresh_%s' % (config.ship_code), 0),
             ('reset_pool_%s' % (config.ship_code), 0),
             ('heart_%s' % (config.ship_code), 0),
             ('set_home_%s' % (config.ship_code), 0),
+            ('poweroff_restart_%s' % (config.ship_code), 0),
             ('path_planning_confirm_%s' % (config.ship_code), 0))
 
         self.pool_code = ''

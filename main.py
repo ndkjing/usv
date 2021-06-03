@@ -276,8 +276,6 @@ def main():
                 target=data_manager_obj.check_ping_delay)
             check_ping_delay_thread.setDaemon(True)
             check_ping_delay_thread.start()
-
-
         else:
             time.sleep(thread_restart_time)
 

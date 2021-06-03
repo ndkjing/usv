@@ -174,7 +174,7 @@ pi2mqtt_interval = 1
 # 上传给单片机心跳时间间隔 单位秒
 # com_heart_time = 1 * 60
 # 船编号
-ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380c'
+ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380a'
 
 # 串口位置和波特率
 # 单片机
@@ -255,9 +255,9 @@ motor_init_time = 1
 # 检查网络连接状态间隔
 check_network_interval = 10
 # 断网返航 0关闭  1开启 大于1的数值表示断网超过该值就返航，默认100秒
-network_backhome = 0
+network_backhome = 1
 # 剩余电量返航 0关闭  1开启 大于1的数值表示剩余电量低于该值就返航，默认30
-energy_backhome = 0
+energy_backhome = 1
 # 最多查找连接点数量
 find_points_num = 5
 # TSP优化路径 0 不使用  1使用

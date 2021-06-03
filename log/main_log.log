@@ -1,92 +1,47 @@
-2021-05-28 09:05:34,287 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 09:06:54,387 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 09:47:33,170 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 10:03:38,679 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 10:14:18,427 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 10:15:53,574 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 10:27:14,963 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 10:28:36,694 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 10:33:56,172 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 10:58:02,312 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 11:11:44,362 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 11:35:23,924 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 11:51:46,282 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 11:56:01,660 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 11:57:49,890 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 12:00:40,027 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 12:06:46,591 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 12:07:56,616 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 12:07:58,616 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 12:08:00,617 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 12:08:02,617 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 12:14:24,629 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 12:40:33,336 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 12:40:59,348 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 12:41:01,349 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 12:41:03,349 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 12:41:05,350 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 12:41:49,680 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 12:43:04,102 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 12:44:21,590 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 12:49:12,637 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 12:50:47,859 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 12:56:35,392 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 13:00:30,173 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 13:04:03,177 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 13:11:21,705 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 13:32:15,487 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 13:32:32,495 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 13:32:34,496 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 13:33:43,197 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 13:34:07,206 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 13:34:09,206 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 13:34:42,748 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 13:34:57,754 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 13:34:59,755 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 13:36:58,614 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 13:37:20,622 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 13:37:22,623 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 13:38:26,922 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 17:04:22,580 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 17:05:59,602 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 17:10:54,564 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 17:11:42,582 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 17:11:44,583 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 17:11:46,584 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 17:11:48,585 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 17:11:50,585 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 20:25:57,108 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 20:32:07,815 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 20:35:53,543 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 20:37:22,545 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 20:37:24,565 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 20:37:26,588 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 20:37:28,612 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 20:37:30,636 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 20:37:32,650 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 20:37:34,670 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 20:37:36,682 main.py[line:245] ERROR restart move_control_thread
-2021-05-28 20:38:34,525 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 20:48:35,371 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 20:50:10,487 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 20:51:22,196 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 20:53:29,890 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 20:53:50,126 main.py[line:260] ERROR restart update_lng_lat_thread
-2021-05-28 20:53:51,137 main.py[line:237] ERROR restart check_status_thread
-2021-05-28 20:53:52,150 main.py[line:260] ERROR restart update_lng_lat_thread
-2021-05-28 20:53:53,167 main.py[line:237] ERROR restart check_status_thread
-2021-05-28 20:54:23,692 main.py[line:69] INFO {'binding status': 1}
-2021-05-28 20:54:24,701 main.py[line:260] ERROR restart update_lng_lat_thread
-2021-05-28 20:54:25,711 main.py[line:237] ERROR restart check_status_thread
-2021-05-28 20:54:26,720 main.py[line:260] ERROR restart update_lng_lat_thread
-2021-05-28 20:54:27,735 main.py[line:237] ERROR restart check_status_thread
-2021-05-28 20:54:28,750 main.py[line:260] ERROR restart update_lng_lat_thread
-2021-05-28 20:54:29,754 main.py[line:237] ERROR restart check_status_thread
-2021-05-28 20:54:30,767 main.py[line:260] ERROR restart update_lng_lat_thread
-2021-05-28 20:54:31,779 main.py[line:237] ERROR restart check_status_thread
-2021-05-28 20:54:32,796 main.py[line:260] ERROR restart update_lng_lat_thread
-2021-05-28 20:54:35,796 main.py[line:69] INFO {'binding status': 1}
-2021-05-31 08:39:31,792 main.py[line:69] INFO {'binding status': 1}
-2021-05-31 08:44:00,043 main.py[line:69] INFO {'binding status': 1}
-2021-05-31 09:14:26,657 main.py[line:69] INFO {'binding status': 1}
-2021-05-31 09:31:07,646 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 08:35:12,965 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 08:49:46,258 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 09:08:13,056 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 09:13:58,366 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 09:16:17,662 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 09:24:18,660 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 09:26:37,530 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 09:28:44,962 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 09:34:00,135 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 10:40:57,688 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 10:49:09,429 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 10:49:11,433 main.py[line:237] ERROR restart check_status_thread
+2021-06-03 10:49:13,434 main.py[line:237] ERROR restart check_status_thread
+2021-06-03 10:50:14,213 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 10:52:12,173 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 10:52:50,255 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 10:58:52,085 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 11:05:12,711 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 11:05:48,740 main.py[line:245] ERROR restart move_control_thread
+2021-06-03 11:05:50,742 main.py[line:245] ERROR restart move_control_thread
+2021-06-03 11:05:52,744 main.py[line:245] ERROR restart move_control_thread
+2021-06-03 11:07:48,342 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 11:08:29,368 main.py[line:245] ERROR restart move_control_thread
+2021-06-03 11:08:31,369 main.py[line:245] ERROR restart move_control_thread
+2021-06-03 11:09:08,040 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 11:23:33,081 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 11:25:53,597 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 11:28:52,565 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 11:32:13,819 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 11:33:42,590 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 11:47:33,672 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 12:58:31,772 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 13:06:25,512 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 13:08:55,001 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 13:11:17,726 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 13:12:45,500 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 13:16:16,103 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 13:19:20,545 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 13:20:33,459 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 15:22:56,494 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 15:24:28,703 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 15:26:01,687 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 17:46:43,636 main.py[line:69] INFO {'binding status': 1}
+2021-06-03 17:47:05,645 main.py[line:245] ERROR restart move_control_thread
+2021-06-03 17:47:07,646 main.py[line:245] ERROR restart move_control_thread
+2021-06-03 17:47:09,647 main.py[line:245] ERROR restart move_control_thread
+2021-06-03 17:49:53,801 main.py[line:69] INFO {'binding status': 1}
