@@ -128,6 +128,13 @@ def func5():
         min_index_list.append(index)
     print(a_d_m)
     print(min_index_list)
-
+from collections import deque
+import time
+def fun6():
+    a = {1:[1,2],2:[3.4]}
+    print(a)
+    print(a.pop(2))
+    print(a[1].pop(1))
+    print(a)
 if __name__ == '__main__':
-    func5()
+    fun6()

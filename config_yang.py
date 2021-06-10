@@ -3,7 +3,7 @@ import enum
 import json
 import os
 import platform
-
+import ship_code
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
@@ -26,6 +26,7 @@ height_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'hei
 save_plan_path = os.path.join(root_path, 'statics', 'configs', 'save_plan_path.json')
 # 保存声呐信息路径
 save_sonar_path = os.path.join(root_path, 'statics', 'geojeson_data.json')
+
 
 class CurrentPlatform(enum.Enum):
     windwos = 1
@@ -174,7 +175,7 @@ pi2mqtt_interval = 1
 # 上传给单片机心跳时间间隔 单位秒
 # com_heart_time = 1 * 60
 # 船编号
-ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380a'
+ship_code = ship_code.ship_code
 
 # 串口位置和波特率
 # 单片机
@@ -220,6 +221,7 @@ mqtt_port = 1884
 mod = 'auto'
 
 ship_gaode_lng_lat = [114.524096, 30.506853]
+# ship_gaode_lng_lat = [117.202177,39.901856]
 
 # 电机前进分量
 motor_forward = 200
@@ -254,9 +256,9 @@ motor_init_time = 1
 # 检查网络连接状态间隔
 check_network_interval = 10
 # 断网返航 0关闭  1开启 大于1的数值表示断网超过该值就返航，默认100秒
-network_backhome = 0
+network_backhome = 1
 # 剩余电量返航 0关闭  1开启 大于1的数值表示剩余电量低于该值就返航，默认30
-energy_backhome = 0
+energy_backhome = 1
 # 最多查找连接点数量
 find_points_num = 5
 # TSP优化路径 0 不使用  1使用
@@ -270,9 +272,9 @@ if current_platform == CurrentPlatform.pi:
     home_debug = 0
 else:
     home_debug = 1
-# 添加避障方式设置0 不避障 1 停止  2 绕行
+# 添加避障方式设置0 不避障 1 停止  2 绕行 3 手动模式下避障
 obstacle_avoid_type = 0
-# 路径规划方式
+# 路径规划方式  0 不平滑路径 1 平滑路径
 path_plan_type = 1
 # 路径跟踪方式  1 pid    2 pure pursuit  3 宫凯调试的pid
 path_track_type = 1
@@ -280,8 +282,8 @@ path_track_type = 1
 calibration_compass = 0
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
-# 是否使用平滑路径
-b_smooth_path = 1
+# 是否使用平滑路径  1 平滑路径 0 不平滑
+b_smooth_path = path_plan_type
 # 平滑路径最小单位 m
 smooth_path_ceil_size = 5
 # 前视觉距离
@@ -745,14 +747,12 @@ sonar_baud = 9600
 sonar_steer = 21
 test_all=0
 
-
-
 # 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
 if home_debug:
     use_shape_theta_type = 3
 else:
     use_shape_theta_type = 1
 
-b_draw = 0
+b_draw = 1
 if __name__ == '__main__':
     write_setting(True, True, True, True)

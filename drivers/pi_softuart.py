@@ -82,14 +82,15 @@ class PiSoftuart(object):
                 time.sleep(self._thread_ts/2)
                 return None
 
-    def read_compass(self, send_data='31', len_data=None):
+    def read_compass(self, send_data='31', len_data=None,debug=False):
         if len_data is None:
             len_data = 4
             try:
                 self.write_data(send_data)
                 time.sleep(self._thread_ts)
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                # print(time.time(), 'count', count, 'data', data)
+                if debug:
+                    print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
                     str_data = data.decode('utf-8')[2:-1]
                     theta = float(str_data)
@@ -99,19 +100,18 @@ class PiSoftuart(object):
                 print({'error read_compass': e})
                 return None
 
-    def read_gps(self, len_data=None):
+    def read_gps(self, len_data=None,debug=False):
         if len_data is None:
             len_data = 4
             try:
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                print(time.time(), 'count', count, 'data', data)
+                if debug:
+                    print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
-                    # str = (str, errors='ignore')
                     str_data = data.decode('utf-8', errors='ignore')
-                    # print('str_data', str_data)
                     for i in str_data.split('$'):
                         i = i.strip()
-                        if i.startswith('GPGGA')or i.startswith('$GPGGA') or i.startswith('GNGGA')or i.startswith('$GNGGA'):
+                        if i.startswith('GPGGA') or i.startswith('$GPGGA') or i.startswith('GNGGA')or i.startswith('$GNGGA'):
                             gps_data = i
                             data_list = gps_data.split(',')
                             if len(data_list) < 8:
@@ -213,16 +213,16 @@ class PiSoftuart(object):
     def get_thread_ts(self):
         return self._thread_ts
 
-    def read_millimeter_wave(self, len_data=None):
+    def read_millimeter_wave(self, len_data=None, debug=False):
         if len_data is None:
             len_data = 4
             try:
                 time.sleep(self._thread_ts)
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                # print(time.time(), 'count', count, 'data', data)
+                if debug:
+                    print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
                     str_data = str(binascii.b2a_hex(data))[2:-1]
-                    # print(r'str_data', str_data)
                     split_str = 'aaaa'
                     data_dict ={}
                     for i in str_data.split(split_str):

@@ -20,16 +20,16 @@ from utils import lng_lat_calculate
 from utils import check_network
 from storage import save_data
 import config
-from moveControl.pathTrack import simple_pid, pure_pursuit
+from moveControl.pathTrack import simple_pid
 from dataAnalyze import utils
 
 
 class RelayType(enum.Enum):
     """
     控制继电器种类
-    前大灯
-    声光报警器
-    舷灯
+    headlight 前大灯
+    audio_light 声光报警器
+    side_light 舷灯
     """
     headlight = 0
     audio_light = 1
@@ -174,6 +174,7 @@ class DataManager:
                 self.drone_obj = drone_kit_control.DroneKitControl(config.pix_port)
                 self.drone_obj.download_mission(True)
                 self.drone_obj.arm()
+            self.pi_main_obj.init_motor()
         # 使用真实GPS 还是 初始化高德GPS
         self.use_true_gps = 0
         if os.path.exists(config.gps_port) or config.b_pin_gps:
@@ -501,10 +502,11 @@ class DataManager:
     # 检查是否需要返航
     def check_backhome(self):
         if config.network_backhome:
-            if int(config.network_backhome) > 100:
+            if int(config.network_backhome) > 20:
                 network_backhome_time = int(config.network_backhome)
             else:
-                network_backhome_time = 100
+                network_backhome_time = 20
+            print(time.time() - self.server_data_obj.mqtt_send_get_obj.last_command_time,network_backhome_time)
             if time.time() - self.server_data_obj.mqtt_send_get_obj.last_command_time > network_backhome_time:
                 self.b_network_backhome = 1
                 self.ship_status = ShipStatus.backhome
@@ -619,8 +621,8 @@ class DataManager:
         if len(distance_list) == 0:
             return self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[index_]
         index = distance_list.index(min(distance_list))
-        if index + 1 == len(self.search_list):
-            return self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[index_]
+        # if index + 1 == len(self.search_list):
+        #     return self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[index_]
         lng_lat = self.search_list[index]
         index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
                                                                         self.lng_lat[1],
@@ -634,6 +636,7 @@ class DataManager:
                                                                             lng_lat[0],
                                                                             lng_lat[1])
             index += 1
+        print('len(self.search_list),len(distance_list)',len(self.search_list),len(distance_list),index_,index)
         return self.search_list[index]
 
     # 构建障碍物地图
@@ -791,25 +794,26 @@ class DataManager:
                     return next_point_lng_lat, False
                 index_i = 0
                 value_list = []
-                while index_i < len(self.pi_main_obj.obstacle_list):
+                while index_i < self.pi_main_obj.cell_size:
                     kr = index_i
                     index_j = index_i
-                    while index_j < len(self.pi_main_obj.obstacle_list) and self.pi_main_obj.obstacle_list[
+                    while index_j < self.pi_main_obj.cell_size and self.pi_main_obj.obstacle_list[
                         index_j] == 0:
                         kl = index_j
-                        if (kl - kr >= config.ceil_max):  # 判断是否是宽波谷
+                        if kl - kr >= config.ceil_max:  # 判断是否是宽波谷
                             print(self.pi_main_obj.obstacle_list, round(kl - config.ceil_max // 2))
                             v = round((kl + kr) / 2)
                             value_list.append(v)
                             break
                         index_j = index_j + 1
                     index_i += 1
+                print('self.pi_main_obj.obstacle_list', self.pi_main_obj.obstacle_list,)
                 # 没有可以通过通道
                 if len(value_list) == 0:
                     return next_point_lng_lat, True
                 else:
                     how = []
-                    for value_i in (value_list):
+                    for value_i in value_list:
                         howtemp = abs(value_i - point_angle_index)
                         how.append(howtemp)
                     ft = how.index(min(how))
@@ -821,6 +825,7 @@ class DataManager:
                                                                                  self.lng_lat[1],
                                                                                  angle,
                                                                                  config.min_steer_distance)
+                print('angle',angle)
                 return next_point_lng_lat, False
 
     # 控制到达目标点
@@ -1283,14 +1288,23 @@ class DataManager:
             if time.time() - last_read_time > 10:
                 last_read_time = time.time()
                 self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
-            if config.home_debug:
-                if time.time() - last_read_time > 10:
-                    last_read_time = time.time()
+                if config.home_debug:
                     self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
                               qos=0)
                     self.logger.info({'fakedate': mqtt_send_detect_data})
-
+                    # 调试时使用发送检测数据
+                    # mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})
+                    # mqtt_send_detect_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
+                    # if len(self.data_define_obj.pool_code) > 0:
+                    #     self.send(method='http', data=mqtt_send_detect_data,
+                    #               url=config.http_data_save,
+                    #               http_type='POST')
+                    #     time.sleep(0.5)
+                    #     self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
             if self.b_draw_over_send_data:
+                # 添加经纬度
+                mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})
+                mqtt_send_detect_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
                 self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
                           qos=0)
                 if len(self.data_define_obj.pool_code) > 0:
@@ -1298,9 +1312,9 @@ class DataManager:
                               url=config.http_data_save,
                               http_type='POST')
                     self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
-                # 添加真实经纬度
+
                 save_detect_data = copy.deepcopy(mqtt_send_detect_data)
-                save_detect_data.update({'lng_lat': self.lng_lat})
+                # save_detect_data.update({'lng_lat': self.lng_lat})
                 self.logger.info({"本地保存检测数据": save_detect_data})
                 del save_detect_data
                 # 发送结束改为False
@@ -1521,7 +1535,7 @@ class DataManager:
                 distance_info_data.update({'distance_info': []})
                 for k in self.pi_main_obj.distance_dict.copy():
                     distance_info_data['distance_info'].append(
-                        {'distance': self.pi_main_obj.distance_dict[k], 'angle': k})
+                        {'distance': self.pi_main_obj.distance_dict[k][0], 'angle': self.pi_main_obj.distance_dict[k][1]})
                 if self.current_theta:
                     distance_info_data.update({'direction': round(self.current_theta)})
                 else:

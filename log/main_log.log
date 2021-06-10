@@ -1,47 +1,30 @@
-2021-06-03 08:35:12,965 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 08:49:46,258 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 09:08:13,056 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 09:13:58,366 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 09:16:17,662 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 09:24:18,660 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 09:26:37,530 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 09:28:44,962 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 09:34:00,135 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 10:40:57,688 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 10:49:09,429 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 10:49:11,433 main.py[line:237] ERROR restart check_status_thread
-2021-06-03 10:49:13,434 main.py[line:237] ERROR restart check_status_thread
-2021-06-03 10:50:14,213 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 10:52:12,173 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 10:52:50,255 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 10:58:52,085 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 11:05:12,711 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 11:05:48,740 main.py[line:245] ERROR restart move_control_thread
-2021-06-03 11:05:50,742 main.py[line:245] ERROR restart move_control_thread
-2021-06-03 11:05:52,744 main.py[line:245] ERROR restart move_control_thread
-2021-06-03 11:07:48,342 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 11:08:29,368 main.py[line:245] ERROR restart move_control_thread
-2021-06-03 11:08:31,369 main.py[line:245] ERROR restart move_control_thread
-2021-06-03 11:09:08,040 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 11:23:33,081 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 11:25:53,597 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 11:28:52,565 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 11:32:13,819 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 11:33:42,590 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 11:47:33,672 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 12:58:31,772 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 13:06:25,512 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 13:08:55,001 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 13:11:17,726 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 13:12:45,500 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 13:16:16,103 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 13:19:20,545 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 13:20:33,459 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 15:22:56,494 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 15:24:28,703 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 15:26:01,687 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 17:46:43,636 main.py[line:69] INFO {'binding status': 1}
-2021-06-03 17:47:05,645 main.py[line:245] ERROR restart move_control_thread
-2021-06-03 17:47:07,646 main.py[line:245] ERROR restart move_control_thread
-2021-06-03 17:47:09,647 main.py[line:245] ERROR restart move_control_thread
-2021-06-03 17:49:53,801 main.py[line:69] INFO {'binding status': 1}
+2021-06-07 09:31:41,275 main.py[line:69] INFO {'binding status': 1}
+2021-06-07 14:46:13,329 main.py[line:69] INFO {'binding status': 1}
+2021-06-07 15:53:01,764 main.py[line:69] INFO {'binding status': 1}
+2021-06-07 15:55:38,603 main.py[line:69] INFO {'binding status': 1}
+2021-06-07 15:56:10,616 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 15:57:34,628 main.py[line:69] INFO {'binding status': 1}
+2021-06-07 15:59:11,999 main.py[line:69] INFO {'binding status': 1}
+2021-06-07 15:59:26,778 main.py[line:69] INFO {'binding status': 1}
+2021-06-07 16:05:21,054 main.py[line:69] INFO {'binding status': 1}
+2021-06-07 16:06:56,088 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 16:07:35,102 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 16:08:07,113 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 16:08:39,125 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 16:09:11,135 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 16:09:43,145 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 16:10:15,156 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 16:10:47,166 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 16:16:16,273 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 16:16:48,284 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 16:17:20,294 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 16:17:52,306 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-07 16:18:24,316 main.py[line:229] ERROR restart send_mqtt_data_thread
+2021-06-08 08:56:38,513 main.py[line:69] INFO {'binding status': 1}
+2021-06-08 16:43:05,023 main.py[line:71] ERROR {'binding_data error': KeyError('flag')}
+2021-06-08 17:21:49,327 main.py[line:69] INFO {'binding status': 1}
+2021-06-08 17:56:22,154 main.py[line:69] INFO {'binding status': 1}
+2021-06-08 17:59:34,723 main.py[line:69] INFO {'binding status': 1}
+2021-06-08 18:00:36,994 main.py[line:69] INFO {'binding status': 1}
+2021-06-08 18:01:29,492 main.py[line:69] INFO {'binding status': 1}
+2021-06-09 08:40:15,819 main.py[line:69] INFO {'binding status': 1}

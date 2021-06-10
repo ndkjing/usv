@@ -156,7 +156,6 @@ class AutoPidParameter:
     """
     自动求解pid参数
     """
-
     def __init__(self):
         self.kp = 0.8
         self.ki = 0

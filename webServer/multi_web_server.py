@@ -232,10 +232,11 @@ class WebServer:
                     else:
                         config.pool_name = self.baidu_map_obj_dict.get(ship_code).address
                     try:
-                        if len(config.pool_name)>=10:
-                            config.pool_name=config.pool_name[:7]
+                        pass
+                        # if len(config.pool_name)>=10:
+                        #     config.pool_name=config.pool_name[:7]
                     except Exception:
-                        config.pool_name='123'
+                        config.pool_name='unknow'
                     self.logger.info({'config.pool_name': config.pool_name})
                     # 判断当前湖泊是否曾经出现，出现过则获取的ID 没出现过发送请求获取新ID
                     if isinstance(self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):

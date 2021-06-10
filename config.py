@@ -3,7 +3,7 @@ import enum
 import json
 import os
 import platform
-
+import ship_code
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
@@ -26,6 +26,7 @@ height_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'hei
 save_plan_path = os.path.join(root_path, 'statics', 'configs', 'save_plan_path.json')
 # 保存声呐信息路径
 save_sonar_path = os.path.join(root_path, 'statics', 'geojeson_data.json')
+
 
 class CurrentPlatform(enum.Enum):
     windwos = 1
@@ -174,7 +175,7 @@ pi2mqtt_interval = 1
 # 上传给单片机心跳时间间隔 单位秒
 # com_heart_time = 1 * 60
 # 船编号
-ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380a'
+ship_code = ship_code.ship_code
 
 # 串口位置和波特率
 # 单片机
@@ -211,7 +212,7 @@ http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
 # http_save = 'http://192.168.8.13:8009/union/admin/xxl/map/save'
 # 发送检测数据
 http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
-# http_data_save = 'http://192.168.8.13:8009/union/admin/xxl/data/save'
+# http_data_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
 
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884
@@ -290,7 +291,7 @@ forward_see_distance = 9
 # 舵机最大扫描角度单侧 左边为正右边为负
 steer_max_angle = 30
 # 最小转向距离
-min_steer_distance = 6
+min_steer_distance = 10
 
 def update_height_setting():
     global motor_forward
@@ -677,9 +678,9 @@ b_use_pi = True
 pin_pan = 2
 pin_tilt = 3
 # 左侧电机信号输出控制口
-left_pwm_pin = 20
+left_pwm_pin = 4
 # 右侧电机信号输出控制口
-right_pwm_pin = 21
+right_pwm_pin = 17
 # 软串口罗盘
 b_pin_compass = 1
 pin_compass_baud = 9600
