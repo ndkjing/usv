@@ -10,7 +10,7 @@ from drivers import audios_manager
 import sys
 import os
 
-if (config.current_platform == config.CurrentPlatform.pi):
+if config.current_platform == config.CurrentPlatform.pi:
     time.sleep(config.start_sleep_time)
 
 sys.path.append(
@@ -132,7 +132,6 @@ def main():
     update_config_thread.start()
     check_ping_delay_thread.start()
 
-
     if config.current_platform == config.CurrentPlatform.pi:
         change_pwm_thread.start()
         if os.path.exists(config.stc_port):
@@ -214,7 +213,8 @@ def main():
                 if config.b_laser:
                     get_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_distance_dict)
                 elif config.b_millimeter_wave:
-                    get_distance_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_distance_dict_millimeter)
+                    get_distance_thread = threading.Thread(
+                        target=data_manager_obj.pi_main_obj.get_distance_dict_millimeter)
                 get_distance_thread.setDaemon(True)
                 get_distance_thread.start()
                 time.sleep(thread_restart_time)

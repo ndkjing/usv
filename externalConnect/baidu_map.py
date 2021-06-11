@@ -4,8 +4,7 @@ import logging
 import math
 import os
 import random
-import time
-import copy
+
 import cv2
 import numpy as np
 import requests
@@ -19,7 +18,8 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)
 method_0 = cv2.CHAIN_APPROX_NONE
 # 方法二：找最简单包围的点，多点共线就省略点
 method_1 = cv2.CHAIN_APPROX_SIMPLE
-pool_x, pool_y, pool_w, pool_h = 0,0,0,0
+pool_x, pool_y, pool_w, pool_h = 0, 0, 0, 0
+
 
 def color_block_finder(img, lowerb, upperb,
                        min_w=0, max_w=None, min_h=0, max_h=None, map_type=None,
@@ -181,7 +181,7 @@ class BaiduMap(object):
 
         self.scale = scale
         # 障碍物地图
-        self.obstacle_map=None
+        self.obstacle_map = None
         # 请求地图位置经纬度
         self.lng_lat = lng_lat
         self.lng_lat_pix = (512 * self.scale, 512 * self.scale)
@@ -249,27 +249,28 @@ class BaiduMap(object):
         # print('map_height, map_width', map_height, map_width)
         # print('湖泊宽长',w*self.pix_2_meter, h*self.pix_2_meter)
         if self.pool_cnts is not None:
-            self.obstacle_map = np.zeros((h,w))
+            self.obstacle_map = np.zeros((h, w))
             for i in range(w):
                 for j in range(h):
                     # 对应原图上坐标点
-                    pix_point = (i,j)
+                    pix_point = (i, j)
                     in_cnt = cv2.pointPolygonTest(self.pool_cnts, pix_point, True)
                     if in_cnt > 0:
-                        self.obstacle_map[j,i] = 255
+                        self.obstacle_map[j, i] = 255
                     # else:
                     #     row_map_data[j, i] = 0
             if b_show:
                 cv2.imshow('obstacle_map', self.obstacle_map)
                 cv2.waitKey(0)
 
-    def update_obstacle_map(self, gaode_point,b_show=False):
+    def update_obstacle_map(self, gaode_point, b_show=False):
         pix_target = obj.gaode_lng_lat_to_pix(gaode_point)
-        print('pix_target',pix_target)
+        print('pix_target', pix_target)
         self.obstacle_map[pix_target[1], pix_target[0]] = 0
         if b_show:
             cv2.imshow('obstacle_map', self.obstacle_map)
             cv2.waitKey(0)
+
     # 获取地址的url
     def get_url(self, addr):
         self.addr = addr
@@ -433,29 +434,29 @@ class BaiduMap(object):
         # theta = 360 - theta
         print('theta', theta)
         theta1 = lng_lat_calculate.angleFromCoordinate(
-            gaode_lng_lat[0], gaode_lng_lat[1],self.lng_lat[0], self.lng_lat[1])
+            gaode_lng_lat[0], gaode_lng_lat[1], self.lng_lat[0], self.lng_lat[1])
         print('theta1', theta1)
-        if theta >= 0 and theta < 90:
+        if 0 <= theta < 90:
             delta_x_distance = math.sin(math.radians(theta)) * distance
             delta_y_distance = math.cos(math.radians(theta)) * distance
             delta_x_pix = -delta_x_distance / (self.pix_2_meter)
             delta_y_pix = -delta_y_distance / (self.pix_2_meter)
             pix = [int(self.width * self.scale / 2 + delta_x_pix),
                    int(self.height * self.scale / 2 + delta_y_pix)]
-        elif theta >= 90 and theta < 180:
+        elif 90 <= theta < 180:
             t2_theta = 180 - theta
             delta_x_distance = math.sin(math.radians(t2_theta)) * distance
             delta_y_distance = math.cos(math.radians(t2_theta)) * distance
-            delta_x_pix = -delta_x_distance / (self.pix_2_meter)
-            delta_y_pix = delta_y_distance / (self.pix_2_meter)
+            delta_x_pix = -delta_x_distance / self.pix_2_meter
+            delta_y_pix = delta_y_distance / self.pix_2_meter
             pix = [int(self.width * self.scale / 2 + delta_x_pix),
                    int(self.height * self.scale / 2 + delta_y_pix)]
-        elif theta >= 180 and theta < 270:
+        elif 180 <= theta < 270:
             t3_theta = 270 - theta
             delta_x_distance = math.cos(math.radians(t3_theta)) * distance
             delta_y_distance = math.sin(math.radians(t3_theta)) * distance
-            delta_x_pix = delta_x_distance / (self.pix_2_meter)
-            delta_y_pix = delta_y_distance / (self.pix_2_meter)
+            delta_x_pix = delta_x_distance / self.pix_2_meter
+            delta_y_pix = delta_y_distance / self.pix_2_meter
             pix = [int(self.width * self.scale / 2 + delta_x_pix),
                    int(self.height * self.scale / 2 + delta_y_pix)]
         else:
@@ -488,8 +489,8 @@ class BaiduMap(object):
             delta_pix_x = point[0] - center[0]
             delta_pix_y = point[1] - center[1]
 
-            delta_meter_x = delta_pix_x * (self.pix_2_meter)
-            delta_meter_y = delta_pix_y * (self.pix_2_meter)
+            delta_meter_x = delta_pix_x * self.pix_2_meter
+            delta_meter_y = delta_pix_y * self.pix_2_meter
             distance = math.sqrt(
                 math.pow(
                     delta_meter_x,
@@ -649,26 +650,26 @@ class BaiduMap(object):
         :return: geojson data
         """
         if not deep_list:
-            deep_list = [random.randrange(10, 50)/10.0 for i in point_gps_list]
-        return_json_data = {"type": "FeatureCollection","features":[]}
-        for deep,lng_lat in zip(deep_list,point_gps_list):
+            deep_list = [random.randrange(10, 50) / 10.0 for i in point_gps_list]
+        return_json_data = {"type": "FeatureCollection", "features": []}
+        for deep, lng_lat in zip(deep_list, point_gps_list):
             feature = {
-                  "type": "Feature",
-                  "properties": {
+                "type": "Feature",
+                "properties": {
                     "count": deep
-                  },
-                  # "std": 5,
-                  "geometry": {
+                },
+                # "std": 5,
+                "geometry": {
                     "type": "Point",
                     "coordinates": [
-                      lng_lat[0],
-                      lng_lat[1]
+                        lng_lat[0],
+                        lng_lat[1]
                     ]
-                  }
+                }
             }
             return_json_data.get("features").append(feature)
-        with open('geojeson_data.json','w') as f:
-            json.dump(return_json_data,f)
+        with open('geojeson_data.json', 'w') as f:
+            json.dump(return_json_data, f)
         return return_json_data
 
 
@@ -685,10 +686,10 @@ if __name__ == '__main__':
     print(return_gps, return_gps_list)
     print(return_gps1, return_gps_list1)
     # obj.build_obstacle_map(False)
-    point = [src_point[0]+0.001,src_point[1]+0.002]
+    point = [src_point[0] + 0.001, src_point[1] + 0.002]
     obj.scan_pool(meter_gap=50)
     scan_point_gps1, scan_point_gps_list1 = obj.pix_to_gps(obj.scan_point_cnts)
-    print(len(scan_point_gps_list1),scan_point_gps_list1)
+    print(len(scan_point_gps_list1), scan_point_gps_list1)
     obj.generate_geojson(scan_point_gps_list1)
     # obj.update_obstacle_map(point,True)
     # obj.surround_pool(b_show=True)
@@ -698,14 +699,14 @@ if __name__ == '__main__':
     # obj = BaiduMap([114.565976,30.541317],zoom=15.113213)
     # obj = BaiduMap([114.393142,30.558981],zoom=14)
     pix_src = obj.gaode_lng_lat_to_pix(src_point)
-    gaode_point2 = [114.429812,30.526649]
-    gaode_point3 = [114.428895,30.520323]
-    gaode_point4 = [114.433235,30.520342]
-    gaode_point1 = [114.432303,30.530362]
+    gaode_point2 = [114.429812, 30.526649]
+    gaode_point3 = [114.428895, 30.520323]
+    gaode_point4 = [114.433235, 30.520342]
+    gaode_point1 = [114.432303, 30.530362]
     gaode_point = gaode_point1
     pix_target = obj.gaode_lng_lat_to_pix(gaode_point)
-    print('pix_src', pix_src,'pix_target', pix_target)
-    b_show =0
+    print('pix_src', pix_src, 'pix_target', pix_target)
+    b_show = 0
     cv2.circle(
         obj.show_img, (pix_src[0], pix_src[1]), 5, [
             255, 0, 0], -1)
@@ -722,7 +723,7 @@ if __name__ == '__main__':
         cv2.destroyAllWindows()
     return_gps, return_gps_list = obj.pix_to_gps([pix_target])
     print(return_gps, return_gps_list)
-    print(lng_lat_calculate.distanceFromCoordinate(114.439899,30.526094,return_gps_list[0][0],return_gps_list[0][1]))
+    print(lng_lat_calculate.distanceFromCoordinate(114.439899, 30.526094, return_gps_list[0][0], return_gps_list[0][1]))
     # obj.pix_to_gps(obj.pool_cnts)
     if pool_cnts is None:
         pass
@@ -737,4 +738,3 @@ if __name__ == '__main__':
         # 求坐标点最大外围矩阵
         (x, y, w, h) = cv2.boundingRect(pool_cnts)
         print('(x, y, w, h)', (x, y, w, h))
-

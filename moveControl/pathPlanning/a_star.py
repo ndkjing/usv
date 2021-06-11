@@ -69,7 +69,7 @@ class AStar:
     """AStar set the cost + heuristics as the priority
     """
 
-    def __init__(self, s_start, s_goal, heuristic_type, pool_cnts):
+    def __init__(self, s_start, s_goal, heuristic_type, pool_cnts, search_safe_pix=None):
         self.s_start = s_start
         self.s_goal = s_goal
         self.heuristic_type = heuristic_type
@@ -83,6 +83,10 @@ class AStar:
         self.CLOSED = []  # CLOSED set / VISITED order
         self.PARENT = dict()  # recorded parent
         self.g = dict()  # cost to come
+        if search_safe_pix:
+            self.search_safe_pix = search_safe_pix
+        else:
+            self.search_safe_pix = 20
 
     def searching(self):
         """
@@ -196,14 +200,12 @@ class AStar:
         :param s_end: end node
         :return: True: is collision / False: not collision
         """
-
         point1 = (s_start[0], s_start[1])
         point2 = (s_end[0], s_end[1])
         in_cnt1 = cv2.pointPolygonTest(np.asarray([self.env.outpool_points]), point1, True)
         in_cnt2 = cv2.pointPolygonTest(np.asarray([self.env.outpool_points]), point2, True)
         # 安全距离
-        path_search_safe_distance = 20
-        if in_cnt1 < path_search_safe_distance or in_cnt2 < path_search_safe_distance:
+        if in_cnt1 < self.search_safe_pix or in_cnt2 < self.search_safe_pix:
             return True
         else:
             return False
@@ -309,12 +311,10 @@ def distance(p0, p1, digits=2):
     a = map(lambda x: (x[0] - x[1]) ** 2, zip(p0, p1))
     return round(math.sqrt(sum(a)), digits)
 
-
-safe_distance = 0
-
-
 # 判断轨迹是否经过陆地区域
-def cross_outpool(point_i, point_j, pool_cnts):
+def cross_outpool(point_i, point_j, pool_cnts,search_safe_pix=None):
+    if not search_safe_pix:
+        search_safe_pix=15
     line_points = []
     dx = point_j[0] - point_i[0]
     dy = point_j[1] - point_i[1]
@@ -329,7 +329,6 @@ def cross_outpool(point_i, point_j, pool_cnts):
         return True
     delta_x = float(dx / steps)
     delta_y = float(dy / steps)
-
     # 四舍五入，保证x和y的增量小于等于1，让生成的直线尽量均匀
     x = point_i[0] + 0.5
     y = point_i[1] + 0.5
@@ -341,7 +340,7 @@ def cross_outpool(point_i, point_j, pool_cnts):
     for point in line_points:
         point_temp = (point[0], point[1])
         in_cnt = cv2.pointPolygonTest(pool_cnts, point_temp, True)
-        if in_cnt < safe_distance:
+        if in_cnt < search_safe_pix:
             # 经过湖泊周围陆地
             return False
     # 不经过陆地
@@ -487,22 +486,23 @@ def get_path(baidu_map_obj,
             return 'pool_cx is None'
     if baidu_map_obj.ship_gaode_lng_lat is None:
         return 'no ship gps'
+
+    search_safe_pix = int(config.path_search_safe_distance / baidu_map_obj.pix_2_meter)
+    print(config.path_search_safe_distance,baidu_map_obj.pix_2_meter)
     # 单点
     print('mode', mode)
     if mode == 1:
-        if target_lng_lats is None:
-            return 'target_pixs is None'
-        elif len(target_lng_lats) > 1:
-            return 'len(target_pixs) is >1 choose mode 1'
         baidu_map_obj.ship_pix = baidu_map_obj.gaode_lng_lat_to_pix(baidu_map_obj.ship_gaode_lng_lat)
+
         row_start = tuple(baidu_map_obj.ship_pix)
         row_goal = tuple(baidu_map_obj.gaode_lng_lat_to_pix(target_lng_lats[0]))
         s_start = mod_point(row_start)
         s_goal = mod_point(row_goal)
-        print('row_start,row_goal', row_start, row_goal, 's_start,s_goal', s_start, s_goal)
+        print('row_start,row_goal ', row_start, row_goal, 's_start,s_goal', s_start, s_goal,)
+        print('search_safe_pix', search_safe_pix)
         # 判断是否能直线到达，不能则采用路径搜索
-        if not cross_outpool(s_start, s_goal, baidu_map_obj.pool_cnts):
-            astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.pool_cnts)
+        if not cross_outpool(s_start, s_goal, baidu_map_obj.pool_cnts, search_safe_pix):
+            astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.pool_cnts, search_safe_pix)
             try:
                 astar_path, visited = astar.searching()
                 return_pix_path = astar_path[::-1]
@@ -592,7 +592,7 @@ def get_path(baidu_map_obj,
                 print('row_start,row_goal', row_start, row_goal, 's_start,s_goal', s_start, s_goal)
                 # 判断是否能直线到达，不能则采用路径搜索
                 if not cross_outpool(s_start, s_goal, baidu_map_obj.pool_cnts):
-                    astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.pool_cnts)
+                    astar = AStar(s_start, s_goal, "euclidean", baidu_map_obj.pool_cnts, search_safe_pix)
                     try:
                         astar_path, visited = astar.searching()
                         return_pix_path = astar_path[::-1]

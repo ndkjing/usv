@@ -1,2 +1,16 @@
 2021-06-10 17:52:11,390 main.py[line:69] INFO {'binding status': 1}
 2021-06-10 17:55:02,455 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 08:52:53,182 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 09:42:03,946 main.py[line:71] ERROR {'binding_data error': JSONDecodeError('Expecting value: line 1 column 1 (char 0)')}
+2021-06-11 09:43:11,690 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 09:44:58,621 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 09:47:38,967 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 09:53:02,101 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 10:11:47,743 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 10:12:47,622 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 10:15:28,152 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 12:51:49,501 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 13:26:12,068 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 14:11:08,209 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 14:16:29,331 main.py[line:69] INFO {'binding status': 1}
+2021-06-11 14:29:15,190 main.py[line:69] INFO {'binding status': 1}

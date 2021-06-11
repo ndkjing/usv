@@ -165,36 +165,9 @@ class MqttSendGet:
 
     # 消息处理函数回调
     def on_message_callback(self, client, userdata, msg):
-        # print(msg.topic + " " + ":" + str(msg.payload),type(msg.payload))
-        # 回调更新控制数据
-        # 判断topic
         topic = msg.topic
-        # 处理控制数据
-        if topic == 'control_data_%s' % (self.ship_code):
-            control_data = json.loads(msg.payload)
-            if control_data.get('move_direction') is None :
-                self.logger.error('control_data_处理控制数据没有move_direction')
-                return
-            self.control_move_direction = int(control_data.get('move_direction'))
-            self.logger.info({'topic':topic,
-                                'control_move_direction': control_data.get('move_direction'),
-                              })
-        # 处理开关信息
-        elif topic == 'switch_%s' % (self.ship_code):
-            switch_data = json.loads(msg.payload)
-            if switch_data.get('b_draw') is None :
-                self.logger.error('switch_data_处理控制数据没有b_draw b_sampling')
-            if switch_data.get('b_sampling') is not None:
-                    self.b_sampling = int(switch_data.get('b_sampling'))
-            if switch_data.get('b_draw') is not None:
-                    self.b_draw = int(switch_data.get('b_draw'))
-            self.logger.info({'topic':topic,
-                                'b_sampling':switch_data.get('b_sampling'),
-                             'b_draw':switch_data.get('b_draw')
-                              })
-
         # 处理初始点击确定湖数据
-        elif topic == 'pool_click_%s' % (self.ship_code):
+        if topic == 'pool_click_%s' % (self.ship_code):
             pool_click_data = json.loads(msg.payload)
             if pool_click_data.get('lng_lat') is None:
                 self.logger.error('pool_click  用户点击经纬度数据没有经纬度字段')

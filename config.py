@@ -62,8 +62,8 @@ speed_grade = 3
 arrive_distance = 2.5
 # 多点和寻点模式下查找连接点数量
 keep_point = 0
-# 路径搜索保留离湖泊边缘安全路径
-path_search_safe_distance = 15
+# 路径搜索保留离湖泊边缘安全路径  单位米
+path_search_safe_distance = 5
 # 寻点模式行间隔
 row_gap = 50
 # 寻点模式列间隔
@@ -123,8 +123,8 @@ def update_base_setting():
             if base_setting_data.get('secure_distance'):
                 try:
                     s_path_search_safe_distance = int(base_setting_data.get('secure_distance'))
-                    if s_path_search_safe_distance > 10:
-                        s_path_search_safe_distance = 10
+                    if s_path_search_safe_distance > 100:
+                        s_path_search_safe_distance = 100
                     elif s_path_search_safe_distance < 2:
                         s_path_search_safe_distance = 2
                     path_search_safe_distance = s_path_search_safe_distance
@@ -255,7 +255,7 @@ start_sleep_time = 6
 motor_init_time = 1
 # 检查网络连接状态间隔
 check_network_interval = 10
-# 断网返航 0关闭  1开启 大于1的数值表示断网超过该值就返航，默认100秒
+# 断网返航 0关闭  1开启 大于1的数值表示断网超过该值就返航，默认600秒
 network_backhome = 1
 # 剩余电量返航 0关闭  1开启 大于1的数值表示剩余电量低于该值就返航，默认30
 energy_backhome = 1

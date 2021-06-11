@@ -15,14 +15,14 @@ import requests
 
 class ServerData:
     def __init__(self, logger,
-                 topics, ship_code=None):
+                 topics):
         self.logger = logger
         self.topics = topics
-        self.http_send_get_obj = HttpSendGet()
-        self.mqtt_send_get_obj = MqttSendGet(self.logger, ship_code=ship_code)
+        # self.http_send_get_obj = HttpSendGet()
+        self.mqtt_send_get_obj = MqttSendGet(self.logger)
         # 启动后自动订阅话题
-        for topic, qos in self.topics:
-            self.mqtt_send_get_obj.subscribe_topic(topic=topic, qos=qos)
+        for topic_, qos_ in self.topics:
+            self.mqtt_send_get_obj.subscribe_topic(topic=topic_, qos=qos_)
 
     # 发送数据到服务器http
     def send_server_http_data(self, request_type, data, url):
@@ -76,7 +76,6 @@ class MqttSendGet:
     def __init__(
             self,
             logger,
-            ship_code,
             mqtt_host=config.mqtt_host,
             mqtt_port=config.mqtt_port,
             client_id=config.ship_code
@@ -106,7 +105,7 @@ class MqttSendGet:
                 break
             except Exception:
                 logger.error('链接mqtt失败')
-                time.sleep(10)
+                time.sleep(3)
                 continue
         # 湖泊初始点击点信息
         self.pool_click_lng_lat = None
