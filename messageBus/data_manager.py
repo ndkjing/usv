@@ -1018,17 +1018,14 @@ class DataManager:
                                 # 开始抽水并等待
                                 self.server_data_obj.mqtt_send_get_obj.b_draw = 1
                                 self.pi_main_obj.stop()
-                                if not config.home_debug:
-                                    if config.b_pin_stc or os.path.exists(config.stc_port):
-                                        self.draw()
-                                time.sleep(config.draw_time)
-                                self.b_draw_over_send_data = True
-                                if not config.home_debug:
-                                    if config.b_pin_stc or os.path.exists(config.stc_port):
-                                        self.draw()
-                            elif not config.b_draw:
-                                if not config.home_debug:
-                                    self.pi_main_obj.stop()
+                                if config.b_pin_stc or os.path.exists(config.stc_port):
+                                    self.draw()
+                                    time.sleep(config.draw_time)
+                                    self.b_draw_over_send_data = True
+                                    self.draw()
+                            # elif not config.b_draw:
+                            #     if not config.home_debug:
+                            #         self.pi_main_obj.stop()
                         else:
                             break
                     if self.b_stop_path_track:
@@ -1190,14 +1187,15 @@ class DataManager:
                               qos=0)
                     self.logger.info({'fakedate': mqtt_send_detect_data})
                     # 调试时使用发送检测数据
-                    # mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})
-                    # mqtt_send_detect_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
-                    # if len(self.data_define_obj.pool_code) > 0:
-                    #     self.send(method='http', data=mqtt_send_detect_data,
-                    #               url=config.http_data_save,
-                    #               http_type='POST')
-                    #     time.sleep(0.5)
-                    #     self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
+                    if config.debug_send_detect_data:
+                        mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})
+                        mqtt_send_detect_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
+                        if len(self.data_define_obj.pool_code) > 0:
+                            self.send(method='http', data=mqtt_send_detect_data,
+                                      url=config.http_data_save,
+                                      http_type='POST')
+                            time.sleep(0.5)
+                            self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
             if self.b_draw_over_send_data:
                 # 添加经纬度
                 mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})
@@ -1209,7 +1207,6 @@ class DataManager:
                               url=config.http_data_save,
                               http_type='POST')
                     self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
-
                 save_detect_data = copy.deepcopy(mqtt_send_detect_data)
                 # save_detect_data.update({'lng_lat': self.lng_lat})
                 self.logger.info({"本地保存检测数据": save_detect_data})

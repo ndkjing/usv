@@ -745,14 +745,16 @@ sonar_tx = 20
 sonar_baud = 9600
 # 声呐舵机
 sonar_steer = 21
-test_all=0
+test_all = 0
 
 # 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
 if home_debug:
     use_shape_theta_type = 3
 else:
     use_shape_theta_type = 1
-
+# 是否含有抽水泵
 b_draw = 1
+# 测试在家调试也发送数据
+debug_send_detect_data = 0
 if __name__ == '__main__':
     write_setting(True, True, True, True)
