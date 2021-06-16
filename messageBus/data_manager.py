@@ -20,6 +20,7 @@ from drivers import audios_manager, drone_kit_control, pi_main
 from utils import lng_lat_calculate
 from utils import check_network
 from utils import resolve_gps_data
+from utils import data_valid
 from storage import save_data
 import config
 from moveControl.pathTrack import simple_pid
@@ -216,15 +217,21 @@ class DataManager:
                         self.com_data_read_logger.info({'second_lng_lat': self.second_lng_lat})
                 elif com_data_read.startswith('BB'):
                     com_data_list = com_data_read.split(',')
-                    self.water_data_dict.update(
-                        {'EC': float(com_data_list[1].split(':')[1]) / math.pow(10, int(com_data_list[7][3:]))})
-                    self.water_data_dict.update(
-                        {'DO': float(com_data_list[0][2:].split(':')[1]) / math.pow(10, int(com_data_list[6][3:]))})
-                    self.water_data_dict.update(
-                        {'TD': float(com_data_list[2].split(':')[1]) / math.pow(10, int(com_data_list[8][3:]))})
-                    self.water_data_dict.update(
-                        {'pH': float(com_data_list[3].split(':')[1]) / math.pow(10, int(com_data_list[9][3:]))})
-                    self.water_data_dict.update({'wt': float(com_data_list[4].split(':')[1])})
+                    ec_data = float(com_data_list[1].split(':')[1]) / math.pow(10, int(com_data_list[7][3:]))
+                    ec_data = data_valid.valid_water_data(config.WaterType.EC, ec_data)
+                    self.water_data_dict.update({'EC': ec_data})
+                    do_data = float(com_data_list[0][2:].split(':')[1]) / math.pow(10, int(com_data_list[6][3:]))
+                    do_data = data_valid.valid_water_data(config.WaterType.DO, do_data)
+                    self.water_data_dict.update({'DO': do_data})
+                    td_data = float(com_data_list[2].split(':')[1]) / math.pow(10, int(com_data_list[8][3:]))
+                    td_data = data_valid.valid_water_data(config.WaterType.TD, td_data)
+                    self.water_data_dict.update({'TD': td_data})
+                    ph_data = float(com_data_list[3].split(':')[1]) / math.pow(10, int(com_data_list[9][3:]))
+                    ph_data = data_valid.valid_water_data(config.WaterType.pH, ph_data)
+                    self.water_data_dict.update({'pH': ph_data})
+                    wt_data = float(com_data_list[4].split(':')[1])
+                    wt_data = data_valid.valid_water_data(config.WaterType.wt, wt_data)
+                    self.water_data_dict.update({'wt': wt_data})
                     self.dump_energy = float(com_data_list[5].split(':')[1])
                     if time.time() - last_read_time > 5:
                         last_read_time = time.time()

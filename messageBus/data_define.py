@@ -8,7 +8,7 @@ import time
 from uuid import uuid4
 
 import config
-
+from utils import data_valid
 # 本地名称与发送名称映射
 name_mappings = {
     # 'pool_id':'mapId',
@@ -206,19 +206,19 @@ def fake_detect_data(detect_data):
     return_dict["weather"].update({"pm25": random.randint(0, 20)})
     return_dict["weather"].update({"pm10": random.randint(20, 40)})
 
-    return_dict["water"].update({"pH": random.randint(50, 90) / 10.0})
-    return_dict["water"].update({"wt": random.randint(10, 200) / 10.0})
+    return_dict["water"].update({"pH": data_valid.get_water_data(config.WaterType.pH)[0]})
+    return_dict["water"].update({"wt": data_valid.get_water_data(config.WaterType.wt)[0]})
     return_dict["water"].update({"COD": random.randint(10, 200) / 10.0})
     return_dict["water"].update(
-        {"DO": random.randint(20, 100) / 10.0})
-    return_dict["water"].update({"TD": random.randint(1, 10) / 10.0})
+        {"DO": data_valid.get_water_data(config.WaterType.DO)[0]})
+    return_dict["water"].update({"TD": data_valid.get_water_data(config.WaterType.TD)[0]})
     return_dict["water"].update(
-        {"NH3_NH4": random.randint(2, 100) / 100.0})
+        {"NH3_NH4": data_valid.get_water_data(config.WaterType.NH3_NH4)[0]})
     return_dict["water"].update(
         {"TN": random.randint(10, 200) / 10.0})
     return_dict["water"].update({"TP": random.randint(0, 2) / 10.0})
     return_dict["water"].update(
-        {"EC": random.randint(480, 600) / 10.0})
+        {"EC": data_valid.get_water_data(config.WaterType.EC)[0]})
     return return_dict
 
 

@@ -755,6 +755,13 @@ else:
 # 是否含有抽水泵
 b_draw = 1
 # 测试在家调试也发送数据
-debug_send_detect_data = 0
+debug_send_detect_data = 1
+class WaterType(enum.Enum):
+    wt = 0
+    EC = 1
+    pH = 2
+    DO = 3
+    TD = 4
+    NH3_NH4 = 5
 if __name__ == '__main__':
     write_setting(True, True, True, True)
