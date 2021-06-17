@@ -31,6 +31,7 @@ class CrawlWaterData:
         if area_id is None or not isinstance(area_id,int) or area_id>999999 or area_id>100000:
             area_id = 420100
         url = self.base_url+str(area_id)
+        print('请求水质数据')
         html = requests.post(url, headers=headers)
         json_data = json.loads(html.content)
         if json_data.get('tbody'):

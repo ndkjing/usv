@@ -195,6 +195,12 @@ class DataManager:
                 time.sleep(0.5)
                 row_com_data_read = self.com_data_obj.readline()
                 print('row_com_data_read', row_com_data_read)
+                # 如果数据不存在或者数据过短都跳过
+                if row_com_data_read:
+                    if len(str(row_com_data_read)) < 7:
+                        continue
+                else:
+                    continue
                 com_data_read = str(row_com_data_read)[2:-5]
                 if time.time() - last_read_time > 3:
                     last_read_time = time.time()
@@ -352,9 +358,8 @@ class DataManager:
                 if count > 0:
                     count = count - 1
                 else:
-                    pass
-                    # self.theta = None
-                self.logger.error({'error': e})
+                    self.logger.error({'error': e})
+                    count = 50
                 time.sleep(1)
 
     # 抽水
@@ -1147,7 +1152,7 @@ class DataManager:
                 except Exception as e:
                     save_distance = 0
                     save_time = 0
-                    self.logger.error({'error': e})
+                    self.logger.error({'读取run_distance_time_path': e})
             else:
                 save_distance = 0
                 save_time = 0
@@ -1267,7 +1272,7 @@ class DataManager:
         assert method in ['http', 'mqtt', 'com'], 'method error not in http mqtt com'
         if method == 'http':
             return_data = self.server_data_obj.send_server_http_data(http_type, data, url)
-            self.logger.debug({'请求 url': url, 'status_code': return_data.status_code})
+            self.logger.info({'请求 url': url, 'status_code': return_data.status_code})
             # 如果是POST返回的数据，添加数据到地图数据保存文件中
             if http_type == 'POST' and r'map/save' in url:
                 content_data = json.loads(return_data.content)

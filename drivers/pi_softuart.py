@@ -98,6 +98,33 @@ class PiSoftuart(object):
                 print({'error read_compass': e})
                 return None
 
+    def read_weite_compass(self, send_data=None, len_data=None, debug=False):
+        if len_data is None:
+            len_data = 4
+            try:
+                if send_data:
+                    print('send_data', send_data)
+                    self.write_data(send_data)
+                time.sleep(self._thread_ts)
+                time.sleep(0.1)
+                count, data1 = self._pi.bb_serial_read(self._rx_pin)
+                time.sleep(0.1)
+                count, data2 = self._pi.bb_serial_read(self._rx_pin)
+                time.sleep(0.1)
+                count, data3 = self._pi.bb_serial_read(self._rx_pin)
+                if debug:
+                    print('send_data', send_data)
+                    print('self._rx_pin', self._rx_pin, self.baud)
+                    print(time.time(), 'count', count, 'data', data1,'data2',data2,'data3',data3)
+                if count > len_data:
+                    str_data = data1.decode('utf-8')[2:-1]
+                    theta = float(str_data)
+                    return 360 - theta
+                # time.sleep(self._thread_ts)
+            except Exception as e:
+                print({'error read_compass': e})
+                return None
+
     def read_gps(self, len_data=None, debug=False):
         if len_data is None:
             len_data = 4

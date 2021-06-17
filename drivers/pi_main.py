@@ -81,9 +81,9 @@ class PiMain:
         # 距离矩阵
         self.distance_dict = {}
         self.field_of_view = 90  # 视场角
-        self.view_cell = 5          # 量化角度单元格
-        self.cell_size = int(self.field_of_view/self.view_cell)
-        self.obstacle_list = [0]*self.cell_size
+        self.view_cell = 5  # 量化角度单元格
+        self.cell_size = int(self.field_of_view / self.view_cell)
+        self.obstacle_list = [0] * self.cell_size
         # 设置为GPIO输出模式 输出高低电平
         self.pi.set_mode(config.side_left_gpio_pin, pigpio.OUTPUT)
         self.pi.set_mode(config.side_right_gpio_pin, pigpio.OUTPUT)
@@ -109,6 +109,7 @@ class PiMain:
     def get_compass_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx,
                                       baud=config.pin_compass_baud)
+
     def get_weite_compass_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=21, tx_pin=20,
                                       baud=9600)
@@ -134,8 +135,6 @@ class PiMain:
         :return:
         """
         data = self.stc_obj.read_stc_data()
-
-
 
     def get_sonar_data(self):
         """
@@ -187,6 +186,35 @@ class PiMain:
                         config.write_setting(b_height=True)
                 else:
                     theta_ = self.compass_obj.read_compass(send_data='31')
+                    theta_ = self.compass_filter(theta_)
+                    if theta_:
+                        self.theta = theta_
+
+    def get_weite_compass_data(self):
+        if config.current_platform == config.CurrentPlatform.pi:
+            # 记录上一次发送数据
+            last_send_data = None
+            while True:
+                # 检查罗盘是否需要校准 # 开始校准
+                if int(config.calibration_compass) == 1:
+                    if last_send_data != 'C0':
+                        info_data = self.weite_compass_obj.read_weite_compass(send_data='C0')
+                        time.sleep(0.05)
+                        self.compass_notice_info = info_data
+                        last_send_data = 'C0'
+                # 结束校准
+                elif int(config.calibration_compass) == 2:
+                    if last_send_data != 'C1':
+                        self.compass_notice_info = ''
+                        info_data = self.compass_obj.read_compass(send_data='C1')
+                        time.sleep(0.05)
+                        self.compass_notice_info = info_data
+                        last_send_data = 'C1'
+                        # 发送完结束校准命令后将配置改为 0
+                        config.calibration_compass = 0
+                        config.write_setting(b_height=True)
+                else:
+                    theta_ = self.weite_compass_obj.read_weite_compass(send_data='31')
                     theta_ = self.compass_filter(theta_)
                     if theta_:
                         self.theta = theta_
@@ -308,7 +336,7 @@ class PiMain:
     def init_motor(self):
         self.set_pwm(config.stop_pwm, config.stop_pwm)
         time.sleep(1)
-        self.set_pwm(config.stop_pwm+300, config.stop_pwm+300)
+        self.set_pwm(config.stop_pwm + 300, config.stop_pwm + 300)
         time.sleep(3)
         # self.set_pwm(config.stop_pwm+200, config.stop_pwm+200)
         # time.sleep(2)
@@ -434,9 +462,9 @@ class PiMain:
     def get_distance_dict_millimeter(self):
         # 角度限制
         count = 0
-        max_count=10
-        average_angle_dict={}
-        average_distance_dict={}
+        max_count = 7
+        average_angle_dict = {}
+        average_distance_dict = {}
         while True:
             data_dict = self.millimeter_wave_obj.read_millimeter_wave()
 
@@ -446,7 +474,7 @@ class PiMain:
                     angle_row = data_dict[obj_id][1]
                     # 将该对象次的平均值作为角度值
                     if obj_id in average_angle_dict:
-                        if len(average_angle_dict.get(obj_id))>=max_count:
+                        if len(average_angle_dict.get(obj_id)) >= max_count:
                             average_angle_dict.get(obj_id).pop(0)
                         average_angle_dict.get(obj_id).append(angle_row)
                     else:
@@ -458,10 +486,10 @@ class PiMain:
                         average_distance_dict.get(obj_id).append(distance_row)
                     else:
                         average_distance_dict.update({obj_id: [distance_row]})
-                    angle_average = int(sum(average_angle_dict.get(obj_id))/len(average_angle_dict.get(obj_id)))
-                    distance_average = sum(average_distance_dict.get(obj_id))/len(average_distance_dict.get(obj_id))
+                    angle_average = int(sum(average_angle_dict.get(obj_id)) / len(average_angle_dict.get(obj_id)))
+                    distance_average = sum(average_distance_dict.get(obj_id)) / len(average_distance_dict.get(obj_id))
                     # 丢弃大于视场角范围的数据
-                    if abs(angle_average) >= (self.field_of_view/2):
+                    if abs(angle_average) >= (self.field_of_view / 2):
                         continue
                     angle_key = int(angle_average - angle_average % 2)
                     self.distance_dict.update({obj_id: [distance_average, angle_key]})
@@ -473,9 +501,10 @@ class PiMain:
                         if len(average_distance_dict.get(obj_id)) >= max_count:
                             average_distance_dict.get(obj_id).pop(0)
                         average_distance_dict.get(obj_id).append(0)
-                        distance_average = sum(average_distance_dict.get(obj_id)) / len(average_distance_dict.get(obj_id))
+                        distance_average = sum(average_distance_dict.get(obj_id)) / len(
+                            average_distance_dict.get(obj_id))
                         # 连续多次不出现该id的目标时平均距离会=0小于0.5时删除该目标
-                        if distance_average<0.5:
+                        if distance_average < 0.5:
                             self.distance_dict.pop(obj_id)
                             average_angle_dict.pop(obj_id)
                             average_distance_dict.pop(obj_id)
@@ -486,7 +515,7 @@ class PiMain:
                         self.distance_dict.pop(obj_id)
                         average_distance_dict.pop(obj_id)
                         continue
-                    elif obj_id in average_angle_dict and  obj_id not in average_distance_dict:
+                    elif obj_id in average_angle_dict and obj_id not in average_distance_dict:
                         self.distance_dict.pop(obj_id)
                         average_angle_dict.pop(obj_id)
                         continue
@@ -499,7 +528,7 @@ class PiMain:
                 else:
                     b_obstacle = 1
                 self.obstacle_list[obstacle_index] = b_obstacle
-            if count == max_count-1:
+            if count == max_count - 1:
                 self.obstacle_list = [0] * int(self.field_of_view / self.view_cell)
             # print('data_dict', data_dict)
             # print('self.distance_dict', self.distance_dict)
@@ -578,12 +607,13 @@ class PiMain:
 if __name__ == '__main__':
     pi_main_obj = PiMain()
     from drivers import com_data
+
     if os.path.exists(config.stc_port):
         com_data_obj = com_data.ComData(
-                config.stc_port,
-                config.stc_baud,
-                timeout=config.stc2pi_timeout,
-                logger=logger)
+            config.stc_port,
+            config.stc_baud,
+            timeout=config.stc2pi_timeout,
+            logger=logger)
     loop_change_pwm_thread = threading.Thread(target=pi_main_obj.loop_change_pwm)
     loop_change_pwm_thread.start()
     while True:
@@ -694,11 +724,28 @@ if __name__ == '__main__':
             elif key_input.startswith('h'):
                 key_input = input('input:  C0  开始  C1 结束 其他为读取 >')
                 if key_input == 'C0':
-                    theta = pi_main_obj.compass_obj.read_compass(send_data='C0',debug=True)
+                    theta = pi_main_obj.compass_obj.read_compass(send_data='C0', debug=True)
                 elif key_input == 'C1':
-                    theta = pi_main_obj.compass_obj.read_compass(send_data='C1',debug=True)
+                    theta = pi_main_obj.compass_obj.read_compass(send_data='C1', debug=True)
                 else:
                     theta = pi_main_obj.compass_obj.read_compass(debug=True)
+                print('theta', theta)
+            elif key_input.startswith('H'):
+                key_input = input('input:  校准 s  开始  e 结束  a 设置自动回传  i 初始化 其他为读取 >')
+                if key_input == 's':
+                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data='41542B43414C493D310D0A',
+                                                                             debug=True)
+                elif key_input == 'e':
+                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data='41542B43414C493D300D0A',
+                                                                             debug=True)
+                elif key_input == 'a':
+                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data='41542B50524154453D3130300D0A',
+                                                                             debug=True)
+                elif key_input == 'i':
+                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data='41542B494E49540D0A', debug=True)
+                else:
+                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data='41542B50524154453D300D0A',
+                                                                             debug=True)
                 print('theta', theta)
             elif key_input.startswith('g'):
                 gps_data = pi_main_obj.gps_obj.read_gps(debug=True)
@@ -741,14 +788,15 @@ if __name__ == '__main__':
                 pi_main_obj.get_distance_dict_millimeter()
             elif key_input.startswith('m'):
                 pi_main_obj.init_motor()
-            elif key_input[0] in ['A','B','C','D','E']:
-                print('len(key_input)',len(key_input))
+            elif key_input[0] in ['A', 'B', 'C', 'D', 'E']:
+                print('len(key_input)', len(key_input))
                 if len(key_input) == 2 and key_input[1] in ['0', '1', '2', '3', '4']:
-                    send_data = key_input+'Z'
-                    print('send_data',send_data)
+                    send_data = key_input + 'Z'
+                    print('send_data', send_data)
                     com_data_obj.send_data(send_data)
                     row_com_data_read = com_data_obj.readline()
-                    print('row_com_data_read',row_com_data_read)
+                    print('row_com_data_read', row_com_data_read)
+
             # TODO
             # 返航
             # 角度控制

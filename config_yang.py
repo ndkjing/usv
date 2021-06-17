@@ -3,8 +3,8 @@ import enum
 import json
 import os
 import platform
-import ship_code
 root_path = os.path.dirname(os.path.abspath(__file__))
+import ship_code_config
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
     os.mkdir(os.path.join(root_path, 'statics'))
@@ -175,7 +175,7 @@ pi2mqtt_interval = 1
 # 上传给单片机心跳时间间隔 单位秒
 # com_heart_time = 1 * 60
 # 船编号
-ship_code = ship_code.ship_code
+ship_code = ship_code_config.ship_code
 
 # 串口位置和波特率
 # 单片机
@@ -754,5 +754,14 @@ else:
     use_shape_theta_type = 1
 
 b_draw = 1
+# 测试在家调试也发送数据
+debug_send_detect_data = 1
+class WaterType(enum.Enum):
+    wt = 0
+    EC = 1
+    pH = 2
+    DO = 3
+    TD = 4
+    NH3_NH4 = 5
 if __name__ == '__main__':
     write_setting(True, True, True, True)

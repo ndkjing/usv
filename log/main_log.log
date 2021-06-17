@@ -1,7 +1,1 @@
-2021-06-15 16:21:29,539 main.py[line:69] INFO {'binding status': 1}
-2021-06-15 16:22:16,107 main.py[line:69] INFO {'binding status': 1}
-2021-06-16 09:26:42,332 main.py[line:71] ERROR {'binding_data error': ConnectionError(MaxRetryError("HTTPConnectionPool(host='wuhanligong.xxlun.com', port=80): Max retries exceeded with url: /union/admin/xxl/device/binding/3c50f4c3-a9c1-4872-9f18-883af014380a (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023522ECED08>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed'))"))}
-2021-06-16 09:29:34,630 main.py[line:69] INFO {'binding status': 1}
-2021-06-16 09:30:27,297 main.py[line:69] INFO {'binding status': 1}
-2021-06-16 09:35:09,004 main.py[line:69] INFO {'binding status': 1}
-2021-06-16 14:18:25,077 main.py[line:69] INFO {'binding status': 1}
+2021-06-17 16:39:54,917 main.py[line:69] INFO {'binding status': 1}

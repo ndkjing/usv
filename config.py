@@ -3,7 +3,7 @@ import enum
 import json
 import os
 import platform
-import ship_code
+import ship_code_config
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
@@ -175,7 +175,7 @@ pi2mqtt_interval = 1
 # 上传给单片机心跳时间间隔 单位秒
 # com_heart_time = 1 * 60
 # 船编号
-ship_code = ship_code.ship_code
+ship_code = ship_code_config.ship_code
 
 # 串口位置和波特率
 # 单片机
