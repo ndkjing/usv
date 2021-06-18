@@ -84,3 +84,4 @@ class LogHandler(logging.Logger):
 if __name__ == '__main__':
     log = LogHandler('test')
     log.info('this is a test msg')
+    log.info({'123':{1:2}})
