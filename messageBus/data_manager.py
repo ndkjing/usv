@@ -69,6 +69,15 @@ class LightStatus(enum.Enum):
     blue = 2
     buzzer = 3
 
+class Nwse(enum.Enum):
+    """
+    北东南西方向
+    """
+    north = 0
+    west = 1
+    south = 2
+    east = 3
+
 
 class DataManager:
     def __init__(self):
@@ -285,6 +294,9 @@ class DataManager:
             else:
                 if time.time() - self.draw_start_time > config.draw_time:
                     self.b_sampling = 2
+                    self.draw_start_time = None
+                else:
+                    self.b_sampling = 1
         else:
             # 判断是否抽水  点击抽水情况
             if self.server_data_obj.mqtt_send_get_obj.b_draw or self.b_arrive_point:
@@ -387,6 +399,7 @@ class DataManager:
             self.last_status_light = 4
 
     def clear_all_status(self):
+        self.logger.info('清除自动状态数据')
         self.server_data_obj.mqtt_send_get_obj.sampling_points.clear()
         self.server_data_obj.mqtt_send_get_obj.path_planning_points.clear()
         self.server_data_obj.mqtt_send_get_obj.sampling_points_status.clear()
@@ -475,11 +488,11 @@ class DataManager:
         # 从任务执行到遥控器控制
         elif status_change_index == 9:
             self.b_start_sample = 0
-            if b_clear_status:
-                self.clear_all_status()
+
         # 从任务执行到电脑手动
         elif status_change_index == 10:
             self.b_start_sample = 0
+
         # 从任务执行到电脑自动
         elif status_change_index == 11:
             pass
@@ -501,7 +514,7 @@ class DataManager:
             pass
         # 从电脑自动到任务模式
         elif status_change_index == 16:
-            self.b_arrive_point = 0
+            pass
         # 断网返航到返航到家
         elif status_change_index == 17:
             pass
@@ -523,6 +536,8 @@ class DataManager:
         # 返航到家到空闲
         elif status_change_index == 23:
             pass
+        if b_clear_status:
+            self.clear_all_status()
         self.ship_status = target_status
 
     # 处理状态切换
@@ -536,60 +551,67 @@ class DataManager:
                 return_ship_status = self.check_backhome()
                 if return_ship_status is not None:
                     self.change_status_info(target_status=return_ship_status)
-
-            # 判断切换到电脑手动模式
+            # 判断电脑自动切换到其他状态情况
             if self.ship_status == ShipStatus.computer_auto:
                 # 取消自动模式
                 if d == -1:
                     self.change_status_info(target_status=ShipStatus.computer_control, b_clear_status=True)
+                if self.b_arrive_point:
+                    self.last_ship_status = ShipStatus.computer_auto
+                    self.change_status_info(target_status=ShipStatus.tasking)
+                if self.server_data_obj.mqtt_send_get_obj.b_draw:
+                    self.last_ship_status = ShipStatus.computer_auto
+                    self.change_status_info(target_status=ShipStatus.tasking)
+            # 判断任务模式切换到其他状态情况
             if self.ship_status == ShipStatus.tasking:
+                self.b_arrive_point = 0
                 if self.b_sampling == 2:
                     if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) == \
                             self.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(1):
-                        print(self.ship_status,self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
+                        print(self.ship_status, self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
                         self.change_status_info(target_status=ShipStatus.computer_control, b_clear_status=True)
-            if self.ship_status == ShipStatus.idle and d in [-1, 0, 90, 180, 270, 10, 190, 1180, 1270]:
-                self.change_status_info(target_status=ShipStatus.computer_control)
-
-            # 判断切换到电脑自动模式
-            if self.ship_status in [ShipStatus.computer_control, ShipStatus.idle] and len(
-                    self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
-                if self.lng_lat is None:
-                    self.logger.error('无当前GPS，不能自主巡航')
-                    time.sleep(0.5)
-                    continue
-                print(self.ship_status, self.server_data_obj.mqtt_send_get_obj.path_planning_points)
-                self.change_status_info(target_status=ShipStatus.computer_auto)
-
-            # 判断切换到遥控器
-            if not config.home_debug and self.pi_main_obj.b_start_remote:
-                # 此时为遥控器控制模式 清除d控制状态
-                self.change_status_info(target_status=ShipStatus.remote_control)
-
-            # 判断切换到执行任务状态
-            if self.ship_status == ShipStatus.computer_auto:
-                self.last_ship_status = ShipStatus.computer_auto
-                if self.b_arrive_point or self.server_data_obj.mqtt_send_get_obj.b_draw:
-                    self.change_status_info(target_status=ShipStatus.tasking)
-            elif self.ship_status == ShipStatus.computer_control:
-                self.last_ship_status = ShipStatus.computer_control
-                # 电脑控制可能是最后一个点切换到的电脑控制
-                if self.b_arrive_point or self.server_data_obj.mqtt_send_get_obj.b_draw:
-                    self.change_status_info(target_status=ShipStatus.tasking)
-            elif self.ship_status == ShipStatus.remote_control:
-                self.last_ship_status = ShipStatus.remote_control
-                if self.pi_main_obj.start_draw:
-                    self.change_status_info(target_status=ShipStatus.tasking)
-
-            # 判断任务模式切换出状态
-            if self.ship_status == ShipStatus.tasking:
-                if self.b_sampling == 2:
-                    self.change_status_info(target_status=self.last_ship_status)
-
-            # 返航状态到返航到家状态
-            if self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy] and self.b_at_home:
-                self.change_status_info(target_status=ShipStatus.at_home)
-                self.change_status_info(target_status=ShipStatus.idle)
+                        self.last_ship_status = ShipStatus.computer_control
+                    self.b_sampling = 0
+                    self.server_data_obj.mqtt_send_get_obj.b_draw = 0
+                    self.change_status_info(self.last_ship_status)
+            # 判断空闲状态切换到其他状态
+            if self.ship_status == ShipStatus.idle:
+                # 判断切换到
+                if not config.home_debug and self.pi_main_obj.b_start_remote:
+                    # 此时为遥控器控制模式 清除d控制状态
+                    self.change_status_info(target_status=ShipStatus.remote_control)
+                elif d in [-1, 0, 90, 180, 270, 10, 190, 1180, 1270]:
+                    self.change_status_info(target_status=ShipStatus.computer_control)
+                elif len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
+                    if self.lng_lat is None:
+                        self.logger.error('无当前GPS，不能自主巡航')
+                        time.sleep(0.5)
+                        continue
+                    print(self.ship_status, self.server_data_obj.mqtt_send_get_obj.path_planning_points)
+                    self.change_status_info(target_status=ShipStatus.computer_auto)
+            # 判断电脑手动状态切换到其他状态
+            if self.ship_status == ShipStatus.computer_control:
+                # 判断切换到
+                if not config.home_debug and self.pi_main_obj.b_start_remote:
+                    # 此时为遥控器控制模式 清除d控制状态
+                    self.change_status_info(target_status=ShipStatus.remote_control)
+                elif len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
+                    if self.lng_lat is None:
+                        self.logger.error('无当前GPS，不能自主巡航')
+                        time.sleep(0.5)
+                        continue
+                    print(self.ship_status, self.server_data_obj.mqtt_send_get_obj.path_planning_points)
+                    self.change_status_info(target_status=ShipStatus.computer_auto)
+            # 遥控器状态切换到其他状态
+            if self.ship_status == ShipStatus.remote_control:
+                if not config.home_debug and self.pi_main_obj.b_start_remote == 0:
+                    # 此时为遥控器控制模式 清除d控制状态
+                    self.change_status_info(target_status=ShipStatus.idle)
+            # 返航状态切换到其他状态
+            if self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
+                if self.b_at_home:
+                    self.change_status_info(target_status=ShipStatus.at_home)
+                    self.change_status_info(target_status=ShipStatus.idle, b_clear_status=True)
 
     # 检查是否需要返航
     def check_backhome(self):
@@ -744,6 +766,22 @@ class DataManager:
                 if v < 5:
                     obstacle_map[10 + int(k / 0.9)] = 1
         return obstacle_map
+
+    # 往东南西北运动控制
+    def nesw_control(self, nest):
+        if nest == Nwse.north:
+            angle = 0
+        elif nest == Nwse.west:
+            angle = 90
+        elif nest == Nwse.south:
+            angle = 180
+        else:
+            angle = 270
+        point = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                             self.lng_lat[1],
+                                                             angle,
+                                                             config.min_steer_distance)
+        self.points_arrive_control(point,point,False,False)
 
     # 计算障碍物下目标点
     def get_avoid_obstacle_point(self, path_planning_point_gps=None):
@@ -940,31 +978,31 @@ class DataManager:
                         self.direction = -1
                 if not config.home_debug:
                     if self.direction == 0:
-                        self.control_info += '向前'
+                        self.control_info += ' 向前'
                         self.pi_main_obj.forward()
                     elif self.direction == 90:
-                        self.control_info += '向左'
+                        self.control_info += ' 向左'
                         self.pi_main_obj.left()
                     elif self.direction == 180:
-                        self.control_info += '向后'
+                        self.control_info += ' 向后'
                         self.pi_main_obj.backword()
                     elif self.direction == 270:
-                        self.control_info += '向右'
+                        self.control_info += ' 向右'
                         self.pi_main_obj.right()
-                    elif self.direction == 10:
-                        self.control_info += '向北'
-                        self.pi_main_obj.north()
+                    elif self.direction in 10:
+                        self.control_info += ' 向北'
+                        self.nesw_control(nest=Nwse.north)
                     elif self.direction == 190:
-                        self.control_info += '向西'
-                        self.pi_main_obj.west()
+                        self.control_info += ' 向西'
+                        self.nesw_control(nest=Nwse.west)
                     elif self.direction == 1180:
-                        self.control_info += '向南'
-                        self.pi_main_obj.south()
+                        self.control_info += ' 向南'
+                        self.nesw_control(nest=Nwse.south)
                     elif self.direction == 1270:
-                        self.control_info += '向东'
-                        self.pi_main_obj.east()
+                        self.control_info += ' 向东'
+                        self.nesw_control(nest=Nwse.east)
                     elif self.direction == -1:
-                        self.control_info += '停止'
+                        self.control_info += ' 停止'
                         self.pi_main_obj.stop()
             # 遥控器控制
             elif self.ship_status == ShipStatus.remote_control:
@@ -1070,14 +1108,12 @@ class DataManager:
                             break
                     if self.ship_status != ShipStatus.computer_auto:
                         break
-
             # 执行任务中
             elif self.ship_status == ShipStatus.tasking:
                 if config.b_draw:
                     if not config.home_debug:
                         self.pi_main_obj.stop()
                     self.draw()
-
             # 返航 断网返航 低电量返航
             elif self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
                 # 有返航点下情况下返回返航点，没有则停止

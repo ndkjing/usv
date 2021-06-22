@@ -341,35 +341,6 @@ class PiMain:
             right_pwm = 1300
         self.set_pwm(left_pwm, right_pwm)
 
-    # TODO
-    def north(self, left_pwm=None, right_pwm=None):
-        if left_pwm is None:
-            left_pwm = config.stop_pwm + int(config.speed_grade) * 100
-        if right_pwm is None:
-            right_pwm = config.stop_pwm + int(config.speed_grade) * 100
-        self.set_pwm(left_pwm, right_pwm)
-
-    def south(self, left_pwm=None, right_pwm=None):
-        if left_pwm is None:
-            left_pwm = config.stop_pwm - int(config.speed_grade) * 100
-        if right_pwm is None:
-            right_pwm = config.stop_pwm - int(config.speed_grade) * 100
-        self.set_pwm(left_pwm, right_pwm)
-
-    def west(self, left_pwm=None, right_pwm=None):
-        if left_pwm is None:
-            left_pwm = 1300
-        if right_pwm is None:
-            right_pwm = 1700
-        self.set_pwm(left_pwm, right_pwm)
-
-    def east(self, left_pwm=None, right_pwm=None):
-        if left_pwm is None:
-            left_pwm = 1700
-        if right_pwm is None:
-            right_pwm = 1300
-        self.set_pwm(left_pwm, right_pwm)
-
     def stop(self):
         self.set_pwm(config.stop_pwm, config.stop_pwm)
 
