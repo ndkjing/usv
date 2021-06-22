@@ -5,6 +5,7 @@ from messageBus.data_define import DataDefine
 import config
 from messageBus import data_define
 from utils import log
+from utils import poweroff_restart
 import copy
 import paho.mqtt.client as mqtt
 import time
@@ -14,14 +15,14 @@ import requests
 
 class ServerData:
     def __init__(self, logger,
-                 topics, ship_code=None):
+                 topics):
         self.logger = logger
         self.topics = topics
-        self.http_send_get_obj = HttpSendGet()
-        self.mqtt_send_get_obj = MqttSendGet(self.logger, ship_code=ship_code)
+        # self.http_send_get_obj = HttpSendGet()
+        self.mqtt_send_get_obj = MqttSendGet(self.logger)
         # 启动后自动订阅话题
-        for topic, qos in self.topics:
-            self.mqtt_send_get_obj.subscribe_topic(topic=topic, qos=qos)
+        for topic_, qos_ in self.topics:
+            self.mqtt_send_get_obj.subscribe_topic(topic=topic_, qos=qos_)
 
     # 发送数据到服务器http
     def send_server_http_data(self, request_type, data, url):
@@ -75,7 +76,6 @@ class MqttSendGet:
     def __init__(
             self,
             logger,
-            ship_code,
             mqtt_host=config.mqtt_host,
             mqtt_port=config.mqtt_port,
             client_id=config.ship_code
@@ -84,8 +84,8 @@ class MqttSendGet:
         self.mqtt_host = mqtt_host
         self.mqtt_port = mqtt_port
         if config.current_platform == config.CurrentPlatform.pi:
-            client_id = client_id + 'windows'
-            self.mqtt_user = 'linux2'
+            client_id = client_id + '_pi'
+            self.mqtt_user = 'linux_pi'
         elif config.current_platform == config.CurrentPlatform.linux:
             client_id = client_id + 'linux'
             self.mqtt_user = 'linux'
@@ -105,7 +105,7 @@ class MqttSendGet:
                 break
             except Exception:
                 logger.error('链接mqtt失败')
-                time.sleep(10)
+                time.sleep(3)
                 continue
         # 湖泊初始点击点信息
         self.pool_click_lng_lat = None
@@ -127,12 +127,10 @@ class MqttSendGet:
         self.sampling_points_status = []
         self.sampling_points_gps = []
         self.path_planning_points_gps = []
-
         # 船当前经纬度 给服务器路径规划使用
         self.current_lng_lat = None
         # 船返航点经纬度 给服务器路径规划使用
         self.home_lng_lat = []
-
         # 自动求取经纬度设置 使用行间距和记录当前路径点是使用行间距
         self.row_gap = None
         self.use_col_gap = False
@@ -142,9 +140,9 @@ class MqttSendGet:
         # 行驶轨迹确认ID 与是否确认
         self.path_id = None
         self.path_id_confirm = None
-
-        # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　360为停止
-        self.control_move_direction = 360
+        # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　-1为停止  -2 为不为平台控制
+        self.control_move_direction = -2
+        self.last_control_move_direction = -2
         # 测量控制位　0为不采样　1为采样
         self.b_sampling = 0
         # 抽水控制位  0为不抽水　1为抽水
@@ -171,15 +169,16 @@ class MqttSendGet:
         self.height_setting_default_data = None
         # 刷新后请求数据
         self.refresh_info_type = 0
-
         # 重置湖泊
         self.reset_pool_click = 0
         # 检查超过指定时间没有收到服务器数据就开启  断网返航
         self.last_command_time = time.time()
         self.b_network_backhome = 0
-
         # 设置的返航点
         self.set_home_gaode_lng_lat = None
+        # 定点和返航
+        self.back_home = 0
+        self.fix_point = 0
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -202,9 +201,6 @@ class MqttSendGet:
             # 回调更新控制数据
             # 判断topic
             topic = msg.topic
-            if config.network_backhome:
-                if time.time()-self.last_command_time>300:
-                    self.b_network_backhome=1
             self.last_command_time = time.time()
             # 处理控制数据
             if topic == 'control_data_%s' % (config.ship_code):
@@ -220,12 +216,13 @@ class MqttSendGet:
                     else:
                         self.use_col_gap = False
                         self.row_gap = 0
+                self.last_control_move_direction = self.control_move_direction
                 self.control_move_direction = int(control_data.get('move_direction'))
-                if self.control_move_direction == -1:
-                    self.sampling_points = []
-                    self.path_planning_points = []
-                    self.sampling_points_status = []
-                    self.sampling_points_gps=[]
+                # if self.control_move_direction == -1:
+                #     self.sampling_points = []
+                #     self.path_planning_points = []
+                #     self.sampling_points_status = []
+                #     self.sampling_points_gps = []
                 self.logger.info({'topic': topic,
                                   'control_move_direction': control_data.get('move_direction'),
                                   })
@@ -233,7 +230,6 @@ class MqttSendGet:
             # 处理开关信息
             if topic == 'switch_%s' % (config.ship_code):
                 switch_data = json.loads(msg.payload)
-                print(switch_data)
                 # 改变了暂时没用
                 if switch_data.get('b_sampling') is not None:
                     self.b_sampling = int(switch_data.get('b_sampling'))
@@ -341,7 +337,7 @@ class MqttSendGet:
                 self.sampling_points_status = [0] * len(self.sampling_points)
                 self.path_planning_points = path_planning_data.get('path_points')
                 self.logger.info({'topic': topic,
-                                  'sampling_points':path_planning_data.get('sampling_points'),
+                                  'sampling_points': path_planning_data.get('sampling_points'),
                                   'path_points': path_planning_data.get('path_points'),
                                   })
 
@@ -482,6 +478,21 @@ class MqttSendGet:
                 self.logger.info({'topic': topic,
                                   'lng_lat': set_home_data.get('lng_lat'),
                                   })
+
+            # 处理关机和重启
+            elif topic == 'poweroff_restart_%s' % (config.ship_code):
+                poweroff_restart_data = json.loads(msg.payload)
+                if poweroff_restart_data.get('poweroff_restart') is None:
+                    self.logger.error('poweroff_restart_处理控制数据没有lng_lat')
+                    return
+                poweroff_restart_type = int(poweroff_restart_data.get('poweroff_restart'))
+                self.logger.info({'topic': topic,
+                                  'poweroff_restart': poweroff_restart_data.get('poweroff_restart'),
+                                  })
+                if poweroff_restart_type == 2:
+                    poweroff_restart.restart()
+                elif poweroff_restart_type == 1:
+                    poweroff_restart.poweroff()
 
         except Exception as e:
             self.logger.error({'error': e})

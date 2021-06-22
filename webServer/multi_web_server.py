@@ -1,7 +1,6 @@
 """
 寻找地图上湖泊，路径规划
 """
-
 import threading
 import time
 import json
@@ -16,17 +15,7 @@ sys.path.append(
     os.path.join(
         os.path.dirname(
             os.path.abspath(__file__)),
-        'drivers'))
-sys.path.append(
-    os.path.join(
-        os.path.dirname(
-            os.path.abspath(__file__)),
         'externalConnect'))
-sys.path.append(
-    os.path.join(
-        os.path.dirname(
-            os.path.abspath(__file__)),
-        'messageBus'))
 sys.path.append(
     os.path.join(
         os.path.dirname(
@@ -64,14 +53,12 @@ class WebServer:
         self.server_log = LogHandler('server_data')
         self.map_log = LogHandler('map_log')
         # mqtt服务器数据收发对象
-
         self.server_data_obj_dict = {}
         for ship_code in server_config.ship_code_list:
             self.server_data_obj_dict.update({ship_code: ServerData(self.server_log,
                                                                     topics=self.data_define_obj_dict.get(
                                                                         ship_code).topics,
                                                                     ship_code=ship_code)})
-
         # 记录目标点击地点
         self.current_target_gaode_lng_lats_dict = {}
         # 记录路径规划地点
@@ -141,12 +128,11 @@ class WebServer:
     def find_pool(self):
         while True:
             # 循环等待一定时间
-            time.sleep(config.check_status_interval)
+            time.sleep(0.1)
             for ship_code in server_config.ship_code_list:
                 # 若是用户没有点击点
-                if self.server_data_obj_dict.get(
-                        ship_code).mqtt_send_get_obj.pool_click_lng_lat is None or self.server_data_obj_dict.get(
-                        ship_code).mqtt_send_get_obj.pool_click_zoom is None:
+                if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat is None or \
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom is None:
                     continue
                 # 查找与更新湖泊id
                 save_img_dir = os.path.join(config.root_path, 'statics', 'imgs')
@@ -185,12 +171,12 @@ class WebServer:
                     if os.path.exists(save_img_path) and self.baidu_map_obj_dict.get(ship_code) is not None:
                         continue
                     else:
-                        self.baidu_map_obj = baidu_map.BaiduMap(
+                        baidu_map_obj = baidu_map.BaiduMap(
                             lng_lat=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat,
                             zoom=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom,
                             logger=self.map_log,
                             map_type=self.current_map_type)
-                        self.baidu_map_obj_dict.update({ship_code: self.baidu_map_obj})
+                        self.baidu_map_obj_dict.update({ship_code: baidu_map_obj})
                     pool_cnts, (pool_cx, pool_cy) = self.baidu_map_obj_dict.get(ship_code).get_pool_pix()
                     # 为None表示没有找到湖泊 继续换地图找
                     if pool_cnts is None:
@@ -231,11 +217,6 @@ class WebServer:
                         config.pool_name = self.baidu_map_obj_dict.get(ship_code).pool_name
                     else:
                         config.pool_name = self.baidu_map_obj_dict.get(ship_code).address
-                    try:
-                        if len(config.pool_name)>=10:
-                            config.pool_name=config.pool_name[:7]
-                    except Exception:
-                        config.pool_name='123'
                     self.logger.info({'config.pool_name': config.pool_name})
                     # 判断当前湖泊是否曾经出现，出现过则获取的ID 没出现过发送请求获取新ID
                     if isinstance(self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
@@ -248,7 +229,7 @@ class WebServer:
                         "mapData": json.dumps(
                             self.baidu_map_obj_dict.get(ship_code).pool_lng_lats),
                         "deviceId": ship_code,
-                        "name":config.pool_name,
+                        "name": config.pool_name,
                         "pixData": json.dumps(save_pool_cnts)}
 
                     # 本地保存经纬度信息，放大1000000倍 用来只保存整数
@@ -288,7 +269,7 @@ class WebServer:
                                 (self.baidu_map_obj_dict.get(ship_code).lng_lat[0] * 1000000,
                                  self.baidu_map_obj_dict.get(ship_code).lng_lat[1] * 1000000),
                                 local_map_data)
-                            print('pool_id',pool_id)
+                            print('pool_id', pool_id)
                         if pool_id is not None:
                             self.logger.info({'在本地找到湖泊 poolid': pool_id})
                         # 不存在获取新的id
@@ -321,9 +302,7 @@ class WebServer:
                                         "pool_lng_lats": save_pool_lng_lats,
                                         "pool_cnts": save_pool_cnts})
                                 json.dump(local_map_data, f)
-
                     self.data_define_obj_dict.get(ship_code).pool_code = pool_id
-
                     pool_info_data = {
                         'deviceId': ship_code,
                         'mapId': self.data_define_obj_dict.get(ship_code).pool_code,
@@ -345,9 +324,11 @@ class WebServer:
                         if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data is None:
                             self.logger.error(
                                 {
-                                    'base_setting_data is None': self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data})
+                                    'base_setting_data is None': self.server_data_obj_dict.get(
+                                        ship_code).mqtt_send_get_obj.base_setting_data})
                         else:
-                            self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.update({'info_type': 3})
+                            self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.update(
+                                {'info_type': 3})
                             send_data = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data
                             send_data.update({'pool_name': config.pool_name})
                             self.send(method='mqtt',
@@ -369,17 +350,6 @@ class WebServer:
                     if len_target_lng_lat == 1:
                         target_lng_lats = copy.deepcopy(
                             self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.target_lng_lat)
-                        # 是否返航
-                        # if int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.back_home) == 1:
-                        #     if config.home_debug:
-                        #         target_lng_lats.append(config.ship_gaode_lng_lat)
-                        #     else:
-                        #         # 添加当前经纬度作为返航点
-                        #         if self.baidu_map_obj_dict.get(ship_code) is not None and self.server_data_obj_dict.get(
-                        #                 ship_code).mqtt_send_get_obj.home_lng_lat is not None:
-                        #             target_lng_lats.append(
-                        #                 self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.home_lng_lat)
-
                         # 判断是否是上次的点
                         if self.current_target_gaode_lng_lats_dict.get(ship_code) == target_lng_lats:
                             pass
@@ -454,8 +424,8 @@ class WebServer:
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.row_gap = None
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.col_gap = None
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.safe_gap = None
-                    except Exception as e:
-                        self.logger.error({'error': e})
+                    except Exception as e1:
+                        self.logger.error({'error': e1})
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.row_gap = None
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.col_gap = None
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.safe_gap = None
@@ -492,7 +462,7 @@ class WebServer:
                 # 路径点
                 self.plan_path = return_gaode_lng_lat_path
                 # 路径点状态
-                self.plan_path_points_status = [0] * len(self.plan_path)
+                # self.plan_path_points_status = [0] * len(self.plan_path)
                 mqtt_send_path_planning_data = {
                     "deviceId": ship_code,
                     "mapId": self.data_define_obj_dict.get(ship_code).pool_code,

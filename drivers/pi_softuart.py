@@ -1,10 +1,9 @@
-import os
 import time
 import pigpio
-import threading
 import os
 import sys
 import binascii
+import config
 
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root_dir)
@@ -21,11 +20,10 @@ sys.path.append(
     os.path.join(
         root_dir,
         'piControl'))
-import config
 
 
 class PiSoftuart(object):
-    def __init__(self, pi, rx_pin, tx_pin, baud,time_out = 0.1):
+    def __init__(self, pi, rx_pin, tx_pin, baud, time_out=0.1):
         self._rx_pin = rx_pin
         self._tx_pin = tx_pin
         self.baud = baud
@@ -34,7 +32,7 @@ class PiSoftuart(object):
         self._pi.set_mode(self._tx_pin, pigpio.OUTPUT)
         self.distance = 0
         # ATTR
-        self._thread_ts =time_out
+        self._thread_ts = time_out
         self.flushInput()
 
     def flushInput(self):
@@ -50,7 +48,7 @@ class PiSoftuart(object):
         if len_data is None:
             len_data = 4
             try:
-                time.sleep(self._thread_ts/2)
+                time.sleep(self._thread_ts / 2)
                 count, data = self._pi.bb_serial_read(self._rx_pin)
                 print(time.time(), 'count', count, 'data', data)
                 if count == len_data:
@@ -78,18 +76,19 @@ class PiSoftuart(object):
                         return distance
                 time.sleep(self._thread_ts)
             except Exception as e:
-                print({'error':e})
-                time.sleep(self._thread_ts/2)
+                print({'error': e})
+                time.sleep(self._thread_ts / 2)
                 return None
 
-    def read_compass(self, send_data='31', len_data=None):
+    def read_compass(self, send_data='31', len_data=None, debug=False):
         if len_data is None:
             len_data = 4
             try:
                 self.write_data(send_data)
                 time.sleep(self._thread_ts)
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                # print(time.time(), 'count', count, 'data', data)
+                if debug:
+                    print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
                     str_data = data.decode('utf-8')[2:-1]
                     theta = float(str_data)
@@ -99,19 +98,46 @@ class PiSoftuart(object):
                 print({'error read_compass': e})
                 return None
 
-    def read_gps(self, len_data=None):
+    def read_weite_compass(self, send_data=None, len_data=None, debug=False):
+        if len_data is None:
+            len_data = 4
+            try:
+                if send_data:
+                    print('send_data', send_data)
+                    self.write_data(send_data)
+                time.sleep(self._thread_ts)
+                time.sleep(0.1)
+                count, data1 = self._pi.bb_serial_read(self._rx_pin)
+                time.sleep(0.1)
+                count, data2 = self._pi.bb_serial_read(self._rx_pin)
+                time.sleep(0.1)
+                count, data3 = self._pi.bb_serial_read(self._rx_pin)
+                if debug:
+                    print('send_data', send_data)
+                    print('self._rx_pin', self._rx_pin, self.baud)
+                    print(time.time(), 'count', count, 'data', data1,'data2',data2,'data3',data3)
+                if count > len_data:
+                    str_data = data1.decode('utf-8')[2:-1]
+                    theta = float(str_data)
+                    return 360 - theta
+                # time.sleep(self._thread_ts)
+            except Exception as e:
+                print({'error read_compass': e})
+                return None
+
+    def read_gps(self, len_data=None, debug=False):
         if len_data is None:
             len_data = 4
             try:
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                # print(time.time(), 'count', count, 'data', data)
+                if debug:
+                    print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
-                    # str = (str, errors='ignore')
                     str_data = data.decode('utf-8', errors='ignore')
-                    # print('str_data', str_data)
                     for i in str_data.split('$'):
                         i = i.strip()
-                        if i.startswith('GPGGA')or i.startswith('$GPGGA') or i.startswith('GNGGA')or i.startswith('$GNGGA'):
+                        if i.startswith('GPGGA') or i.startswith('$GPGGA') or i.startswith('GNGGA') or i.startswith(
+                                '$GNGGA'):
                             gps_data = i
                             data_list = gps_data.split(',')
                             if len(data_list) < 8:
@@ -126,7 +152,6 @@ class PiSoftuart(object):
                                     pass
                                 else:
                                     lng_lat_error = float(data_list[8])
-                                    # print(lng, lat, lng_lat_error)
                                     return [lng, lat, lng_lat_error]
                 time.sleep(self._thread_ts * 10)
             except Exception as e:
@@ -136,12 +161,12 @@ class PiSoftuart(object):
     def read_laser(self, send_data=None):
         try:
             if send_data:
-                self.write_data(send_data,baud=115200)
-                time.sleep(self._thread_ts*4)
+                self.write_data(send_data, baud=115200)
+                time.sleep(self._thread_ts * 4)
             count, data = self._pi.bb_serial_read(self._rx_pin)
             # print(time.time(), type(data), count, data)
-            if count == 0 :
-                time.sleep(1/config.laser_hz)
+            if count == 0:
+                time.sleep(1 / config.laser_hz)
                 return 0
             str_data = str(binascii.b2a_hex(data))[2:-1]
             # print('str_data', str_data, 'len(str_data)', len(str_data))
@@ -154,9 +179,9 @@ class PiSoftuart(object):
                         # print(time.time(), type(data), count, data)
                         # print(str_data)
                     return distance
-            time.sleep(1/config.laser_hz)
+            time.sleep(1 / config.laser_hz)
         except Exception as e:
-            time.sleep(1/config.laser_hz)
+            time.sleep(1 / config.laser_hz)
             print({'error read_laser': e})
             return 0
 
@@ -195,7 +220,7 @@ class PiSoftuart(object):
             time.sleep(self._thread_ts / 2)
             return None
 
-    def write_data(self, msg,baud=None):
+    def write_data(self, msg, baud=None):
         self._pi.wave_clear()
         if baud:
             self._pi.wave_add_serial(self._tx_pin, baud, bytes.fromhex(msg))
@@ -213,25 +238,25 @@ class PiSoftuart(object):
     def get_thread_ts(self):
         return self._thread_ts
 
-    def read_millimeter_wave(self, len_data=None):
+    def read_millimeter_wave(self, len_data=None, debug=False):
         if len_data is None:
             len_data = 4
             try:
                 time.sleep(self._thread_ts)
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                # print(time.time(), 'count', count, 'data', data)
+                if debug:
+                    print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
                     str_data = str(binascii.b2a_hex(data))[2:-1]
-                    # print(r'str_data', str_data)
                     split_str = 'aaaa'
-                    data_dict ={}
+                    data_dict = {}
                     for i in str_data.split(split_str):
                         if i.startswith('0c07'):
                             index = int(i[4:6], 16)
-                            distance = 0.01 * (int(i[8:10], 16)*256+int(i[10:12], 16))
-                            angle = 2 * int(i[12:14], 16)-90
-                            speed = 0.05 * (int(i[14:16], 16)*256+int(i[16:18], 16)) - 35
-                            data_dict.update({index:[distance,angle,speed]})
+                            distance = 0.01 * (int(i[8:10], 16) * 256 + int(i[10:12], 16))
+                            angle = 2 * int(i[12:14], 16) - 90
+                            speed = 0.05 * (int(i[14:16], 16) * 256 + int(i[16:18], 16)) - 35
+                            data_dict.update({index: [distance, angle, speed]})
                             # print('distance:{},angle:{},speed:{}'.format(distance,angle,speed))
                     return data_dict
                 else:
@@ -262,76 +287,3 @@ class PiSoftuart(object):
         except Exception as e:
             print({'error read_gps': e})
             return None
-
-if __name__ == '__main__':
-    pi = pigpio.pi()
-    b_compass = 0
-    b_ultrasonic = 0
-    b_com_data = 0
-    b_gps = 0
-    b_laser = 0
-    check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  5 laser >:')
-    if int(check_type) == 1:
-        b_compass = 1
-    elif int(check_type) == 2:
-        b_ultrasonic = 1
-    elif int(check_type) == 3:
-        b_com_data = 1
-    elif int(check_type) == 4:
-        b_gps = 1
-    elif int(check_type) == 5:
-        b_laser = 1
-    if b_compass:
-        compass_obj = PiSoftuart(pi=pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx,
-                                 baud=config.pin_compass_baud)
-    if b_ultrasonic:
-        left_distance_obj = PiSoftuart(pi=pi, rx_pin=config.left_rx, tx_pin=config.left_tx, baud=config.ultrasonic_baud)
-        right_distance_obj = PiSoftuart(pi=pi, rx_pin=config.right_rx, tx_pin=config.right_tx,
-                                        baud=config.ultrasonic_baud)
-    if b_gps:
-        gps_obj = PiSoftuart(pi=pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx, baud=config.pin_gps_baud)
-    if b_laser:
-        laser_obj = PiSoftuart(pi=pi, rx_pin=config.laser_rx, tx_pin=config.laser_tx, baud=115200,time_out=0.1)
-    start_time = time.time()
-    while True:
-        if b_ultrasonic:
-            # l_distance = left_distance_obj.read_ultrasonic()
-            time.sleep(0.2)
-            r_distance = right_distance_obj.read_ultrasonic()
-            # if l_distance is not None:
-            #     print('l_distance', l_distance)
-            if r_distance is not None:
-                print('r_distance', r_distance)
-        if b_compass:
-            key_input = input('input:  C0  开始  C1 结束 其他为读取 >')
-            if key_input == 'C0':
-                theta = compass_obj.read_compass(send_data='C0')
-            elif key_input == 'C1':
-                theta = compass_obj.read_compass(send_data='C1')
-            else:
-                theta = compass_obj.read_compass()
-            print('theta', theta)
-        if b_gps:
-            gps_data = gps_obj.read_gps()
-            print('gps_data', gps_data)
-        if b_laser:
-            # key_input = input('input:  C0  开始  其他为读取 >')
-            # if key_input == 'C0':
-            #     theta = compass_obj.read_laser(send_data='C0')
-            # else:
-            laser_data = laser_obj.read_laser()
-            if laser_data:
-                print('laser_data', laser_data)
-    # while True:
-    # if thread_left_distance.is_alive():
-    #     print(time.time(),'softuart_obj', softuart_obj.left_distance)
-    #     time.sleep(0.2)
-    # else:
-    #     print(thread_left_distance.is_alive())
-    #     time.sleep(1)
-    #     # recvbuf = bytearray(softuart_obj.read(7))
-    #     # b1 = int(recvbuf[3])
-    #     # b0 = int(recvbuf[4])
-    #     # result = (b1 << 8) | b0
-    #     # print(result / 10.0)
-    #     # time.sleep(.05)

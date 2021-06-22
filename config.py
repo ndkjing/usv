@@ -3,6 +3,7 @@ import enum
 import json
 import os
 import platform
+import ship_code_config
 
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
@@ -26,6 +27,9 @@ height_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'hei
 save_plan_path = os.path.join(root_path, 'statics', 'configs', 'save_plan_path.json')
 # 保存声呐信息路径
 save_sonar_path = os.path.join(root_path, 'statics', 'geojeson_data.json')
+# 保存抓取的水质数据
+save_water_data_path = os.path.join(root_path, 'statics', 'water_data.json')
+
 
 class CurrentPlatform(enum.Enum):
     windwos = 1
@@ -61,8 +65,8 @@ speed_grade = 3
 arrive_distance = 2.5
 # 多点和寻点模式下查找连接点数量
 keep_point = 0
-# 路径搜索保留离湖泊边缘安全路径
-path_search_safe_distance = 15
+# 路径搜索保留离湖泊边缘安全路径  单位米
+path_search_safe_distance = 5
 # 寻点模式行间隔
 row_gap = 50
 # 寻点模式列间隔
@@ -122,8 +126,8 @@ def update_base_setting():
             if base_setting_data.get('secure_distance'):
                 try:
                     s_path_search_safe_distance = int(base_setting_data.get('secure_distance'))
-                    if s_path_search_safe_distance > 10:
-                        s_path_search_safe_distance = 10
+                    if s_path_search_safe_distance > 100:
+                        s_path_search_safe_distance = 100
                     elif s_path_search_safe_distance < 2:
                         s_path_search_safe_distance = 2
                     path_search_safe_distance = s_path_search_safe_distance
@@ -173,8 +177,10 @@ pi2com_timeout = 0.05
 pi2mqtt_interval = 1
 # 上传给单片机心跳时间间隔 单位秒
 # com_heart_time = 1 * 60
+# 线程等待时间
+thread_sleep_time = 0.5
 # 船编号
-ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380c'
+ship_code = ship_code_config.ship_code
 
 # 串口位置和波特率
 # 单片机
@@ -211,7 +217,7 @@ http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
 # http_save = 'http://192.168.8.13:8009/union/admin/xxl/map/save'
 # 发送检测数据
 http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
-# http_data_save = 'http://192.168.8.13:8009/union/admin/xxl/data/save'
+# http_data_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
 
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884
@@ -254,10 +260,10 @@ start_sleep_time = 6
 motor_init_time = 1
 # 检查网络连接状态间隔
 check_network_interval = 10
-# 断网返航 0关闭  1开启 大于1的数值表示断网超过该值就返航，默认100秒
-network_backhome = 0
+# 断网返航 0关闭  1开启 大于1的数值表示断网超过该值就返航，默认600秒
+network_backhome = 1
 # 剩余电量返航 0关闭  1开启 大于1的数值表示剩余电量低于该值就返航，默认30
-energy_backhome = 0
+energy_backhome = 1
 # 最多查找连接点数量
 find_points_num = 5
 # TSP优化路径 0 不使用  1使用
@@ -271,8 +277,9 @@ if current_platform == CurrentPlatform.pi:
     home_debug = 0
 else:
     home_debug = 1
-# 添加避障方式设置0 不避障 1 停止  2 绕行
+# 添加避障方式设置0 不避障 1 避障停止  2 自动避障绕行 3 自动避障绕行和手动模式下避障停止
 obstacle_avoid_type = 0
+control_obstacle_distance = 2.5
 # 路径规划方式  0 不平滑路径 1 平滑路径
 path_plan_type = 1
 # 路径跟踪方式  1 pid    2 pure pursuit  3 宫凯调试的pid
@@ -290,7 +297,8 @@ forward_see_distance = 9
 # 舵机最大扫描角度单侧 左边为正右边为负
 steer_max_angle = 30
 # 最小转向距离
-min_steer_distance = 6
+min_steer_distance = 10
+
 
 def update_height_setting():
     global motor_forward
@@ -677,9 +685,9 @@ b_use_pi = True
 pin_pan = 2
 pin_tilt = 3
 # 左侧电机信号输出控制口
-left_pwm_pin = 20
+left_pwm_pin = 4
 # 右侧电机信号输出控制口
-right_pwm_pin = 21
+right_pwm_pin = 17
 # 软串口罗盘
 b_pin_compass = 1
 pin_compass_baud = 9600
@@ -713,7 +721,7 @@ angle_ceil_size = 5
 detect_angle = 45
 field_of_view = 90
 view_cell = 5
-ceil_max = 3 #  可以通过扇区阈值
+ceil_max = 3  # 可以通过扇区阈值
 millimeter_wave_tx = 13
 millimeter_wave_rx = 19
 millimeter_wave_baud = 115200
@@ -744,14 +752,27 @@ sonar_tx = 20
 sonar_baud = 9600
 # 声呐舵机
 sonar_steer = 21
-test_all=0
+test_all = 0
 
 # 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
 if home_debug:
     use_shape_theta_type = 3
 else:
     use_shape_theta_type = 1
-
+# 是否含有抽水泵
 b_draw = 1
+# 测试在家调试也发送数据
+debug_send_detect_data = 0
+
+
+class WaterType(enum.Enum):
+    wt = 0
+    EC = 1
+    pH = 2
+    DO = 3
+    TD = 4
+    NH3_NH4 = 5
+
+
 if __name__ == '__main__':
     write_setting(True, True, True, True)

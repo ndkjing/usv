@@ -22,9 +22,16 @@ def set_data(save_data, save_path):
 # 获取数据
 def get_data(save_path):
     if os.path.exists(save_path):
-        with open(save_path, 'r') as f:
-            save_data = json.load(f)
-            return save_data
+        try:
+            with open(save_path, 'r') as f:
+                save_data = json.load(f)
+            if isinstance(save_data, dict):
+                return save_data
+            else:
+                return None
+        except json.decoder.JSONDecodeError:
+            os.remove(save_path)
+            return None
     else:
         return None
 

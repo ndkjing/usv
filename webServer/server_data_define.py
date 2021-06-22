@@ -11,11 +11,8 @@ class DataDefine:
         # 订阅话题
         self.topics = (
             ('pool_click_%s' % (ship_code), 1),
-            ('control_data_%s' % (ship_code), 1),
             ('path_confirm_%s' % (ship_code), 0),
             ('user_lng_lat_%s' % (ship_code), 0),
-            ('start_%s' % (ship_code), 1),
-            ('switch_%s' % (ship_code), 1),
             ('pool_info_%s' % (ship_code), 1),
             ('auto_lng_lat_%s' % (ship_code), 1),
             ('path_planning_%s' % (ship_code), 1),

@@ -86,7 +86,7 @@ def nelder_mead(f, x_start,
     # simplex iter
     iters = 0
     while 1:
-        print('x',x,'res',res)
+        print('x', x, 'res', res)
         res.sort(key=lambda x: x[1])
         best = res[0][1]
 
@@ -206,13 +206,13 @@ class AutoPidParameter:
                     theta_error = theta_error - 360
                 else:
                     theta_error = 360 + theta_error
-            print('theta_error',theta_error)
+            print('theta_error', theta_error)
             left_pwm, right_pwm = self.pid_obj.pid_pwm_1(distance=0,
                                                          theta_error=theta_error)
 
             self.pi_main_obj.set_pwm(left_pwm, right_pwm)
             time.sleep(0.3)
-            print('epoch time:',time.time()-start_time)
+            print('epoch time:', time.time() - start_time)
         return sum(self.theta_error_list)
 
 
@@ -229,4 +229,3 @@ if __name__ == '__main__':
     # except Exception as e:
     #     print('AutoPidParameter error ', e)
     #     auto_obj.pi_main_obj.stop()
-

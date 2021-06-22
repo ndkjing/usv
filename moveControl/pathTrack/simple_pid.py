@@ -1,12 +1,6 @@
-import threading
-import math
-import time
-import json
 import copy
 import numpy as np
 from numpy import e
-import os
-from utils import lng_lat_calculate
 from utils import log
 import config
 
