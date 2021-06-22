@@ -70,12 +70,11 @@ def main():
     except Exception as e1:
         logger.error({'binding_data error': e1})
 
-    # 启动串口数据收发和mqtt数据收发
+    # 启动串口数据收发和mqtt数据收发  树莓派对象数据处理
     if config.current_platform == config.CurrentPlatform.pi:
         change_pwm_thread = threading.Thread(target=data_manager_obj.pi_main_obj.loop_change_pwm)
         if os.path.exists(config.stc_port):
             get_com_data_thread = threading.Thread(target=data_manager_obj.get_com_data)
-        # 树莓派对象数据处理
         if config.b_pin_gps:
             soft_gps_thread = threading.Thread(target=data_manager_obj.pi_main_obj.get_gps_data)
         if config.b_pin_compass:
@@ -162,9 +161,9 @@ def main():
                 try:
                     if data_manager_obj.com_data_obj.uart.is_open():
                         data_manager_obj.com_data_obj.uart.close()
-                    data_manager_obj.com_data_obj = data_manager_obj.get_com_obj(port=config.stc_port,
-                                                                                 baud=config.stc_baud,
-                                                                                 logger=None)
+                    data_manager_obj.com_data_obj = data_manager_obj.pi_main_obj.get_com_obj(port=config.stc_port,
+                                                                                             baud=config.stc_baud,
+                                                                                             logger=None)
                 except Exception as e1:
                     logger.error({'串口关闭失败': 111, 'error': e1})
                 get_com_data_thread = threading.Thread(target=data_manager_obj.get_com_data)

@@ -127,12 +127,10 @@ class MqttSendGet:
         self.sampling_points_status = []
         self.sampling_points_gps = []
         self.path_planning_points_gps = []
-
         # 船当前经纬度 给服务器路径规划使用
         self.current_lng_lat = None
         # 船返航点经纬度 给服务器路径规划使用
         self.home_lng_lat = []
-
         # 自动求取经纬度设置 使用行间距和记录当前路径点是使用行间距
         self.row_gap = None
         self.use_col_gap = False
@@ -142,9 +140,9 @@ class MqttSendGet:
         # 行驶轨迹确认ID 与是否确认
         self.path_id = None
         self.path_id_confirm = None
-
-        # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　360为停止
-        self.control_move_direction = 360
+        # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　-1为停止  -2 为不为平台控制
+        self.control_move_direction = -2
+        self.last_control_move_direction = -2
         # 测量控制位　0为不采样　1为采样
         self.b_sampling = 0
         # 抽水控制位  0为不抽水　1为抽水
@@ -218,12 +216,13 @@ class MqttSendGet:
                     else:
                         self.use_col_gap = False
                         self.row_gap = 0
+                self.last_control_move_direction = self.control_move_direction
                 self.control_move_direction = int(control_data.get('move_direction'))
-                if self.control_move_direction == -1:
-                    self.sampling_points = []
-                    self.path_planning_points = []
-                    self.sampling_points_status = []
-                    self.sampling_points_gps=[]
+                # if self.control_move_direction == -1:
+                #     self.sampling_points = []
+                #     self.path_planning_points = []
+                #     self.sampling_points_status = []
+                #     self.sampling_points_gps = []
                 self.logger.info({'topic': topic,
                                   'control_move_direction': control_data.get('move_direction'),
                                   })
@@ -231,7 +230,6 @@ class MqttSendGet:
             # 处理开关信息
             if topic == 'switch_%s' % (config.ship_code):
                 switch_data = json.loads(msg.payload)
-                print(switch_data)
                 # 改变了暂时没用
                 if switch_data.get('b_sampling') is not None:
                     self.b_sampling = int(switch_data.get('b_sampling'))
@@ -339,7 +337,7 @@ class MqttSendGet:
                 self.sampling_points_status = [0] * len(self.sampling_points)
                 self.path_planning_points = path_planning_data.get('path_points')
                 self.logger.info({'topic': topic,
-                                  'sampling_points':path_planning_data.get('sampling_points'),
+                                  'sampling_points': path_planning_data.get('sampling_points'),
                                   'path_points': path_planning_data.get('path_points'),
                                   })
 

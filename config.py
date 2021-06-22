@@ -4,6 +4,7 @@ import json
 import os
 import platform
 import ship_code_config
+
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
@@ -26,6 +27,8 @@ height_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'hei
 save_plan_path = os.path.join(root_path, 'statics', 'configs', 'save_plan_path.json')
 # 保存声呐信息路径
 save_sonar_path = os.path.join(root_path, 'statics', 'geojeson_data.json')
+# 保存抓取的水质数据
+save_water_data_path = os.path.join(root_path, 'statics', 'water_data.json')
 
 
 class CurrentPlatform(enum.Enum):
@@ -174,6 +177,8 @@ pi2com_timeout = 0.05
 pi2mqtt_interval = 1
 # 上传给单片机心跳时间间隔 单位秒
 # com_heart_time = 1 * 60
+# 线程等待时间
+thread_sleep_time = 0.5
 # 船编号
 ship_code = ship_code_config.ship_code
 
@@ -272,8 +277,9 @@ if current_platform == CurrentPlatform.pi:
     home_debug = 0
 else:
     home_debug = 1
-# 添加避障方式设置0 不避障 1 停止  2 绕行 3 手动模式下避障
+# 添加避障方式设置0 不避障 1 避障停止  2 自动避障绕行 3 自动避障绕行和手动模式下避障停止
 obstacle_avoid_type = 0
+control_obstacle_distance = 2.5
 # 路径规划方式  0 不平滑路径 1 平滑路径
 path_plan_type = 1
 # 路径跟踪方式  1 pid    2 pure pursuit  3 宫凯调试的pid
@@ -292,6 +298,7 @@ forward_see_distance = 9
 steer_max_angle = 30
 # 最小转向距离
 min_steer_distance = 10
+
 
 def update_height_setting():
     global motor_forward
@@ -714,7 +721,7 @@ angle_ceil_size = 5
 detect_angle = 45
 field_of_view = 90
 view_cell = 5
-ceil_max = 3 #  可以通过扇区阈值
+ceil_max = 3  # 可以通过扇区阈值
 millimeter_wave_tx = 13
 millimeter_wave_rx = 19
 millimeter_wave_baud = 115200
@@ -755,7 +762,9 @@ else:
 # 是否含有抽水泵
 b_draw = 1
 # 测试在家调试也发送数据
-debug_send_detect_data = 1
+debug_send_detect_data = 0
+
+
 class WaterType(enum.Enum):
     wt = 0
     EC = 1
@@ -763,5 +772,7 @@ class WaterType(enum.Enum):
     DO = 3
     TD = 4
     NH3_NH4 = 5
+
+
 if __name__ == '__main__':
     write_setting(True, True, True, True)

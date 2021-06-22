@@ -1,8 +1,11 @@
 import numpy as np
 import enum
-from utils import crawl_water_data
+import os
 import config
-
+from storage import save_data
+from utils import crawl_water_data
+import time
+import copy
 min_max_wt = (0, 35)
 wt = [
     29.8,
@@ -138,9 +141,57 @@ water_data_dict.update(
 water_data_dict.update(
     {config.WaterType.NH3_NH4: {'min_data': min_max_NH3_NH4[0], 'max_data': min_max_NH3_NH4[1], 'data': NH3_NH4,
                                 'keep_valid_decimals': 3}})
-try:
+
+def update_enum_type(data_dict,b_map_inv=True):
+    water_map_dict = {config.WaterType.wt : 0,
+                      config.WaterType.EC: 1,
+                      config.WaterType.pH: 2,
+                      config.WaterType.DO: 3,
+                      config.WaterType.TD: 4,
+                      config.WaterType.NH3_NH4: 5,
+                }
+    inv_water_map_dict = {str(v):k for k,v in water_map_dict.items()}
+    return_data_dict = {}
+    for i in data_dict.copy():
+        if b_map_inv:
+            if i in water_map_dict:
+                return_data_dict.update({water_map_dict[i]: data_dict[i]})
+            else:
+                return_data_dict.update({i:data_dict[i]})
+        else:
+            if i in inv_water_map_dict:
+                return_data_dict.update({inv_water_map_dict[i]: data_dict[i]})
+            else:
+                return_data_dict.update({i:data_dict[i]})
+    return return_data_dict
+
+
+def run_crawl_water_data():
     water_crawl_obj = crawl_water_data.CrawlWaterData()
     data_dict = water_crawl_obj.get_data_dict()
+    str_date = time.strftime("%Y_%m_%d", time.localtime())
+    if data_dict:
+        save_data_dict = copy.deepcopy(data_dict)
+        save_data_dict = update_enum_type(save_data_dict)
+        save_data_dict.update({'save_date': str_date})
+        save_data.set_data(save_data_dict, config.save_water_data_path)
+        return data_dict
+    else:
+        return water_data_dict
+
+
+def get_current_water_data():
+    # 如果本地存在且时间为当天则不再重新抓取数据
+    str_date = time.strftime("%Y_%m_%d", time.localtime())
+    if os.path.exists(config.save_water_data_path):
+        save_water_data = save_data.get_data(config.save_water_data_path)
+        if save_water_data and save_water_data.get('save_date') and save_water_data.get('save_date')[-2:] == str_date[
+                                                                                                             -2:]:
+            data_dict = update_enum_type(save_water_data, b_map_inv=False)
+        else:
+            data_dict = run_crawl_water_data()
+    else:
+        data_dict = run_crawl_water_data()
     print('data_dict', data_dict)
     if isinstance(data_dict, dict):
         water_data_dict.update({config.WaterType.wt: {'min_data': min(data_dict[config.WaterType.wt]),
@@ -168,8 +219,7 @@ try:
                                         'max_data': max(data_dict[config.WaterType.NH3_NH4]),
                                         'data': data_dict[config.WaterType.NH3_NH4],
                                         'keep_valid_decimals': 3}})
-except Exception as e:
-    print({'error': e})
+
 
 def get_water_data(water_type, count=1, keep_valid_decimals=None):
     """
@@ -224,6 +274,7 @@ def valid_water_data(water_type, data, keep_valid_decimals=None):
 
 
 if __name__ == '__main__':
+    get_current_water_data()
     for i in config.WaterType:
         print(i)
         data = get_water_data(water_type=i, count=5)

@@ -101,6 +101,17 @@ class PiMain:
         self.alarm_light_output = 0
         self.left_sidelight_output = 0
         self.right_sidelight_output = 0
+        # 遥控器控制开始抽水
+        self.start_draw = 0
+
+    # 获取串口对象
+    @staticmethod
+    def get_com_obj(port, baud, logger=None, timeout=0.4):
+        return com_data.ComData(
+            port,
+            baud,
+            timeout=timeout,
+            logger=logger)
 
     def get_millimeter_wave_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.millimeter_wave_rx, tx_pin=config.millimeter_wave_tx,
@@ -324,6 +335,35 @@ class PiMain:
         self.set_pwm(left_pwm, right_pwm)
 
     def right(self, left_pwm=None, right_pwm=None):
+        if left_pwm is None:
+            left_pwm = 1700
+        if right_pwm is None:
+            right_pwm = 1300
+        self.set_pwm(left_pwm, right_pwm)
+
+    # TODO
+    def north(self, left_pwm=None, right_pwm=None):
+        if left_pwm is None:
+            left_pwm = config.stop_pwm + int(config.speed_grade) * 100
+        if right_pwm is None:
+            right_pwm = config.stop_pwm + int(config.speed_grade) * 100
+        self.set_pwm(left_pwm, right_pwm)
+
+    def south(self, left_pwm=None, right_pwm=None):
+        if left_pwm is None:
+            left_pwm = config.stop_pwm - int(config.speed_grade) * 100
+        if right_pwm is None:
+            right_pwm = config.stop_pwm - int(config.speed_grade) * 100
+        self.set_pwm(left_pwm, right_pwm)
+
+    def west(self, left_pwm=None, right_pwm=None):
+        if left_pwm is None:
+            left_pwm = 1300
+        if right_pwm is None:
+            right_pwm = 1700
+        self.set_pwm(left_pwm, right_pwm)
+
+    def east(self, left_pwm=None, right_pwm=None):
         if left_pwm is None:
             left_pwm = 1700
         if right_pwm is None:
@@ -602,6 +642,115 @@ class PiMain:
         self.pi.set_servo_pulsewidth(config.pin_tilt, tilt_angle_pwm)
         self.pan_angle_pwm = pan_angle_pwm
         self.tilt_angle_pwm = tilt_angle_pwm
+
+    """
+        # 在线程中读取 gps
+    def get_gps_data(self):
+        last_read_time = None
+        while True:
+            try:
+                data = self.gps_obj.readline()
+                str_data = data.decode('ascii')
+                gps_dict = resolve_gps_data.resolve_gps(str_data)
+                lng = gps_dict.get('lng')
+                lat = gps_dict.get('lat')
+                lng_lat_error = gps_dict.get('lng_lat_error')
+                if lng and lat:
+                    if lng >= 1 and lat >= 1:
+                        # 替换上一次的值
+                        self.last_lng_lat = copy.deepcopy(self.lng_lat)
+                        self.lng_lat = [lng, lat]
+                        self.lng_lat_error = lng_lat_error
+                        if not last_read_time:
+                            last_read_time = time.time()
+                        if self.lng_lat_error and self.lng_lat_error < 2.5:
+                            if self.last_lng_lat:
+                                # 计算当前行驶里程
+                                speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
+                                                                                          self.last_lng_lat[1],
+                                                                                          self.lng_lat[0],
+                                                                                          self.lng_lat[1])
+                                self.run_distance += speed_distance
+                                # 计算速度
+                                self.speed = round(speed_distance / (time.time() - last_read_time), 1)
+                                last_read_time = time.time()
+            except Exception as e:
+                self.logger.error({'error': e})
+                time.sleep(0.5)
+
+    # 在线程中读取罗盘
+    def get_compass_data(self):
+        # 累计50次出错则记为None
+        count = 50
+        # 记录上一次发送数据
+        last_send_data = None
+        while True:
+            try:
+                # 检查罗盘是否需要校准 # 开始校准
+                if int(config.calibration_compass) == 1:
+                    if last_send_data != 'C0':
+                        self.compass_obj.send_data('C0', b_hex=True)
+                        time.sleep(0.05)
+                        data0 = self.compass_obj.readline()
+                        str_data0 = data0.decode('ascii')
+                        if len(str_data0) > 3:
+                            self.compass_notice_info += str_data0
+                        data0 = self.compass_obj.readline()
+                        str_data0 = data0.decode('ascii')
+                        if len(str_data0) > 3:
+                            self.compass_notice_info += str_data0
+                        data0 = self.compass_obj.readline()
+                        str_data0 = data0.decode('ascii')
+                        if len(str_data0) > 3:
+                            self.compass_notice_info += str_data0
+                        last_send_data = 'C0'
+                # 结束校准
+                elif int(config.calibration_compass) == 2:
+                    if last_send_data != 'C1':
+                        self.compass_notice_info = ''
+                        self.compass_obj.send_data('C1', b_hex=True)
+                        time.sleep(0.05)
+                        data0 = self.compass_obj.readline()
+                        str_data0 = data0.decode('ascii')
+                        if len(str_data0) > 3:
+                            self.compass_notice_info += str_data0
+                        data0 = self.compass_obj.readline()
+                        str_data0 = data0.decode('ascii')
+                        if len(str_data0) > 3:
+                            self.compass_notice_info += str_data0
+                        data0 = self.compass_obj.readline()
+                        str_data0 = data0.decode('ascii')
+                        if len(str_data0) > 3:
+                            self.compass_notice_info += str_data0
+                        last_send_data = 'C1'
+                        # 发送完结束校准命令后将配置改为 0
+                        config.calibration_compass = 0
+                        config.write_setting(b_height=True)
+                # 隐藏修改 设置为10 改为启用gps计算角度  设置为9 改为启用二号罗盘
+                elif int(config.calibration_compass) in [9, 10]:
+                    self.theta = None
+                else:
+                    self.compass_obj.send_data('31', b_hex=True)
+                    time.sleep(0.05)
+                    data0 = self.compass_obj.readline()
+                    # 角度
+                    str_data0 = data0.decode('ascii')[:-3]
+                    if len(str_data0) < 1:
+                        continue
+                    float_data0 = float(str_data0)
+                    self.theta = 360 - float_data0
+                    time.sleep(config.compass_timeout / 4)
+                    count = 50
+                    last_send_data = None
+                    # self.compass_notice_info = ''
+            except Exception as e:
+                if count > 0:
+                    count = count - 1
+                else:
+                    self.logger.error({'error': e})
+                    count = 50
+                time.sleep(1)
+    """
 
 
 if __name__ == '__main__':

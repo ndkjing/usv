@@ -21,7 +21,7 @@ class CrawlWaterData:
     def __init__(self):
         self.base_url = 'http://106.37.208.243:8068/GJZ/Ajax/Publish.ashx?PageIndex=1&PageSize=60&action=getRealDatas&AreaID='
 
-    def get_data_dict(self,area_id=None):
+    def get_data_dict(self, area_id=None):
         """
         获取目标市的水质数据，area_id为市的行政编码
         :param area_id: 默认值None 若不传则使用武汉市编码
