@@ -561,7 +561,7 @@ def get_path(baidu_map_obj,
             distance_matrix = measure_distance(target_pixs, baidu_map_obj.pool_cnts, map_connect=config.find_points_num)
             tsp_path = solve_tsp(distance_matrix)
             if config.b_tsp:
-                tsp_path = solve_tsp(distance_matrix, endpoints=(0, (len(target_pixs) - 1)))
+                tsp_path = solve_tsp(distance_matrix)
             path_points = []
             print('path_matrix', path_matrix)
             for index_i, val in enumerate(tsp_path):

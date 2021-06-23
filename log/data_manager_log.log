@@ -4108,3 +4108,313 @@
 2021-06-23 17:20:50,615 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '电脑手动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.44, 'mapId': '1397858718729355265'}}
 2021-06-23 17:21:00,588 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '电脑手动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.44, 'mapId': '1397858718729355265'}}
 2021-06-23 17:21:10,588 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '电脑手动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.44, 'mapId': '1397858718729355265'}}
+2021-06-23 17:29:10,022 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': ''}}
+2021-06-23 17:29:20,730 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': '1397858718729355265'}}
+2021-06-23 17:29:21,104 data_manager.py[line:467] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 17:29:21,623 data_manager.py[line:1106] INFO {'点击地点': [[114.520782, 30.504484]]}
+2021-06-23 17:29:21,647 data_manager.py[line:1131] INFO {'全部距离': 412.5428094849605}
+2021-06-23 17:29:30,651 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '328.12', 'path_info': '当前目标点:0 目标点总数: 1', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.24, 'mapId': '1397858718729355265'}}
+2021-06-23 17:29:40,629 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '224.02', 'path_info': '当前目标点:0 目标点总数: 1', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.27, 'mapId': '1397858718729355265'}}
+2021-06-23 17:29:50,590 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '120.28', 'path_info': '当前目标点:0 目标点总数: 1', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.32, 'mapId': '1397858718729355265'}}
+2021-06-23 17:30:00,668 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '14.01', 'path_info': '当前目标点:0 目标点总数: 1', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.2, 'mapId': '1397858718729355265'}}
+2021-06-23 17:30:02,008 data_manager.py[line:467] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 17:30:04,731 data_manager.py[line:1366] INFO {'fakedate': {'weather': {'windSpeed': 2.7, 'windDirection': '225', 'rainfall': 8.1, 'illuminance': 7.3, 'temperature': 33, 'humidity': 80, 'pm25': 4, 'pm10': 22}, 'water': {'wt': 32.8, 'ph': 7.33, 'doDo': 5.94, 'cod': 1.0, 'ec': 283.4, 'td': 6.9, 'nh3Nh4': 0.173, 'tn': 2.7, 'tp': 0.2}, 'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}}
+2021-06-23 17:30:10,679 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '2.25', 'path_info': '当前目标点:1 目标点总数: 1', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.68, 'mapId': '1397858718729355265'}}
+2021-06-23 17:30:20,631 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '2.25', 'path_info': '当前目标点:1 目标点总数: 1', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.68, 'mapId': '1397858718729355265'}}
+2021-06-23 17:30:30,525 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '2.25', 'path_info': '当前目标点:1 目标点总数: 1', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.68, 'mapId': '1397858718729355265'}}
+2021-06-23 17:30:40,535 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '2.25', 'path_info': '当前目标点:1 目标点总数: 1', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.68, 'mapId': '1397858718729355265'}}
+2021-06-23 17:30:50,464 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '2.25', 'path_info': '当前目标点:1 目标点总数: 1', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.68, 'mapId': '1397858718729355265'}}
+2021-06-23 17:31:00,399 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '2.25', 'path_info': '当前目标点:1 目标点总数: 1', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.68, 'mapId': '1397858718729355265'}}
+2021-06-23 17:31:05,573 data_manager.py[line:1366] INFO {'fakedate': {'weather': {'windSpeed': 9.7, 'windDirection': '90', 'rainfall': 2.6, 'illuminance': 4.0, 'temperature': 33, 'humidity': 43, 'pm25': 8, 'pm10': 33}, 'water': {'wt': 24.8, 'ph': 7.97, 'doDo': 4.28, 'cod': 20.0, 'ec': 315.8, 'td': 14.0, 'nh3Nh4': 0.152, 'tn': 5.5, 'tp': 0.2}, 'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}}
+2021-06-23 17:31:40,573 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': ''}}
+2021-06-23 17:31:43,505 data_manager.py[line:467] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_control: 3>)}
+2021-06-23 17:31:47,656 data_manager.py[line:467] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 17:31:48,050 data_manager.py[line:1106] INFO {'点击地点': [[114.523917, 30.506409]]}
+2021-06-23 17:31:48,062 data_manager.py[line:1131] INFO {'全部距离': 52.26399895021787}
+2021-06-23 17:31:50,473 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '41.65', 'path_info': '当前目标点:0 目标点总数: 1', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.25, 'mapId': '1397858718729355265'}}
+2021-06-23 17:31:54,269 data_manager.py[line:467] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 17:32:00,467 data_manager.py[line:1559] INFO {'notice_info_': {'distance': '2.22', 'path_info': '当前目标点:1 目标点总数: 1', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.21, 'mapId': '1397858718729355265'}}
+2021-06-23 17:34:00,519 data_manager.py[line:1560] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': ''}}
+2021-06-23 17:34:10,990 data_manager.py[line:1560] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': '1397858718729355265'}}
+2021-06-23 17:34:20,945 data_manager.py[line:1560] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': '1397858718729355265'}}
+2021-06-23 17:34:22,472 data_manager.py[line:467] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 17:34:22,767 data_manager.py[line:1107] INFO {'点击地点': [[114.524047, 30.506447]]}
+2021-06-23 17:34:22,779 data_manager.py[line:1132] INFO {'全部距离': 45.38854734005055}
+2021-06-23 17:34:28,397 data_manager.py[line:467] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 17:34:30,906 data_manager.py[line:1560] INFO {'notice_info_': {'distance': '2.45', 'path_info': '当前目标点:1 目标点总数: 1', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 2.62, 'mapId': '1397858718729355265'}}
+2021-06-23 17:34:40,800 data_manager.py[line:1560] INFO {'notice_info_': {'distance': '2.45', 'path_info': '当前目标点:1 目标点总数: 1', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 2.62, 'mapId': '1397858718729355265'}}
+2021-06-23 17:35:40,075 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': ''}}
+2021-06-23 17:35:48,647 data_manager.py[line:468] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 17:35:49,141 data_manager.py[line:1108] INFO {'点击地点': [[114.523876, 30.506274]]}
+2021-06-23 17:35:49,147 data_manager.py[line:1133] INFO {'全部距离': 67.7439559357005}
+2021-06-23 17:35:50,638 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '63.9', 'path_info': '当前目标点:0 目标点总数: 1', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 4.17, 'mapId': '1397858718729355265'}}
+2021-06-23 17:35:56,615 data_manager.py[line:468] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 17:36:00,606 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.19', 'path_info': '当前目标点:1 目标点总数: 1', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -1.56, 'mapId': '1397858718729355265'}}
+2021-06-23 17:36:10,552 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.19', 'path_info': '当前目标点:1 目标点总数: 1', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -1.56, 'mapId': '1397858718729355265'}}
+2021-06-23 17:36:40,305 data_manager.py[line:1562] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': ''}}
+2021-06-23 17:36:50,614 data_manager.py[line:1562] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': '1397858718729355265'}}
+2021-06-23 17:36:53,381 data_manager.py[line:469] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_control: 3>)}
+2021-06-23 17:36:58,884 data_manager.py[line:469] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 17:36:59,034 data_manager.py[line:1109] INFO {'点击地点': [[114.523993, 30.506184]]}
+2021-06-23 17:36:59,046 data_manager.py[line:1134] INFO {'全部距离': 75.04101621255545}
+2021-06-23 17:37:00,577 data_manager.py[line:1562] INFO {'notice_info_': {'distance': '72.6', 'path_info': '当前目标点:0 目标点总数: 1', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.48, 'mapId': '1397858718729355265'}}
+2021-06-23 17:37:07,505 data_manager.py[line:469] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 17:37:10,543 data_manager.py[line:1562] INFO {'notice_info_': {'distance': '2.24', 'path_info': '当前目标点:1 目标点总数: 1', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 2.09, 'mapId': '1397858718729355265'}}
+2021-06-23 17:38:20,069 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': ''}}
+2021-06-23 17:38:24,934 data_manager.py[line:469] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 17:38:25,058 data_manager.py[line:1109] INFO {'点击地点': [[114.523949, 30.506146]]}
+2021-06-23 17:38:25,076 data_manager.py[line:1134] INFO {'全部距离': 79.86625293362924}
+2021-06-23 17:38:30,892 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '34.59', 'path_info': '当前目标点:0 目标点总数: 1', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.01, 'mapId': '1397858718729355265'}}
+2021-06-23 17:38:34,171 data_manager.py[line:469] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 17:38:37,819 data_manager.py[line:469] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 17:38:37,831 data_manager.py[line:416] INFO 清除自动状态数据
+2021-06-23 17:38:37,849 data_manager.py[line:469] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 17:38:40,852 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.95, 'mapId': '1397858718729355265'}}
+2021-06-23 17:48:20,938 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': ''}}
+2021-06-23 17:58:10,016 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': '1397858718729355265'}}
+2021-06-23 17:58:40,981 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': '1397858718729355265'}}
+2021-06-23 17:58:50,929 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': '1397858718729355265'}}
+2021-06-23 17:58:54,311 data_manager.py[line:470] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 17:58:54,518 data_manager.py[line:1109] INFO {'点击地点': [[114.52414, 30.505409]]}
+2021-06-23 17:58:54,530 data_manager.py[line:1134] INFO {'全部距离': 160.6207968999494}
+2021-06-23 17:59:00,908 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '109.58', 'path_info': '当前目标点:0 目标点总数: 1', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.29, 'mapId': '1397858718729355265'}}
+2021-06-23 17:59:04,058 data_manager.py[line:1368] INFO {'fakedate': {'weather': {'windSpeed': 5.6, 'windDirection': '180', 'rainfall': 7.4, 'illuminance': 8.1, 'temperature': 20, 'humidity': 60, 'pm25': 9, 'pm10': 34}, 'water': {'wt': 28.3, 'ph': 8.35, 'doDo': 4.61, 'cod': 4.6, 'ec': 408.9, 'td': 295.1, 'nh3Nh4': 0.173, 'tn': 9.3, 'tp': 0.2}, 'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}}
+2021-06-23 17:59:10,888 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '7.12', 'path_info': '当前目标点:0 目标点总数: 1', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.58, 'mapId': '1397858718729355265'}}
+2021-06-23 17:59:11,546 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 17:59:15,057 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 17:59:15,063 data_manager.py[line:417] INFO 清除自动状态数据
+2021-06-23 17:59:15,063 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 17:59:20,306 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 2.62, 'mapId': '1397858718729355265'}}
+2021-06-23 17:59:29,714 data_manager.py[line:470] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 17:59:30,197 data_manager.py[line:1109] INFO {'点击地点': [[114.523453, 30.505974], [114.522991, 30.505835], [114.523098, 30.50553], [114.523603, 30.505169]]}
+2021-06-23 17:59:30,209 data_manager.py[line:1134] INFO {'全部距离': 235.23237693573049}
+2021-06-23 17:59:30,661 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '99.34', 'path_info': '当前目标点:0 目标点总数: 4', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -62.18, 'mapId': '1397858718729355265'}}
+2021-06-23 17:59:40,144 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 17:59:40,597 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.02', 'path_info': '当前目标点:3 目标点总数: 4', 'progress': 75, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -1.54, 'mapId': '1397858718729355265'}}
+2021-06-23 17:59:43,751 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 17:59:44,164 data_manager.py[line:1109] INFO {'点击地点': [[114.523453, 30.505974], [114.522991, 30.505835], [114.523098, 30.50553], [114.523603, 30.505169]]}
+2021-06-23 17:59:47,928 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 17:59:50,576 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.46', 'path_info': '当前目标点:2 目标点总数: 4', 'progress': 50, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 2.33, 'mapId': '1397858718729355265'}}
+2021-06-23 17:59:51,447 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 17:59:51,902 data_manager.py[line:1109] INFO {'点击地点': [[114.523453, 30.505974], [114.522991, 30.505835], [114.523098, 30.50553], [114.523603, 30.505169]]}
+2021-06-23 17:59:57,026 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:00:00,536 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:00:00,588 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.38', 'path_info': '当前目标点:1 目标点总数: 4', 'progress': 25, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.84, 'mapId': '1397858718729355265'}}
+2021-06-23 18:00:00,994 data_manager.py[line:1109] INFO {'点击地点': [[114.523453, 30.505974], [114.522991, 30.505835], [114.523098, 30.50553], [114.523603, 30.505169]]}
+2021-06-23 18:00:04,711 data_manager.py[line:1368] INFO {'fakedate': {'weather': {'windSpeed': 4.0, 'windDirection': '135', 'rainfall': 7.2, 'illuminance': 6.6, 'temperature': 40, 'humidity': 58, 'pm25': 12, 'pm10': 40}, 'water': {'wt': 27.1, 'ph': 8.05, 'doDo': 8.52, 'cod': 8.6, 'ec': 492.9, 'td': 209.1, 'nh3Nh4': 0.313, 'tn': 1.1, 'tp': 0.1}, 'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}}
+2021-06-23 18:00:10,541 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '32.88', 'path_info': '当前目标点:1 目标点总数: 4', 'progress': 25, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.19, 'mapId': '1397858718729355265'}}
+2021-06-23 18:00:13,663 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:00:17,178 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:00:17,184 data_manager.py[line:417] INFO 清除自动状态数据
+2021-06-23 18:00:17,184 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 18:00:20,478 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.2, 'mapId': '1397858718729355265'}}
+2021-06-23 18:00:30,435 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.2, 'mapId': '1397858718729355265'}}
+2021-06-23 18:00:40,397 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.2, 'mapId': '1397858718729355265'}}
+2021-06-23 18:00:41,560 data_manager.py[line:470] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:00:50,292 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:00:50,365 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '电脑手动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.2, 'mapId': '1397858718729355265'}}
+2021-06-23 18:00:50,562 data_manager.py[line:1109] INFO {'点击地点': [[114.524054, 30.505067], [114.524516, 30.505196], [114.524903, 30.505409], [114.525354, 30.505789]]}
+2021-06-23 18:00:50,568 data_manager.py[line:1134] INFO {'全部距离': 197.5239979410705}
+2021-06-23 18:00:56,559 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:01:00,064 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:01:00,327 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.3', 'path_info': '当前目标点:1 目标点总数: 4', 'progress': 25, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -1.8, 'mapId': '1397858718729355265'}}
+2021-06-23 18:01:00,552 data_manager.py[line:1109] INFO {'点击地点': [[114.524054, 30.505067], [114.524516, 30.505196], [114.524903, 30.505409], [114.525354, 30.505789]]}
+2021-06-23 18:01:04,722 data_manager.py[line:1368] INFO {'fakedate': {'weather': {'windSpeed': 3.6, 'windDirection': '90', 'rainfall': 5.4, 'illuminance': 3.3, 'temperature': 12, 'humidity': 52, 'pm25': 1, 'pm10': 35}, 'water': {'wt': 28.2, 'ph': 8.39, 'doDo': 5.03, 'cod': 5.0, 'ec': 202.0, 'td': 241.8, 'nh3Nh4': 0.252, 'tn': 18.7, 'tp': 0.2}, 'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}}
+2021-06-23 18:01:05,696 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:01:09,299 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:01:09,758 data_manager.py[line:1109] INFO {'点击地点': [[114.524054, 30.505067], [114.524516, 30.505196], [114.524903, 30.505409], [114.525354, 30.505789]]}
+2021-06-23 18:01:10,341 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '101.78', 'path_info': '当前目标点:2 目标点总数: 4', 'progress': 50, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.15, 'mapId': '1397858718729355265'}}
+2021-06-23 18:01:14,300 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:01:17,833 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:01:18,313 data_manager.py[line:1109] INFO {'点击地点': [[114.524054, 30.505067], [114.524516, 30.505196], [114.524903, 30.505409], [114.525354, 30.505789]]}
+2021-06-23 18:01:20,285 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '43.62', 'path_info': '当前目标点:3 目标点总数: 4', 'progress': 75, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.03, 'mapId': '1397858718729355265'}}
+2021-06-23 18:01:24,332 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:01:27,927 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:01:27,939 data_manager.py[line:417] INFO 清除自动状态数据
+2021-06-23 18:01:27,951 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 18:01:30,304 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -1.49, 'mapId': '1397858718729355265'}}
+2021-06-23 18:01:36,232 data_manager.py[line:470] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:01:36,443 data_manager.py[line:1109] INFO {'点击地点': [[114.525257, 30.50552], [114.525074, 30.505289], [114.525343, 30.505104], [114.52486, 30.504872], [114.524645, 30.504687]]}
+2021-06-23 18:01:36,455 data_manager.py[line:1134] INFO {'全部距离': 175.1314254068439}
+2021-06-23 18:01:40,227 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '10.79', 'path_info': '当前目标点:0 目标点总数: 5', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.06, 'mapId': '1397858718729355265'}}
+2021-06-23 18:01:41,215 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:01:44,725 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:01:45,220 data_manager.py[line:1109] INFO {'点击地点': [[114.525257, 30.50552], [114.525074, 30.505289], [114.525343, 30.505104], [114.52486, 30.504872], [114.524645, 30.504687]]}
+2021-06-23 18:01:48,768 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:01:50,184 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.17', 'path_info': '当前目标点:2 目标点总数: 5', 'progress': 40, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.01, 'mapId': '1397858718729355265'}}
+2021-06-23 18:01:52,394 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:01:52,823 data_manager.py[line:1109] INFO {'点击地点': [[114.525257, 30.50552], [114.525074, 30.505289], [114.525343, 30.505104], [114.52486, 30.504872], [114.524645, 30.504687]]}
+2021-06-23 18:02:00,100 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '11.53', 'path_info': '当前目标点:2 目标点总数: 5', 'progress': 40, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.06, 'mapId': '1397858718729355265'}}
+2021-06-23 18:02:01,200 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:02:04,802 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:02:05,238 data_manager.py[line:1109] INFO {'点击地点': [[114.525257, 30.50552], [114.525074, 30.505289], [114.525343, 30.505104], [114.52486, 30.504872], [114.524645, 30.504687]]}
+2021-06-23 18:02:05,500 data_manager.py[line:1368] INFO {'fakedate': {'weather': {'windSpeed': 7.0, 'windDirection': '45', 'rainfall': 9.6, 'illuminance': 7.0, 'temperature': 14, 'humidity': 89, 'pm25': 14, 'pm10': 40}, 'water': {'wt': 26.2, 'ph': 7.93, 'doDo': 4.42, 'cod': 1.8, 'ec': 406.2, 'td': 152.7, 'nh3Nh4': 0.243, 'tn': 4.6, 'tp': 0.2}, 'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}}
+2021-06-23 18:02:09,491 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:02:10,082 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.32', 'path_info': '当前目标点:5 目标点总数: 5', 'progress': 100, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.05, 'mapId': '1397858718729355265'}}
+2021-06-23 18:02:13,084 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:02:13,490 data_manager.py[line:1109] INFO {'点击地点': [[114.525257, 30.50552], [114.525074, 30.505289], [114.525343, 30.505104], [114.52486, 30.504872], [114.524645, 30.504687]]}
+2021-06-23 18:02:20,064 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '38.39', 'path_info': '当前目标点:5 目标点总数: 5', 'progress': 100, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -0.04, 'mapId': '1397858718729355265'}}
+2021-06-23 18:02:25,221 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:02:28,778 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:02:28,790 data_manager.py[line:417] INFO 清除自动状态数据
+2021-06-23 18:02:28,802 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 18:02:30,015 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -1.79, 'mapId': '1397858718729355265'}}
+2021-06-23 18:02:51,937 data_manager.py[line:470] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:03:06,263 data_manager.py[line:1368] INFO {'fakedate': {'weather': {'windSpeed': 4.3, 'windDirection': '180', 'rainfall': 4.3, 'illuminance': 3.1, 'temperature': 25, 'humidity': 79, 'pm25': 18, 'pm10': 27}, 'water': {'wt': 27.4, 'ph': 8.01, 'doDo': 12.91, 'cod': 3.2, 'ec': 471.4, 'td': 145.2, 'nh3Nh4': 0.224, 'tn': 9.8, 'tp': 0.1}, 'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}}
+2021-06-23 18:03:07,776 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:03:08,144 data_manager.py[line:1109] INFO {'点击地点': [[114.5253, 30.50491], [114.525193, 30.504771], [114.525311, 30.504724], [114.525182, 30.504623], [114.525203, 30.504521]]}
+2021-06-23 18:03:08,156 data_manager.py[line:1134] INFO {'全部距离': 81.84023159328477}
+2021-06-23 18:03:10,655 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:03:14,282 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:03:14,705 data_manager.py[line:1109] INFO {'点击地点': [[114.5253, 30.50491], [114.525193, 30.504771], [114.525311, 30.504724], [114.525182, 30.504623], [114.525203, 30.504521]]}
+2021-06-23 18:03:16,719 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:03:20,336 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:03:20,742 data_manager.py[line:1109] INFO {'点击地点': [[114.5253, 30.50491], [114.525193, 30.504771], [114.525311, 30.504724], [114.525182, 30.504623], [114.525203, 30.504521]]}
+2021-06-23 18:03:20,961 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '12.86', 'path_info': '当前目标点:2 目标点总数: 5', 'progress': 40, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 84.26, 'mapId': '1397858718729355265'}}
+2021-06-23 18:03:22,674 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:03:26,159 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:03:26,660 data_manager.py[line:1109] INFO {'点击地点': [[114.5253, 30.50491], [114.525193, 30.504771], [114.525311, 30.504724], [114.525182, 30.504623], [114.525203, 30.504521]]}
+2021-06-23 18:03:28,934 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:03:30,919 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.47', 'path_info': '当前目标点:4 目标点总数: 5', 'progress': 80, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -2.32, 'mapId': '1397858718729355265'}}
+2021-06-23 18:03:32,544 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:03:33,012 data_manager.py[line:1109] INFO {'点击地点': [[114.5253, 30.50491], [114.525193, 30.504771], [114.525311, 30.504724], [114.525182, 30.504623], [114.525203, 30.504521]]}
+2021-06-23 18:03:34,677 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:03:38,286 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:03:38,292 data_manager.py[line:417] INFO 清除自动状态数据
+2021-06-23 18:03:38,304 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 18:03:40,931 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.91, 'mapId': '1397858718729355265'}}
+2021-06-23 18:03:50,532 data_manager.py[line:470] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:03:50,857 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.91, 'mapId': '1397858718729355265'}}
+2021-06-23 18:03:50,863 data_manager.py[line:1109] INFO {'点击地点': [[114.525042, 30.504419], [114.52516, 30.504364], [114.525279, 30.504354], [114.525279, 30.504354], [114.525236, 30.504317], [114.525236, 30.50428]]}
+2021-06-23 18:03:50,899 data_manager.py[line:1134] INFO {'全部距离': 54.239939078776665}
+2021-06-23 18:03:53,189 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:03:56,827 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:03:57,259 data_manager.py[line:1109] INFO {'点击地点': [[114.525042, 30.504419], [114.52516, 30.504364], [114.525279, 30.504354], [114.525279, 30.504354], [114.525236, 30.504317], [114.525236, 30.50428]]}
+2021-06-23 18:03:59,280 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:04:00,849 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.38', 'path_info': '当前目标点:2 目标点总数: 4', 'progress': 50, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 4.08, 'mapId': '1397858718729355265'}}
+2021-06-23 18:04:02,791 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:04:03,283 data_manager.py[line:1109] INFO {'点击地点': [[114.525042, 30.504419], [114.52516, 30.504364], [114.525279, 30.504354], [114.525279, 30.504354], [114.525236, 30.504317], [114.525236, 30.50428]]}
+2021-06-23 18:04:04,512 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:04:06,356 data_manager.py[line:1368] INFO {'fakedate': {'weather': {'windSpeed': 9.7, 'windDirection': '90', 'rainfall': 4.3, 'illuminance': 7.3, 'temperature': 5, 'humidity': 75, 'pm25': 11, 'pm10': 25}, 'water': {'wt': 28.6, 'ph': 7.84, 'doDo': 13.85, 'cod': 5.9, 'ec': 451.2, 'td': 207.9, 'nh3Nh4': 0.223, 'tn': 3.3, 'tp': 0.1}, 'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}}
+2021-06-23 18:04:08,121 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:04:08,552 data_manager.py[line:1109] INFO {'点击地点': [[114.525042, 30.504419], [114.52516, 30.504364], [114.525279, 30.504354], [114.525279, 30.504354], [114.525236, 30.504317], [114.525236, 30.50428]]}
+2021-06-23 18:04:10,251 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:04:10,872 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.12', 'path_info': '当前目标点:4 目标点总数: 4', 'progress': 100, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.3, 'mapId': '1397858718729355265'}}
+2021-06-23 18:04:13,857 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:04:13,869 data_manager.py[line:417] INFO 清除自动状态数据
+2021-06-23 18:04:13,881 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 18:04:20,800 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.3, 'mapId': '1397858718729355265'}}
+2021-06-23 18:04:22,860 data_manager.py[line:470] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:04:23,367 data_manager.py[line:1109] INFO {'点击地点': [[114.525236, 30.50428], [114.525193, 30.50428], [114.52515, 30.50428], [114.525107, 30.50428], [114.525064, 30.50428], [114.525021, 30.50428], [114.524978, 30.50428], [114.524935, 30.50428], [114.525107, 30.504234], [114.525064, 30.504123]]}
+2021-06-23 18:04:23,379 data_manager.py[line:1134] INFO {'全部距离': 59.466562045285315}
+2021-06-23 18:04:24,782 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:04:28,302 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:04:28,794 data_manager.py[line:1109] INFO {'点击地点': [[114.525236, 30.50428], [114.525193, 30.50428], [114.52515, 30.50428], [114.525107, 30.50428], [114.525064, 30.50428], [114.525021, 30.50428], [114.524978, 30.50428], [114.524935, 30.50428], [114.525107, 30.504234], [114.525064, 30.504123]]}
+2021-06-23 18:04:30,737 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.08', 'path_info': '当前目标点:3 目标点总数: 3', 'progress': 100, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.7, 'mapId': '1397858718729355265'}}
+2021-06-23 18:04:30,743 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:04:34,281 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:04:34,719 data_manager.py[line:1109] INFO {'点击地点': [[114.525236, 30.50428], [114.525193, 30.50428], [114.52515, 30.50428], [114.525107, 30.50428], [114.525064, 30.50428], [114.525021, 30.50428], [114.524978, 30.50428], [114.524935, 30.50428], [114.525107, 30.504234], [114.525064, 30.504123]]}
+2021-06-23 18:04:38,779 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:04:40,651 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.47', 'path_info': '当前目标点:1 目标点总数: 3', 'progress': 33, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.6, 'mapId': '1397858718729355265'}}
+2021-06-23 18:04:42,275 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:04:42,287 data_manager.py[line:417] INFO 清除自动状态数据
+2021-06-23 18:04:42,299 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 18:04:50,569 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.6, 'mapId': '1397858718729355265'}}
+2021-06-23 18:04:52,114 data_manager.py[line:470] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:04:52,366 data_manager.py[line:1109] INFO {'点击地点': [[114.524473, 30.504197], [114.524774, 30.504262], [114.524645, 30.504512]]}
+2021-06-23 18:04:52,372 data_manager.py[line:1134] INFO {'全部距离': 105.65615540239935}
+2021-06-23 18:04:54,119 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:04:57,641 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:04:58,117 data_manager.py[line:1109] INFO {'点击地点': [[114.524473, 30.504197], [114.524774, 30.504262], [114.524645, 30.504512]]}
+2021-06-23 18:05:00,503 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '20.08', 'path_info': '当前目标点:2 目标点总数: 3', 'progress': 66, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -14.93, 'mapId': '1397858718729355265'}}
+2021-06-23 18:05:02,530 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:05:06,048 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:05:06,534 data_manager.py[line:1109] INFO {'点击地点': [[114.524473, 30.504197], [114.524774, 30.504262], [114.524645, 30.504512]]}
+2021-06-23 18:05:06,612 data_manager.py[line:1368] INFO {'fakedate': {'weather': {'windSpeed': 3.6, 'windDirection': '225', 'rainfall': 3.0, 'illuminance': 8.3, 'temperature': 13, 'humidity': 48, 'pm25': 8, 'pm10': 36}, 'water': {'wt': 28.9, 'ph': 7.4, 'doDo': 7.54, 'cod': 15.7, 'ec': 462.1, 'td': 265.5, 'nh3Nh4': 0.165, 'tn': 12.6, 'tp': 0.2}, 'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}}
+2021-06-23 18:05:10,453 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '18.85', 'path_info': '当前目标点:1 目标点总数: 3', 'progress': 33, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 33.95, 'mapId': '1397858718729355265'}}
+2021-06-23 18:05:12,320 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:05:15,944 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:05:15,956 data_manager.py[line:417] INFO 清除自动状态数据
+2021-06-23 18:05:15,974 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 18:05:20,400 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.88, 'mapId': '1397858718729355265'}}
+2021-06-23 18:05:30,405 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.88, 'mapId': '1397858718729355265'}}
+2021-06-23 18:05:40,429 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.88, 'mapId': '1397858718729355265'}}
+2021-06-23 18:05:50,388 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.88, 'mapId': '1397858718729355265'}}
+2021-06-23 18:06:00,318 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.88, 'mapId': '1397858718729355265'}}
+2021-06-23 18:06:07,432 data_manager.py[line:1368] INFO {'fakedate': {'weather': {'windSpeed': 5.2, 'windDirection': '90', 'rainfall': 1.8, 'illuminance': 4.5, 'temperature': 20, 'humidity': 50, 'pm25': 12, 'pm10': 29}, 'water': {'wt': 27.1, 'ph': 7.93, 'doDo': 13.03, 'cod': 7.0, 'ec': 222.3, 'td': 114.0, 'nh3Nh4': 0.228, 'tn': 16.2, 'tp': 0.1}, 'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}}
+2021-06-23 18:06:09,502 data_manager.py[line:470] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:06:10,021 data_manager.py[line:1109] INFO {'点击地点': [[114.523968, 30.504715], [114.524333, 30.504808], [114.524376, 30.505095]]}
+2021-06-23 18:06:10,033 data_manager.py[line:1134] INFO {'全部距离': 139.8630151622409}
+2021-06-23 18:06:10,556 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '44.47', 'path_info': '当前目标点:0 目标点总数: 3', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 3.29, 'mapId': '1397858718729355265'}}
+2021-06-23 18:06:14,598 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:06:18,127 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:06:18,609 data_manager.py[line:1109] INFO {'点击地点': [[114.523968, 30.504715], [114.524333, 30.504808], [114.524376, 30.505095]]}
+2021-06-23 18:06:20,602 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '33.92', 'path_info': '当前目标点:2 目标点总数: 3', 'progress': 66, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 125.78, 'mapId': '1397858718729355265'}}
+2021-06-23 18:06:26,524 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:06:30,144 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:06:30,220 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.03', 'path_info': '当前目标点:3 目标点总数: 3', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.21, 'mapId': '1397858718729355265'}}
+2021-06-23 18:06:30,586 data_manager.py[line:1109] INFO {'点击地点': [[114.523968, 30.504715], [114.524333, 30.504808], [114.524376, 30.505095]]}
+2021-06-23 18:06:38,962 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:06:40,420 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.34', 'path_info': '当前目标点:1 目标点总数: 3', 'progress': 33, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.4, 'mapId': '1397858718729355265'}}
+2021-06-23 18:06:42,484 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:06:42,496 data_manager.py[line:417] INFO 清除自动状态数据
+2021-06-23 18:06:42,508 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 18:06:50,459 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.4, 'mapId': '1397858718729355265'}}
+2021-06-23 18:06:52,783 data_manager.py[line:470] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:06:53,060 data_manager.py[line:1109] INFO {'点击地点': [[114.524097, 30.504549], [114.524215, 30.504456], [114.524247, 30.504354]]}
+2021-06-23 18:06:53,071 data_manager.py[line:1134] INFO {'全部距离': 47.170942748502846}
+2021-06-23 18:06:56,213 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:06:59,731 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:07:00,206 data_manager.py[line:1109] INFO {'点击地点': [[114.524097, 30.504549], [114.524215, 30.504456], [114.524247, 30.504354]]}
+2021-06-23 18:07:00,388 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '16.62', 'path_info': '当前目标点:1 目标点总数: 3', 'progress': 33, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.74, 'mapId': '1397858718729355265'}}
+2021-06-23 18:07:01,881 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:07:05,505 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:07:05,932 data_manager.py[line:1109] INFO {'点击地点': [[114.524097, 30.504549], [114.524215, 30.504456], [114.524247, 30.504354]]}
+2021-06-23 18:07:07,429 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:07:08,288 data_manager.py[line:1368] INFO {'fakedate': {'weather': {'windSpeed': 5.3, 'windDirection': '135', 'rainfall': 1.6, 'illuminance': 4.5, 'temperature': 17, 'humidity': 67, 'pm25': 9, 'pm10': 28}, 'water': {'wt': 29.4, 'ph': 7.87, 'doDo': 9.75, 'cod': 15.0, 'ec': 282.1, 'td': 40.4, 'nh3Nh4': 0.358, 'tn': 8.3, 'tp': 0.2}, 'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}}
+2021-06-23 18:07:10,538 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.27', 'path_info': '当前目标点:3 目标点总数: 3', 'progress': 100, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -1.51, 'mapId': '1397858718729355265'}}
+2021-06-23 18:07:10,951 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:07:10,969 data_manager.py[line:417] INFO 清除自动状态数据
+2021-06-23 18:07:10,981 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 18:07:20,577 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -1.51, 'mapId': '1397858718729355265'}}
+2021-06-23 18:07:28,321 data_manager.py[line:470] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:07:28,619 data_manager.py[line:1109] INFO {'点击地点': [[114.52385, 30.504197], [114.524162, 30.504206], [114.524344, 30.504067], [114.524548, 30.504086]]}
+2021-06-23 18:07:28,631 data_manager.py[line:1134] INFO {'全部距离': 114.84793304698867}
+2021-06-23 18:07:30,634 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.52', 'path_info': '当前目标点:0 目标点总数: 4', 'progress': 0, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.08, 'mapId': '1397858718729355265'}}
+2021-06-23 18:07:30,688 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:07:34,301 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:07:34,771 data_manager.py[line:1109] INFO {'点击地点': [[114.52385, 30.504197], [114.524162, 30.504206], [114.524344, 30.504067], [114.524548, 30.504086]]}
+2021-06-23 18:07:38,360 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:07:40,602 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.16', 'path_info': '当前目标点:3 目标点总数: 4', 'progress': 75, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 2.35, 'mapId': '1397858718729355265'}}
+2021-06-23 18:07:41,995 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:07:42,401 data_manager.py[line:1109] INFO {'点击地点': [[114.52385, 30.504197], [114.524162, 30.504206], [114.524344, 30.504067], [114.524548, 30.504086]]}
+2021-06-23 18:07:44,658 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:07:48,267 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:07:48,738 data_manager.py[line:1109] INFO {'点击地点': [[114.52385, 30.504197], [114.524162, 30.504206], [114.524344, 30.504067], [114.524548, 30.504086]]}
+2021-06-23 18:07:50,554 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '60.97', 'path_info': '当前目标点:4 目标点总数: 4', 'progress': 100, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0.82, 'mapId': '1397858718729355265'}}
+2021-06-23 18:07:57,340 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:08:00,518 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '1.99', 'path_info': '当前目标点:1 目标点总数: 4', 'progress': 25, 'control_info': '执行任务中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 2.26, 'mapId': '1397858718729355265'}}
+2021-06-23 18:08:00,868 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:08:00,880 data_manager.py[line:417] INFO 清除自动状态数据
+2021-06-23 18:08:00,892 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 18:08:08,590 data_manager.py[line:1368] INFO {'fakedate': {'weather': {'windSpeed': 9.9, 'windDirection': '45', 'rainfall': 4.9, 'illuminance': 5.0, 'temperature': 29, 'humidity': 88, 'pm25': 8, 'pm10': 34}, 'water': {'wt': 28.9, 'ph': 7.13, 'doDo': 6.03, 'cod': 15.0, 'ec': 194.8, 'td': 73.7, 'nh3Nh4': 0.329, 'tn': 4.2, 'tp': 0.1}, 'deviceId': '3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}}
+2021-06-23 18:08:09,508 data_manager.py[line:470] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:08:10,746 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '电脑手动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 2.26, 'mapId': '1397858718729355265'}}
+2021-06-23 18:08:20,878 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '电脑手动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 2.26, 'mapId': '1397858718729355265'}}
+2021-06-23 18:08:26,907 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:08:27,140 data_manager.py[line:1109] INFO {'点击地点': [[114.523904, 30.504206], [114.523904, 30.504243], [114.523904, 30.50428], [114.523904, 30.504317], [114.523904, 30.504354], [114.523904, 30.504391], [114.523807, 30.504549], [114.523764, 30.504724]]}
+2021-06-23 18:08:27,146 data_manager.py[line:1134] INFO {'全部距离': 62.84980522234266}
+2021-06-23 18:08:30,548 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:08:30,912 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '2.08', 'path_info': '当前目标点:1 目标点总数: 3', 'progress': 33, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -4.5, 'mapId': '1397858718729355265'}}
+2021-06-23 18:08:34,170 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:08:34,602 data_manager.py[line:1109] INFO {'点击地点': [[114.523904, 30.504206], [114.523904, 30.504243], [114.523904, 30.50428], [114.523904, 30.504317], [114.523904, 30.504354], [114.523904, 30.504391], [114.523807, 30.504549], [114.523764, 30.504724]]}
+2021-06-23 18:08:36,846 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:08:40,365 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_auto: 4>)}
+2021-06-23 18:08:40,835 data_manager.py[line:1109] INFO {'点击地点': [[114.523904, 30.504206], [114.523904, 30.504243], [114.523904, 30.50428], [114.523904, 30.504317], [114.523904, 30.504354], [114.523904, 30.504391], [114.523807, 30.504549], [114.523764, 30.504724]]}
+2021-06-23 18:08:40,936 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '22.79', 'path_info': '当前目标点:2 目标点总数: 3', 'progress': 66, 'control_info': '电脑自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -7.82, 'mapId': '1397858718729355265'}}
+2021-06-23 18:08:43,042 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.tasking: 5>)}
+2021-06-23 18:08:46,643 data_manager.py[line:470] INFO {'status change': (<ShipStatus.tasking: 5>, <ShipStatus.computer_control: 3>)}
+2021-06-23 18:08:46,655 data_manager.py[line:417] INFO 清除自动状态数据
+2021-06-23 18:08:46,667 data_manager.py[line:470] INFO {'status change': (<ShipStatus.computer_control: 3>, <ShipStatus.idle: 1>)}
+2021-06-23 18:08:50,920 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.82, 'mapId': '1397858718729355265'}}
+2021-06-23 18:09:00,881 data_manager.py[line:1561] INFO {'notice_info_': {'distance': '0', 'path_info': '当前目标点:0 目标点总数: 0', 'progress': 0, 'control_info': '等待中', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 1.82, 'mapId': '1397858718729355265'}}

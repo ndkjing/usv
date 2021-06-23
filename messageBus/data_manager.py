@@ -212,6 +212,8 @@ class DataManager:
         self.keep_d = -2
         #  # 如果采样点长时间没到达则跳过
         self.point_arrive_start_time = None
+        # 是否需要抓取水质数据
+        self.b_check_get_water_data = 0
 
     def connect_mqtt_server(self):
         while True:
@@ -301,6 +303,7 @@ class DataManager:
             if self.draw_start_time is None:
                 self.draw_start_time = time.time()
             else:
+                print(time.time() - self.draw_start_time)
                 if time.time() - self.draw_start_time > config.draw_time:
                     self.b_sampling = 2
                     self.draw_start_time = None
@@ -427,7 +430,7 @@ class DataManager:
         self.server_data_obj.mqtt_send_get_obj.keep_point = 0
         self.point_arrive_start_time = None  # 清楚记录长期不到时间
 
-        # 当模式改变是改变保存的状态消息
+    # 当模式改变是改变保存的状态消息
     def change_status_info(self, target_status, b_clear_status=False):
         """
         当模式改变是改变保存的状态消息
@@ -1196,10 +1199,9 @@ class DataManager:
                         break
             # 执行任务中
             elif self.ship_status == ShipStatus.tasking:
-                if config.b_draw:
-                    if not config.home_debug:
-                        self.pi_main_obj.stop()
-                    self.draw()
+                if not config.home_debug:
+                    self.pi_main_obj.stop()
+                self.draw()
             # 返航 断网返航 低电量返航
             elif self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
                 # 有返航点下情况下返回返航点，没有则停止
@@ -1658,6 +1660,12 @@ class DataManager:
                       topic='switch_%s' % config.ship_code,
                       data=switch_data,
                       qos=0)
+            if not self.b_check_get_water_data:
+                try:
+                    data_valid.get_current_water_data()
+                    self.b_check_get_water_data = 1
+                except Exception as e:
+                    self.logger.error({'error':e})
 
 
 if __name__ == '__main__':
