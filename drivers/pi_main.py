@@ -69,6 +69,7 @@ class PiMain:
             self.sonar_obj = self.get_sonar_obj()
         if config.b_millimeter_wave and config.current_platform == config.CurrentPlatform.pi:
             self.millimeter_wave_obj = self.get_millimeter_wave_obj()
+        self.remote_control_obj = self.get_remote_control_obj()
         # GPS
         self.lng_lat = None
         # GPS 误差
@@ -83,7 +84,8 @@ class PiMain:
         self.field_of_view = 90  # 视场角
         self.view_cell = 5  # 量化角度单元格
         self.cell_size = int(self.field_of_view / self.view_cell)
-        self.obstacle_list = [0] * self.cell_size
+        self.obstacle_list = [0] * self.cell_size  # 自动避障列表
+        self.obstacle_list = [0] * self.cell_size  #
         # 设置为GPIO输出模式 输出高低电平
         self.pi.set_mode(config.side_left_gpio_pin, pigpio.OUTPUT)
         self.pi.set_mode(config.side_right_gpio_pin, pigpio.OUTPUT)
@@ -103,6 +105,8 @@ class PiMain:
         self.right_sidelight_output = 0
         # 遥控器控制开始抽水
         self.start_draw = 0
+        # 遥控器控制数据
+        self.remote_control_data = []
 
     # 获取串口对象
     @staticmethod
@@ -124,6 +128,10 @@ class PiMain:
     def get_weite_compass_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=21, tx_pin=20,
                                       baud=9600)
+
+    def get_remote_control_obj(self):
+        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=21, tx_pin=20,
+                                      baud=9600, time_out=0.2)
 
     def get_gps_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx,
@@ -470,7 +478,7 @@ class PiMain:
                 b_add = -1 if b_add == 1 else 1
             time.sleep(0.02)
 
-    def get_distance_dict_millimeter(self):
+    def get_distance_dict_millimeter(self, debug=False):
         # 角度限制
         count = 0
         max_count = 7
@@ -478,7 +486,6 @@ class PiMain:
         average_distance_dict = {}
         while True:
             data_dict = self.millimeter_wave_obj.read_millimeter_wave()
-
             if data_dict:
                 for obj_id in data_dict:
                     distance_row = data_dict[obj_id][0]
@@ -541,9 +548,10 @@ class PiMain:
                 self.obstacle_list[obstacle_index] = b_obstacle
             if count == max_count - 1:
                 self.obstacle_list = [0] * int(self.field_of_view / self.view_cell)
-            # print('data_dict', data_dict)
-            # print('self.distance_dict', self.distance_dict)
-            # print('self.obstacle_list', self.obstacle_list)
+            if debug:
+                print('data_dict', data_dict)
+                print('self.distance_dict', self.distance_dict)
+                print('self.obstacle_list', self.obstacle_list)
             count += 1
             count %= max_count
             time.sleep(0.001)
@@ -613,6 +621,11 @@ class PiMain:
         self.pi.set_servo_pulsewidth(config.pin_tilt, tilt_angle_pwm)
         self.pan_angle_pwm = pan_angle_pwm
         self.tilt_angle_pwm = tilt_angle_pwm
+
+    def get_remote_control_data(self, debug=False):
+        while True:
+            self.remote_control_data = self.remote_control_obj.read_remote_control(debug=debug)
+            time.sleep(0.01)
 
     """
         # 在线程中读取 gps
@@ -760,6 +773,7 @@ if __name__ == '__main__':
                   'C0 C1  关闭和开启前面大灯'
                   'D0 D1  关闭和开启声光报警器'
                   'E0 E1 E2 E3 E4  状态灯'
+                  'R 遥控器'
                   )
             key_input = input('please input:')
             # 前 后 左 右 停止  右侧电机是反桨叶 左侧电机是正桨叶
@@ -905,7 +919,7 @@ if __name__ == '__main__':
                 millimeter_wave_data = pi_main_obj.millimeter_wave_obj.read_millimeter_wave(debug=True)
                 print('millimeter_wave', millimeter_wave_data)
             elif key_input.startswith('n'):
-                pi_main_obj.get_distance_dict_millimeter()
+                pi_main_obj.get_distance_dict_millimeter(debug=True)
             elif key_input.startswith('m'):
                 pi_main_obj.init_motor()
             elif key_input[0] in ['A', 'B', 'C', 'D', 'E']:
@@ -916,7 +930,11 @@ if __name__ == '__main__':
                     com_data_obj.send_data(send_data)
                     row_com_data_read = com_data_obj.readline()
                     print('row_com_data_read', row_com_data_read)
-
+            elif key_input.startswith('R'):
+                if len(key_input) > 1 and key_input[1] == '1':
+                    pi_main_obj.get_remote_control_data(debug=True)
+                else:
+                    pi_main_obj.remote_control_obj.read_remote_control(debug=True)
             # TODO
             # 返航
             # 角度控制

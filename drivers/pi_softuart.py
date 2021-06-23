@@ -34,6 +34,7 @@ class PiSoftuart(object):
         # ATTR
         self._thread_ts = time_out
         self.flushInput()
+        self.last_send = None
 
     def flushInput(self):
         pigpio.exceptions = False  # fatal exceptions off (so that closing an unopened gpio doesn't error)
@@ -115,7 +116,7 @@ class PiSoftuart(object):
                 if debug:
                     print('send_data', send_data)
                     print('self._rx_pin', self._rx_pin, self.baud)
-                    print(time.time(), 'count', count, 'data', data1,'data2',data2,'data3',data3)
+                    print(time.time(), 'count', count, 'data', data1, 'data2', data2, 'data3', data3)
                 if count > len_data:
                     str_data = data1.decode('utf-8')[2:-1]
                     theta = float(str_data)
@@ -220,7 +221,75 @@ class PiSoftuart(object):
             time.sleep(self._thread_ts / 2)
             return None
 
-    def write_data(self, msg, baud=None):
+    def read_remote_control(self, len_data=None, debug=False):
+        """
+        读取自己做的lora遥控器数据
+        :param len_data:限制接受数据最短长度
+        :param debug:是否是调试  调试则print打印输出数据
+        :return:
+        """
+        if len_data is None:
+            len_data = 4
+            try:
+                # 发送数据让遥控器接受变为绿灯
+                if self.last_send is None:
+                    self.write_data('C9', debug=True)
+                    self.last_send = time.time()
+                else:
+                    if time.time() - self.last_send > 1:
+                        self.write_data('C9', debug=True)
+                        self.last_send = time.time()
+                count, data = self._pi.bb_serial_read(self._rx_pin)
+                if debug:
+                    print(time.time(), 'count', count, 'data', data)
+                if count > 40:
+                    str_data = str(data, encoding="utf8")
+                    data_list = str_data.split(r'\r\nZ')
+                    if debug:
+                        print(time.time(), 'str_data', str_data, 'data_list', data_list)
+                    for item in data_list:
+                        temp_data = item.strip()
+                        if temp_data[0] == 'A' and temp_data[-1] == 'Z':
+                            item_data = temp_data[1:-1]
+                            item_data_list = item_data.split(',')
+                            if len(item_data_list) == 14:
+                                left_row = item_data_list[1]
+                                left_col = item_data_list[0]
+                                right_row = item_data_list[3]
+                                right_col = item_data_list[2]
+                                fine_tuning = item_data_list[4]
+                                button_10 = item_data_list[9]
+                                button_11 = item_data_list[10]
+                                button_12 = item_data_list[11]
+                                button_13 = item_data_list[12]
+                                lever_6 = item_data_list[5]
+                                lever_7 = item_data_list[6]
+                                lever_8 = item_data_list[7]
+                                lever_9 = item_data_list[8]
+                                return [left_col,
+                                        left_row,
+                                        right_col,
+                                        right_row,
+                                        fine_tuning,
+                                        lever_6,
+                                        lever_7,
+                                        lever_8,
+                                        lever_9,
+                                        button_10,
+                                        button_11,
+                                        button_12,
+                                        button_13,
+                                        ]
+
+                time.sleep(self._thread_ts)
+            except Exception as e:
+                time.sleep(self._thread_ts)
+                print({'error read_remote_control': e})
+                return None
+
+    def write_data(self, msg, baud=None, debug=False):
+        if debug:
+            print('send data', msg)
         self._pi.wave_clear()
         if baud:
             self._pi.wave_add_serial(self._tx_pin, baud, bytes.fromhex(msg))

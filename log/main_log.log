@@ -70,3 +70,5 @@
 2021-06-22 20:07:59,976 main1.py[line:68] INFO {'binding status': 1}
 2021-06-22 20:10:35,302 main1.py[line:68] INFO {'binding status': 1}
 2021-06-22 20:13:44,493 main1.py[line:68] INFO {'binding status': 1}
+2021-06-23 08:36:01,971 main1.py[line:68] INFO {'binding status': 1}
+2021-06-23 11:09:10,154 main1.py[line:70] ERROR {'binding_data error': AttributeError("'NoneType' object has no attribute 'send_server_http_data'")}

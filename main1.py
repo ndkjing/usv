@@ -10,9 +10,6 @@ from drivers import audios_manager
 import sys
 import os
 
-if config.current_platform == config.CurrentPlatform.pi:
-    time.sleep(config.start_sleep_time)
-
 sys.path.append(
     os.path.join(
         os.path.dirname(
@@ -58,7 +55,8 @@ def main():
     # 数据处理对象
     data_manager_obj = data_manager.DataManager()
     # 查询改船是否注册 若未注册直接退出
-    try:
+    """
+        try:
         binding_data = data_manager_obj.send(
             method='http', data="", url=config.http_binding, http_type='GET')
         if int(binding_data['flag']) != 1:
@@ -68,6 +66,7 @@ def main():
         logger.info({'binding status': binding_data['flag']})
     except Exception as e1:
         logger.error({'binding_data error': e1})
+    """
     # 通用调用函数
     common_func_list = [data_manager_obj.move_control,
                         data_manager_obj.check_status,
@@ -78,7 +77,8 @@ def main():
                         data_manager_obj.check_ping_delay,
                         data_manager_obj.control_peripherals,
                         data_manager_obj.change_status,
-                        data_manager_obj.check_switch
+                        data_manager_obj.check_switch,
+                        data_manager_obj.connect_mqtt_server
                         ]
     common_thread_list = []
     # 树莓派对象数据处理
@@ -93,10 +93,9 @@ def main():
                         data_manager_obj.pi_main_obj.get_distance_dict,
                         data_manager_obj.pi_main_obj.get_distance_dict_millimeter,
                         data_manager_obj.send_distacne,
-                        data_manager_obj.pi_main_obj.get_stc_data
+                        data_manager_obj.pi_main_obj.get_stc_data,
+                        data_manager_obj.pi_main_obj.get_remote_control_data,
                         ]
-        pi_func_flag = []
-        pi_thread_list = []
         pi_func_flag.append(True)
         pi_func_flag.append(True)
         pi_func_flag.append(True)
@@ -105,6 +104,7 @@ def main():
         pi_func_flag.append(True if config.b_millimeter_wave else False)
         pi_func_flag.append(True if config.b_laser or config.b_millimeter_wave else False)
         pi_func_flag.append(True if config.b_pin_stc else False)
+        pi_func_flag.append(True if config.b_use_remote_control else False)
     for common_func in common_func_list:
         common_thread_list.append(threading.Thread(target=common_func))
     if config.current_platform == config.CurrentPlatform.pi:

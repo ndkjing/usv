@@ -2732,3 +2732,785 @@
 2021-06-22 20:16:41,097 server_data.py[line:252] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
 2021-06-22 20:16:46,108 server_data.py[line:252] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
 2021-06-22 20:16:51,189 server_data.py[line:252] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:36:01,560 server_data.py[line:533] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,561 server_data.py[line:533] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,562 server_data.py[line:533] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,562 server_data.py[line:533] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,562 server_data.py[line:533] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,562 server_data.py[line:533] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,563 server_data.py[line:533] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,563 server_data.py[line:533] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,563 server_data.py[line:533] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,563 server_data.py[line:533] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,564 server_data.py[line:533] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,565 server_data.py[line:533] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,565 server_data.py[line:533] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,565 server_data.py[line:533] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,565 server_data.py[line:533] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,566 server_data.py[line:533] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,566 server_data.py[line:533] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 08:36:01,593 server_data.py[line:191] INFO Connected with result code:  0
+2021-06-23 08:36:07,031 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:36:12,068 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:36:15,821 server_data.py[line:458] INFO {'refresh_setting ': {'info_type': 1}}
+2021-06-23 08:36:15,844 server_data.py[line:398] INFO {'base_setting ': {'info_type': 1}}
+2021-06-23 08:36:16,001 server_data.py[line:398] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 08:36:17,068 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:36:18,897 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 08:36:19,781 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 08:36:20,866 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 08:36:22,080 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:36:22,177 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 08:36:22,407 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 08:36:22,677 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 08:36:23,899 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 08:36:26,727 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 08:36:27,083 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:36:27,805 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 90, 'mode': 1}
+2021-06-23 08:36:27,934 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 90, 'mode': 1}
+2021-06-23 08:36:29,366 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 180, 'mode': 1}
+2021-06-23 08:36:29,971 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 270, 'mode': 1}
+2021-06-23 08:36:32,092 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 10, 'mode': 2}
+2021-06-23 08:36:32,116 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:36:33,930 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 10, 'mode': 2}
+2021-06-23 08:36:35,113 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 190, 'mode': 2}
+2021-06-23 08:36:37,131 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:36:37,354 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 1180, 'mode': 2}
+2021-06-23 08:36:38,286 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 1270, 'mode': 2}
+2021-06-23 08:36:39,178 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 1270, 'mode': 2}
+2021-06-23 08:36:39,890 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 1270, 'mode': 2}
+2021-06-23 08:36:42,127 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:36:47,142 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:36:52,158 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:36:57,152 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:37:02,183 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:37:07,202 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:37:12,190 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:37:17,208 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:37:22,215 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:37:27,250 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:37:32,270 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:37:32,919 server_data.py[line:277] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.524091, 30.505836], 'zoom': 16.89}
+2021-06-23 08:37:33,870 server_data.py[line:384] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}
+2021-06-23 08:37:33,927 server_data.py[line:398] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 08:37:35,121 server_data.py[line:458] INFO {'refresh_setting ': {'mapId': '1397858718729355265', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-06-23 08:37:37,269 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:37:38,461 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.523583, 30.506015]], 'zoom': 17, 'meter_pix': 1.110528037978966, 'back_home': 0, 'fix_point': None}
+2021-06-23 08:37:38,633 server_data.py[line:348] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.523583, 30.506015]], 'path_points': [[114.523575, 30.506021]]}
+2021-06-23 08:37:42,283 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:37:47,299 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:37:52,304 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:37:57,304 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:38:02,329 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:38:05,832 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.525072, 30.5051]], 'zoom': 17, 'meter_pix': 1.110528037978966, 'back_home': 0, 'fix_point': None}
+2021-06-23 08:38:06,020 server_data.py[line:348] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.525072, 30.5051]], 'path_points': [[114.525068, 30.505105]]}
+2021-06-23 08:38:07,355 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:38:10,373 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': None, 'b_draw': 1, 'headlight': None, 'audio_light': None, 'side_light': None}
+2021-06-23 08:38:12,371 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 1, 'b_draw': 1, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:38:17,366 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:38:22,379 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:38:27,398 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:38:32,422 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 08:38:37,430 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:25:01,695 server_data.py[line:190] INFO Connected with result code:  0
+2021-06-23 11:25:01,695 server_data.py[line:532] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,731 server_data.py[line:532] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,749 server_data.py[line:532] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,773 server_data.py[line:532] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,791 server_data.py[line:532] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,815 server_data.py[line:532] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,827 server_data.py[line:532] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,845 server_data.py[line:532] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,857 server_data.py[line:532] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,881 server_data.py[line:532] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,893 server_data.py[line:532] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,911 server_data.py[line:532] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,935 server_data.py[line:532] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,964 server_data.py[line:532] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:01,988 server_data.py[line:532] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:02,012 server_data.py[line:532] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:02,030 server_data.py[line:532] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,060 server_data.py[line:532] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,061 server_data.py[line:532] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,061 server_data.py[line:532] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,061 server_data.py[line:532] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,062 server_data.py[line:532] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,062 server_data.py[line:532] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,062 server_data.py[line:532] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,062 server_data.py[line:532] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,063 server_data.py[line:532] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,063 server_data.py[line:532] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,063 server_data.py[line:532] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,064 server_data.py[line:532] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,064 server_data.py[line:532] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,064 server_data.py[line:532] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,064 server_data.py[line:532] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,065 server_data.py[line:532] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,065 server_data.py[line:532] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:25:54,095 server_data.py[line:190] INFO Connected with result code:  0
+2021-06-23 11:25:59,128 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:26:04,135 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:26:09,155 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:26:14,159 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:26:19,173 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:26:24,198 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:26:29,222 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:26:34,222 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:26:39,229 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:26:44,278 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:26:49,283 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:26:54,313 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:26:59,317 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:27:04,330 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:27:09,337 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:27:14,372 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:27:19,381 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:27:24,399 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:27:29,383 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:27:34,405 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:27:39,422 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:27:44,434 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:27:49,458 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:27:54,459 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:27:59,476 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:28:04,482 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:28:09,507 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:28:14,525 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:28:19,544 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:28:24,563 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:28:29,575 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:28:34,591 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:28:39,596 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:28:44,621 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:28:49,634 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:28:54,646 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 11:30:16,281 server_data.py[line:190] INFO Connected with result code:  0
+2021-06-23 11:31:13,523 server_data.py[line:533] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,523 server_data.py[line:533] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,523 server_data.py[line:533] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,523 server_data.py[line:533] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:31:13,524 server_data.py[line:533] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,809 server_data.py[line:536] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,809 server_data.py[line:536] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,810 server_data.py[line:536] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,810 server_data.py[line:536] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,810 server_data.py[line:536] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,810 server_data.py[line:536] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,811 server_data.py[line:536] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,811 server_data.py[line:536] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,811 server_data.py[line:536] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,811 server_data.py[line:536] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,811 server_data.py[line:536] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,811 server_data.py[line:536] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,812 server_data.py[line:536] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,812 server_data.py[line:536] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,812 server_data.py[line:536] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,812 server_data.py[line:536] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:51:26,812 server_data.py[line:536] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,148 server_data.py[line:536] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,149 server_data.py[line:536] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,150 server_data.py[line:536] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:52:19,150 server_data.py[line:536] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,712 server_data.py[line:539] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:01,713 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 11:54:53,917 server_data.py[line:197] INFO Connected with result code:  0
+2021-06-23 13:04:39,582 server_data.py[line:531] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,582 server_data.py[line:531] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,582 server_data.py[line:531] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,582 server_data.py[line:531] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,582 server_data.py[line:531] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,582 server_data.py[line:531] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,582 server_data.py[line:531] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,582 server_data.py[line:531] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,582 server_data.py[line:531] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,582 server_data.py[line:531] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,582 server_data.py[line:531] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,583 server_data.py[line:531] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,583 server_data.py[line:531] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,583 server_data.py[line:531] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,583 server_data.py[line:531] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,583 server_data.py[line:531] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,583 server_data.py[line:531] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:04:39,726 server_data.py[line:189] INFO Connected with result code:  0
+2021-06-23 13:06:40,430 server_data.py[line:531] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,430 server_data.py[line:531] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,431 server_data.py[line:531] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,432 server_data.py[line:531] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:06:40,556 server_data.py[line:189] INFO Connected with result code:  0
+2021-06-23 13:08:13,731 server_data.py[line:532] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,731 server_data.py[line:532] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,731 server_data.py[line:532] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,731 server_data.py[line:532] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,731 server_data.py[line:532] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,731 server_data.py[line:532] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,731 server_data.py[line:532] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,731 server_data.py[line:532] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,732 server_data.py[line:532] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,732 server_data.py[line:532] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,732 server_data.py[line:532] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,732 server_data.py[line:532] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,732 server_data.py[line:532] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,732 server_data.py[line:532] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,732 server_data.py[line:532] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,732 server_data.py[line:532] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,732 server_data.py[line:532] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:08:13,831 server_data.py[line:189] INFO Connected with result code:  0
+2021-06-23 13:09:00,311 server_data.py[line:532] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,312 server_data.py[line:532] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,313 server_data.py[line:532] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:00,313 server_data.py[line:532] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,856 server_data.py[line:532] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,856 server_data.py[line:532] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,856 server_data.py[line:532] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,856 server_data.py[line:532] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,857 server_data.py[line:532] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:16,996 server_data.py[line:189] INFO Connected with result code:  01
+2021-06-23 13:09:38,808 server_data.py[line:532] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,809 server_data.py[line:532] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:09:38,916 server_data.py[line:189] INFO Connected with result code:  01
+2021-06-23 13:16:58,477 server_data.py[line:534] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,501 server_data.py[line:191] INFO Connected with result code:  01
+2021-06-23 13:16:58,513 server_data.py[line:534] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,530 server_data.py[line:534] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,554 server_data.py[line:534] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,590 server_data.py[line:534] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,632 server_data.py[line:534] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,650 server_data.py[line:534] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,668 server_data.py[line:534] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,680 server_data.py[line:534] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,692 server_data.py[line:534] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,704 server_data.py[line:534] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,746 server_data.py[line:534] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,770 server_data.py[line:534] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,782 server_data.py[line:534] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,812 server_data.py[line:534] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,830 server_data.py[line:534] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:16:58,860 server_data.py[line:534] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:17:03,448 server_data.py[line:260] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:17:08,471 server_data.py[line:260] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:17:13,472 server_data.py[line:260] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:17:18,514 server_data.py[line:260] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:17:23,503 server_data.py[line:260] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:17:28,521 server_data.py[line:260] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:17:33,558 server_data.py[line:260] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:21:07,131 server_data.py[line:191] INFO Connected with result code:  00
+2021-06-23 13:21:07,131 server_data.py[line:532] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,173 server_data.py[line:532] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,191 server_data.py[line:532] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,202 server_data.py[line:532] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,220 server_data.py[line:532] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,244 server_data.py[line:532] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,268 server_data.py[line:532] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,286 server_data.py[line:532] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,304 server_data.py[line:532] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,328 server_data.py[line:532] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,346 server_data.py[line:532] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,364 server_data.py[line:532] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,382 server_data.py[line:532] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,400 server_data.py[line:532] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,412 server_data.py[line:532] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,436 server_data.py[line:532] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:07,448 server_data.py[line:532] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 13:21:12,076 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:21:17,073 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:21:17,881 server_data.py[line:457] INFO {'refresh_setting ': {'info_type': 1}}
+2021-06-23 13:21:17,917 server_data.py[line:397] INFO {'base_setting ': {'info_type': 1}}
+2021-06-23 13:21:18,007 server_data.py[line:397] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 13:21:21,206 server_data.py[line:276] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.524046, 30.506235], 'zoom': 17.1}
+2021-06-23 13:21:21,912 server_data.py[line:383] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}
+2021-06-23 13:21:21,954 server_data.py[line:397] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 13:21:22,102 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:21:23,507 server_data.py[line:457] INFO {'refresh_setting ': {'mapId': '1397858718729355265', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-06-23 13:21:27,090 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:21:27,952 server_data.py[line:310] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.524156, 30.505423]], 'zoom': 17, 'meter_pix': 0.9600917887079486, 'back_home': 0, 'fix_point': None}
+2021-06-23 13:21:28,111 server_data.py[line:347] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.524156, 30.505423]], 'path_points': [[114.524153, 30.50543]]}
+2021-06-23 13:21:32,121 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:21:37,127 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:21:38,506 server_data.py[line:233] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 13:21:42,141 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:21:43,426 server_data.py[line:233] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 13:21:47,165 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:21:52,190 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:21:54,020 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': None, 'b_draw': 1, 'headlight': None, 'audio_light': None, 'side_light': None}
+2021-06-23 13:21:57,196 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 1, 'b_draw': 1, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:22:02,196 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 1, 'b_draw': 1, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:22:04,045 server_data.py[line:233] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 13:22:05,777 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': None, 'b_draw': 0, 'headlight': None, 'audio_light': None, 'side_light': None}
+2021-06-23 13:22:07,193 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 13:22:12,214 server_data.py[line:258] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:28:24,294 server_data.py[line:534] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,306 server_data.py[line:534] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,324 server_data.py[line:534] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,336 server_data.py[line:192] INFO Connected with result code:  01
+2021-06-23 15:28:24,348 server_data.py[line:534] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,366 server_data.py[line:534] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,414 server_data.py[line:534] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,450 server_data.py[line:534] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,462 server_data.py[line:534] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,474 server_data.py[line:534] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,492 server_data.py[line:534] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,510 server_data.py[line:534] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,522 server_data.py[line:534] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,540 server_data.py[line:534] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,564 server_data.py[line:534] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,588 server_data.py[line:534] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,606 server_data.py[line:534] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:24,618 server_data.py[line:534] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:28:27,717 server_data.py[line:459] INFO {'refresh_setting ': {'info_type': 1}}
+2021-06-23 15:28:27,753 server_data.py[line:399] INFO {'base_setting ': {'info_type': 1}}
+2021-06-23 15:28:27,830 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '喻家湖', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 15:28:29,282 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:28:30,894 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': None, 'b_draw': 1, 'headlight': None, 'audio_light': None, 'side_light': None}
+2021-06-23 15:28:34,282 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 1, 'b_draw': 1, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:28:39,320 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 1, 'b_draw': 1, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:28:44,327 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 1, 'b_draw': 1, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:28:49,344 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 1, 'b_draw': 1, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:28:50,639 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 15:28:54,334 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:28:59,364 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:29:04,377 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:29:06,806 server_data.py[line:277] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.524346, 30.505658], 'zoom': 17.5}
+2021-06-23 15:29:08,358 server_data.py[line:385] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}
+2021-06-23 15:29:08,393 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 15:29:09,383 server_data.py[line:459] INFO {'refresh_setting ': {'mapId': '1397858718729355265', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-06-23 15:29:09,418 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:29:12,453 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.52359, 30.505774]], 'zoom': 18, 'meter_pix': 0.7276160437736119, 'back_home': 0, 'fix_point': None}
+2021-06-23 15:29:12,576 server_data.py[line:349] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.52359, 30.505774]], 'path_points': [[114.523589, 30.505774]]}
+2021-06-23 15:29:14,386 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:29:19,410 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:29:24,401 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:29:29,435 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:29:34,458 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:29:39,458 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:29:40,444 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 15:29:44,467 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:29:49,383 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.524091, 30.505957]], 'zoom': 18, 'meter_pix': 0.7276160437736119, 'back_home': 0, 'fix_point': None}
+2021-06-23 15:29:49,414 server_data.py[line:349] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.524091, 30.505957]], 'path_points': [[114.524088, 30.505959]]}
+2021-06-23 15:29:49,466 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:29:54,476 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:29:59,496 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:30:04,524 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:30:09,512 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:30:14,530 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:30:19,555 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:30:24,573 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:30:29,597 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:30:34,580 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:30:39,617 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:30:44,624 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:30:49,630 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:30:54,648 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:30:59,667 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:31:02,858 server_data.py[line:534] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:02,870 server_data.py[line:534] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:02,888 server_data.py[line:534] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:02,899 server_data.py[line:192] INFO Connected with result code:  01
+2021-06-23 15:31:02,905 server_data.py[line:534] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:02,929 server_data.py[line:534] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:02,947 server_data.py[line:534] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:02,971 server_data.py[line:534] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:02,983 server_data.py[line:534] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:03,018 server_data.py[line:534] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:03,040 server_data.py[line:534] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:03,055 server_data.py[line:534] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:03,061 server_data.py[line:534] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:03,079 server_data.py[line:534] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:03,097 server_data.py[line:534] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:03,174 server_data.py[line:534] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:03,174 server_data.py[line:534] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:03,174 server_data.py[line:534] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:31:05,903 server_data.py[line:459] INFO {'refresh_setting ': {'info_type': 1}}
+2021-06-23 15:31:05,933 server_data.py[line:399] INFO {'base_setting ': {'info_type': 1}}
+2021-06-23 15:31:06,011 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 15:31:07,857 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:31:09,388 server_data.py[line:277] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.524147, 30.50597], 'zoom': 17.05}
+2021-06-23 15:31:10,082 server_data.py[line:385] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}
+2021-06-23 15:31:10,094 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 15:31:11,104 server_data.py[line:459] INFO {'refresh_setting ': {'mapId': '1397858718729355265', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-06-23 15:31:12,857 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:31:14,329 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 15:31:17,865 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:31:17,956 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.523804, 30.505791]], 'zoom': 17, 'meter_pix': 0.9939504666230337, 'back_home': 0, 'fix_point': None}
+2021-06-23 15:31:17,992 server_data.py[line:349] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.523804, 30.505791]], 'path_points': [[114.523803, 30.505794]]}
+2021-06-23 15:31:22,884 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:31:27,899 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:31:32,909 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:31:35,497 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.523409, 30.506041]], 'zoom': 17, 'meter_pix': 0.9939504666230337, 'back_home': 0, 'fix_point': None}
+2021-06-23 15:31:35,629 server_data.py[line:349] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.523409, 30.506041]], 'path_points': [[114.523406, 30.506044]]}
+2021-06-23 15:31:37,928 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:31:40,585 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 15:31:42,933 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:31:47,953 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:31:48,724 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 15:31:52,970 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:31:57,977 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:32:02,463 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.524262, 30.505665]], 'zoom': 17, 'meter_pix': 0.9939504666230337, 'back_home': 0, 'fix_point': None}
+2021-06-23 15:32:02,678 server_data.py[line:349] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.524262, 30.505665]], 'path_points': [[114.524254, 30.505674]]}
+2021-06-23 15:32:02,990 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:32:08,032 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:32:13,045 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:32:18,044 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:32:23,056 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:32:28,075 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:32:33,089 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:32:38,099 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:36:18,743 server_data.py[line:534] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:18,767 server_data.py[line:534] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:18,773 server_data.py[line:192] INFO Connected with result code:  01
+2021-06-23 15:36:18,778 server_data.py[line:534] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:18,796 server_data.py[line:534] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:18,832 server_data.py[line:534] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:18,844 server_data.py[line:534] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:18,868 server_data.py[line:534] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:18,892 server_data.py[line:534] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:18,916 server_data.py[line:534] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:18,946 server_data.py[line:534] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:18,964 server_data.py[line:534] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:18,981 server_data.py[line:534] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:18,993 server_data.py[line:534] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:19,011 server_data.py[line:534] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:19,035 server_data.py[line:534] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:19,053 server_data.py[line:534] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:19,077 server_data.py[line:534] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:36:21,947 server_data.py[line:459] INFO {'refresh_setting ': {'info_type': 1}}
+2021-06-23 15:36:21,988 server_data.py[line:399] INFO {'base_setting ': {'info_type': 1}}
+2021-06-23 15:36:22,098 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 15:36:23,706 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:36:24,363 server_data.py[line:277] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.524243, 30.506097], 'zoom': 17.2}
+2021-06-23 15:36:25,149 server_data.py[line:385] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}
+2021-06-23 15:36:25,191 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 15:36:25,905 server_data.py[line:459] INFO {'refresh_setting ': {'mapId': '1397858718729355265', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-06-23 15:36:28,595 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 15:36:28,748 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:36:33,741 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:36:38,758 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:36:43,762 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:36:48,762 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:36:53,765 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:36:58,787 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:37:03,814 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:37:08,810 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:37:13,828 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:37:18,841 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:37:19,813 server_data.py[line:534] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,819 server_data.py[line:192] INFO Connected with result code:  01
+2021-06-23 15:37:19,837 server_data.py[line:534] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,849 server_data.py[line:534] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,867 server_data.py[line:534] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,891 server_data.py[line:534] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,921 server_data.py[line:534] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,945 server_data.py[line:534] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,966 server_data.py[line:534] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,967 server_data.py[line:534] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,967 server_data.py[line:534] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,967 server_data.py[line:534] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,967 server_data.py[line:534] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,967 server_data.py[line:534] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,968 server_data.py[line:534] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,968 server_data.py[line:534] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,968 server_data.py[line:534] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:19,968 server_data.py[line:534] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:37:22,616 server_data.py[line:459] INFO {'refresh_setting ': {'info_type': 1}}
+2021-06-23 15:37:22,646 server_data.py[line:399] INFO {'base_setting ': {'info_type': 1}}
+2021-06-23 15:37:22,848 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': '10', 'secure_distance': '10', 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 15:37:24,813 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:37:25,533 server_data.py[line:277] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.524013, 30.505992], 'zoom': 17.5}
+2021-06-23 15:37:26,237 server_data.py[line:385] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}
+2021-06-23 15:37:26,261 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 15:37:28,035 server_data.py[line:459] INFO {'refresh_setting ': {'mapId': '1397858718729355265', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-06-23 15:37:28,635 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 15:37:29,815 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:37:31,913 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.523595, 30.50592]], 'zoom': 18, 'meter_pix': 0.7276150486312876, 'back_home': 0, 'fix_point': None}
+2021-06-23 15:37:32,073 server_data.py[line:349] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.523595, 30.50592]], 'path_points': [[114.523594, 30.505923]]}
+2021-06-23 15:37:34,827 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:37:39,828 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:37:44,858 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:37:49,865 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:37:54,884 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:37:59,875 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:38:04,910 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:38:09,922 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:40:29,227 server_data.py[line:534] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,239 server_data.py[line:534] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,262 server_data.py[line:534] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,262 server_data.py[line:192] INFO Connected with result code:  01
+2021-06-23 15:40:29,286 server_data.py[line:534] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,304 server_data.py[line:534] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,316 server_data.py[line:534] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,340 server_data.py[line:534] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,364 server_data.py[line:534] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,382 server_data.py[line:534] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,400 server_data.py[line:534] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,418 server_data.py[line:534] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,436 server_data.py[line:534] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,460 server_data.py[line:534] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,484 server_data.py[line:534] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,496 server_data.py[line:534] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,514 server_data.py[line:534] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:29,532 server_data.py[line:534] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:40:34,184 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:40:34,497 server_data.py[line:459] INFO {'refresh_setting ': {'info_type': 1}}
+2021-06-23 15:40:34,533 server_data.py[line:399] INFO {'base_setting ': {'info_type': 1}}
+2021-06-23 15:40:34,587 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 15:40:37,354 server_data.py[line:277] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.523983, 30.50589], 'zoom': 16.59}
+2021-06-23 15:40:37,994 server_data.py[line:385] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}
+2021-06-23 15:40:38,003 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 15:40:39,196 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:40:39,490 server_data.py[line:459] INFO {'refresh_setting ': {'mapId': '1397858718729355265', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-06-23 15:40:43,605 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 15:40:44,218 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:40:44,971 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.523897, 30.505408]], 'zoom': 17, 'meter_pix': 1.2322106444228136, 'back_home': 0, 'fix_point': None}
+2021-06-23 15:40:45,085 server_data.py[line:349] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.523897, 30.505408]], 'path_points': [[114.523886, 30.505409]]}
+2021-06-23 15:40:49,237 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:40:51,917 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': None, 'b_draw': 1, 'headlight': None, 'audio_light': None, 'side_light': None}
+2021-06-23 15:40:54,242 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 1, 'b_draw': 1, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:40:59,274 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 1, 'b_draw': 1, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:41:04,277 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 1, 'b_draw': 1, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:43:47,497 server_data.py[line:534] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,521 server_data.py[line:534] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,527 server_data.py[line:192] INFO Connected with result code:  01
+2021-06-23 15:43:47,533 server_data.py[line:534] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,598 server_data.py[line:534] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,610 server_data.py[line:534] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,616 server_data.py[line:534] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,634 server_data.py[line:534] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,646 server_data.py[line:534] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,658 server_data.py[line:534] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,676 server_data.py[line:534] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,694 server_data.py[line:534] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,712 server_data.py[line:534] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,748 server_data.py[line:534] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,772 server_data.py[line:534] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,790 server_data.py[line:534] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,807 server_data.py[line:534] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:47,819 server_data.py[line:534] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 15:43:52,485 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:43:54,258 server_data.py[line:459] INFO {'refresh_setting ': {'info_type': 1}}
+2021-06-23 15:43:54,294 server_data.py[line:399] INFO {'base_setting ': {'info_type': 1}}
+2021-06-23 15:43:54,400 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 15:43:57,486 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:43:58,790 server_data.py[line:277] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.524021, 30.505896], 'zoom': 17.2}
+2021-06-23 15:43:59,397 server_data.py[line:385] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}
+2021-06-23 15:43:59,433 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 15:43:59,825 server_data.py[line:459] INFO {'refresh_setting ': {'mapId': '1397858718729355265', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-06-23 15:44:02,499 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:44:04,294 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 15:44:05,227 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.523619, 30.505871]], 'zoom': 17, 'meter_pix': 0.8958024631400212, 'back_home': 0, 'fix_point': None}
+2021-06-23 15:44:05,316 server_data.py[line:349] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.523619, 30.505871]], 'path_points': [[114.523613, 30.505877]]}
+2021-06-23 15:44:07,530 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:44:11,794 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': None, 'b_draw': 1, 'headlight': None, 'audio_light': None, 'side_light': None}
+2021-06-23 15:44:12,525 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 1, 'b_draw': 1, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:44:17,521 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:44:22,557 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:44:27,566 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:44:27,817 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 15:44:30,452 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 270, 'mode': 1}
+2021-06-23 15:44:30,919 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 180, 'mode': 1}
+2021-06-23 15:44:31,226 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 90, 'mode': 1}
+2021-06-23 15:44:32,569 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:44:35,149 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.524189, 30.505267]], 'zoom': 17, 'meter_pix': 0.8958024631400212, 'back_home': 0, 'fix_point': None}
+2021-06-23 15:44:35,203 server_data.py[line:349] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.524189, 30.505267]], 'path_points': [[114.524182, 30.505276]]}
+2021-06-23 15:44:37,584 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:44:42,562 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:44:46,242 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.524714, 30.505541]], 'zoom': 17, 'meter_pix': 0.8958024631400212, 'back_home': 0, 'fix_point': None}
+2021-06-23 15:44:46,395 server_data.py[line:349] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.524714, 30.505541]], 'path_points': [[114.524708, 30.505544]]}
+2021-06-23 15:44:47,593 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:44:52,622 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:44:57,605 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:44:59,382 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 15:45:02,624 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:45:07,680 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:45:12,665 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:45:17,680 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:45:18,400 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 15:45:22,699 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:45:27,695 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:45:29,008 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 15:45:32,740 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:45:37,732 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:45:38,020 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.524208, 30.504976], [114.524854, 30.504743]], 'zoom': 17, 'meter_pix': 0.8958024631400212, 'back_home': False, 'fix_point': None}
+2021-06-23 15:45:38,083 server_data.py[line:349] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.524208, 30.504976], [114.524854, 30.504743]], 'path_points': [[114.524204, 30.50498], [114.524848, 30.504749]]}
+2021-06-23 15:45:42,750 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:45:47,781 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:45:52,757 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:45:57,779 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:46:02,773 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:46:07,790 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 15:46:12,821 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:17:13,211 server_data.py[line:534] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,223 server_data.py[line:534] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,229 server_data.py[line:192] INFO Connected with result code:  01
+2021-06-23 17:17:13,247 server_data.py[line:534] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,265 server_data.py[line:534] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,277 server_data.py[line:534] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,283 server_data.py[line:534] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,295 server_data.py[line:534] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,313 server_data.py[line:534] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,343 server_data.py[line:534] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,355 server_data.py[line:534] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,367 server_data.py[line:534] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,385 server_data.py[line:534] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,415 server_data.py[line:534] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,427 server_data.py[line:534] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,433 server_data.py[line:534] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,451 server_data.py[line:534] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:13,463 server_data.py[line:534] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380a', 'qos': 0}
+2021-06-23 17:17:18,200 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:17:23,226 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:17:25,778 server_data.py[line:459] INFO {'refresh_setting ': {'info_type': 1}}
+2021-06-23 17:17:25,808 server_data.py[line:399] INFO {'base_setting ': {'info_type': 1}}
+2021-06-23 17:17:25,880 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '喻家湖', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 17:17:28,266 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:17:28,667 server_data.py[line:277] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380a', 'lng_lat': [114.523916, 30.505593], 'zoom': 16.64}
+2021-06-23 17:17:29,623 server_data.py[line:385] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380a', 'mapId': '1397858718729355265'}
+2021-06-23 17:17:29,640 server_data.py[line:399] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道书画路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-23 17:17:31,633 server_data.py[line:459] INFO {'refresh_setting ': {'mapId': '1397858718729355265', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-06-23 17:17:33,266 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:17:33,802 server_data.py[line:311] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380a', 'target_lng_lat': [[114.523697, 30.50512]], 'zoom': 17, 'meter_pix': 1.3206327422108977, 'back_home': 0, 'fix_point': None}
+2021-06-23 17:17:33,949 server_data.py[line:349] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380a', 'sampling_points': [[114.523697, 30.50512]], 'path_points': [[114.52369, 30.505121]]}
+2021-06-23 17:17:38,271 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:17:43,265 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:17:47,283 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 17:17:48,323 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:17:53,313 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:17:55,602 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 17:17:57,765 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 17:17:58,339 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:17:59,429 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 17:18:01,218 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 17:18:01,664 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 17:18:01,833 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 17:18:02,042 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': -1, 'mode': None}
+2021-06-23 17:18:03,314 server_data.py[line:234] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380a', 'control_move_direction': 0, 'mode': 1}
+2021-06-23 17:18:03,379 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:18:08,404 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:18:13,415 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:18:18,411 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:18:23,453 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:18:28,463 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:18:33,470 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:18:38,462 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:18:43,478 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:18:48,509 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:18:53,521 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:18:58,547 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:19:03,546 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:19:08,578 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:19:13,570 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:19:18,576 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:19:23,580 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:19:28,610 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:19:33,629 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:19:38,627 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:19:43,639 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:19:48,658 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:19:53,664 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:19:58,678 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:20:03,701 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:20:08,713 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:20:13,733 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:20:18,755 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:20:23,746 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:20:28,749 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:20:33,774 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:20:38,791 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:20:43,802 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:20:48,824 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:20:53,830 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:20:58,881 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:21:03,845 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:21:08,853 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-06-23 17:21:13,852 server_data.py[line:259] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}

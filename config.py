@@ -4,7 +4,7 @@ import json
 import os
 import platform
 import ship_code_config
-
+import time
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
@@ -699,7 +699,7 @@ pin_gps_baud = 9600
 pin_gps_tx = 10
 pin_gps_rx = 9
 # 是否使用遥控器
-b_use_remote_control = True
+b_use_remote_control = False
 # usv a 遥控器  水平是1通道   垂直是2通道
 # 水平
 channel_1_pin = 5
@@ -760,7 +760,7 @@ if home_debug:
 else:
     use_shape_theta_type = 1
 # 是否含有抽水泵
-b_draw = 1
+b_draw = 0
 # 测试在家调试也发送数据
 debug_send_detect_data = 0
 
@@ -773,6 +773,9 @@ class WaterType(enum.Enum):
     TD = 4
     NH3_NH4 = 5
 
+
+if current_platform == CurrentPlatform.pi:
+    time.sleep(start_sleep_time)
 
 if __name__ == '__main__':
     write_setting(True, True, True, True)

@@ -11,18 +11,14 @@ import paho.mqtt.client as mqtt
 import time
 import json
 import requests
-
+import socket
 
 class ServerData:
     def __init__(self, logger,
                  topics):
         self.logger = logger
         self.topics = topics
-        # self.http_send_get_obj = HttpSendGet()
-        self.mqtt_send_get_obj = MqttSendGet(self.logger)
-        # 启动后自动订阅话题
-        for topic_, qos_ in self.topics:
-            self.mqtt_send_get_obj.subscribe_topic(topic=topic_, qos=qos_)
+        self.mqtt_send_get_obj = MqttSendGet(self.logger,topics = topics)
 
     # 发送数据到服务器http
     def send_server_http_data(self, request_type, data, url):
@@ -76,10 +72,13 @@ class MqttSendGet:
     def __init__(
             self,
             logger,
+            topics,
             mqtt_host=config.mqtt_host,
             mqtt_port=config.mqtt_port,
             client_id=config.ship_code
+
     ):
+        self.topics = topics
         self.logger = logger
         self.mqtt_host = mqtt_host
         self.mqtt_port = mqtt_port
@@ -99,14 +98,6 @@ class MqttSendGet:
         self.mqtt_client.on_publish = self.on_publish_callback
         # self.mqtt_client.on_subscribe = self.on_message_come
         self.mqtt_client.on_message = self.on_message_callback
-        while True:
-            try:
-                self.mqtt_connect()
-                break
-            except Exception:
-                logger.error('链接mqtt失败')
-                time.sleep(3)
-                continue
         # 湖泊初始点击点信息
         self.pool_click_lng_lat = None
         self.pool_click_zoom = None
@@ -127,6 +118,7 @@ class MqttSendGet:
         self.sampling_points_status = []
         self.sampling_points_gps = []
         self.path_planning_points_gps = []
+        self.keep_point = 0
         # 船当前经纬度 给服务器路径规划使用
         self.current_lng_lat = None
         # 船返航点经纬度 给服务器路径规划使用
@@ -154,7 +146,7 @@ class MqttSendGet:
         # 舷灯 1 允许打开舷灯 没有该键表示不打开
         self.side_light = 1
         # 状态灯
-        self.status_light = 3
+        self.status_light = 2
         # 启动还是停止
         self.b_start = 0
         # 基础设置数据
@@ -179,16 +171,25 @@ class MqttSendGet:
         # 定点和返航
         self.back_home = 0
         self.fix_point = 0
+        self.is_connected = 0
 
     # 连接MQTT服务器
     def mqtt_connect(self):
-        self.mqtt_client.connect(self.mqtt_host, self.mqtt_port, 60)
-        # 开启接收循环，直到程序终止
-        self.mqtt_client.loop_start()
+        if not self.is_connected:
+            try:
+                self.mqtt_client.connect(self.mqtt_host, self.mqtt_port, 30)
+                # 开启接收循环，直到程序终止
+                self.mqtt_client.loop_start()
+                self.is_connected = 1
+                # 启动后自动订阅话题
+                for topic_, qos_ in self.topics:
+                    self.subscribe_topic(topic=topic_, qos=qos_)
+            except TimeoutError:
+                return
 
     # 建立连接时候回调
     def on_connect_callback(self, client, userdata, flags, rc):
-        self.logger.info('Connected with result code:  ' + str(rc))
+        self.logger.info('Connected with result code:  ' + str(rc)+str(self.is_connected))
 
     # 发布消息回调
     def on_publish_callback(self, client, userdata, mid):
@@ -199,7 +200,6 @@ class MqttSendGet:
     def on_message_callback(self, client, userdata, msg):
         try:
             # 回调更新控制数据
-            # 判断topic
             topic = msg.topic
             self.last_command_time = time.time()
             # 处理控制数据
@@ -218,13 +218,20 @@ class MqttSendGet:
                         self.row_gap = 0
                 self.last_control_move_direction = self.control_move_direction
                 self.control_move_direction = int(control_data.get('move_direction'))
-                # if self.control_move_direction == -1:
-                #     self.sampling_points = []
-                #     self.path_planning_points = []
-                #     self.sampling_points_status = []
-                #     self.sampling_points_gps = []
+                nwse_dict = {
+                    0: 10,
+                    90: 190,
+                    180: 1180,
+                    270: 1270,
+                }
+                if control_data.get('mode'):
+                    if int(control_data.get('mode')) == 1:
+                        pass
+                    elif int(control_data.get('mode')) == 2:
+                        self.control_move_direction = nwse_dict[self.control_move_direction]
                 self.logger.info({'topic': topic,
-                                  'control_move_direction': control_data.get('move_direction'),
+                                  'control_move_direction': self.control_move_direction,
+                                  'mode': control_data.get('mode')
                                   })
 
             # 处理开关信息
@@ -336,6 +343,7 @@ class MqttSendGet:
                 # 存储目标点到达状态
                 self.sampling_points_status = [0] * len(self.sampling_points)
                 self.path_planning_points = path_planning_data.get('path_points')
+                self.keep_point = 1
                 self.logger.info({'topic': topic,
                                   'sampling_points': path_planning_data.get('sampling_points'),
                                   'path_points': path_planning_data.get('path_points'),
@@ -525,27 +533,3 @@ class MqttSendGet:
         """
         self.logger.info({'topic': topic, 'qos': qos})
         self.mqtt_client.subscribe(topic, qos)
-
-
-if __name__ == '__main__':
-    # obj = ServerData()
-    logger = log.LogHandler('server_data_test')
-    mqtt_obj = MqttSendGet(logger)
-    data_define_obj = DataDefine()
-    # 启动后自动订阅话题
-    for topic, qos in data_define_obj.topics:
-        logger.info(topic + '    ' + str(qos))
-        mqtt_obj.subscribe_topic(topic=topic, qos=qos)
-    # http发送检测数据给服务器
-    while True:
-        mqtt_obj.publish_topic(
-            topic='status_data_%s' %
-                  (config.ship_code),
-            data=data_define.init_ststus_data,
-            qos=1)
-        mqtt_obj.publish_topic(
-            topic='detect_data_%s' %
-                  (config.ship_code),
-            data=data_define.init_detect_data,
-            qos=1)
-        time.sleep(config.pi2mqtt_interval)
