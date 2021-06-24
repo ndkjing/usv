@@ -3,6 +3,7 @@ import json
 import re
 import enum
 import config
+
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " \
              "AppleWebKit/537.36 (KHTML, like Gecko) " \
              "Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362"
@@ -18,6 +19,7 @@ class CrawlWaterData:
     """
     抓取水质数据
     """
+
     def __init__(self):
         self.base_url = 'http://106.37.208.243:8068/GJZ/Ajax/Publish.ashx?PageIndex=1&PageSize=60&action=getRealDatas&AreaID='
 
@@ -28,17 +30,17 @@ class CrawlWaterData:
         :return:
         """
         return_data_dict = {}
-        if area_id is None or not isinstance(area_id,int) or area_id>999999 or area_id>100000:
+        if area_id is None or not isinstance(area_id, int) or area_id > 999999 or area_id > 100000:
             area_id = 420100
-        url = self.base_url+str(area_id)
+        url = self.base_url + str(area_id)
         print('请求水质数据')
         html = requests.post(url, headers=headers)
         json_data = json.loads(html.content)
         if json_data.get('tbody'):
-            return_data_dict.update({'省份':json_data.get('tbody')[0][0]})
-            return_data_dict.update({'流域':json_data.get('tbody')[0][1]})
-            city = re.findall(':(..市)',json_data.get('tbody')[0][2])[0]
-            return_data_dict.update({'所属市':city})
+            return_data_dict.update({'省份': json_data.get('tbody')[0][0]})
+            return_data_dict.update({'流域': json_data.get('tbody')[0][1]})
+            city = re.findall(':(..市)', json_data.get('tbody')[0][2])[0]
+            return_data_dict.update({'所属市': city})
         wt_list = []
         pH_list = []
         DO_list = []
@@ -46,20 +48,21 @@ class CrawlWaterData:
         TD_list = []
         NH3NH4_list = []
         for data_list in json_data.get('tbody'):
-            print(re.findall('>(.*)<',data_list[5]))
-            if len(re.findall('>(.*)<',data_list[5]))<1:
+            print(re.findall('>(.*)<', data_list[5]))
+            if len(re.findall('>(.*)<', data_list[5])) < 1:
                 continue
-            wt = float(re.findall('>(.*)<',data_list[5])[0])
-            pH = float(re.findall('>(.*)<',data_list[6])[0])
-            DO = float(re.findall('>(.*)<',data_list[7])[0])
-            EC = float(re.findall('>(.*)<',data_list[8])[0])
-            TD = float(re.findall('>(.*)<',data_list[9])[0])
-            NH3NH4 = float(re.findall('>(.*)<',data_list[11])[0])
+            wt = float(re.findall('>(.*)<', data_list[5])[0])
+            pH = float(re.findall('>(.*)<', data_list[6])[0])
+            DO = float(re.findall('>(.*)<', data_list[7])[0])
+            EC = float(re.findall('>(.*)<', data_list[8])[0])
+            TD = float(re.findall('>(.*)<', data_list[9])[0])
+            # NH3NH4 = float(re.findall('>(.*)<', data_list[11])[0])
             wt_list.append(wt)
             pH_list.append(pH)
             DO_list.append(DO)
             EC_list.append(EC)
             TD_list.append(TD)
+            NH3NH4 = 0.413
             NH3NH4_list.append(NH3NH4)
 
         return_data_dict.update({config.WaterType.wt: wt_list})
@@ -69,6 +72,7 @@ class CrawlWaterData:
         return_data_dict.update({config.WaterType.TD: TD_list})
         return_data_dict.update({config.WaterType.NH3_NH4: NH3NH4_list})
         return return_data_dict
+
 
 if __name__ == '__main__':
     obj = CrawlWaterData()

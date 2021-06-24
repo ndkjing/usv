@@ -1,15 +1,15 @@
 import os
 import sys
 import threading
+import pigpio
+import time
+import copy
 
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root_dir)
 from utils import log
 from drivers import pi_softuart
 import config
-import pigpio
-import time
-import copy
 
 logger = log.LogHandler('pi_log')
 
@@ -29,7 +29,8 @@ class PiMain:
             try:
                 self.pi = pigpio.pi()
                 break
-            except Exception:
+            except Exception as e:
+                print({'error': e})
                 time.sleep(5)
                 continue
         # gpio脚的编号顺序依照Broadcom number顺序，请自行参照gpio引脚图里面的“BCM编码”，
@@ -61,20 +62,20 @@ class PiMain:
             self.gps_obj = self.get_gps_obj()
             self.compass_obj = self.get_compass_obj()
             self.weite_compass_obj = self.get_weite_compass_obj()
-        if config.b_pin_stc and config.current_platform == config.CurrentPlatform.pi:
-            self.stc_obj = self.get_stc_obj()
-        if config.b_laser and config.current_platform == config.CurrentPlatform.pi:
-            self.laser_obj = self.get_laser_obj()
-        if config.b_sonar and config.current_platform == config.CurrentPlatform.pi:
-            self.sonar_obj = self.get_sonar_obj()
-        if config.b_millimeter_wave and config.current_platform == config.CurrentPlatform.pi:
-            self.millimeter_wave_obj = self.get_millimeter_wave_obj()
-        self.remote_control_obj = self.get_remote_control_obj()
+            if config.b_pin_stc:
+                self.stc_obj = self.get_stc_obj()
+            if config.b_laser:
+                self.laser_obj = self.get_laser_obj()
+            if config.b_sonar:
+                self.sonar_obj = self.get_sonar_obj()
+            if config.b_millimeter_wave:
+                self.millimeter_wave_obj = self.get_millimeter_wave_obj()
+            self.remote_control_obj = self.get_remote_control_obj()
         # GPS
         self.lng_lat = None
         # GPS 误差
         self.lng_lat_error = None
-        # 罗盘角度
+        # 罗盘角度   还没收到罗盘数据则为NOne  收到后正常为罗盘值 ** 当罗盘失效后为 -1
         self.theta = None
         self.last_theta = None
         # 罗盘提示消息
@@ -107,15 +108,19 @@ class PiMain:
         self.start_draw = 0
         # 遥控器控制数据
         self.remote_control_data = []
+        # 求角速度     逆时针方向角速度为正值
+        self.theta_list = []  # (时间，角度)
+        self.angular_velocity = None
+        self.last_angular_velocity = None
 
     # 获取串口对象
     @staticmethod
-    def get_com_obj(port, baud, logger=None, timeout=0.4):
+    def get_com_obj(port, baud, logger_=None, timeout=0.4):
         return com_data.ComData(
             port,
             baud,
             timeout=timeout,
-            logger=logger)
+            logger=logger_)
 
     def get_millimeter_wave_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.millimeter_wave_rx, tx_pin=config.millimeter_wave_tx,
@@ -123,7 +128,7 @@ class PiMain:
 
     def get_compass_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx,
-                                      baud=config.pin_compass_baud)
+                                      baud=config.pin_compass_baud, time_out=0.1)
 
     def get_weite_compass_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=21, tx_pin=20,
@@ -154,6 +159,7 @@ class PiMain:
         :return:
         """
         data = self.stc_obj.read_stc_data()
+        return data
 
     def get_sonar_data(self):
         """
@@ -164,23 +170,32 @@ class PiMain:
         return deep
 
     # 罗盘角度滤波
-    def compass_filter(self, theta):
-        if theta:
+    def compass_filter(self, theta_):
+        current_time = time.time()
+        if theta_:
+            if len(self.theta_list) >= 20:
+                self.theta_list.pop(0)
+            self.theta_list.append((current_time, theta_))
+            if len(self.theta_list) >= 2:
+                self.angular_velocity = (self.theta_list[-1][1] - self.theta_list[-2][1]) / (
+                            self.theta_list[-2][0] - self.theta_list[-2][0])
+                self.last_angular_velocity = self.angular_velocity
             if not self.last_theta:
-                self.last_theta = theta
-                return theta
+                self.last_theta = theta_
+                return_theta = theta_
             else:
-                # if abs(theta-self.last_theta)>180:
-                #     return self.last_theta
-                # else:
-                #     self.last_theta = theta
-                #     return theta
+                if abs(theta_ - self.last_theta) > 180:
+                    return_theta = self.last_theta
+                else:
+                    self.last_theta = theta_
+                    return_theta = theta_
                 self.last_theta = theta
-                return theta
         else:
-            return self.last_theta
+            self.angular_velocity = self.last_angular_velocity
+            return_theta = self.last_theta
+        return return_theta
 
-    def get_compass_data(self):
+    def get_compass_data(self, debug=False):
         if config.current_platform == config.CurrentPlatform.pi:
             # 记录上一次发送数据
             last_send_data = None
@@ -208,6 +223,8 @@ class PiMain:
                     theta_ = self.compass_filter(theta_)
                     if theta_:
                         self.theta = theta_
+                if debug:
+                    print('time', time.time(), self.theta, self.angular_velocity)
 
     def get_weite_compass_data(self):
         if config.current_platform == config.CurrentPlatform.pi:
@@ -362,10 +379,9 @@ class PiMain:
         self.set_pwm(config.stop_pwm, config.stop_pwm)
         time.sleep(config.motor_init_time)
 
-    def set_pwm(self, set_left_pwm, set_right_pwm, pwm_timeout=None):
+    def set_pwm(self, set_left_pwm, set_right_pwm):
         """
         设置pwm波数值
-        :param pwm_timeout:
         :param set_left_pwm:
         :param set_right_pwm:
         :return:
@@ -751,14 +767,13 @@ if __name__ == '__main__':
     loop_change_pwm_thread.start()
     while True:
         try:
-            # 已经使用w,a,s,d,q,  r,t  ,y,u,i,o,p,  f
-            # w,a,s,d 为前后左右，q为停止 按键后需要按回车才能生效
+            # 按键后需要按回车才能生效
             print('w,a,s,d 为前后左右，q为停止\n'
                   'r,t 左右抽水泵\n'
                   'y,u,i,o,p 摄像头舵机 y回中 u右  i左  o上   p下\n'
                   'f  测距\n'
                   'g  获取gps数据\n'
-                  'h  获取罗盘数据\n'
+                  'h  单次获取罗盘数据  h1 持续读取罗盘数据求角速度\n'
                   'j  声光报警器  j1 开 j0关\n '
                   'k  左舷灯 k1 开 k0关\n '
                   'l  右舷灯  l1 开 l0关\n '
@@ -768,12 +783,12 @@ if __name__ == '__main__':
                   'c  声呐数据\n'
                   'b  毫米波数据\n'
                   'n  距离字典\n'
-                  'A0 A1  关闭和开启水泵'
-                  'B0 B1  关闭和开启舷灯'
-                  'C0 C1  关闭和开启前面大灯'
-                  'D0 D1  关闭和开启声光报警器'
-                  'E0 E1 E2 E3 E4  状态灯'
-                  'R 遥控器'
+                  'A0 A1  关闭和开启水泵\n'
+                  'B0 B1  关闭和开启舷灯\n'
+                  'C0 C1  关闭和开启前面大灯\n'
+                  'D0 D1  关闭和开启声光报警器\n'
+                  'E0 E1 E2 E3 E4  状态灯\n'
+                  'R 遥控器\n'
                   )
             key_input = input('please input:')
             # 前 后 左 右 停止  右侧电机是反桨叶 左侧电机是正桨叶
@@ -856,14 +871,18 @@ if __name__ == '__main__':
                 # laser_distance = pi_main_obj.laser_obj.read_laser()
                 pi_main_obj.get_distance_dict()
             elif key_input.startswith('h'):
-                key_input = input('input:  C0  开始  C1 结束 其他为读取 >')
-                if key_input == 'C0':
-                    theta = pi_main_obj.compass_obj.read_compass(send_data='C0', debug=True)
-                elif key_input == 'C1':
-                    theta = pi_main_obj.compass_obj.read_compass(send_data='C1', debug=True)
-                else:
-                    theta = pi_main_obj.compass_obj.read_compass(debug=True)
-                print('theta', theta)
+                if len(key_input) == 1:
+                    key_input = input('input:  C0  开始  C1 结束 其他为读取 >')
+                    if key_input == 'C0':
+                        theta_c = pi_main_obj.compass_obj.read_compass(send_data='C0', debug=True)
+                    elif key_input == 'C1':
+                        theta_c = pi_main_obj.compass_obj.read_compass(send_data='C1', debug=True)
+                    else:
+                        theta_c = pi_main_obj.compass_obj.read_compass(debug=True)
+                    print('theta_c', theta_c)
+                elif len(key_input) > 1 and key_input[1]==1:
+                    pi_main_obj.get_compass_data(debug=True)
+
             elif key_input.startswith('H'):
                 key_input = input('input:  校准 s  开始  e 结束  a 设置自动回传  i 初始化 其他为读取 >')
                 if key_input == 's':

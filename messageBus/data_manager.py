@@ -66,7 +66,7 @@ class LightStatus(enum.Enum):
     """
     red = 0
     green = 1
-    blue = 2
+    yellow = 2
     buzzer = 3
 
 
@@ -173,7 +173,7 @@ class DataManager:
         self.last_audio_light = 0
         self.last_status_light = 0
         # 状态灯
-        self.light_status = LightStatus.red
+        self.light_status = LightStatus.yellow
         if config.current_platform == config.CurrentPlatform.pi:
             self.pi_main_obj = pi_main.PiMain()
             # 串口数据收发对象
@@ -199,8 +199,6 @@ class DataManager:
                 self.use_true_gps = 1
         # 当前路径平滑搜索列表
         self.search_list = []
-        # 到达点或者点击抽水
-        self.b_start_sample = 0  # 是否需要开始抽水  0关闭  1 开始
         self.b_sampling = 0  # 在抽水中  0没有在抽水  1 在抽水中   2 抽水结束
         # 是否到达目标点
         self.b_arrive_point = 0
@@ -208,8 +206,6 @@ class DataManager:
         self.direction = -1
         # 切换到任务状态前的状态
         self.last_ship_status = ShipStatus.idle
-        # 记录自动模式被暂停
-        self.keep_d = -2
         #  # 如果采样点长时间没到达则跳过
         self.point_arrive_start_time = None
         # 是否需要抓取水质数据
@@ -440,6 +436,7 @@ class DataManager:
         status_change_list = {
             (ShipStatus.idle, ShipStatus.computer_control): 0,
             (ShipStatus.idle, ShipStatus.computer_auto): 24,
+            (ShipStatus.idle, ShipStatus.backhome_network): 26,
             (ShipStatus.idle, ShipStatus.remote_control): 1,
             (ShipStatus.computer_control, ShipStatus.tasking): 2,
             (ShipStatus.computer_control, ShipStatus.remote_control): 3,
@@ -483,7 +480,6 @@ class DataManager:
         elif status_change_index == 2:
             # 将船设置停下
             self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
-            self.b_start_sample = 1
         # 从电脑手动到遥控器手动
         elif status_change_index == 3:
             self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
@@ -506,10 +502,9 @@ class DataManager:
         # 从遥控器控制到任务执行
         elif status_change_index == 8:
             self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
-            self.b_start_sample = 1
         # 从任务执行到遥控器控制
         elif status_change_index == 9:
-            self.b_start_sample = 0
+            pass
         # 从任务执行到电脑手动
         elif status_change_index == 10:
             self.server_data_obj.mqtt_send_get_obj.b_draw = 0
@@ -796,6 +791,7 @@ class DataManager:
         # 搜索最临近的路点
         distance_list = []
         start_index = self.smooth_path_lng_lat_index[index_]
+        print('self.smooth_path_lng_lat, index_,',self.smooth_path_lng_lat_index, index_)
         if index_ == 0:
             self.search_list = copy.deepcopy(self.smooth_path_lng_lat[:start_index])
         else:
@@ -1098,13 +1094,6 @@ class DataManager:
                 self.pi_main_obj.set_pwm(set_left_pwm=remote_left_pwm, set_right_pwm=remote_right_pwm)
             # 电脑自动
             elif self.ship_status == ShipStatus.computer_auto:
-                # 点击暂停后暂停住
-                if self.keep_d == -1:
-                    if not config.home_debug:
-                        self.pi_main_obj.stop()
-                    else:
-                        time.sleep(1)
-                        continue
                 if b_log_points:
                     self.logger.info({'点击地点': self.server_data_obj.mqtt_send_get_obj.path_planning_points})
                 # 判断是否是寻点模式点了寻点但是还没点开始
@@ -1162,39 +1151,35 @@ class DataManager:
                     print('self.server_data_obj.mqtt_send_get_obj.sampling_points_status',
                           self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
                 while self.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(0) > 0:
-                    for index, sampling_point_gps in enumerate(
-                            self.server_data_obj.mqtt_send_get_obj.sampling_points_gps):
-                        if self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] == 1:
-                            continue
-                        # 计算下一个目标点经纬度
-                        if config.path_plan_type:
-                            next_lng_lat = self.calc_target_lng_lat(index)
-                            # 如果当前点靠近采样点指定范围就停止并采样
-                            sample_distance = lng_lat_calculate.distanceFromCoordinate(
-                                next_lng_lat[0],
-                                next_lng_lat[1],
-                                sampling_point_gps[0],
-                                sampling_point_gps[1])
-                            if sample_distance < config.forward_see_distance:
-                                b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
-                                                                             b_force_arrive=True)
-                            else:
-                                b_arrive_sample = self.points_arrive_control(next_lng_lat, sampling_point_gps,
-                                                                             b_force_arrive=False)
-                        else:
+                    index = self.server_data_obj.mqtt_send_get_obj.sampling_points_status.index(0)
+                    sampling_point_gps = self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[index]
+                    # 计算下一个目标点经纬度
+                    if config.path_plan_type:
+                        next_lng_lat = self.calc_target_lng_lat(index)
+                        # 如果当前点靠近采样点指定范围就停止并采样
+                        sample_distance = lng_lat_calculate.distanceFromCoordinate(
+                            next_lng_lat[0],
+                            next_lng_lat[1],
+                            sampling_point_gps[0],
+                            sampling_point_gps[1])
+                        if sample_distance < config.forward_see_distance:
                             b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
                                                                          b_force_arrive=True)
-                        if b_arrive_sample:
-                            print('b_arrive_sample', b_arrive_sample)
-                        if b_arrive_sample:
-                            # 更新目标点提示消息
-                            self.b_arrive_point = 1
-                            self.point_arrive_start_time = None
-                            self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] = 1
-                            self.path_info = [index + 1, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
-                            time.sleep(1)
-                        if self.ship_status != ShipStatus.computer_auto:
-                            break
+                        else:
+                            b_arrive_sample = self.points_arrive_control(next_lng_lat, sampling_point_gps,
+                                                                         b_force_arrive=False)
+                    else:
+                        b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
+                                                                     b_force_arrive=True)
+                    if b_arrive_sample:
+                        print('b_arrive_sample', b_arrive_sample)
+                    if b_arrive_sample:
+                        # 更新目标点提示消息
+                        self.b_arrive_point = 1
+                        self.point_arrive_start_time = None
+                        self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] = 1
+                        self.path_info = [index + 1, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
+                        time.sleep(1)
                     if self.ship_status != ShipStatus.computer_auto:
                         break
             # 执行任务中
@@ -1661,11 +1646,13 @@ class DataManager:
                       data=switch_data,
                       qos=0)
             if not self.b_check_get_water_data:
-                try:
-                    data_valid.get_current_water_data()
-                    self.b_check_get_water_data = 1
-                except Exception as e:
-                    self.logger.error({'error':e})
+                data_valid.get_current_water_data()
+                self.b_check_get_water_data = 1
+                # try:
+                #     data_valid.get_current_water_data()
+                #     self.b_check_get_water_data = 1
+                # except Exception as e:
+                #     self.logger.error({'error':e})
 
 
 if __name__ == '__main__':
