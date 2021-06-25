@@ -166,9 +166,9 @@ def update_enum_type(data_dict,b_map_inv=True):
     return return_data_dict
 
 
-def run_crawl_water_data():
+def run_crawl_water_data(area_id=None):
     water_crawl_obj = crawl_water_data.CrawlWaterData()
-    data_dict = water_crawl_obj.get_data_dict()
+    data_dict = water_crawl_obj.get_data_dict(area_id=area_id)
     str_date = time.strftime("%Y_%m_%d", time.localtime())
     if data_dict:
         save_data_dict = copy.deepcopy(data_dict)
@@ -180,7 +180,7 @@ def run_crawl_water_data():
         return water_data_dict
 
 
-def get_current_water_data():
+def get_current_water_data(area_id=None):
     # 如果本地存在且时间为当天则不再重新抓取数据
     str_date = time.strftime("%Y_%m_%d", time.localtime())
     if os.path.exists(config.save_water_data_path):
@@ -189,9 +189,9 @@ def get_current_water_data():
                                                                                                              -2:]:
             data_dict = update_enum_type(save_water_data, b_map_inv=False)
         else:
-            data_dict = run_crawl_water_data()
+            data_dict = run_crawl_water_data(area_id=area_id)
     else:
-        data_dict = run_crawl_water_data()
+        data_dict = run_crawl_water_data(area_id=area_id)
     print('data_dict', data_dict)
     if isinstance(data_dict, dict):
         water_data_dict.update({config.WaterType.wt: {'min_data': min(data_dict[config.WaterType.wt]),

@@ -10,7 +10,7 @@ sys.path.append(root_dir)
 from utils import log
 from drivers import pi_softuart
 import config
-
+from moveControl.pathTrack import simple_pid
 logger = log.LogHandler('pi_log')
 
 
@@ -25,14 +25,7 @@ class PiMain:
         self.pice = 20000
         self.diff = int(20000 / self.pice)
         self.hz = 50
-        while True:
-            try:
-                self.pi = pigpio.pi()
-                break
-            except Exception as e:
-                print({'error': e})
-                time.sleep(5)
-                continue
+        self.pi = pigpio.pi()
         # gpio脚的编号顺序依照Broadcom number顺序，请自行参照gpio引脚图里面的“BCM编码”，
         self.pi.set_PWM_frequency(config.left_pwm_pin, self.hz)  # 设定左侧电机引脚产生的pwm波形的频率为50Hz
         self.pi.set_PWM_frequency(config.right_pwm_pin, self.hz)  # 设定右侧电机引脚产生的pwm波形的频率为50Hz
@@ -54,9 +47,10 @@ class PiMain:
         self.channel_col_input_pwm = 0
         # 当前是否是遥控器控制
         self.b_start_remote = 0
-        self.cb1 = self.pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, self.mycallback)
-        self.cb2 = self.pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, self.mycallback)
-        self.cb3 = self.pi.callback(config.channel_remote_pin, pigpio.EITHER_EDGE, self.mycallback)
+        if config.b_use_remote_control:
+            self.cb1 = self.pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, self.mycallback)
+            self.cb2 = self.pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, self.mycallback)
+            self.cb3 = self.pi.callback(config.channel_remote_pin, pigpio.EITHER_EDGE, self.mycallback)
 
         if config.current_platform == config.CurrentPlatform.pi:
             self.gps_obj = self.get_gps_obj()
@@ -82,21 +76,23 @@ class PiMain:
         self.compass_notice_info = ''
         # 距离矩阵
         self.distance_dict = {}
-        self.field_of_view = 90  # 视场角
-        self.view_cell = 5  # 量化角度单元格
+        self.field_of_view = config.field_of_view  # 视场角
+        self.view_cell = config.view_cell  # 量化角度单元格
         self.cell_size = int(self.field_of_view / self.view_cell)
         self.obstacle_list = [0] * self.cell_size  # 自动避障列表
-        self.obstacle_list = [0] * self.cell_size  #
+        self.control_obstacle_list = [0] * self.cell_size  #
         # 设置为GPIO输出模式 输出高低电平
+        """
         self.pi.set_mode(config.side_left_gpio_pin, pigpio.OUTPUT)
         self.pi.set_mode(config.side_right_gpio_pin, pigpio.OUTPUT)
         self.pi.set_mode(config.headlight_gpio_pin, pigpio.OUTPUT)
         self.pi.set_mode(config.audio_light_alarm_gpio_pin, pigpio.OUTPUT)
         self.pi.set_mode(config.draw_left_gpio_pin, pigpio.OUTPUT)
         self.pi.set_mode(config.draw_right_gpio_pin, pigpio.OUTPUT)
+        """
         # 云台舵机角度
         self.pan_angle_pwm = 1500
-        self.tilt_angle = 1500
+        self.tilt_angle_pwm = 1500
         # 记录继电器输出电平 1 高电平 0 低电平
         self.left_motor_output = 0
         self.right_motor_output = 0
@@ -112,6 +108,7 @@ class PiMain:
         self.theta_list = []  # (时间，角度)
         self.angular_velocity = None
         self.last_angular_velocity = None
+        self.pid_obj = simple_pid.SimplePid()
 
     # 获取串口对象
     @staticmethod
@@ -135,6 +132,10 @@ class PiMain:
                                       baud=9600)
 
     def get_remote_control_obj(self):
+        """
+        遥控器lora串口
+        :return:
+        """
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=21, tx_pin=20,
                                       baud=9600, time_out=0.2)
 
@@ -176,9 +177,9 @@ class PiMain:
             if len(self.theta_list) >= 20:
                 self.theta_list.pop(0)
             self.theta_list.append((current_time, theta_))
-            if len(self.theta_list) >= 2:
-                self.angular_velocity = (self.theta_list[-1][1] - self.theta_list[-2][1]) / (
-                            self.theta_list[-2][0] - self.theta_list[-2][0])
+            if len(self.theta_list) >= 4:
+                self.angular_velocity = round((self.theta_list[-1][1] - self.theta_list[-4][1]) / (
+                        self.theta_list[-1][0] - self.theta_list[-4][0]), 1)
                 self.last_angular_velocity = self.angular_velocity
             if not self.last_theta:
                 self.last_theta = theta_
@@ -189,7 +190,7 @@ class PiMain:
                 else:
                     self.last_theta = theta_
                     return_theta = theta_
-                self.last_theta = theta
+                self.last_theta = theta_
         else:
             self.angular_velocity = self.last_angular_velocity
             return_theta = self.last_theta
@@ -304,8 +305,6 @@ class PiMain:
         return remote_left_pwm, remote_right_pwm
 
     def mycallback(self, gpio, level, tick):
-        # if int(gpio) == int(config.channel_1_pin):
-        # print('gpio', gpio)
         if level == 0:
             if int(gpio) == int(config.channel_1_pin):
                 self.tick_0[0] = tick
@@ -366,16 +365,45 @@ class PiMain:
             right_pwm = 1300
         self.set_pwm(left_pwm, right_pwm)
 
+    def turn_angular_velocity(self, is_left=1):
+        """
+        :param is_left 是否是左转  1 是左转   0 右转
+        固定速度转向 config.angular_velocity
+        :return:
+        """
+        if self.angular_velocity:
+            if is_left:
+                angular_velocity_error = self.angular_velocity - config.angular_velocity
+            else:
+                angular_velocity_error = self.angular_velocity - (-1*config.angular_velocity)
+            left_pwm, right_pwm = self.pid_obj.pid_turn_pwm(angular_velocity_error)
+        else:
+            if is_left:
+                left_pwm, right_pwm = 1700, 1300
+            else:
+                left_pwm, right_pwm = 1300, 1700
+        self.set_pwm(left_pwm, right_pwm)
+
+    def turn_angle(self, angle):
+        """
+        旋转到指定角度
+        :param angle: 0 --360 逆时针为正
+        :return:
+        """
+        angle_error = self.theta-angle
+        left_pwm, right_pwm = self.pid_obj.pid_turn_pwm(angle_error)
+        self.set_pwm(left_pwm, right_pwm)
+
     def stop(self):
         self.set_pwm(config.stop_pwm, config.stop_pwm)
 
     def init_motor(self):
         self.set_pwm(config.stop_pwm, config.stop_pwm)
-        time.sleep(1)
-        self.set_pwm(config.stop_pwm + 300, config.stop_pwm + 300)
+        time.sleep(2)
+        self.set_pwm(config.stop_pwm + 200, config.stop_pwm + 200)
         time.sleep(3)
-        # self.set_pwm(config.stop_pwm+200, config.stop_pwm+200)
-        # time.sleep(2)
+        self.set_pwm(config.stop_pwm-200, config.stop_pwm-200)
+        time.sleep(2)
         self.set_pwm(config.stop_pwm, config.stop_pwm)
         time.sleep(config.motor_init_time)
 
@@ -562,6 +590,11 @@ class PiMain:
                 else:
                     b_obstacle = 1
                 self.obstacle_list[obstacle_index] = b_obstacle
+                if distance_average > config.control_obstacle_distance:
+                    b_control_obstacle = 0
+                else:
+                    b_control_obstacle = 1
+                self.control_obstacle_list[obstacle_index] = b_control_obstacle
             if count == max_count - 1:
                 self.obstacle_list = [0] * int(self.field_of_view / self.view_cell)
             if debug:
@@ -626,17 +659,17 @@ class PiMain:
             self.pi.write(config.side_right_gpio_pin, pigpio.HIGH)
             self.right_sidelight_output = 1
 
-    def set_ptz_camera(self, pan_angle_pwm=1500, tilt_angle_pwm=1500):
+    def set_ptz_camera(self, pan_angle_pwm_=1500, tilt_angle_pwm_=1500):
         """
         设置云台舵机角度
-        :param pan_angle_pwm: 500-2500 设置水平角度
-        :param tilt_angle_pwm: 500-2500  设置垂直角度
+        :param pan_angle_pwm_: 500-2500 设置水平角度
+        :param tilt_angle_pwm_: 500-2500  设置垂直角度
         :return:
         """
-        self.pi.set_servo_pulsewidth(config.pin_pan, pan_angle_pwm)
-        self.pi.set_servo_pulsewidth(config.pin_tilt, tilt_angle_pwm)
-        self.pan_angle_pwm = pan_angle_pwm
-        self.tilt_angle_pwm = tilt_angle_pwm
+        self.pi.set_servo_pulsewidth(config.pin_pan, pan_angle_pwm_)
+        self.pi.set_servo_pulsewidth(config.pin_tilt, tilt_angle_pwm_)
+        self.pan_angle_pwm = pan_angle_pwm_
+        self.tilt_angle_pwm = tilt_angle_pwm_
 
     def get_remote_control_data(self, debug=False):
         while True:
@@ -769,7 +802,8 @@ if __name__ == '__main__':
         try:
             # 按键后需要按回车才能生效
             print('w,a,s,d 为前后左右，q为停止\n'
-                  'r,t 左右抽水泵\n'
+                  'r 初始化电机\n'
+                  't 左右抽水泵\n'
                   'y,u,i,o,p 摄像头舵机 y回中 u右  i左  o上   p下\n'
                   'f  测距\n'
                   'g  获取gps数据\n'
@@ -838,7 +872,7 @@ if __name__ == '__main__':
             elif key_input == 'q':
                 pi_main_obj.stop()
             elif key_input.startswith('r'):
-                pi_main_obj.set_gpio(control_left_motor=True)
+                pi_main_obj.init_motor()
             elif key_input.startswith('t'):
                 pi_main_obj.set_gpio(control_right_motor=True)
             # 设置云台相机角度
@@ -880,7 +914,7 @@ if __name__ == '__main__':
                     else:
                         theta_c = pi_main_obj.compass_obj.read_compass(debug=True)
                     print('theta_c', theta_c)
-                elif len(key_input) > 1 and key_input[1]==1:
+                elif len(key_input) > 1 and int(key_input[1]) == 1:
                     pi_main_obj.get_compass_data(debug=True)
 
             elif key_input.startswith('H'):

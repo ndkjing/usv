@@ -8,15 +8,12 @@ import time
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
-    os.mkdir(os.path.join(root_path, 'statics'))
+    if not os.path.exists(os.path.join(root_path, 'statics')):
+        os.mkdir(os.path.join(root_path, 'statics'))
     os.mkdir(os.path.join(root_path, 'statics', 'mapsData'))
 
 # 保存所有地图湖泊信息位置
-# map_data_path = os.path.join(maps_dir, 'map.json')
 local_map_data_path = os.path.join(maps_dir, 'local_map.json')
-
-# 保存当前用户点击位置相关信息
-usr_lng_lat_path = os.path.join(maps_dir, 'usr_lng_lat_path.json')
 # 保存行驶路径和时间数据
 run_distance_time_path = os.path.join(root_path, 'statics', 'run_distance_time_path.json')
 base_setting_path = os.path.join(root_path, 'statics', 'configs', 'base_setting.json')
@@ -29,6 +26,8 @@ save_plan_path = os.path.join(root_path, 'statics', 'configs', 'save_plan_path.j
 save_sonar_path = os.path.join(root_path, 'statics', 'geojeson_data.json')
 # 保存抓取的水质数据
 save_water_data_path = os.path.join(root_path, 'statics', 'water_data.json')
+# 保存返航点地址路径
+home_location_path = os.path.join(root_path, 'home_location.json')
 
 
 class CurrentPlatform(enum.Enum):
@@ -66,7 +65,7 @@ arrive_distance = 2.5
 # 多点和寻点模式下查找连接点数量
 keep_point = 0
 # 路径搜索保留离湖泊边缘安全路径  单位米
-path_search_safe_distance = 5
+path_search_safe_distance = 15
 # 寻点模式行间隔
 row_gap = 50
 # 寻点模式列间隔
@@ -181,7 +180,6 @@ pi2mqtt_interval = 1
 thread_sleep_time = 0.5
 # 船编号
 ship_code = ship_code_config.ship_code
-
 # 串口位置和波特率
 # 单片机
 # stc_port = '/dev/ttyAMA0'
@@ -205,10 +203,6 @@ gps_frequency = 1
 # 罗盘
 compass_port = '/dev/compass0'
 compass_baud = 9600
-
-compass_port1 = '/dev/compass1'
-compass_baud1 = 9600
-
 # http 接口
 # 查询船是否注册  wuhanligong.xxlun.com/union
 http_binding = 'http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/%s' % (ship_code)
@@ -218,16 +212,11 @@ http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
 # 发送检测数据
 http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
 # http_data_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
-
+# mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884
-# 手动模式和自动模式
-# mod in ['manual', 'auto']
-mod = 'auto'
-
+# 调试的时候使用初始经纬度
 ship_gaode_lng_lat = [114.524096, 30.506853]
-# ship_gaode_lng_lat = [117.202177,39.901856]
-
 # 电机前进分量
 motor_forward = 200
 # 电机转弯分量
@@ -279,10 +268,10 @@ else:
     home_debug = 1
 # 添加避障方式设置0 不避障 1 避障停止  2 自动避障绕行 3 自动避障绕行和手动模式下避障停止
 obstacle_avoid_type = 0
-control_obstacle_distance = 2.5
+control_obstacle_distance = 2.5   # 手动模式避障距离 单位m
 # 路径规划方式  0 不平滑路径 1 平滑路径
 path_plan_type = 1
-# 路径跟踪方式  1 pid    2 pure pursuit  3 宫凯调试的pid
+# 路径跟踪方式  1 pid
 path_track_type = 1
 # 校准罗盘  0 不校准 1 开始校准 2 结束校准
 calibration_compass = 0
@@ -297,7 +286,7 @@ forward_see_distance = 9
 # 舵机最大扫描角度单侧 左边为正右边为负
 steer_max_angle = 30
 # 最小转向距离
-min_steer_distance = 10
+min_steer_distance = 10   # 自动模式下避障距离 单位m
 
 
 def update_height_setting():
@@ -671,16 +660,7 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                       hdf)
 
 
-# 保存返航点地址路径
-home_location_path = os.path.join(root_path, 'home_location.json')
-# 是否使用启动按钮
-b_use_start = False
-
 ########### 树莓派GPIO端口相关设置 均使用BCM编码端口
-# 是否使用超声波
-b_use_ultrasonic = 0
-# 使用树莓派控制电机
-b_use_pi = True
 # 水下摄像头云台水平和俯仰
 pin_pan = 2
 pin_tilt = 3
@@ -717,8 +697,6 @@ laser_hz = 40
 steer_engine_pin = 26
 # 毫米波雷达 millimeter wave radar
 b_millimeter_wave = 1
-angle_ceil_size = 5
-detect_angle = 45
 field_of_view = 90
 view_cell = 5
 ceil_max = 3  # 可以通过扇区阈值
@@ -763,6 +741,8 @@ else:
 b_draw = 0
 # 测试在家调试也发送数据
 debug_send_detect_data = 0
+# 转向速度
+angular_velocity = 90
 
 
 class WaterType(enum.Enum):
@@ -773,9 +753,6 @@ class WaterType(enum.Enum):
     TD = 4
     NH3_NH4 = 5
 
-
-if current_platform == CurrentPlatform.pi:
-    time.sleep(start_sleep_time)
 
 if __name__ == '__main__':
     write_setting(True, True, True, True)

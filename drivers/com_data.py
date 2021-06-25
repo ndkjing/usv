@@ -47,7 +47,7 @@ class ComData:
             self.uart = serial.Serial(
                 self.port, self.baud, timeout=self.timeout)
             # 判断是否打开成功
-            if not (self.uart.is_open):
+            if not self.uart.is_open:
                 self.logger.error('无法打开串口')
         except Exception as e:
             self.logger.error({"串口连接异常：": e})
@@ -180,17 +180,12 @@ if __name__ == '__main__':
                           config.compass_baud,
                           timeout=0.7,
                           logger=logger)
-        com_obj1 = ComData(config.compass_port1,
-                           config.compass_baud1,
-                           timeout=0.7,
-                           logger=logger)
+
         while True:
             # 校准罗盘  C0  开始  C1 结束
             key_input = input('input:  C0  开始  C1 结束 >')
             com_obj.send_data(key_input, b_hex=True)
-            com_obj1.send_data(key_input, b_hex=True)
             print('0号罗盘数据:', com_obj.readline(), com_obj.readline(), com_obj.readline(), com_obj.readline())
-            print('1号罗盘数据:', com_obj1.readline(), com_obj1.readline(), com_obj1.readline(), com_obj1.readline())
     elif b_com_data:
         serial_obj = ComData(config.stc_port,
                              config.stc_baud,

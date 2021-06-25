@@ -181,7 +181,7 @@ class DataManager:
                 self.com_data_obj = self.pi_main_obj.get_com_obj(port=config.stc_port,
                                                                  baud=config.stc_baud,
                                                                  timeout=config.stc2pi_timeout,
-                                                                 logger=self.com_data_read_logger)
+                                                                 logger_=self.com_data_read_logger)
             if os.path.exists(config.gps_port):
                 self.gps_obj = self.pi_main_obj.get_com_obj(config.gps_port, config.gps_baud, self.gps_log)
             if os.path.exists(config.compass_port):
@@ -191,7 +191,7 @@ class DataManager:
                 self.drone_obj = drone_kit_control.DroneKitControl(config.pix_port)
                 self.drone_obj.download_mission(True)
                 self.drone_obj.arm()
-            self.pi_main_obj.init_motor()
+            # self.pi_main_obj.init_motor()
         # 使用真实GPS 还是 初始化高德GPS
         self.use_true_gps = 0
         if config.current_platform == config.CurrentPlatform.pi:
@@ -210,6 +210,8 @@ class DataManager:
         self.point_arrive_start_time = None
         # 是否需要抓取水质数据
         self.b_check_get_water_data = 0
+        # 是否已经初始化电机
+        self.is_init_motor = 0
 
     def connect_mqtt_server(self):
         while True:
@@ -791,7 +793,7 @@ class DataManager:
         # 搜索最临近的路点
         distance_list = []
         start_index = self.smooth_path_lng_lat_index[index_]
-        print('self.smooth_path_lng_lat, index_,',self.smooth_path_lng_lat_index, index_)
+        print('self.smooth_path_lng_lat, index_,', self.smooth_path_lng_lat_index, index_)
         if index_ == 0:
             self.search_list = copy.deepcopy(self.smooth_path_lng_lat[:start_index])
         else:
@@ -1057,9 +1059,10 @@ class DataManager:
             if self.ship_status == ShipStatus.computer_control:
                 # 手动模式避障距离
                 if config.obstacle_avoid_type == 3:
-                    if 1 in self.pi_main_obj.obstacle_list[
+                    if 1 in self.pi_main_obj.control_obstacle_list[
                             int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                        self.direction = -1
+                        if self.direction == 0:
+                            self.direction = -1
                 if not config.home_debug:
                     if self.direction == 0:
                         self.control_info += ' 向前'
@@ -1073,7 +1076,7 @@ class DataManager:
                     elif self.direction == 270:
                         self.control_info += ' 向右'
                         self.pi_main_obj.right()
-                    elif self.direction in 10:
+                    elif self.direction == 10:
                         self.control_info += ' 向北'
                         self.nesw_control(nest=Nwse.north)
                     elif self.direction == 190:
@@ -1573,7 +1576,7 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.is_connected = 0
                 else:
                     self.ping = ping
-            time.sleep(1)
+            time.sleep(config.check_network_interval)
 
     # 测试发送障碍物数据
     def send_test_distance(self):
@@ -1645,14 +1648,16 @@ class DataManager:
                       topic='switch_%s' % config.ship_code,
                       data=switch_data,
                       qos=0)
+
+    def start_once_func(self):
+        while True:
             if not self.b_check_get_water_data:
                 data_valid.get_current_water_data()
                 self.b_check_get_water_data = 1
-                # try:
-                #     data_valid.get_current_water_data()
-                #     self.b_check_get_water_data = 1
-                # except Exception as e:
-                #     self.logger.error({'error':e})
+            if not config.home_debug and not self.is_init_motor:
+                self.pi_main_obj.init_motor()
+                self.is_init_motor = 1
+            time.sleep(3)
 
 
 if __name__ == '__main__':

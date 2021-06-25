@@ -207,7 +207,7 @@ class AutoPidParameter:
                 else:
                     theta_error = 360 + theta_error
             print('theta_error', theta_error)
-            left_pwm, right_pwm = self.pid_obj.pid_pwm_1(distance=0,
+            left_pwm, right_pwm = self.pid_obj.pid_pwm_2(distance=0,
                                                          theta_error=theta_error)
 
             self.pi_main_obj.set_pwm(left_pwm, right_pwm)

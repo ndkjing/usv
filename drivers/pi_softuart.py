@@ -94,7 +94,6 @@ class PiSoftuart(object):
                     str_data = data.decode('utf-8')[2:-1]
                     theta = float(str_data)
                     return 360 - theta
-                # time.sleep(self._thread_ts)
             except Exception as e:
                 print({'error read_compass': e})
                 return None

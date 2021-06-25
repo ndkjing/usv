@@ -47,23 +47,27 @@ class CrawlWaterData:
         EC_list = []
         TD_list = []
         NH3NH4_list = []
+        count = 0
         for data_list in json_data.get('tbody'):
-            print(re.findall('>(.*)<', data_list[5]))
-            if len(re.findall('>(.*)<', data_list[5])) < 1:
-                continue
-            wt = float(re.findall('>(.*)<', data_list[5])[0])
-            pH = float(re.findall('>(.*)<', data_list[6])[0])
-            DO = float(re.findall('>(.*)<', data_list[7])[0])
-            EC = float(re.findall('>(.*)<', data_list[8])[0])
-            TD = float(re.findall('>(.*)<', data_list[9])[0])
-            # NH3NH4 = float(re.findall('>(.*)<', data_list[11])[0])
-            wt_list.append(wt)
-            pH_list.append(pH)
-            DO_list.append(DO)
-            EC_list.append(EC)
-            TD_list.append(TD)
-            NH3NH4 = 0.413
-            NH3NH4_list.append(NH3NH4)
+            count += 1
+            if len(re.findall('>(.*)<', data_list[5]))>0:
+                wt = float(re.findall('>(.*)<', data_list[5])[0])
+                wt_list.append(wt)
+            if len(re.findall('>(.*)<', data_list[6])) > 0:
+                pH = float(re.findall('>(.*)<', data_list[6])[0])
+                pH_list.append(pH)
+            if len(re.findall('>(.*)<', data_list[7])) > 0:
+                DO = float(re.findall('>(.*)<', data_list[7])[0])
+                DO_list.append(DO)
+            if len(re.findall('>(.*)<', data_list[8])) > 0:
+                EC = float(re.findall('>(.*)<', data_list[8])[0])
+                EC_list.append(EC)
+            if len(re.findall('>(.*)<', data_list[9])) > 0:
+                TD = float(re.findall('>(.*)<', data_list[9])[0])
+                TD_list.append(TD)
+            if len(re.findall('>(.*)<', data_list[11])) > 0:
+                NH3NH4 = float(re.findall('>(.*)<', data_list[11])[0])
+                NH3NH4_list.append(NH3NH4)
 
         return_data_dict.update({config.WaterType.wt: wt_list})
         return_data_dict.update({config.WaterType.pH: pH_list})
