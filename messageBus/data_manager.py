@@ -860,11 +860,13 @@ class DataManager:
             angle = 180
         else:
             angle = 270
+        print('angle',angle)
         point = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                             self.lng_lat[1],
                                                             angle,
-                                                            config.min_steer_distance)
-        self.points_arrive_control(point, point, False, False)
+                                                            config.min_steer_distance*5)
+        r_temp = self.points_arrive_control(point, point, False, False)
+        print('r_temp',r_temp)
 
     # 计算障碍物下目标点
     def get_avoid_obstacle_point(self, path_planning_point_gps=None):
@@ -887,15 +889,17 @@ class DataManager:
                     return path_planning_point_gps, False
             # 避障绕行，根据障碍物计算下一个目标点
             elif config.obstacle_avoid_type == 2:
-                angle_point = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
-                                                                    self.lng_lat[1],
-                                                                    path_planning_point_gps[0],
-                                                                    path_planning_point_gps[1])
-                if angle_point > 180:
-                    angle_point_temp = angle_point - 360
-                else:
-                    angle_point_temp = angle_point
-                point_angle_index = angle_point_temp // self.pi_main_obj.view_cell + 9
+                # angle_point = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
+                #                                                     self.lng_lat[1],
+                #                                                     path_planning_point_gps[0],
+                #                                                     path_planning_point_gps[1])
+                # if angle_point > 180:
+                #     angle_point_temp = angle_point - 360
+                # else:
+                #     angle_point_temp = angle_point
+                # point_angle_index = angle_point_temp // self.pi_main_obj.view_cell + 9
+                point_angle_index = 9
+                print('point_angle_index',point_angle_index)
                 # 目标区域超出避障范围，当前正在转弯不必进行避障
                 if point_angle_index < 0 or point_angle_index >= len(self.pi_main_obj.obstacle_list):
                     return next_point_lng_lat, False
