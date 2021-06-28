@@ -891,16 +891,26 @@ class DataManager:
             # 避障绕行，根据障碍物计算下一个目标点
             elif config.obstacle_avoid_type == 2:
                 angle = vfh.vfh_func(9, self.pi_main_obj.obstacle_list)
+                print('angle', angle)
                 if angle == -1:
                     abs_angle = (self.theta + 180) % 360
+                    next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                     self.lng_lat[1],
+                                                                                     abs_angle,
+                                                                                     config.min_steer_distance)
+                    print('abs_angle', abs_angle)
+                    return next_point_lng_lat, False
+                elif angle == 0:
+                    # 为0表示原始路径可以通行此时不跳过
+                    return next_point_lng_lat, False
                 else:
                     abs_angle = (self.theta + angle) % 360
-                next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-                                                                                 self.lng_lat[1],
-                                                                                 abs_angle,
-                                                                                 config.min_steer_distance)
-                print('abs_angle', abs_angle)
-                return next_point_lng_lat, False
+                    next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                     self.lng_lat[1],
+                                                                                     abs_angle,
+                                                                                     config.min_steer_distance)
+                    print('abs_angle', abs_angle)
+                    return next_point_lng_lat, False
         else:
             return path_planning_point_gps, False
 
