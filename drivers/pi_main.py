@@ -31,7 +31,6 @@ class PiMain:
         self.pi.set_PWM_frequency(config.right_pwm_pin, self.hz)  # 设定右侧电机引脚产生的pwm波形的频率为50Hz
         self.pi.set_PWM_range(config.left_pwm_pin, self.pice)
         self.pi.set_PWM_range(config.right_pwm_pin, self.pice)
-        # self.init_motor()
         # 设置舵机输出
         self.pi.set_PWM_frequency(26, self.hz)  # 设定引脚产生的pwm波形的频率为50Hz
         self.pi.set_PWM_range(26, self.pice)
