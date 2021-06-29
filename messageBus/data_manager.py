@@ -902,7 +902,7 @@ class DataManager:
                     # 为0表示原始路径可以通行此时不跳过
                     return next_point_lng_lat, False
                 else:
-                    abs_angle = (self.theta + angle) % 360
+                    abs_angle = (self.pi_main_obj.theta + angle) % 360
                     next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                                      self.lng_lat[1],
                                                                                      abs_angle,

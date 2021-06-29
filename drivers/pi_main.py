@@ -407,24 +407,27 @@ class PiMain:
             right_pwm = 1300
         self.set_pwm(left_pwm, right_pwm)
 
-    def turn_angular_velocity(self, is_left=1):
+    def turn_angular_velocity(self, is_left=1,debug=False):
         """
         :param is_left 是否是左转  1 是左转   0 右转
         固定速度转向 config.angular_velocity
         :return:
         """
-        if self.angular_velocity:
-            if is_left:
-                angular_velocity_error = self.angular_velocity - config.angular_velocity
+        while True:
+            if self.angular_velocity:
+                if is_left:
+                    angular_velocity_error = self.angular_velocity - config.angular_velocity
+                else:
+                    angular_velocity_error = self.angular_velocity - (-1 * config.angular_velocity)
+                left_pwm, right_pwm = self.pid_obj.pid_turn_pwm(angular_velocity_error)
             else:
-                angular_velocity_error = self.angular_velocity - (-1 * config.angular_velocity)
-            left_pwm, right_pwm = self.pid_obj.pid_turn_pwm(angular_velocity_error)
-        else:
-            if is_left:
-                left_pwm, right_pwm = 1700, 1300
-            else:
-                left_pwm, right_pwm = 1300, 1700
-        self.set_pwm(left_pwm, right_pwm)
+                if is_left:
+                    left_pwm, right_pwm = 1700, 1300
+                else:
+                    left_pwm, right_pwm = 1300, 1700
+            if debug:
+                print('self.angular_velocity',self.angular_velocity)
+            self.set_pwm(left_pwm, right_pwm)
 
     def turn_angle(self, angle):
         """
@@ -567,7 +570,7 @@ class PiMain:
     def get_distance_dict_millimeter(self, debug=False):
         # 角度限制
         count = 0
-        max_count = 15
+        max_count = 40
         average_angle_dict = {}
         average_distance_dict = {}
         while True:
@@ -1056,6 +1059,8 @@ if __name__ == '__main__':
             # 到达目标点控制
             # 简单走矩形区域
             # 退出
+            elif key_input.startswith('Z'):
+                pi_main_obj.turn_angular_velocity(debug=True)
             elif key_input.startswith('z'):
                 break
         except KeyboardInterrupt:
