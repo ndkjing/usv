@@ -391,6 +391,8 @@ class WebServer:
                     else:
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.update(
                             {'info_type': 3})
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.update(
+                            {'video_url': server_config.ship_code_video_dict[ship_code]})
                         self.send(method='mqtt',
                                   ship_code=ship_code,
                                   topic='base_setting_%s' % (ship_code),

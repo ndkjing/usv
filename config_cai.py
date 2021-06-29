@@ -5,6 +5,7 @@ import os
 import platform
 import ship_code_config
 import time
+
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
@@ -185,7 +186,6 @@ ship_code = ship_code_config.ship_code
 # stc_port = '/dev/ttyAMA0'
 stc_port = '/dev/ttyUSB0'
 stc_baud = 115200
-b_com_stc = os.path.exists(stc_port)
 # imu
 imu_port = '/dev/imu'
 imu_baud = 115200
@@ -269,7 +269,7 @@ else:
     home_debug = 1
 # 添加避障方式设置0 不避障 1 避障停止  2 自动避障绕行 3 自动避障绕行和手动模式下避障停止
 obstacle_avoid_type = 0
-control_obstacle_distance = 2.5   # 手动模式避障距离 单位m
+control_obstacle_distance = 2.5  # 手动模式避障距离 单位m
 # 路径规划方式  0 不平滑路径 1 平滑路径
 path_plan_type = 1
 # 路径跟踪方式  1 pid
@@ -287,7 +287,7 @@ forward_see_distance = 9
 # 舵机最大扫描角度单侧 左边为正右边为负
 steer_max_angle = 30
 # 最小转向距离
-min_steer_distance = 10   # 自动模式下避障距离 单位m
+min_steer_distance = 10  # 自动模式下避障距离 单位m
 
 
 def update_height_setting():
@@ -662,13 +662,10 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
 
 
 ########### 树莓派GPIO端口相关设置 均使用BCM编码端口
-# 水下摄像头云台水平和俯仰
-pin_pan = 2
-pin_tilt = 3
 # 左侧电机信号输出控制口
-left_pwm_pin = 4
+left_pwm_pin = 6
 # 右侧电机信号输出控制口
-right_pwm_pin = 17
+right_pwm_pin = 5
 # 软串口罗盘
 b_pin_compass = 1
 pin_compass_baud = 9600
@@ -677,17 +674,24 @@ pin_compass_rx = 22
 # 软串口gps
 b_pin_gps = 1
 pin_gps_baud = 9600
-pin_gps_tx = 10
-pin_gps_rx = 9
-# 是否使用遥控器
-b_use_remote_control = False
-# usv a 遥控器  水平是1通道   垂直是2通道
-# 水平
-channel_1_pin = 5
-# 垂直
-channel_3_pin = 6
-# 开启遥控器输入pin口
-channel_remote_pin = 11
+pin_gps_tx = 23
+pin_gps_rx = 24
+# usv 串口遥控器
+b_lora_remote_control = 1
+lora_tx = 25
+lora_rx = 8
+# 单片机串口
+b_pin_stc = 1
+stc_tx = 3
+stc_rx = 4
+stc_baud = 115200
+
+# 是否通用2.4g遥控器
+b_use_remote_control = 0
+channel_1_pin = 5  # 水平是1通道
+channel_3_pin = 6  # 垂直是2通道
+channel_remote_pin = 11  # 开启遥控器输入pin口
+
 # 激光雷达
 b_laser = 0
 laser_tx = 13
@@ -696,40 +700,27 @@ laser_baud = 115200
 laser_hz = 40
 # 激光雷达舵机输出
 steer_engine_pin = 26
+
 # 毫米波雷达 millimeter wave radar
 b_millimeter_wave = 1
 field_of_view = 90
 view_cell = 5
 ceil_max = 3  # 可以通过扇区阈值
-millimeter_wave_tx = 13
-millimeter_wave_rx = 19
+millimeter_wave_tx = 16
+millimeter_wave_rx = 20
 millimeter_wave_baud = 115200
 millimeter_wave_hz = 40
-# 单片机串口
-b_pin_stc = 0
-stc_tx = 14
-stc_rx = 15
-stc_baud = 115200
-# 舷灯 左舷灯 右舷灯
-side_left_gpio_pin = 18
-side_right_gpio_pin = 23
-# 前大灯
-headlight_gpio_pin = 24
-# 左抽水泵  右抽水泵
-draw_left_gpio_pin = 25
-draw_right_gpio_pin = 8
-# 声光报警器
-audio_light_alarm_gpio_pin = 7
-# 漏水传感器
-leak_gpio_pin = 12
-# 声呐
+
+# 抽水
+b_draw = 1     # 是否有抽水泵
+b_control_deep = 1  # 是否可调深度
+draw_steer = 13  # 舵机接口
+
+# 声呐  RX  TX  声呐舵机
 b_sonar = 0
-# RX
 sonar_rx = 16
-# TX
 sonar_tx = 20
 sonar_baud = 9600
-# 声呐舵机
 sonar_steer = 21
 test_all = 0
 
@@ -738,26 +729,12 @@ if home_debug:
     use_shape_theta_type = 3
 else:
     use_shape_theta_type = 1
-# 抽水
-b_draw = 0     # 是否有抽水泵
-b_control_deep = 1  # 是否可调深度
-draw_steer = 13  # 舵机接口
+# 是否含有抽水泵
+b_draw = 0
 # 测试在家调试也发送数据
 debug_send_detect_data = 0
 # 转向速度
 angular_velocity = 90
-
-# usv 串口遥控器
-b_lora_remote_control = 1
-lora_tx = 25
-lora_rx = 8
-lora_baud = 9600
-# 单片机串口
-b_pin_stc = 1
-stc_tx = 3
-stc_rx = 4
-stc_baud = 115200
-
 
 
 class WaterType(enum.Enum):

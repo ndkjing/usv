@@ -861,13 +861,11 @@ class DataManager:
             angle = 180
         else:
             angle = 270
-        print('angle', angle)
         point = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                             self.lng_lat[1],
                                                             angle,
                                                             config.min_steer_distance * 5)
         r_temp = self.points_arrive_control(point, point, False, False)
-        print('r_temp', r_temp)
 
     # 计算障碍物下目标点
     def get_avoid_obstacle_point(self, path_planning_point_gps=None):
@@ -931,12 +929,16 @@ class DataManager:
         self.distance_p = distance
         if distance < config.arrive_distance:
             return True
-        # 超时不到则跳过 达到15米且30秒不到则跳过
-        if distance < 15 and self.point_arrive_start_time is None:
+        # 超时不到则跳过 达到30米且60秒不到则跳过
+        if distance < 30 and self.point_arrive_start_time is None:
             self.point_arrive_start_time = time.time()
-        elif self.point_arrive_start_time and time.time() - self.point_arrive_start_time > 30:
+        elif self.point_arrive_start_time and time.time() - self.point_arrive_start_time > 60:
             return True
         while distance >= config.arrive_distance:
+            if distance < 30 and self.point_arrive_start_time is None:
+                self.point_arrive_start_time = time.time()
+            elif self.point_arrive_start_time and time.time() - self.point_arrive_start_time > 60:
+                return True
             distance_sample = lng_lat_calculate.distanceFromCoordinate(
                 self.lng_lat[0],
                 self.lng_lat[1],
@@ -991,7 +993,6 @@ class DataManager:
                                                                            self.lng_lat[1],
                                                                            self.current_theta,
                                                                            delta_distance)
-
             else:
                 # 判断是否需要避障处理
                 print('b_stop', b_stop)
@@ -1068,11 +1069,20 @@ class DataManager:
                         self.nesw_control(nest=Nwse.east)
                     elif self.direction == -1:
                         self.control_info += ' 停止'
+                        self.point_arrive_start_time = None
                         self.pi_main_obj.stop()
             # 遥控器控制
             elif self.ship_status == ShipStatus.remote_control:
-                remote_left_pwm, remote_right_pwm = self.pi_main_obj.check_remote_pwm()
-                self.pi_main_obj.set_pwm(set_left_pwm=remote_left_pwm, set_right_pwm=remote_right_pwm)
+                # lora遥控器
+                if config.b_lora_remote_control:
+                    remote_left_pwm, remote_right_pwm = self.pi_main_obj.check_lora_remote_pwm()
+                    self.pi_main_obj.set_pwm(set_left_pwm=remote_left_pwm, set_right_pwm=remote_right_pwm)
+                # 2.4g遥控器
+                elif config.b_use_remote_control:
+                    remote_left_pwm, remote_right_pwm = self.pi_main_obj.check_remote_pwm()
+                    self.pi_main_obj.set_pwm(set_left_pwm=remote_left_pwm, set_right_pwm=remote_right_pwm)
+                else:
+                    continue
             # 电脑自动
             elif self.ship_status == ShipStatus.computer_auto:
                 if b_log_points:
@@ -1154,7 +1164,6 @@ class DataManager:
                                                                      b_force_arrive=True)
                     if b_arrive_sample:
                         print('b_arrive_sample', b_arrive_sample)
-                    if b_arrive_sample:
                         # 更新目标点提示消息
                         self.b_arrive_point = 1
                         self.point_arrive_start_time = None
@@ -1371,6 +1380,7 @@ class DataManager:
                         {'base_setting_data is None': self.server_data_obj.mqtt_send_get_obj.base_setting_data})
                 else:
                     self.server_data_obj.mqtt_send_get_obj.base_setting_data.update({'info_type': 3})
+                    self.server_data_obj.mqtt_send_get_obj.base_setting_data.update({'video_url': 3})
                     self.send(method='mqtt', topic='base_setting_%s' % config.ship_code,
                               data=self.server_data_obj.mqtt_send_get_obj.base_setting_data,
                               qos=0)

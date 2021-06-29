@@ -220,6 +220,25 @@ class PiSoftuart(object):
             time.sleep(self._thread_ts / 2)
             return None
 
+    def pin_stc_read(self,debug=False):
+        """
+        软串口单片机数据读取
+        :return:
+        """
+        count, data = self._pi.bb_serial_read(self._rx_pin)
+        if debug:
+            print(time.time(), 'count', count, 'data', data)
+
+    def pin_stc_write(self, stc_write_data, debug=False):
+        """
+        软串口单片机数据发送
+        :param stc_write_data:
+        :param debug
+        :return:
+        """
+        str_16_stc_write_data = str(binascii.b2a_hex(stc_write_data.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
+        self.write_data(str_16_stc_write_data, baud=self.baud, debug=debug)
+
     def read_remote_control(self, len_data=None, debug=False):
         """
         读取自己做的lora遥控器数据
@@ -231,12 +250,15 @@ class PiSoftuart(object):
             len_data = 4
             try:
                 # 发送数据让遥控器接受变为绿灯
+                s = 'S9'
+                str_16 = str(binascii.b2a_hex(s.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
+                # str_16 = '41305a'
                 if self.last_send is None:
-                    self.write_data('C9', debug=True)
+                    self.write_data(str_16, baud=self.baud, debug=debug)
                     self.last_send = time.time()
                 else:
                     if time.time() - self.last_send > 1:
-                        self.write_data('C9', debug=True)
+                        self.write_data(str_16, baud=self.baud, debug=debug)
                         self.last_send = time.time()
                 count, data = self._pi.bb_serial_read(self._rx_pin)
                 if debug:
@@ -336,7 +358,7 @@ class PiSoftuart(object):
 
     def send_stc_data(self, send_data):
         try:
-            self.write_data(send_data, baud=115200)
+            self.pin_stc_write(send_data)
             time.sleep(self._thread_ts)
             return None
             # time.sleep(self._thread_ts)

@@ -12,6 +12,7 @@ import time
 import json
 import requests
 
+
 class ServerData:
     def __init__(self, logger,
                  topics,
@@ -19,7 +20,7 @@ class ServerData:
         self.logger = logger
         self.topics = topics
         self.http_send_get_obj = HttpSendGet()
-        self.mqtt_send_get_obj = MqttSendGet(self.logger,ship_code=ship_code)
+        self.mqtt_send_get_obj = MqttSendGet(self.logger, ship_code=ship_code)
         # 启动后自动订阅话题
         for topic, qos in self.topics:
             self.mqtt_send_get_obj.subscribe_topic(topic=topic, qos=qos)
@@ -42,6 +43,7 @@ class ServerData:
     # 发送数据到服务器mqtt
     def send_server_mqtt_data(self, topic='test', data="", qos=1):
         self.mqtt_send_get_obj.publish_topic(topic=topic, data=data, qos=qos)
+
 
 class HttpSendGet:
     """
@@ -71,6 +73,7 @@ class MqttSendGet:
     """
     处理mqtt数据收发
     """
+
     def __init__(
             self,
             logger,
@@ -78,19 +81,19 @@ class MqttSendGet:
             mqtt_host=config.mqtt_host,
             mqtt_port=config.mqtt_port,
             client_id=config.ship_code
-            ):
+    ):
         self.logger = logger
         self.mqtt_host = mqtt_host
         self.mqtt_port = mqtt_port
         if ship_code is not None:
             client_id = ship_code
-            self.mqtt_user = 'dk_linux_x'+ship_code
+            self.mqtt_user = 'dk_linux_x' + ship_code
         else:
             client_id = client_id + 'dk_windwos'
             self.mqtt_user = 'dk_windwos'
         self.mqtt_passwd = 'public'
-        self.ship_code =ship_code
-        self.logger.info({'client_id':client_id})
+        self.ship_code = ship_code
+        self.logger.info({'client_id': client_id})
         self.mqtt_client = mqtt.Client(client_id=client_id)
         self.mqtt_client.username_pw_set(self.mqtt_user, password=self.mqtt_passwd)
         self.mqtt_client.on_connect = self.on_connect_callback
@@ -107,15 +110,15 @@ class MqttSendGet:
         self.zoom = []
         self.meter_pix = {}
         self.mode = []
-        self.pool_id=None
+        self.pool_id = None
         # 记录经纬度是不是已经到达或者放弃到达（在去的过程中手动操作） 0准备过去(自动) -1放弃（手动）  1 已经到达的点  2:该点是陆地
         self.target_lng_lat_status = []
         # 当前航线  -1是还没选择
         self.current_lng_lat_index = -1
         self.confirm_index = -1
         # 路径规划话题中的消息
-        self.path_planning_points=[]
-        self.path_planning_points_status=[]
+        self.path_planning_points = []
+        self.path_planning_points_status = []
 
         # 船当前经纬度 给服务器路径规划使用
         self.current_lng_lat = None
@@ -139,14 +142,14 @@ class MqttSendGet:
         # 抽水控制位  0为不抽水　1为抽水
         self.b_draw = 0
         # 启动还是停止寻点模式
-        self.b_start=0
+        self.b_start = 0
         # 请求设置类型
         self.base_setting_data = None
-        self.base_setting_data_info=-1
+        self.base_setting_data_info = -1
         # 点击湖泊
         self.b_pool_click = 0
         # 重置选择湖泊
-        self.reset_pool_click=0
+        self.reset_pool_click = 0
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -156,7 +159,7 @@ class MqttSendGet:
 
     # 建立连接时候回调
     def on_connect_callback(self, client, userdata, flags, rc):
-        self.logger.info('Connected with result code:  ' + str(rc),)
+        self.logger.info('Connected with result code:  ' + str(rc), )
 
     # 发布消息回调
     def on_publish_callback(self, client, userdata, mid):
@@ -180,8 +183,8 @@ class MqttSendGet:
             zoom = int(round(float(pool_click_data.get('zoom')), 0))
             self.pool_click_zoom = zoom
             self.b_pool_click = 1
-            self.logger.info({'topic':topic,
-                                'lng_lat': pool_click_data.get('lng_lat'),
+            self.logger.info({'topic': topic,
+                              'lng_lat': pool_click_data.get('lng_lat'),
                               'zoom': pool_click_data.get('zoom')
                               })
 
@@ -202,21 +205,21 @@ class MqttSendGet:
             # 添加新的点
             lng_lat = user_lng_lat_data.get('lng_lat')
             self.target_lng_lat = lng_lat
-            self.target_lng_lat_status=[0]*len(lng_lat)
+            self.target_lng_lat_status = [0] * len(lng_lat)
             zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
             self.zoom.append(zoom)
-            self.meter_pix.update({zoom:float(user_lng_lat_data.get('meter_pix'))})
+            self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
             if user_lng_lat_data.get('config').get('back_home') is not None:
                 self.back_home = user_lng_lat_data.get('config').get('back_home')
 
             self.fix_point = user_lng_lat_data.get('config').get('fixpoint')
 
-            self.logger.info({'topic':topic,
-                                'target_lng_lat': self.target_lng_lat,
-                              'zoom':  zoom,
-                              'meter_pix':user_lng_lat_data.get('meter_pix'),
+            self.logger.info({'topic': topic,
+                              'target_lng_lat': self.target_lng_lat,
+                              'zoom': zoom,
+                              'meter_pix': user_lng_lat_data.get('meter_pix'),
                               'back_home': self.back_home,
-                              'fix_point':self.fix_point,
+                              'fix_point': self.fix_point,
                               })
 
         # 用户设置自动求取检测点经纬度
@@ -230,11 +233,11 @@ class MqttSendGet:
                 return
             self.row_gap = auto_lng_lat_data.get('config').get('row_gap')
             self.col_gap = auto_lng_lat_data.get('config').get('col_gap')
-            if auto_lng_lat_data.get('config').get('safe_gap') is not None :
+            if auto_lng_lat_data.get('config').get('safe_gap') is not None:
                 self.safe_gap = auto_lng_lat_data.get('config').get('safe_gap')
             self.round_pool_gap = auto_lng_lat_data.get('config').get('round_pool_gap')
-            self.logger.info({'topic':topic,
-                                'row_gap': self.row_gap,
+            self.logger.info({'topic': topic,
+                              'row_gap': self.row_gap,
                               'col_gap': self.col_gap,
                               'safe_gap': self.safe_gap,
                               'round_pool_gap': self.round_pool_gap})
@@ -263,8 +266,8 @@ class MqttSendGet:
             self.path_id = path_planning_confirm_data.get('path_id')
             self.path_id_confirm = path_planning_confirm_data.get('confirm')
 
-            self.logger.info({'topic':topic,
-                'path_id': path_planning_confirm_data.get('path_id'),
+            self.logger.info({'topic': topic,
+                              'path_id': path_planning_confirm_data.get('path_id'),
                               'path_id_confirm': path_planning_confirm_data.get('confirm'),
                               })
 
@@ -275,7 +278,7 @@ class MqttSendGet:
                 self.logger.error('start_设置启动消息没有search_pattern字段')
                 return
             self.b_start = int(start_data.get('search_pattern'))
-            self.logger.info({'topic':topic,'b_start': start_data.get('search_pattern')})
+            self.logger.info({'topic': topic, 'b_start': start_data.get('search_pattern')})
 
         # 湖泊id
         elif topic == 'pool_info_%s' % (self.ship_code):
@@ -293,11 +296,11 @@ class MqttSendGet:
                 # self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
                 return
             else:
-                self.current_lng_lat =status_data.get('current_lng_lat')
+                self.current_lng_lat = status_data.get('current_lng_lat')
             if status_data.get("home_lng_lat") is None:
                 pass
             else:
-                self.home_lng_lat =status_data.get('home_lng_lat')
+                self.home_lng_lat = status_data.get('home_lng_lat')
         # 基础配置
         elif topic == 'base_setting_%s' % (self.ship_code):
             self.logger.info({'base_setting ': json.loads(msg.payload)})
@@ -311,7 +314,7 @@ class MqttSendGet:
                 info_type = int(base_setting_data.get('info_type'))
                 self.base_setting_data_info = info_type
                 if info_type == 1:
-                    print('base_setting_path',config.base_setting_path)
+                    print('base_setting_path', config.base_setting_path)
                     with open(config.base_setting_path, 'r') as f:
                         self.base_setting_data = json.load(f)
                 elif info_type == 2:
@@ -373,12 +376,12 @@ if __name__ == '__main__':
     while True:
         mqtt_obj.publish_topic(
             topic='status_data_%s' %
-            (config.ship_code),
+                  (config.ship_code),
             data=data_define.init_ststus_data,
             qos=1)
         mqtt_obj.publish_topic(
             topic='detect_data_%s' %
-            (config.ship_code),
+                  (config.ship_code),
             data=data_define.init_detect_data,
             qos=1)
         time.sleep(config.pi2mqtt_interval)

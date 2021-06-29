@@ -11,6 +11,7 @@ from utils import log
 from drivers import pi_softuart
 import config
 from moveControl.pathTrack import simple_pid
+
 logger = log.LogHandler('pi_log')
 
 
@@ -31,9 +32,6 @@ class PiMain:
         self.pi.set_PWM_frequency(config.right_pwm_pin, self.hz)  # 设定右侧电机引脚产生的pwm波形的频率为50Hz
         self.pi.set_PWM_range(config.left_pwm_pin, self.pice)
         self.pi.set_PWM_range(config.right_pwm_pin, self.pice)
-        # 设置舵机输出
-        self.pi.set_PWM_frequency(26, self.hz)  # 设定引脚产生的pwm波形的频率为50Hz
-        self.pi.set_PWM_range(26, self.pice)
 
         self.save = [1, 161, 150, 157, 152, 142, 101]
         self.set = 1
@@ -44,7 +42,7 @@ class PiMain:
 
         self.channel_row_input_pwm = 0
         self.channel_col_input_pwm = 0
-        # 当前是否是遥控器控制
+        # 当前是否是遥控器控制  2.4g遥控器和lora遥控器都用这个标志位
         self.b_start_remote = 0
         if config.b_use_remote_control:
             self.cb1 = self.pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, self.mycallback)
@@ -63,7 +61,8 @@ class PiMain:
                 self.sonar_obj = self.get_sonar_obj()
             if config.b_millimeter_wave:
                 self.millimeter_wave_obj = self.get_millimeter_wave_obj()
-            self.remote_control_obj = self.get_remote_control_obj()
+            if config.b_lora_remote_control:
+                self.remote_control_obj = self.get_remote_control_obj()
         # GPS
         self.lng_lat = None
         # GPS 误差
@@ -89,6 +88,8 @@ class PiMain:
         self.pi.set_mode(config.draw_left_gpio_pin, pigpio.OUTPUT)
         self.pi.set_mode(config.draw_right_gpio_pin, pigpio.OUTPUT)
         """
+        # 抽水泵舵机
+        self.draw_steer_pwm = 500
         # 云台舵机角度
         self.pan_angle_pwm = 1500
         self.tilt_angle_pwm = 1500
@@ -103,11 +104,14 @@ class PiMain:
         self.start_draw = 0
         # 遥控器控制数据
         self.remote_control_data = []
+
         # 求角速度     逆时针方向角速度为正值
         self.theta_list = []  # (时间，角度)
         self.angular_velocity = None
         self.last_angular_velocity = None
         self.pid_obj = simple_pid.SimplePid()
+        # 将舵机归位
+        self.set_draw_deep(deep_pwm=500)
 
     # 获取串口对象
     @staticmethod
@@ -135,8 +139,8 @@ class PiMain:
         遥控器lora串口
         :return:
         """
-        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=21, tx_pin=20,
-                                      baud=9600, time_out=0.2)
+        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
+                                      baud=config.lora_baud, time_out=0.2)
 
     def get_gps_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx,
@@ -151,7 +155,7 @@ class PiMain:
 
     def get_stc_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.stc_rx, tx_pin=config.stc_tx,
-                                      baud=config.sonar_baud, time_out=0.1)
+                                      baud=config.stc_baud, time_out=0.1)
 
     def get_stc_data(self):
         """
@@ -262,6 +266,45 @@ class PiMain:
                 if gps_data_read:
                     self.lng_lat = gps_data_read[0:2]
                     self.lng_lat_error = gps_data_read[2]
+
+    def check_lora_remote_pwm(self):
+        """
+        遥控器输入
+        :return:
+        """
+        remote_forward_pwm = int((99 - self.remote_control_data[2]) * 10 + 1000)
+        remote_steer_pwm = int(self.remote_control_data[3] * 10 + 1000)
+        # 防止抖动
+        if 1600 > remote_forward_pwm > 1400:
+            remote_forward_pwm = config.stop_pwm
+        # 防止过大值
+        elif remote_forward_pwm >= 2000:
+            remote_forward_pwm = 2000
+        # 防止初始读取到0电机会转动， 设置为1500
+        elif remote_forward_pwm < 900:
+            remote_forward_pwm = config.stop_pwm
+        # 防止过小值
+        elif 1000 >= remote_forward_pwm >= 900:
+            remote_forward_pwm = 1000
+        # 防止抖动
+        if 1600 > remote_steer_pwm > 1400:
+            remote_steer_pwm = config.stop_pwm
+        # 防止过大值
+        elif remote_steer_pwm >= 2000:
+            remote_steer_pwm = 2000
+        # 防止初始读取到0电机会转动， 设置为1500
+        elif remote_steer_pwm < 900:
+            remote_steer_pwm = config.stop_pwm
+        # 防止过小值
+        elif 1000 >= remote_steer_pwm >= 900:
+            remote_steer_pwm = 1000
+        if remote_forward_pwm == config.stop_pwm and remote_steer_pwm == config.stop_pwm:
+            remote_left_pwm = config.stop_pwm
+            remote_right_pwm = config.stop_pwm
+        else:
+            remote_left_pwm = 1500 + (remote_forward_pwm - 1500) + (remote_steer_pwm - 1500)
+            remote_right_pwm = 1500 + (remote_forward_pwm - 1500) - (remote_steer_pwm - 1500)
+        return remote_left_pwm, remote_right_pwm
 
     def check_remote_pwm(self):
         """
@@ -374,7 +417,7 @@ class PiMain:
             if is_left:
                 angular_velocity_error = self.angular_velocity - config.angular_velocity
             else:
-                angular_velocity_error = self.angular_velocity - (-1*config.angular_velocity)
+                angular_velocity_error = self.angular_velocity - (-1 * config.angular_velocity)
             left_pwm, right_pwm = self.pid_obj.pid_turn_pwm(angular_velocity_error)
         else:
             if is_left:
@@ -389,7 +432,7 @@ class PiMain:
         :param angle: 0 --360 逆时针为正
         :return:
         """
-        angle_error = self.theta-angle
+        angle_error = self.theta - angle
         left_pwm, right_pwm = self.pid_obj.pid_turn_pwm(angle_error)
         self.set_pwm(left_pwm, right_pwm)
 
@@ -401,7 +444,7 @@ class PiMain:
         time.sleep(2)
         self.set_pwm(config.stop_pwm + 200, config.stop_pwm + 200)
         time.sleep(3)
-        self.set_pwm(config.stop_pwm-200, config.stop_pwm-200)
+        self.set_pwm(config.stop_pwm - 200, config.stop_pwm - 200)
         time.sleep(2)
         self.set_pwm(config.stop_pwm, config.stop_pwm)
         time.sleep(config.motor_init_time)
@@ -524,7 +567,7 @@ class PiMain:
     def get_distance_dict_millimeter(self, debug=False):
         # 角度限制
         count = 0
-        max_count = 7
+        max_count = 15
         average_angle_dict = {}
         average_distance_dict = {}
         while True:
@@ -670,9 +713,21 @@ class PiMain:
         self.pan_angle_pwm = pan_angle_pwm_
         self.tilt_angle_pwm = tilt_angle_pwm_
 
+    def set_draw_deep(self, deep_pwm=500):
+        """
+        设置抽水泵深度
+        :param deep_pwm:
+        :return:
+        """
+        self.pi.set_servo_pulsewidth(config.pin_tilt, deep_pwm)
+        self.draw_steer_pwm = deep_pwm
+
     def get_remote_control_data(self, debug=False):
         while True:
             self.remote_control_data = self.remote_control_obj.read_remote_control(debug=debug)
+            if self.remote_control_data and len(self.remote_control_data) == 14:
+                if self.remote_control_data[-2] == 1:
+                    self.b_start_remote = 1
             time.sleep(0.01)
 
     """
@@ -797,16 +852,19 @@ if __name__ == '__main__':
             logger=logger)
     loop_change_pwm_thread = threading.Thread(target=pi_main_obj.loop_change_pwm)
     loop_change_pwm_thread.start()
+
+
     while True:
         try:
             # 按键后需要按回车才能生效
             print('w,a,s,d 为前后左右，q为停止\n'
                   'r 初始化电机\n'
-                  't 左右抽水泵\n'
+                  't 控制抽水舵机和抽水\n'
                   'y,u,i,o,p 摄像头舵机 y回中 u右  i左  o上   p下\n'
-                  'f  测距\n'
+                  'f  读取单片机数据\n'
                   'g  获取gps数据\n'
                   'h  单次获取罗盘数据  h1 持续读取罗盘数据求角速度\n'
+                  'H  读取维特罗盘数据  校准 s  开始  e 结束  a 设置自动回传  i 初始化 其他为读取\n'
                   'j  声光报警器  j1 开 j0关\n '
                   'k  左舷灯 k1 开 k0关\n '
                   'l  右舷灯  l1 开 l0关\n '
@@ -873,7 +931,13 @@ if __name__ == '__main__':
             elif key_input.startswith('r'):
                 pi_main_obj.init_motor()
             elif key_input.startswith('t'):
-                pi_main_obj.set_gpio(control_right_motor=True)
+                pi_main_obj.set_draw_deep(deep_pwm=2500)  # 旋转舵机
+                time.sleep(3)
+                pi_main_obj.stc_obj.pin_stc_write('A1Z', debug=True)
+                time.sleep(5)
+                pi_main_obj.stc_obj.pin_stc_write('A0Z', debug=True)
+                pi_main_obj.set_draw_deep(deep_pwm=500)
+                time.sleep(3)
             # 设置云台相机角度
             elif key_input.startswith('y'):
                 pi_main_obj.set_ptz_camera(1500, 1500)
@@ -897,12 +961,9 @@ if __name__ == '__main__':
                 if tilt_angle_pwm < 500:
                     tilt_angle_pwm = 500
                 pi_main_obj.set_ptz_camera(pi_main_obj.pan_angle_pwm, tilt_angle_pwm)
-            # 获取激光雷达测距数据
+            # 获取读取单片机数据
             elif key_input.startswith('f'):
-                # print('sad')
-                # pi_main_obj.set_steer_engine(1500)
-                # laser_distance = pi_main_obj.laser_obj.read_laser()
-                pi_main_obj.get_distance_dict()
+                laser_distance = pi_main_obj.stc_obj.pin_stc_read(debug=True)
             elif key_input.startswith('h'):
                 if len(key_input) == 1:
                     key_input = input('input:  C0  开始  C1 结束 其他为读取 >')
@@ -915,7 +976,6 @@ if __name__ == '__main__':
                     print('theta_c', theta_c)
                 elif len(key_input) > 1 and int(key_input[1]) == 1:
                     pi_main_obj.get_compass_data(debug=True)
-
             elif key_input.startswith('H'):
                 key_input = input('input:  校准 s  开始  e 结束  a 设置自动回传  i 初始化 其他为读取 >')
                 if key_input == 's':
@@ -979,9 +1039,12 @@ if __name__ == '__main__':
                 if len(key_input) == 2 and key_input[1] in ['0', '1', '2', '3', '4']:
                     send_data = key_input + 'Z'
                     print('send_data', send_data)
-                    com_data_obj.send_data(send_data)
-                    row_com_data_read = com_data_obj.readline()
-                    print('row_com_data_read', row_com_data_read)
+                    if config.b_com_stc:
+                        com_data_obj.send_data(send_data)
+                        row_com_data_read = com_data_obj.readline()
+                        print('row_com_data_read', row_com_data_read)
+                    elif config.b_pin_stc:
+                        pi_main_obj.stc_obj.write_data(send_data, debug=True)
             elif key_input.startswith('R'):
                 if len(key_input) > 1 and key_input[1] == '1':
                     pi_main_obj.get_remote_control_data(debug=True)
