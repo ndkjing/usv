@@ -29,7 +29,7 @@ save_sonar_path = os.path.join(root_path, 'statics', 'geojeson_data.json')
 
 
 class CurrentPlatform(enum.Enum):
-    windwos = 1
+    windows = 1
     linux = 2
     pi = 3
     others = 4
@@ -38,7 +38,7 @@ class CurrentPlatform(enum.Enum):
 sysstr = platform.system()
 if sysstr == "Windows":
     print("Call Windows tasks")
-    current_platform = CurrentPlatform.windwos
+    current_platform = CurrentPlatform.windows
 elif sysstr == "Linux":  # 树莓派上也是Linux
     print("Call Linux tasks")
     # 公司Linux电脑名称

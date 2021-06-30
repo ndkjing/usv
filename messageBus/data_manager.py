@@ -92,7 +92,6 @@ class DataManager:
         self.server_log = LogHandler('server_data')
         self.map_log = LogHandler('map_log')
         self.gps_log = LogHandler('gps_log')
-        self.compass_log = LogHandler('compass_log')
         self.path_track_obj = simple_pid.SimplePid()
         # mqtt服务器数据收发对象
         self.server_data_obj = server_data.ServerData(self.server_log, topics=self.data_define_obj.topics)
@@ -183,20 +182,10 @@ class DataManager:
                                                                  baud=config.stc_baud,
                                                                  timeout=config.stc2pi_timeout,
                                                                  logger_=self.com_data_read_logger)
-            if os.path.exists(config.gps_port):
-                self.gps_obj = self.pi_main_obj.get_com_obj(config.gps_port, config.gps_baud, self.gps_log)
-            if os.path.exists(config.compass_port):
-                self.compass_obj = self.pi_main_obj.get_com_obj(config.compass_port, config.compass_baud,
-                                                                self.compass_log)
-            if config.b_use_pix:
-                self.drone_obj = drone_kit_control.DroneKitControl(config.pix_port)
-                self.drone_obj.download_mission(True)
-                self.drone_obj.arm()
-            # self.pi_main_obj.init_motor()
         # 使用真实GPS 还是 初始化高德GPS
         self.use_true_gps = 0
         if config.current_platform == config.CurrentPlatform.pi:
-            if os.path.exists(config.gps_port) or config.b_pin_gps:
+            if config.b_pin_gps:
                 self.use_true_gps = 1
         # 当前路径平滑搜索列表
         self.search_list = []
@@ -1071,6 +1060,19 @@ class DataManager:
                         self.control_info += ' 停止'
                         self.point_arrive_start_time = None
                         self.pi_main_obj.stop()
+                else:
+                    if self.direction == 10:
+                        self.control_info += ' 向北'
+                        self.nesw_control(nest=Nwse.north)
+                    elif self.direction == 190:
+                        self.control_info += ' 向西'
+                        self.nesw_control(nest=Nwse.west)
+                    elif self.direction == 1180:
+                        self.control_info += ' 向南'
+                        self.nesw_control(nest=Nwse.south)
+                    elif self.direction == 1270:
+                        self.control_info += ' 向东'
+                        self.nesw_control(nest=Nwse.east)
             # 遥控器控制
             elif self.ship_status == ShipStatus.remote_control:
                 # lora遥控器
@@ -1334,23 +1336,22 @@ class DataManager:
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
                       qos=0)
-            if time.time() - last_read_time > 60:
+            if config.home_debug and time.time() - last_read_time > 60:
                 last_read_time = time.time()
                 self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
-                if config.home_debug:
-                    self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
-                              qos=0)
-                    self.logger.info({'fakedate': mqtt_send_detect_data})
-                    # 调试时使用发送检测数据
-                    if config.debug_send_detect_data:
-                        mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})
-                        mqtt_send_detect_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
-                        if len(self.data_define_obj.pool_code) > 0:
-                            self.send(method='http', data=mqtt_send_detect_data,
-                                      url=config.http_data_save,
-                                      http_type='POST')
-                            time.sleep(0.5)
-                            self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
+                self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
+                          qos=0)
+                self.logger.info({'fakedate': mqtt_send_detect_data})
+                # 调试时使用发送检测数据
+                if config.debug_send_detect_data:
+                    mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})
+                    mqtt_send_detect_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
+                    if len(self.data_define_obj.pool_code) > 0:
+                        self.send(method='http', data=mqtt_send_detect_data,
+                                  url=config.http_data_save,
+                                  http_type='POST')
+                        time.sleep(0.5)
+                        self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
             # print('b_draw_over_send_data', self.b_draw_over_send_data)
             if self.b_draw_over_send_data:
                 # 添加经纬度

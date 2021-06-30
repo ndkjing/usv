@@ -692,7 +692,11 @@ class DroneKitControl:
 # --out=tcp:127.0.0.1:5662
 # 1是右侧  3是左侧电机
 if __name__ == '__main__':
-    drone_obj = DroneKitControl(config.pix_port)
+    # pix_port = '/dev/ttyACM0'
+    pix_port = 'tcp:127.0.0.1:5760'
+    pix_baud = 115200
+    b_use_pix = False
+    drone_obj = DroneKitControl(pix_port)
     drone_obj.download_mission(True)
     # simple_point()
     # multi_points()

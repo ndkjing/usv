@@ -32,7 +32,7 @@ home_location_path = os.path.join(root_path, 'home_location.json')
 
 
 class CurrentPlatform(enum.Enum):
-    windwos = 1
+    windows = 1
     linux = 2
     pi = 3
     others = 4
@@ -41,7 +41,7 @@ class CurrentPlatform(enum.Enum):
 sysstr = platform.system()
 if sysstr == "Windows":
     print("Call Windows tasks")
-    current_platform = CurrentPlatform.windwos
+    current_platform = CurrentPlatform.windows
 elif sysstr == "Linux":  # 树莓派上也是Linux
     print("Call Linux tasks")
     # 公司Linux电脑名称
@@ -692,15 +692,6 @@ channel_1_pin = 5  # 水平是1通道
 channel_3_pin = 6  # 垂直是2通道
 channel_remote_pin = 11  # 开启遥控器输入pin口
 
-# 激光雷达
-b_laser = 0
-laser_tx = 13
-laser_rx = 19
-laser_baud = 115200
-laser_hz = 40
-# 激光雷达舵机输出
-steer_engine_pin = 26
-
 # 毫米波雷达 millimeter wave radar
 b_millimeter_wave = 1
 field_of_view = 90
@@ -716,21 +707,12 @@ b_draw = 1     # 是否有抽水泵
 b_control_deep = 1  # 是否可调深度
 draw_steer = 13  # 舵机接口
 
-# 声呐  RX  TX  声呐舵机
-b_sonar = 0
-sonar_rx = 16
-sonar_tx = 20
-sonar_baud = 9600
-sonar_steer = 21
-test_all = 0
-
 # 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
 if home_debug:
     use_shape_theta_type = 3
 else:
     use_shape_theta_type = 1
-# 是否含有抽水泵
-b_draw = 0
+
 # 测试在家调试也发送数据
 debug_send_detect_data = 0
 # 转向速度

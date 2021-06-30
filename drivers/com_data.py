@@ -159,7 +159,6 @@ class ComData:
 
 if __name__ == '__main__':
     import config
-    b_compass = 0
     b_ultrasonic = 0
     b_com_data = 0
     b_gps = 0
@@ -175,17 +174,6 @@ if __name__ == '__main__':
         b_gps = 1
     elif int(check_type) == 5:
         b_laser = 1
-    if b_compass:
-        com_obj = ComData(config.compass_port,
-                          config.compass_baud,
-                          timeout=0.7,
-                          logger=logger)
-
-        while True:
-            # 校准罗盘  C0  开始  C1 结束
-            key_input = input('input:  C0  开始  C1 结束 >')
-            com_obj.send_data(key_input, b_hex=True)
-            print('0号罗盘数据:', com_obj.readline(), com_obj.readline(), com_obj.readline(), com_obj.readline())
     elif b_com_data:
         serial_obj = ComData(config.stc_port,
                              config.stc_baud,

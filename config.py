@@ -4,7 +4,6 @@ import json
 import os
 import platform
 import ship_code_config
-import time
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
@@ -31,7 +30,7 @@ home_location_path = os.path.join(root_path, 'home_location.json')
 
 
 class CurrentPlatform(enum.Enum):
-    windwos = 1
+    windows = 1
     linux = 2
     pi = 3
     others = 4
@@ -40,7 +39,7 @@ class CurrentPlatform(enum.Enum):
 sysstr = platform.system()
 if sysstr == "Windows":
     print("Call Windows tasks")
-    current_platform = CurrentPlatform.windwos
+    current_platform = CurrentPlatform.windows
 elif sysstr == "Linux":  # 树莓派上也是Linux
     print("Call Linux tasks")
     # 公司Linux电脑名称
@@ -186,24 +185,6 @@ ship_code = ship_code_config.ship_code
 stc_port = '/dev/ttyUSB0'
 stc_baud = 115200
 b_com_stc = os.path.exists(stc_port)
-# imu
-imu_port = '/dev/imu'
-imu_baud = 115200
-
-if current_platform == CurrentPlatform.pi:
-    pix_port = '/dev/ttyACM0'
-else:
-    pix_port = 'tcp:127.0.0.1:5760'
-pix_baud = 115200
-b_use_pix = False
-
-# GPS
-gps_port = '/dev/gps'
-gps_baud = 115200
-gps_frequency = 1
-# 罗盘
-compass_port = '/dev/compass0'
-compass_baud = 9600
 # http 接口
 # 查询船是否注册  wuhanligong.xxlun.com/union
 http_binding = 'http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/%s' % (ship_code)
@@ -731,7 +712,6 @@ sonar_tx = 20
 sonar_baud = 9600
 # 声呐舵机
 sonar_steer = 21
-test_all = 0
 
 # 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
 if home_debug:
