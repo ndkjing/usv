@@ -722,7 +722,7 @@ class PiMain:
         :param deep_pwm:
         :return:
         """
-        self.pi.set_servo_pulsewidth(config.pin_tilt, deep_pwm)
+        self.pi.set_servo_pulsewidth(config.draw_steer, deep_pwm)
         self.draw_steer_pwm = deep_pwm
 
     def get_remote_control_data(self, debug=False):

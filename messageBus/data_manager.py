@@ -291,7 +291,7 @@ class DataManager:
             if self.draw_start_time is None:
                 self.draw_start_time = time.time()
             else:
-                print(time.time() - self.draw_start_time)
+                print('抽水时间', time.time() - self.draw_start_time)
                 if time.time() - self.draw_start_time > config.draw_time:
                     self.b_sampling = 2
                     self.draw_start_time = None
@@ -814,6 +814,11 @@ class DataManager:
                                                                             lng_lat[0],
                                                                             lng_lat[1])
             index += 1
+        # 超过第一个点后需要累积之前计数
+        if index_ > 0:
+            self.path_info = [self.smooth_path_lng_lat_index[index_-1] + index, len(self.smooth_path_lng_lat)]
+        else:
+            self.path_info = [index, len(self.smooth_path_lng_lat)]
         return self.search_list[index]
 
     # 构建障碍物地图
@@ -854,7 +859,7 @@ class DataManager:
                                                             self.lng_lat[1],
                                                             angle,
                                                             config.min_steer_distance * 5)
-        r_temp = self.points_arrive_control(point, point, False, False)
+        self.points_arrive_control(point, point, False, False)
 
     # 计算障碍物下目标点
     def get_avoid_obstacle_point(self, path_planning_point_gps=None):
@@ -880,7 +885,7 @@ class DataManager:
                 angle = vfh.vfh_func(9, self.pi_main_obj.obstacle_list)
                 print('angle', angle)
                 if angle == -1:
-                    abs_angle = (self.theta + 180) % 360
+                    abs_angle = (self.pi_main_obj.theta + 180) % 360
                     next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                                      self.lng_lat[1],
                                                                                      abs_angle,
@@ -1003,7 +1008,6 @@ class DataManager:
             if b_back_home:
                 if distance_sample < config.arrive_distance:
                     return True
-            end_time = time.time()
 
     # 处理电机控制
     def move_control(self):
@@ -1244,7 +1248,7 @@ class DataManager:
                     else:
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
                         last_read_time = time.time()
-            time.sleep(1 / config.gps_frequency)
+            time.sleep(0.5)
 
     # 读取函数会阻塞 必须使用线程发送mqtt状态数据和检测数据
     def send_mqtt_data(self):
@@ -1352,7 +1356,6 @@ class DataManager:
                                   http_type='POST')
                         time.sleep(0.5)
                         self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
-            # print('b_draw_over_send_data', self.b_draw_over_send_data)
             if self.b_draw_over_send_data:
                 # 添加经纬度
                 mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})

@@ -269,7 +269,10 @@ forward_see_distance = 9
 steer_max_angle = 30
 # 最小转向距离
 min_steer_distance = 10   # 自动模式下避障距离 单位m
-
+# 测试在家调试也发送数据
+debug_send_detect_data = 0
+# 转向速度
+angular_velocity = 90
 
 def update_height_setting():
     global motor_forward
@@ -643,6 +646,7 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
 
 
 ########### 树莓派GPIO端口相关设置 均使用BCM编码端口
+"""
 # 水下摄像头云台水平和俯仰
 pin_pan = 2
 pin_tilt = 3
@@ -737,6 +741,69 @@ b_pin_stc = 1
 stc_tx = 3
 stc_rx = 4
 stc_baud = 115200
+"""
+########### 树莓派GPIO端口相关设置 均使用BCM编码端口
+# 水下摄像头云台水平和俯仰
+# 激光雷达
+b_laser = 0
+laser_tx = 13
+laser_rx = 19
+laser_baud = 115200
+laser_hz = 40
+# 电机信号输出控制口
+left_pwm_pin = 6  # 左侧
+right_pwm_pin = 5  # 右侧电机
+# 软串口罗盘
+b_pin_compass = 1
+pin_compass_baud = 9600
+pin_compass_tx = 27
+pin_compass_rx = 22
+# 软串口gps
+b_pin_gps = 1
+pin_gps_baud = 9600
+pin_gps_tx = 23
+pin_gps_rx = 24
+# usv 串口遥控器
+b_lora_remote_control = 1
+lora_tx = 25
+lora_rx = 8
+lora_baud = 9600
+# 单片机串口
+b_pin_stc = 1
+stc_tx = 3
+stc_rx = 4
+stc_baud = 115200
+# 是否通用2.4g遥控器
+b_use_remote_control = 0
+channel_1_pin = 5  # 水平是1通道
+channel_3_pin = 6  # 垂直是2通道
+channel_remote_pin = 11  # 开启遥控器输入pin口
+# 毫米波雷达 millimeter wave radar
+b_millimeter_wave = 1
+field_of_view = 90
+view_cell = 5
+ceil_max = 3  # 可以通过扇区阈值
+millimeter_wave_tx = 16
+millimeter_wave_rx = 20
+millimeter_wave_baud = 115200
+millimeter_wave_hz = 40
+# 声呐
+b_sonar = 0
+sonar_rx = 16  # RX
+sonar_tx = 20  # TX
+sonar_baud = 9600
+sonar_steer = 21  # 声呐舵机
+
+# 抽水
+b_draw = 1     # 是否有抽水泵
+b_control_deep = 1  # 是否可调深度
+draw_steer = 13  # 舵机接口
+
+# 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
+if home_debug:
+    use_shape_theta_type = 3
+else:
+    use_shape_theta_type = 1
 
 
 
