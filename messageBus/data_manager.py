@@ -299,34 +299,22 @@ class DataManager:
                     self.b_sampling = 1
         else:
             # 判断是否抽水  点击抽水情况
-            if self.server_data_obj.mqtt_send_get_obj.b_draw or self.b_arrive_point:
-                if self.draw_start_time is None or self.current_b_draw == 0:
-                    if self.draw_start_time is not None:
-                        # 超时中断抽水
-                        if time.time() - self.draw_start_time > config.draw_time:
-                            self.b_draw_over_send_data = True
-                            self.com_data_obj.send_data('A0Z')
-                            self.current_b_draw = 0
-                            self.draw_start_time = None
-                    else:
-                        self.com_data_obj.send_data('A1Z')
-                        self.b_sampling = 1
-                        self.current_b_draw = 1
-                        self.draw_start_time = time.time()
-                elif self.draw_start_time is not None and self.current_b_draw == 1:
+            if self.server_data_obj.mqtt_send_get_obj.b_draw:
+                if self.draw_start_time is None:
+                    self.com_data_obj.send_data('A1Z')
+                    self.b_sampling = 1
+                    self.draw_start_time = time.time()
+                else:
                     # 超时中断抽水
                     if time.time() - self.draw_start_time > config.draw_time:
                         self.b_draw_over_send_data = True
                         self.com_data_obj.send_data('A0Z')
                         self.b_sampling = 2
-                        self.current_b_draw = 0
-                        self.server_data_obj.mqtt_send_get_obj.b_draw = 0
                         self.draw_start_time = None
             else:
                 if self.current_b_draw == 1:
                     self.com_data_obj.send_data('A0Z')
                     print('A0Z')
-                    self.current_b_draw = 0
                     self.draw_start_time = None
 
     # 控制外设
@@ -499,11 +487,10 @@ class DataManager:
             pass
         # 从任务执行到电脑手动
         elif status_change_index == 10:
-            self.server_data_obj.mqtt_send_get_obj.b_draw = 0
+            pass
         # 从任务执行到电脑自动
         elif status_change_index == 11:
-            if self.server_data_obj.mqtt_send_get_obj.b_draw:
-                self.server_data_obj.mqtt_send_get_obj.b_draw = 0
+            pass
         # 从电脑自动到电脑手动
         elif status_change_index == 12:
             # 此时区分是否取消之前的航点
@@ -521,8 +508,8 @@ class DataManager:
             pass
         # 从电脑自动到任务模式
         elif status_change_index == 16:
-            pass
-
+            self.b_arrive_point = 0
+            self.server_data_obj.mqtt_send_get_obj.b_draw = 1
         # 断网返航到返航到家
         elif status_change_index == 17:
             pass
@@ -630,13 +617,8 @@ class DataManager:
 
             # 判断任务模式切换到其他状态情况
             if self.ship_status == ShipStatus.tasking:
-                self.b_arrive_point = 0
-                # TODO 切换到遥控器模式
-                # 切换到电脑手动模式
-                if self.server_data_obj.mqtt_send_get_obj.b_draw == 1 and self.b_sampling == 2:
-                    self.change_status_info(self.last_ship_status)
-                # 切换到电脑自动模式
-                elif self.b_sampling == 2:
+                # 切换到电脑自动模式  切换到电脑手动模式
+                if self.b_sampling == 2:
                     if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) > 0 and \
                             all(self.server_data_obj.mqtt_send_get_obj.sampling_points_status):
                         self.change_status_info(target_status=ShipStatus.computer_control, b_clear_status=True)
@@ -1279,7 +1261,7 @@ class DataManager:
                 self.home_gaode_lng_lat = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
                 self.home_lng_lat = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
                                                                        self.gaode_lng_lat,
-                                                                       self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
+                                                                    self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
                 self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat = None
             elif self.home_gaode_lng_lat:
                 status_data.update({'home_lng_lat': self.home_gaode_lng_lat})
