@@ -146,7 +146,7 @@ class MqttSendGet:
         # 舷灯 1 允许打开舷灯 没有该键表示不打开
         self.side_light = 1
         # 状态灯
-        self.status_light = 2
+        self.status_light = 1
         # 启动还是停止
         self.b_start = 0
         # 基础设置数据

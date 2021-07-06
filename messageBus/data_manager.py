@@ -108,8 +108,6 @@ class DataManager:
         self.distance_move_score = 0
         # 目标点信息
         self.path_info = [0, 0]
-        # 当前是否抽水
-        self.current_b_draw = 0
         # 抽水开始时间
         self.draw_start_time = None
         # 抽水结束发送数据
@@ -172,16 +170,14 @@ class DataManager:
         self.last_headlight = 0
         self.last_audio_light = 0
         self.last_status_light = 0
+        self.last_drain = 0  # 0没有在排水 1 在排水
+        self.last_draw_steer = None  # 舵机状态
+        self.pi_main_obj = None
         # 状态灯
         self.light_status = LightStatus.yellow
         if config.current_platform == config.CurrentPlatform.pi:
             self.pi_main_obj = pi_main.PiMain()
-            # 串口数据收发对象
-            if os.path.exists(config.stc_port):
-                self.com_data_obj = self.pi_main_obj.get_com_obj(port=config.stc_port,
-                                                                 baud=config.stc_baud,
-                                                                 timeout=config.stc2pi_timeout,
-                                                                 logger_=self.com_data_read_logger)
+
         # 使用真实GPS 还是 初始化高德GPS
         self.use_true_gps = 0
         if config.current_platform == config.CurrentPlatform.pi:
@@ -209,66 +205,16 @@ class DataManager:
                 self.server_data_obj.mqtt_send_get_obj.mqtt_connect()
             time.sleep(5)
 
-    # 读取函数会阻塞 必须使用线程
-    def get_com_data(self):
-        last_read_time = time.time()
-        while True:
-            # 水质数据 b''BBD:0,R:158,Z:36,P:0,T:16.1,V:92.08,x1:0,x2:2,x3:1,x4:0\r\n'
-            # 经纬度数据 b'AA2020.2354804,N,11425.41234568896,E\r\n'
-            try:
-                time.sleep(0.5)
-                row_com_data_read = self.com_data_obj.readline()
-                # 如果数据不存在或者数据过短都跳过
-                if row_com_data_read:
-                    if len(str(row_com_data_read)) < 7:
-                        continue
-                else:
-                    continue
-                com_data_read = str(row_com_data_read)[2:-5]
-                if time.time() - last_read_time > 3:
-                    last_read_time = time.time()
-                    self.com_data_read_logger.info({'str com_data_read': com_data_read})
-                # 解析串口发送过来的数据
-                if com_data_read is None:
-                    continue
-                # 读取数据过短跳过
-                if len(com_data_read) < 5:
-                    continue
-                if com_data_read.startswith('AA'):
-                    com_data_list = com_data_read.split(',')
-                    lng, lat = round(float(com_data_list[2][:3]) +
-                                     float(com_data_list[2][3:]) /
-                                     60, 6), round(float(com_data_list[0][2:4]) +
-                                                   float(com_data_list[0][4:]) /
-                                                   60, 6)
-                    self.second_lng_lat = [lng, lat]
-                    if time.time() - last_read_time > 10:
-                        self.com_data_read_logger.info({'second_lng_lat': self.second_lng_lat})
-                elif com_data_read.startswith('BB'):
-                    com_data_list = com_data_read.split(',')
-                    ec_data = float(com_data_list[1].split(':')[1]) / math.pow(10, int(com_data_list[7][3:]))
-                    ec_data = data_valid.valid_water_data(config.WaterType.EC, ec_data)
-                    self.water_data_dict.update({'EC': ec_data})
-                    do_data = float(com_data_list[0][2:].split(':')[1]) / math.pow(10, int(com_data_list[6][3:]))
-                    do_data = data_valid.valid_water_data(config.WaterType.DO, do_data)
-                    self.water_data_dict.update({'DO': do_data})
-                    td_data = float(com_data_list[2].split(':')[1]) / math.pow(10, int(com_data_list[8][3:]))
-                    td_data = data_valid.valid_water_data(config.WaterType.TD, td_data)
-                    self.water_data_dict.update({'TD': td_data})
-                    ph_data = float(com_data_list[3].split(':')[1]) / math.pow(10, int(com_data_list[9][3:]))
-                    ph_data = data_valid.valid_water_data(config.WaterType.pH, ph_data)
-                    self.water_data_dict.update({'pH': ph_data})
-                    wt_data = float(com_data_list[4].split(':')[1])
-                    wt_data = data_valid.valid_water_data(config.WaterType.wt, wt_data)
-                    self.water_data_dict.update({'wt': wt_data})
-                    self.dump_energy = float(com_data_list[5].split(':')[1])
-                    if time.time() - last_read_time > 5:
-                        last_read_time = time.time()
-                        self.com_data_read_logger.info({'str com_data_read': com_data_read})
-                        print({'water_data_dict': self.water_data_dict})
-                        self.com_data_read_logger.info({'water_data_dict': self.water_data_dict})
-            except Exception as e:
-                self.com_data_read_logger.error({'串口数据解析错误': e})
+    def send_stc_data(self, data):
+        """
+
+        :param data:
+        :return:
+        """
+        if config.b_com_stc:
+            self.pi_main_obj.com_data_obj.send_data(data)
+        elif config.b_pin_stc:
+            self.pi_main_obj.stc_obj.write_data(data)
 
     # 抽水
     def draw(self):
@@ -297,25 +243,54 @@ class DataManager:
                     self.draw_start_time = None
                 else:
                     self.b_sampling = 1
+        # 判断遥控器控制抽水
+        elif self.pi_main_obj.remote_draw_status == 1:
+            if self.draw_start_time is None:
+                self.draw_start_time = time.time()
+                self.b_sampling = 1
+                if config.b_pin_stc:
+                    self.pi_main_obj.stc_obj.send_stc_data('A1Z')
+                elif config.b_com_stc:
+                    self.pi_main_obj.com_data_obj.send_data('A1Z')
+        elif self.pi_main_obj.remote_draw_status == 0 and self.b_sampling == 1 \
+                and self.draw_start_time and not self.server_data_obj.mqtt_send_get_obj.b_draw:
+            if config.b_pin_stc:
+                self.pi_main_obj.stc_obj.send_stc_data('A0Z')
+            elif os.path.exists(config.stc_port):
+                self.pi_main_obj.com_data_obj.send_data('A0Z')
+            if time.time() - self.draw_start_time > config.draw_time:
+                self.b_draw_over_send_data = True
+            self.b_sampling = 2
+            self.draw_start_time = None
+        # 到点和点击按键抽水
         else:
             # 判断是否抽水  点击抽水情况
             if self.server_data_obj.mqtt_send_get_obj.b_draw:
                 if self.draw_start_time is None:
-                    self.com_data_obj.send_data('A1Z')
+                    if config.b_pin_stc:
+                        self.pi_main_obj.stc_obj.send_stc_data('A1Z')
+                    elif config.b_com_stc:
+                        self.pi_main_obj.com_data_obj.send_data('A1Z')
                     self.b_sampling = 1
                     self.draw_start_time = time.time()
                 else:
                     # 超时中断抽水
                     if time.time() - self.draw_start_time > config.draw_time:
                         self.b_draw_over_send_data = True
-                        self.com_data_obj.send_data('A0Z')
+                        if config.b_pin_stc:
+                            self.pi_main_obj.stc_obj.send_stc_data('A0Z')
+                        elif os.path.exists(config.stc_port):
+                            self.pi_main_obj.com_data_obj.send_data('A0Z')
                         self.b_sampling = 2
                         self.draw_start_time = None
             else:
-                if self.current_b_draw == 1:
-                    self.com_data_obj.send_data('A0Z')
-                    print('A0Z')
-                    self.draw_start_time = None
+                if config.b_pin_stc:
+                    self.pi_main_obj.stc_obj.send_stc_data('A0Z')
+                elif os.path.exists(config.stc_port):
+                    self.pi_main_obj.com_data_obj.send_data('A0Z')
+                self.b_sampling = 2
+                print('A0Z')
+                self.draw_start_time = None
 
     # 控制外设
     def control_relay(self):
@@ -323,6 +298,11 @@ class DataManager:
         控制继电器
         :return:
         """
+        # 舷灯
+        if self.pi_main_obj.remote_side_light_status == 1:
+            self.server_data_obj.mqtt_send_get_obj.side_light = 1
+        elif self.pi_main_obj.remote_side_light_status == 0:
+            self.server_data_obj.mqtt_send_get_obj.side_light = 0
         if self.server_data_obj.mqtt_send_get_obj.side_light:
             if self.last_side_light:
                 pass
@@ -330,17 +310,21 @@ class DataManager:
                 if config.b_pin_stc:
                     self.pi_main_obj.stc_obj.send_stc_data('B1Z')
                 elif os.path.exists(config.stc_port):
-                    self.com_data_obj.send_data('B1Z')
+                    self.pi_main_obj.com_data_obj.send_data('B1Z')
         else:
             if self.last_side_light:
                 if config.b_pin_stc:
                     self.pi_main_obj.stc_obj.send_stc_data('B0Z')
                 elif os.path.exists(config.stc_port):
-                    self.com_data_obj.send_data('B0Z')
+                    self.pi_main_obj.com_data_obj.send_data('B0Z')
             else:
                 pass
         self.last_side_light = self.server_data_obj.mqtt_send_get_obj.side_light
-
+        # 大灯
+        if self.pi_main_obj.remote_head_light_status == 1:
+            self.server_data_obj.mqtt_send_get_obj.headlight = 1
+        elif self.pi_main_obj.remote_head_light_status == 0:
+            self.server_data_obj.mqtt_send_get_obj.headlight = 0
         if self.server_data_obj.mqtt_send_get_obj.headlight:
             if self.last_headlight:
                 pass
@@ -348,17 +332,17 @@ class DataManager:
                 if config.b_pin_stc:
                     self.pi_main_obj.stc_obj.send_stc_data('C1Z')
                 elif os.path.exists(config.stc_port):
-                    self.com_data_obj.send_data('C1Z')
+                    self.pi_main_obj.com_data_obj.send_data('C1Z')
         else:
             if self.last_headlight:
                 if config.b_pin_stc:
                     self.pi_main_obj.stc_obj.send_stc_data('C0Z')
                 elif os.path.exists(config.stc_port):
-                    self.com_data_obj.send_data('C0Z')
+                    self.pi_main_obj.com_data_obj.send_data('C0Z')
             else:
                 pass
         self.last_headlight = self.server_data_obj.mqtt_send_get_obj.headlight
-
+        # 声光报警器
         if self.server_data_obj.mqtt_send_get_obj.audio_light:
             if self.last_audio_light:
                 pass
@@ -366,27 +350,60 @@ class DataManager:
                 if config.b_pin_stc:
                     self.pi_main_obj.stc_obj.send_stc_data('D1Z')
                 elif os.path.exists(config.stc_port):
-                    self.com_data_obj.send_data('D1Z')
+                    self.pi_main_obj.com_data_obj.send_data('D1Z')
         else:
             if self.last_audio_light:
                 if config.b_pin_stc:
                     self.pi_main_obj.stc_obj.send_stc_data('D0Z')
                 elif os.path.exists(config.stc_port):
-                    self.com_data_obj.send_data('D0Z')
+                    self.pi_main_obj.com_data_obj.send_data('D0Z')
             else:
                 pass
         self.last_audio_light = self.server_data_obj.mqtt_send_get_obj.audio_light
+        # 排水
+        if self.pi_main_obj.remote_drain_status:
+            if self.last_drain:
+                pass
+            else:
+                if config.b_pin_stc:
+                    self.pi_main_obj.stc_obj.send_stc_data('A2Z')
+                elif os.path.exists(config.stc_port):
+                    self.pi_main_obj.com_data_obj.send_data('A2Z')
+        else:
+            if self.last_drain:
+                if config.b_pin_stc:
+                    self.pi_main_obj.stc_obj.send_stc_data('A0Z')
+                elif os.path.exists(config.stc_port):
+                    self.pi_main_obj.com_data_obj.send_data('A0Z')
+            else:
+                pass
+        self.last_drain = self.pi_main_obj.remote_drain_status
+        # 舵机
+        if self.pi_main_obj.remote_draw_steer == 500:
+            if self.last_draw_steer == 500:
+                pass
+            else:
+                self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
+        else:
+            if self.last_draw_steer == 2500:
+                pass
+            else:
+                self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
+        self.last_draw_steer = self.pi_main_obj.remote_draw_steer
+        # 状态灯
         if self.server_data_obj.mqtt_send_get_obj.status_light != self.last_status_light:
-            # 启动后先亮黄灯
+            # 启动后mqtt连接上亮绿灯
             if self.server_data_obj.mqtt_send_get_obj.is_connected:
                 self.server_data_obj.mqtt_send_get_obj.status_light = 3
+            if self.pi_main_obj.b_start_remote:
+                self.server_data_obj.mqtt_send_get_obj.status_light = 2
             send_stc_data = 'E%sZ' % (str(self.server_data_obj.mqtt_send_get_obj.status_light))
             if config.b_pin_stc:
                 self.pi_main_obj.stc_obj.send_stc_data(send_stc_data)
             elif os.path.exists(config.stc_port):
-                self.com_data_obj.send_data(send_stc_data)
+                self.pi_main_obj.com_data_obj.send_data(send_stc_data)
         self.last_status_light = self.server_data_obj.mqtt_send_get_obj.status_light
-        if random.random() > 0.8:
+        if random.random() > 0.9:
             self.last_status_light = 4
 
     def clear_all_status(self):
@@ -639,7 +656,7 @@ class DataManager:
                 elif not config.home_debug and self.pi_main_obj.b_start_remote == 0:
                     self.change_status_info(target_status=ShipStatus.idle)
                 # 切换到任务模式
-                elif not config.home_debug and self.pi_main_obj.start_draw == 1:
+                elif not config.home_debug and self.pi_main_obj.remote_draw_status == 1:
                     self.last_ship_status = ShipStatus.remote_control
                     self.change_status_info(target_status=ShipStatus.tasking)
 
@@ -678,7 +695,7 @@ class DataManager:
             if int(config.network_backhome) > 600:
                 network_backhome_time = int(config.network_backhome)
             else:
-                network_backhome_time = 600
+                network_backhome_time = 1000
             if time.time() - self.server_data_obj.mqtt_send_get_obj.last_command_time > network_backhome_time:
                 return_ship_status = ShipStatus.backhome_network
         if self.low_dump_energy_warnning:
@@ -798,7 +815,7 @@ class DataManager:
             index += 1
         # 超过第一个点后需要累积之前计数
         if index_ > 0:
-            self.path_info = [self.smooth_path_lng_lat_index[index_-1] + index, len(self.smooth_path_lng_lat)]
+            self.path_info = [self.smooth_path_lng_lat_index[index_ - 1] + index, len(self.smooth_path_lng_lat)]
         else:
             self.path_info = [index, len(self.smooth_path_lng_lat)]
         return self.search_list[index]
@@ -1169,9 +1186,12 @@ class DataManager:
             elif self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
                 # 有返航点下情况下返回返航点，没有则停止
                 print('back home')
-                back_home_flag = self.points_arrive_control(self.home_lng_lat, self.home_lng_lat, True, True)
-                if back_home_flag:
-                    self.b_at_home = 1
+                if self.home_lng_lat:
+                    back_home_flag = self.points_arrive_control(self.home_lng_lat, self.home_lng_lat, True, True)
+                    if back_home_flag:
+                        self.b_at_home = 1
+                else:
+                    continue
 
     # 将经纬度转换为高德经纬度
     def update_ship_gaode_lng_lat(self):
@@ -1261,7 +1281,7 @@ class DataManager:
                 self.home_gaode_lng_lat = copy.deepcopy(self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
                 self.home_lng_lat = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
                                                                        self.gaode_lng_lat,
-                                                                    self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
+                                                                       self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat)
                 self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat = None
             elif self.home_gaode_lng_lat:
                 status_data.update({'home_lng_lat': self.home_gaode_lng_lat})
@@ -1439,7 +1459,7 @@ class DataManager:
     def control_peripherals(self):
         while True:
             time.sleep(config.thread_sleep_time)
-            if not config.home_debug:
+            if not config.home_debug and self.pi_main_obj:
                 self.control_relay()
 
     # 状态检查函数，检查自身状态发送对应消息

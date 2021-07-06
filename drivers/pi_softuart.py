@@ -273,20 +273,20 @@ class PiSoftuart(object):
                         if temp_data[0] == 'A' and temp_data[-1] == 'Z':
                             item_data = temp_data[1:-1]
                             item_data_list = item_data.split(',')
-                            if len(item_data_list) == 14:
-                                left_row = item_data_list[1]
-                                left_col = item_data_list[0]
-                                right_row = item_data_list[3]
-                                right_col = item_data_list[2]
-                                fine_tuning = item_data_list[4]
-                                button_10 = item_data_list[9]
-                                button_11 = item_data_list[10]
-                                button_12 = item_data_list[11]
-                                button_13 = item_data_list[12]
-                                lever_6 = item_data_list[5]
-                                lever_7 = item_data_list[6]
-                                lever_8 = item_data_list[7]
-                                lever_9 = item_data_list[8]
+                            if len(item_data_list) >= 13:
+                                left_row = int(item_data_list[1])
+                                left_col = int(item_data_list[0])
+                                right_row = int(item_data_list[3])
+                                right_col = int(item_data_list[2])
+                                fine_tuning = int(item_data_list[4])
+                                button_10 = int(item_data_list[9])
+                                button_11 = int(item_data_list[10])
+                                button_12 = int(item_data_list[11])
+                                button_13 = int(item_data_list[12])
+                                lever_6 = int(item_data_list[5])
+                                lever_7 = int(item_data_list[6])
+                                lever_8 = int(item_data_list[7])
+                                lever_9 = int(item_data_list[8])
                                 return [left_col,
                                         left_row,
                                         right_col,
@@ -370,10 +370,7 @@ class PiSoftuart(object):
         try:
             count, data = self._pi.bb_serial_read(self._rx_pin)
             print(time.time(), 'count', count, 'data', data)
-            str_data = data.decode('utf-8', errors='ignore')
-            com_data_read = str(data)[2:-5]
-            print('com_data_read', com_data_read)
             time.sleep(self._thread_ts * 10)
         except Exception as e:
-            print({'error read_gps': e})
+            print({'error read_stc_data': e})
             return None

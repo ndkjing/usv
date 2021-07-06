@@ -93,7 +93,7 @@ def main():
         pi_func_list = [data_manager_obj.pi_main_obj.loop_change_pwm,
                         data_manager_obj.pi_main_obj.get_gps_data,
                         data_manager_obj.pi_main_obj.get_compass_data,
-                        data_manager_obj.get_com_data,
+                        data_manager_obj.pi_main_obj.get_com_data,
                         data_manager_obj.pi_main_obj.get_distance_dict,
                         data_manager_obj.pi_main_obj.get_distance_dict_millimeter,
                         data_manager_obj.send_distacne,
@@ -108,7 +108,7 @@ def main():
         pi_func_flag.append(True if config.b_millimeter_wave else False)
         pi_func_flag.append(True if config.b_laser or config.b_millimeter_wave else False)
         pi_func_flag.append(True if config.b_pin_stc else False)
-        pi_func_flag.append(True if config.b_use_remote_control else False)
+        pi_func_flag.append(True if config.b_lora_remote_control else False)
     for common_func in common_func_list:
         common_thread_list.append(threading.Thread(target=common_func))
     if config.current_platform == config.CurrentPlatform.pi:
@@ -129,15 +129,17 @@ def main():
     #  判断线程是否死亡并重启线程
     while True:
         if config.current_platform == config.CurrentPlatform.pi:
-            for index_common_thread, common_thread in enumerate(pi_thread_list):
-                if not common_thread.is_alive():
-                    logger.error('restart get_com_data_thread')
+            for index_common_thread, common_thread in enumerate(common_thread_list):
+                if common_thread is not None and not common_thread.is_alive():
+                    logger.error({'restart ':index_common_thread})
+                    print(index_common_thread,common_func_list[index_common_thread])
                     common_thread_list[index_common_thread] = threading.Thread(
                         target=common_func_list[index_common_thread])
                     common_thread_list[index_common_thread].start()
             for index_pi_thread, pi_thread in enumerate(pi_thread_list):
                 if pi_thread and not pi_thread.is_alive():
-                    logger.error('restart get_com_data_thread')
+                    logger.error({'restart ': index_pi_thread})
+                    print(index_pi_thread, pi_func_list[index_pi_thread])
                     pi_thread_list[index_pi_thread] = threading.Thread(target=pi_func_list[index_pi_thread])
                     pi_thread_list[index_pi_thread].start()
             time.sleep(thread_restart_time)
