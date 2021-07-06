@@ -198,6 +198,7 @@ class DataManager:
         self.b_check_get_water_data = 0
         # 是否已经初始化电机
         self.is_init_motor = 0
+        self.area_id = None
 
     def connect_mqtt_server(self):
         while True:
@@ -1645,12 +1646,16 @@ class DataManager:
 
     def start_once_func(self):
         while True:
-            if not self.b_check_get_water_data:
-                data_valid.get_current_water_data()
-                self.b_check_get_water_data = 1
             if not config.home_debug and not self.is_init_motor:
                 self.pi_main_obj.init_motor()
                 self.is_init_motor = 1
+            if not self.b_check_get_water_data and self.gaode_lng_lat is not None:
+                adcode = baidu_map.BaiduMap.get_area_code(self.gaode_lng_lat)
+                self.area_id = data_valid.adcode_2_area_id(adcode)
+                print('self.area_id',self.area_id)
+                data_valid.get_current_water_data(area_id=self.area_id)
+                self.b_check_get_water_data = 1
+
             time.sleep(3)
 
 

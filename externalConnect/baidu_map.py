@@ -332,6 +332,16 @@ class BaiduMap(object):
         self.pool_name = pool_name
         self.address = address
 
+    @staticmethod
+    def get_area_code(lng_lat):
+        address_url = 'https://restapi.amap.com/v3/geocode/regeo?output=json&location={position}&key={key}&radius=1000&extensions=all&poitype=湖泊'.format(
+            position='%f,%f' % (lng_lat[0], lng_lat[1]), key=config.gaode_key)
+        response = requests.get(address_url)
+        address_response_data = json.loads(response.content)
+        if int(address_response_data.get('status')) == 1:
+            adcode = address_response_data.get('regeocode').get('addressComponent').get('adcode')
+            return adcode
+
     # 按照经纬度url获取静态图
     def draw_image(self, ):
         png_url = self.get_image_url()
@@ -666,11 +676,12 @@ class BaiduMap(object):
 
 if __name__ == '__main__':
     pass
-    # src_point = [114.4314,30.523558]  喻家湖
+    src_point = [114.4314,30.523558]  # 喻家湖
     # src_point = [114.431400, 30.523558]
-    # obj = BaiduMap(src_point, zoom=15,
-    #                scale=1, map_type=MapType.gaode)
-    # print(obj.get_pool_name())
+    obj = BaiduMap(src_point, zoom=15,
+                   scale=1, map_type=MapType.gaode)
+    print(obj.get_pool_name())
+    print(obj.get_area_code(src_point))
     # pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=False)
     # scan_cnts = obj.scan_pool(meter_gap=50, safe_meter_distance=10, b_show=False)
     # return_gps, return_gps_list = obj.pix_to_gps(scan_cnts)

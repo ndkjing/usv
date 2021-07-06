@@ -19,7 +19,6 @@ class CrawlWaterData:
     """
     抓取水质数据
     """
-
     def __init__(self):
         self.base_url = 'http://106.37.208.243:8068/GJZ/Ajax/Publish.ashx?PageIndex=1&PageSize=60&action=getRealDatas&AreaID='
 
@@ -32,6 +31,7 @@ class CrawlWaterData:
         return_data_dict = {}
         if area_id is None or not isinstance(area_id, int) or area_id > 999999 or area_id > 100000:
             area_id = 420100
+            # area_id = 420000
         url = self.base_url + str(area_id)
         print('请求水质数据')
         html = requests.post(url, headers=headers)
