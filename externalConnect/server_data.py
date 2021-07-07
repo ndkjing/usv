@@ -1,36 +1,34 @@
 """
 网络数据收发
 """
-from messageBus.data_define import DataDefine
 import config
-from messageBus import data_define
-from utils import log
 from utils import poweroff_restart
 import copy
 import paho.mqtt.client as mqtt
 import time
 import json
 import requests
-import socket
+
 
 class ServerData:
     def __init__(self, logger,
                  topics):
         self.logger = logger
         self.topics = topics
-        self.mqtt_send_get_obj = MqttSendGet(self.logger,topics = topics)
+        self.mqtt_send_get_obj = MqttSendGet(self.logger, topics=topics)
 
     # 发送数据到服务器http
     def send_server_http_data(self, request_type, data, url):
         # 请求头设置
-        payloadHeader = {
+        payload_header = {
             'Content-Type': 'application/json',
         }
         assert request_type in ['POST', 'GET']
+        self.logger.info(url)
         if request_type == 'POST':
-            dumpJsonData = json.dumps(data)
+            dump_json_data = json.dumps(data)
             return_data = requests.post(
-                url=url, data=dumpJsonData, headers=payloadHeader)
+                url=url, data=dump_json_data, headers=payload_header)
         else:
             return_data = requests.get(url=url)
         return return_data
@@ -40,28 +38,28 @@ class ServerData:
         self.mqtt_send_get_obj.publish_topic(topic=topic, data=data, qos=qos)
 
 
-class HttpSendGet:
-    """
-    处理ｊｓｏｎ数据收发
-    """
-
-    def __init__(self, base_url='127.0.0.1'):
-        self.base_url = base_url
-
-    def send_data(self, uri, data):
-        """
-        :param uri 发送接口uri
-        :param data  需要发送数据
-        """
-        send_url = self.base_url + uri
-        response = requests.post(send_url, data=data)
-
-    def get_data(self, uri):
-        """
-        :param uri 发送接口uri
-        """
-        get_url = self.base_url + uri
-        response = requests.get(uri)
+# class HttpSendGet:
+#     """
+#     处理ｊｓｏｎ数据收发
+#     """
+#
+#     def __init__(self, base_url='127.0.0.1'):
+#         self.base_url = base_url
+#
+#     def send_data(self, uri, data):
+#         """
+#         :param uri 发送接口uri
+#         :param data  需要发送数据
+#         """
+#         send_url = self.base_url + uri
+#         response = requests.post(send_url, data=data)
+#
+#     def get_data(self, uri):
+#         """
+#         :param uri 发送接口uri
+#         """
+#         get_url = self.base_url + uri
+#         response = requests.get(uri)
 
 
 class MqttSendGet:
@@ -146,7 +144,7 @@ class MqttSendGet:
         # 舷灯 1 允许打开舷灯 没有该键表示不打开
         self.side_light = 1
         # 状态灯
-        self.status_light = 1
+        self.status_light = 1  # 默认为红色
         # 启动还是停止
         self.b_start = 0
         # 基础设置数据
@@ -189,12 +187,11 @@ class MqttSendGet:
 
     # 建立连接时候回调
     def on_connect_callback(self, client, userdata, flags, rc):
-        self.logger.info('Connected with result code:  ' + str(rc)+str(self.is_connected))
+        self.logger.info('Connected with result code:  ' + str(rc))
 
     # 发布消息回调
     def on_publish_callback(self, client, userdata, mid):
         pass
-        # print('publish',mid)
 
     # 消息处理函数回调
     def on_message_callback(self, client, userdata, msg):
@@ -203,7 +200,7 @@ class MqttSendGet:
             topic = msg.topic
             self.last_command_time = time.time()
             # 处理控制数据
-            if topic == 'control_data_%s' % (config.ship_code):
+            if topic == 'control_data_%s' % config.ship_code:
                 control_data = json.loads(msg.payload)
                 if control_data.get('move_direction') is None:
                     self.logger.error('control_data_处理控制数据没有move_direction')
@@ -235,7 +232,7 @@ class MqttSendGet:
                                   })
 
             # 处理开关信息
-            if topic == 'switch_%s' % (config.ship_code):
+            if topic == 'switch_%s' % config.ship_code:
                 switch_data = json.loads(msg.payload)
                 # 改变了暂时没用
                 if switch_data.get('b_sampling') is not None:
@@ -260,7 +257,7 @@ class MqttSendGet:
                                   })
 
             # 处理初始点击确定湖数据
-            elif topic == 'pool_click_%s' % (config.ship_code):
+            elif topic == 'pool_click_%s' % config.ship_code:
                 pool_click_data = json.loads(msg.payload)
                 if pool_click_data.get('lng_lat') is None:
                     self.logger.error('pool_click  用户点击经纬度数据没有经纬度字段')
@@ -278,7 +275,7 @@ class MqttSendGet:
                                   })
 
             # 用户点击经纬度和图层 保存到指定路径
-            elif topic == 'user_lng_lat_%s' % (config.ship_code):
+            elif topic == 'user_lng_lat_%s' % config.ship_code:
                 user_lng_lat_data = json.loads(msg.payload)
                 if user_lng_lat_data.get('lng_lat') is None:
                     self.logger.error('user_lng_lat_用户点击经纬度数据没有经纬度字段')
@@ -367,7 +364,7 @@ class MqttSendGet:
                                   })
 
             # 启动设备
-            elif topic == 'start_%s' % (config.ship_code):
+            elif topic == 'start_%s' % config.ship_code:
                 start_data = json.loads(msg.payload)
                 if not start_data.get('search_pattern'):
                     self.logger.error('start_设置启动消息没有search_pattern字段')
@@ -376,7 +373,7 @@ class MqttSendGet:
                 self.logger.info({'topic': topic, 'b_start': start_data.get('search_pattern')})
 
             # 湖泊id
-            elif topic == 'pool_info_%s' % (config.ship_code):
+            elif topic == 'pool_info_%s' % config.ship_code:
                 pool_info_data = json.loads(msg.payload)
                 if not pool_info_data.get('mapId'):
                     self.logger.error('pool_info_data设置启动消息没有mapId字段')
@@ -385,7 +382,7 @@ class MqttSendGet:
                 self.logger.info({'topic': topic, 'mapId': pool_info_data.get('mapId')})
 
             # 服务器从状态数据中获取 当前经纬度
-            elif topic == 'status_data_%s' % (config.ship_code):
+            elif topic == 'status_data_%s' % config.ship_code:
                 status_data = json.loads(msg.payload)
                 if not status_data.get("current_lng_lat"):
                     # self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
@@ -395,7 +392,7 @@ class MqttSendGet:
                 #                   'current_lng_lat': status_data.get('current_lng_lat')})
 
             # 基础配置
-            elif topic == 'base_setting_%s' % (config.ship_code):
+            elif topic == 'base_setting_%s' % config.ship_code:
                 self.logger.info({'base_setting ': json.loads(msg.payload)})
                 if len(msg.payload) < 5:
                     return

@@ -18,7 +18,11 @@ logger = log.LogHandler('pi_log')
 
 
 class PiMain:
-    def __init__(self):
+    def __init__(self, logger_=None):
+        if logger_ is not None:
+            self.logger_obj = logger_
+        else:
+            self.logger_obj = logger
         self.water_data_dict = {}
         # 遥控器控制外设标志位
         self.remote_draw_status = 0  # 遥控器控制抽水状态 0 未抽水 1抽水
@@ -35,29 +39,21 @@ class PiMain:
         self.diff = int(20000 / self.pice)
         self.hz = 50
         self.pi = pigpio.pi()
-
         # gpio脚的编号顺序依照Broadcom number顺序，请自行参照gpio引脚图里面的“BCM编码”，
         self.pi.set_PWM_frequency(config.left_pwm_pin, self.hz)  # 设定左侧电机引脚产生的pwm波形的频率为50Hz
         self.pi.set_PWM_frequency(config.right_pwm_pin, self.hz)  # 设定右侧电机引脚产生的pwm波形的频率为50Hz
         self.pi.set_PWM_range(config.left_pwm_pin, self.pice)
         self.pi.set_PWM_range(config.right_pwm_pin, self.pice)
 
-        self.save = [1, 161, 150, 157, 152, 142, 101]
-        self.set = 1
-        self.tick_0 = [None, None, None, None, None, None, None]
-        self.tick_1 = [None, None, None, None, None, None, None]
-        self.temp_read = [[150 for col in range(21)] for row in range(7)]
-        self.count = [1, 0, 0, 0, 0, 0, 0]
-
+        self.tick_0 = [None, None, None]
+        self.tick_1 = [None, None, None]
+        # self.temp_read = [[150 for col in range(21)] for row in range(7)]
+        # self.count = [1, 0, 0, 0, 0, 0, 0]
+        # self.save = [1, 161, 150, 157, 152, 142, 101]
         self.channel_row_input_pwm = 0
         self.channel_col_input_pwm = 0
         # 当前是否是遥控器控制  2.4g遥控器和lora遥控器都用这个标志位
         self.b_start_remote = 0
-        if config.b_use_remote_control:
-            self.cb1 = self.pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, self.mycallback)
-            self.cb2 = self.pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, self.mycallback)
-            self.cb3 = self.pi.callback(config.channel_remote_pin, pigpio.EITHER_EDGE, self.mycallback)
-
         if config.current_platform == config.CurrentPlatform.pi:
             self.gps_obj = self.get_gps_obj()
             self.compass_obj = self.get_compass_obj()
@@ -72,6 +68,10 @@ class PiMain:
                 self.millimeter_wave_obj = self.get_millimeter_wave_obj()
             if config.b_lora_remote_control:
                 self.remote_control_obj = self.get_remote_control_obj()
+            if config.b_use_remote_control:
+                self.cb1 = self.pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, self.mycallback)
+                self.cb2 = self.pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, self.mycallback)
+                self.cb3 = self.pi.callback(config.channel_remote_pin, pigpio.EITHER_EDGE, self.mycallback)
         # GPS
         self.lng_lat = None
         # GPS 误差
@@ -119,10 +119,8 @@ class PiMain:
         # 将舵机归位
         # self.set_draw_deep(deep_pwm=500)
         # 记录罗盘数据用于分析
-
         # 记录上一次收到有效lora遥控器数据时间
         self.lora_control_receive_time = None
-
         # 串口数据收发对象
         if config.b_com_stc:
             self.com_data_obj = self.get_com_obj(port=config.stc_port,
@@ -174,83 +172,6 @@ class PiMain:
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.stc_rx, tx_pin=config.stc_tx,
                                       baud=config.stc_baud, time_out=0.1)
 
-    def get_stc_data(self):
-        """
-        读取单片机数据
-        :return:
-        """
-        while True:
-            data = self.stc_obj.read_stc_data()
-            time.sleep(1)
-
-    def get_sonar_data(self):
-        """
-        获取声呐检测深度数据
-        :return:
-        """
-        deep = self.sonar_obj.read_sonar()
-        return deep
-
-    # 读取函数会阻塞 必须使用线程
-    def get_com_data(self):
-        last_read_time = time.time()
-        while True:
-            # 水质数据 b''BBD:0,R:158,Z:36,P:0,T:16.1,V:92.08,x1:0,x2:2,x3:1,x4:0\r\n'
-            # 经纬度数据 b'AA2020.2354804,N,11425.41234568896,E\r\n'
-            try:
-                time.sleep(0.5)
-                row_com_data_read = self.com_data_obj.readline()
-                # 如果数据不存在或者数据过短都跳过
-                if row_com_data_read:
-                    if len(str(row_com_data_read)) < 7:
-                        continue
-                else:
-                    continue
-                com_data_read = str(row_com_data_read)[2:-5]
-                if time.time() - last_read_time > 3:
-                    last_read_time = time.time()
-                # 解析串口发送过来的数据
-                if com_data_read is None:
-                    continue
-                # 读取数据过短跳过
-                if len(com_data_read) < 5:
-                    continue
-                if com_data_read.startswith('AA'):
-                    com_data_list = com_data_read.split(',')
-                    lng, lat = round(float(com_data_list[2][:3]) +
-                                     float(com_data_list[2][3:]) /
-                                     60, 6), round(float(com_data_list[0][2:4]) +
-                                                   float(com_data_list[0][4:]) /
-                                                   60, 6)
-                    self.second_lng_lat = [lng, lat]
-                    if time.time() - last_read_time > 10:
-                        logger.info({'second_lng_lat': self.second_lng_lat})
-                elif com_data_read.startswith('BB'):
-                    com_data_list = com_data_read.split(',')
-                    ec_data = float(com_data_list[1].split(':')[1]) / math.pow(10, int(com_data_list[7][3:]))
-                    ec_data = data_valid.valid_water_data(config.WaterType.EC, ec_data)
-                    self.water_data_dict.update({'EC': ec_data})
-                    do_data = float(com_data_list[0][2:].split(':')[1]) / math.pow(10, int(com_data_list[6][3:]))
-                    do_data = data_valid.valid_water_data(config.WaterType.DO, do_data)
-                    self.water_data_dict.update({'DO': do_data})
-                    td_data = float(com_data_list[2].split(':')[1]) / math.pow(10, int(com_data_list[8][3:]))
-                    td_data = data_valid.valid_water_data(config.WaterType.TD, td_data)
-                    self.water_data_dict.update({'TD': td_data})
-                    ph_data = float(com_data_list[3].split(':')[1]) / math.pow(10, int(com_data_list[9][3:]))
-                    ph_data = data_valid.valid_water_data(config.WaterType.pH, ph_data)
-                    self.water_data_dict.update({'pH': ph_data})
-                    wt_data = float(com_data_list[4].split(':')[1])
-                    wt_data = data_valid.valid_water_data(config.WaterType.wt, wt_data)
-                    self.water_data_dict.update({'wt': wt_data})
-                    self.dump_energy = float(com_data_list[5].split(':')[1])
-                    if time.time() - last_read_time > 5:
-                        last_read_time = time.time()
-                        logger.info({'str com_data_read': com_data_read})
-                        print({'water_data_dict': self.water_data_dict})
-                        logger.info({'water_data_dict': self.water_data_dict})
-            except Exception as e1:
-                logger.error({'串口数据解析错误': e1})
-
     # 罗盘角度滤波
     def compass_filter(self, theta_):
         current_time = time.time()
@@ -277,124 +198,22 @@ class PiMain:
             return_theta = self.last_theta
         return return_theta
 
-    def get_compass_data(self, debug=False):
-        if config.current_platform == config.CurrentPlatform.pi:
-            # 记录上一次发送数据
-            last_send_data = None
-            while True:
-                # 检查罗盘是否需要校准 # 开始校准
-                if int(config.calibration_compass) == 1:
-                    if last_send_data != 'C0':
-                        info_data = self.compass_obj.read_compass(send_data='C0')
-                        time.sleep(0.05)
-                        self.compass_notice_info = info_data
-                        last_send_data = 'C0'
-                # 结束校准
-                elif int(config.calibration_compass) == 2:
-                    if last_send_data != 'C1':
-                        self.compass_notice_info = ''
-                        info_data = self.compass_obj.read_compass(send_data='C1')
-                        time.sleep(0.05)
-                        self.compass_notice_info = info_data
-                        last_send_data = 'C1'
-                        # 发送完结束校准命令后将配置改为 0
-                        config.calibration_compass = 0
-                        config.write_setting(b_height=True)
-                else:
-                    theta_ = self.compass_obj.read_compass(send_data='31')
-                    theta_ = self.compass_filter(theta_)
-                    if theta_:
-                        self.theta = theta_
-                if debug:
-                    print('time', time.time(), self.theta, self.angular_velocity)
-
-    def get_weite_compass_data(self):
-        if config.current_platform == config.CurrentPlatform.pi:
-            # 记录上一次发送数据
-            last_send_data = None
-            while True:
-                # 检查罗盘是否需要校准 # 开始校准
-                if int(config.calibration_compass) == 1:
-                    if last_send_data != 'C0':
-                        info_data = self.weite_compass_obj.read_weite_compass(send_data='C0')
-                        time.sleep(0.05)
-                        self.compass_notice_info = info_data
-                        last_send_data = 'C0'
-                # 结束校准
-                elif int(config.calibration_compass) == 2:
-                    if last_send_data != 'C1':
-                        self.compass_notice_info = ''
-                        info_data = self.compass_obj.read_compass(send_data='C1')
-                        time.sleep(0.05)
-                        self.compass_notice_info = info_data
-                        last_send_data = 'C1'
-                        # 发送完结束校准命令后将配置改为 0
-                        config.calibration_compass = 0
-                        config.write_setting(b_height=True)
-                else:
-                    theta_ = self.weite_compass_obj.read_weite_compass(send_data='31')
-                    theta_ = self.compass_filter(theta_)
-                    if theta_:
-                        self.theta = theta_
-
-    def get_gps_data(self):
-        if config.current_platform == config.CurrentPlatform.pi:
-            while True:
-                gps_data_read = self.gps_obj.read_gps()
-                if gps_data_read:
-                    self.lng_lat = gps_data_read[0:2]
-                    self.lng_lat_error = gps_data_read[2]
-
-    def check_lora_remote_pwm(self):
+    # 检查遥控器输入
+    def check_remote_pwm(self, b_lora_remote_control=True):
         """
         遥控器输入
         :return:
         """
-        if self.remote_control_data:
-            remote_forward_pwm = int((99 - self.remote_control_data[2]) * 10 + 1000)
-            remote_steer_pwm = int(self.remote_control_data[3] * 10 + 1000)
-            # 防止抖动
-            if 1600 > remote_forward_pwm > 1400:
-                remote_forward_pwm = config.stop_pwm
-            # 防止过大值
-            elif remote_forward_pwm >= 2000:
-                remote_forward_pwm = 2000
-            # 防止初始读取到0电机会转动， 设置为1500
-            elif remote_forward_pwm < 900:
-                remote_forward_pwm = config.stop_pwm
-            # 防止过小值
-            elif 1000 >= remote_forward_pwm >= 900:
-                remote_forward_pwm = 1000
-            # 防止抖动
-            if 1600 > remote_steer_pwm > 1400:
-                remote_steer_pwm = config.stop_pwm
-            # 防止过大值
-            elif remote_steer_pwm >= 2000:
-                remote_steer_pwm = 2000
-            # 防止初始读取到0电机会转动， 设置为1500
-            elif remote_steer_pwm < 900:
-                remote_steer_pwm = config.stop_pwm
-            # 防止过小值
-            elif 1000 >= remote_steer_pwm >= 900:
-                remote_steer_pwm = 1000
-            if remote_forward_pwm == config.stop_pwm and remote_steer_pwm == config.stop_pwm:
-                remote_left_pwm = config.stop_pwm
-                remote_right_pwm = config.stop_pwm
+        if b_lora_remote_control:
+            if self.remote_control_data:
+                remote_forward_pwm = int((99 - self.remote_control_data[2]) * 10 + 1000)
+                remote_steer_pwm = int(self.remote_control_data[3] * 10 + 1000)
             else:
-                remote_left_pwm = 1500 + (remote_forward_pwm - 1500) + (remote_steer_pwm - 1500)
-                remote_right_pwm = 1500 + (remote_forward_pwm - 1500) - (remote_steer_pwm - 1500)
-            return remote_left_pwm, remote_right_pwm
+                remote_forward_pwm = 1500
+                remote_steer_pwm = 1500
         else:
-            return 1500, 1500
-
-    def check_remote_pwm(self):
-        """
-        遥控器输入
-        :return:
-        """
-        remote_forward_pwm = copy.deepcopy(int(self.channel_col_input_pwm))
-        remote_steer_pwm = copy.deepcopy(int(self.channel_row_input_pwm))
-        # print('remote', remote_forward_pwm, remote_steer_pwm)
+            remote_forward_pwm = copy.deepcopy(int(self.channel_col_input_pwm))
+            remote_steer_pwm = copy.deepcopy(int(self.channel_row_input_pwm))
         # 防止抖动
         if 1600 > remote_forward_pwm > 1400:
             remote_forward_pwm = config.stop_pwm
@@ -427,6 +246,7 @@ class PiMain:
             remote_right_pwm = 1500 + (remote_forward_pwm - 1500) - (remote_steer_pwm - 1500)
         return remote_left_pwm, remote_right_pwm
 
+    # 获取pwm波输入
     def mycallback(self, gpio, level, tick):
         if level == 0:
             if int(gpio) == int(config.channel_1_pin):
@@ -434,17 +254,16 @@ class PiMain:
                 if self.tick_1[0] is not None:
                     diff = pigpio.tickDiff(self.tick_1[0], tick)
                     self.channel_row_input_pwm = int(diff)
-                    # print('self.channel_row_input_pwm ', self.channel_row_input_pwm ,diff)
-                    self.temp_read[0][self.count[0]] = diff
-                    self.save[0] = int(self.temp_read[0][self.count[0]])
+                    # self.temp_read[0][self.count[0]] = diff
+                    # self.save[0] = int(self.temp_read[0][self.count[0]])
             if int(gpio) == int(config.channel_3_pin):
                 self.tick_0[1] = tick
                 if self.tick_1[1] is not None:
                     diff = pigpio.tickDiff(self.tick_1[1], tick)
                     self.channel_col_input_pwm = int(diff)
-                    self.temp_read[1][self.count[1]] = diff
-                    self.save[1] = int(self.temp_read[1][self.count[1]])
-            if int(gpio) == 11:
+                    # self.temp_read[1][self.count[1]] = diff
+                    # self.save[1] = int(self.temp_read[1][self.count[1]])
+            if int(gpio) == config.channel_remote_pin:
                 self.tick_0[2] = tick
                 if self.tick_1[2] is not None:
                     diff = pigpio.tickDiff(self.tick_1[2], tick)
@@ -457,7 +276,7 @@ class PiMain:
                 self.tick_1[0] = tick
             if gpio == int(config.channel_3_pin):
                 self.tick_1[1] = tick
-            if gpio == 11:
+            if gpio == config.channel_remote_pin:
                 self.tick_1[2] = tick
 
     def forward(self, left_pwm=None, right_pwm=None):
@@ -488,10 +307,37 @@ class PiMain:
             right_pwm = 1300
         self.set_pwm(left_pwm, right_pwm)
 
+    # 设置云台舵机角度
+    def set_ptz_camera(self, pan_angle_pwm_=1500, tilt_angle_pwm_=1500):
+        """
+        设置云台舵机角度
+        :param pan_angle_pwm_: 500-2500 设置水平角度
+        :param tilt_angle_pwm_: 500-2500  设置垂直角度
+        :return:
+        """
+        pin_pan = 2
+        pin_tilt = 3
+        self.pi.set_servo_pulsewidth(pin_pan, pan_angle_pwm_)
+        self.pi.set_servo_pulsewidth(pin_tilt, tilt_angle_pwm_)
+        self.pan_angle_pwm = pan_angle_pwm_
+        self.tilt_angle_pwm = tilt_angle_pwm_
+
+    # 设置抽水泵舵深度
+    def set_draw_deep(self, deep_pwm=500):
+        """
+        设置抽水泵深度
+        :param deep_pwm:
+        :return:
+        """
+        self.pi.set_servo_pulsewidth(config.draw_steer, deep_pwm)
+        self.draw_steer_pwm = deep_pwm
+
+    # 固定速度转向
     def turn_angular_velocity(self, is_left=1, debug=False):
         """
-        :param is_left 是否是左转  1 是左转   0 右转
         固定速度转向 config.angular_velocity
+        :param is_left 是否是左转  1 是左转   0 右转
+        :param debug 是否输出调试信息
         :return:
         """
         while True:
@@ -509,6 +355,7 @@ class PiMain:
             if debug:
                 print('self.angular_velocity', self.angular_velocity)
             self.set_pwm(left_pwm, right_pwm)
+            time.sleep(0.2)
 
     def turn_angle(self, angle):
         """
@@ -523,6 +370,7 @@ class PiMain:
     def stop(self):
         self.set_pwm(config.stop_pwm, config.stop_pwm)
 
+    # 初始化电机
     def init_motor(self):
         self.set_pwm(config.stop_pwm, config.stop_pwm)
         time.sleep(2)
@@ -558,7 +406,7 @@ class PiMain:
         self.target_left_pwm = int(set_left_pwm / (20000 / self.pice) / (50 / self.hz))
         self.target_right_pwm = int(set_right_pwm / (20000 / self.pice) / (50 / self.hz))
 
-    # 死循环函数放在线程中执行
+    # 循环修改pwm波值
     def loop_change_pwm(self):
         """
         一直修改输出pwm波到目标pwm波
@@ -583,12 +431,11 @@ class PiMain:
                 time.sleep(sleep_time)
             else:
                 time.sleep(sleep_time)
-        # 不支持输出获取pwm状态，以后再调试
-        # print('left_pwm:',self.left_pwm,self.pi.get_PWM_dutycycle(config.left_pwm_pin),'right_pwm:',self.right_pwm,self.pi.get_PWM_dutycycle(config.right_pwm_pin))
 
     def set_steer_engine(self, angle):
         self.pi.set_PWM_dutycycle(26, angle)
 
+    # 获取舵机＋激光雷达数据距离字典
     def get_distance_dict(self):
         if config.b_laser:
             self.laser_obj = self.get_laser_obj()
@@ -647,6 +494,7 @@ class PiMain:
                 b_add = -1 if b_add == 1 else 1
             time.sleep(0.02)
 
+    # 获取毫米波雷达数据距离字典
     def get_distance_dict_millimeter(self, debug=False):
         # 角度限制
         count = 0
@@ -730,29 +578,160 @@ class PiMain:
             count %= max_count
             time.sleep(0.001)
 
-    def set_ptz_camera(self, pan_angle_pwm_=1500, tilt_angle_pwm_=1500):
+    def get_stc_data(self):
         """
-        设置云台舵机角度
-        :param pan_angle_pwm_: 500-2500 设置水平角度
-        :param tilt_angle_pwm_: 500-2500  设置垂直角度
+        读取单片机数据
         :return:
         """
-        pin_pan = 2
-        pin_tilt = 3
-        self.pi.set_servo_pulsewidth(pin_pan, pan_angle_pwm_)
-        self.pi.set_servo_pulsewidth(pin_tilt, tilt_angle_pwm_)
-        self.pan_angle_pwm = pan_angle_pwm_
-        self.tilt_angle_pwm = tilt_angle_pwm_
+        while True:
+            data = self.stc_obj.read_stc_data()
+            if data:
+                self.logger_obj.info(data)
+            time.sleep(1)
 
-    def set_draw_deep(self, deep_pwm=500):
+    def get_sonar_data(self):
         """
-        设置抽水泵深度
-        :param deep_pwm:
+        获取声呐检测深度数据
         :return:
         """
-        self.pi.set_servo_pulsewidth(config.draw_steer, deep_pwm)
-        self.draw_steer_pwm = deep_pwm
+        while True:
+            deep = self.sonar_obj.read_sonar()
+            if deep:
+                self.logger_obj.info(str(deep))
+            time.sleep(1)
 
+    # 读取函数会阻塞 必须使用线程
+    def get_com_data(self):
+        last_read_time = time.time()
+        while True:
+            # 水质数据 b''BBD:0,R:158,Z:36,P:0,T:16.1,V:92.08,x1:0,x2:2,x3:1,x4:0\r\n'
+            # 经纬度数据 b'AA2020.2354804,N,11425.41234568896,E\r\n'
+            try:
+                time.sleep(0.5)
+                row_com_data_read = self.com_data_obj.readline()
+                # 如果数据不存在或者数据过短都跳过
+                if row_com_data_read:
+                    if len(str(row_com_data_read)) < 7:
+                        continue
+                else:
+                    continue
+                com_data_read = str(row_com_data_read)[2:-5]
+                if time.time() - last_read_time > 3:
+                    last_read_time = time.time()
+                # 解析串口发送过来的数据
+                if com_data_read is None:
+                    continue
+                # 读取数据过短跳过
+                if len(com_data_read) < 5:
+                    continue
+                if com_data_read.startswith('AA'):
+                    com_data_list = com_data_read.split(',')
+                    lng, lat = round(float(com_data_list[2][:3]) +
+                                     float(com_data_list[2][3:]) /
+                                     60, 6), round(float(com_data_list[0][2:4]) +
+                                                   float(com_data_list[0][4:]) /
+                                                   60, 6)
+                    self.second_lng_lat = [lng, lat]
+                    if time.time() - last_read_time > 10:
+                        logger.info({'second_lng_lat': self.second_lng_lat})
+                elif com_data_read.startswith('BB'):
+                    com_data_list = com_data_read.split(',')
+                    ec_data = float(com_data_list[1].split(':')[1]) / math.pow(10, int(com_data_list[7][3:]))
+                    ec_data = data_valid.valid_water_data(config.WaterType.EC, ec_data)
+                    self.water_data_dict.update({'EC': ec_data})
+                    do_data = float(com_data_list[0][2:].split(':')[1]) / math.pow(10, int(com_data_list[6][3:]))
+                    do_data = data_valid.valid_water_data(config.WaterType.DO, do_data)
+                    self.water_data_dict.update({'DO': do_data})
+                    td_data = float(com_data_list[2].split(':')[1]) / math.pow(10, int(com_data_list[8][3:]))
+                    td_data = data_valid.valid_water_data(config.WaterType.TD, td_data)
+                    self.water_data_dict.update({'TD': td_data})
+                    ph_data = float(com_data_list[3].split(':')[1]) / math.pow(10, int(com_data_list[9][3:]))
+                    ph_data = data_valid.valid_water_data(config.WaterType.pH, ph_data)
+                    self.water_data_dict.update({'pH': ph_data})
+                    wt_data = float(com_data_list[4].split(':')[1])
+                    wt_data = data_valid.valid_water_data(config.WaterType.wt, wt_data)
+                    self.water_data_dict.update({'wt': wt_data})
+                    self.dump_energy = float(com_data_list[5].split(':')[1])
+                    if time.time() - last_read_time > 5:
+                        last_read_time = time.time()
+                        logger.info({'str com_data_read': com_data_read})
+                        print({'water_data_dict': self.water_data_dict})
+                        logger.info({'water_data_dict': self.water_data_dict})
+            except Exception as e1:
+                logger.error({'串口数据解析错误': e1})
+
+    # 读取GY-26罗盘数据
+    def get_compass_data(self, debug=False):
+        if config.current_platform == config.CurrentPlatform.pi:
+            # 记录上一次发送数据
+            last_send_data = None
+            while True:
+                # 检查罗盘是否需要校准 # 开始校准
+                if int(config.calibration_compass) == 1:
+                    if last_send_data != 'C0':
+                        info_data = self.compass_obj.read_compass(send_data='C0')
+                        time.sleep(0.05)
+                        self.compass_notice_info = info_data
+                        last_send_data = 'C0'
+                # 结束校准
+                elif int(config.calibration_compass) == 2:
+                    if last_send_data != 'C1':
+                        self.compass_notice_info = ''
+                        info_data = self.compass_obj.read_compass(send_data='C1')
+                        time.sleep(0.05)
+                        self.compass_notice_info = info_data
+                        last_send_data = 'C1'
+                        # 发送完结束校准命令后将配置改为 0
+                        config.calibration_compass = 0
+                        config.write_setting(b_height=True)
+                else:
+                    theta_ = self.compass_obj.read_compass(send_data='31')
+                    theta_ = self.compass_filter(theta_)
+                    if theta_:
+                        self.theta = theta_
+                if debug:
+                    print('time', time.time(), self.theta, self.angular_velocity)
+
+    # 读取维特罗盘数据
+    def get_weite_compass_data(self):
+        if config.current_platform == config.CurrentPlatform.pi:
+            # 记录上一次发送数据
+            last_send_data = None
+            while True:
+                # 检查罗盘是否需要校准 # 开始校准
+                if int(config.calibration_compass) == 1:
+                    if last_send_data != 'C0':
+                        info_data = self.weite_compass_obj.read_weite_compass(send_data='C0')
+                        time.sleep(0.05)
+                        self.compass_notice_info = info_data
+                        last_send_data = 'C0'
+                # 结束校准
+                elif int(config.calibration_compass) == 2:
+                    if last_send_data != 'C1':
+                        self.compass_notice_info = ''
+                        info_data = self.compass_obj.read_compass(send_data='C1')
+                        time.sleep(0.05)
+                        self.compass_notice_info = info_data
+                        last_send_data = 'C1'
+                        # 发送完结束校准命令后将配置改为 0
+                        config.calibration_compass = 0
+                        config.write_setting(b_height=True)
+                else:
+                    theta_ = self.weite_compass_obj.read_weite_compass(send_data='31')
+                    theta_ = self.compass_filter(theta_)
+                    if theta_:
+                        self.theta = theta_
+
+    # 读取gps数据
+    def get_gps_data(self):
+        if config.current_platform == config.CurrentPlatform.pi:
+            while True:
+                gps_data_read = self.gps_obj.read_gps()
+                if gps_data_read:
+                    self.lng_lat = gps_data_read[0:2]
+                    self.lng_lat_error = gps_data_read[2]
+
+    # 读取lora遥控器数据
     def get_remote_control_data(self, debug=False):
         """
         读取lora遥控器数据
@@ -898,7 +877,7 @@ if __name__ == '__main__':
             elif key_input.startswith('R'):
                 if len(key_input) > 1 and key_input[1] == '1':
                     pi_main_obj.get_remote_control_data(debug=True)
-                    pi_main_obj.check_lora_remote_pwm()
+                    pi_main_obj.check_remote_pwm()
                 else:
                     pi_main_obj.remote_control_obj.read_remote_control(debug=True)
             elif key_input.startswith('t'):
@@ -911,7 +890,7 @@ if __name__ == '__main__':
                 time.sleep(3)
             # 获取读取单片机数据
             elif key_input.startswith('f'):
-                laser_distance = pi_main_obj.stc_obj.pin_stc_read(debug=True)
+                stc_data = pi_main_obj.stc_obj.pin_stc_read(debug=True)
             elif key_input.startswith('g'):
                 gps_data = pi_main_obj.gps_obj.read_gps(debug=True)
                 print('gps_data', gps_data)
@@ -970,8 +949,8 @@ if __name__ == '__main__':
                     send_data = key_input + 'Z'
                     print('send_data', send_data)
                     if config.b_com_stc:
-                        com_data_obj.send_data(send_data)
-                        row_com_data_read = com_data_obj.readline()
+                        pi_main_obj.com_data_obj.send_data(send_data)
+                        row_com_data_read = pi_main_obj.com_data_obj.readline()
                         print('row_com_data_read', row_com_data_read)
                     elif config.b_pin_stc:
                         pi_main_obj.stc_obj.send_stc_data(send_data)

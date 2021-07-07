@@ -302,7 +302,7 @@ class MqttSendGet:
             else:
                 self.home_lng_lat = status_data.get('home_lng_lat')
         # 基础配置
-        elif topic == 'base_setting_%s' % (self.ship_code):
+        elif topic == 'base_setting_%s' % self.ship_code:
             self.logger.info({'base_setting ': json.loads(msg.payload)})
             if len(msg.payload) < 5:
                 return

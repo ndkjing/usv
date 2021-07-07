@@ -220,7 +220,7 @@ class PiSoftuart(object):
             time.sleep(self._thread_ts / 2)
             return None
 
-    def pin_stc_read(self,debug=False):
+    def pin_stc_read(self, debug=False):
         """
         软串口单片机数据读取
         :return:
@@ -247,7 +247,6 @@ class PiSoftuart(object):
         :return:
         """
         if len_data is None:
-            len_data = 4
             try:
                 # 发送数据让遥控器接受变为绿灯
                 s = 'S9'
@@ -369,7 +368,8 @@ class PiSoftuart(object):
     def read_stc_data(self):
         try:
             count, data = self._pi.bb_serial_read(self._rx_pin)
-            print(time.time(), 'count', count, 'data', data)
+            if count > 10:
+                return data
             time.sleep(self._thread_ts * 10)
         except Exception as e:
             print({'error read_stc_data': e})

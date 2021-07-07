@@ -131,14 +131,14 @@ def main():
         if config.current_platform == config.CurrentPlatform.pi:
             for index_common_thread, common_thread in enumerate(common_thread_list):
                 if common_thread is not None and not common_thread.is_alive():
-                    logger.error({'restart ':index_common_thread})
-                    print(index_common_thread,common_func_list[index_common_thread])
+                    logger.error({'restart common_thread': index_common_thread})
+                    print(index_common_thread, common_func_list[index_common_thread])
                     common_thread_list[index_common_thread] = threading.Thread(
                         target=common_func_list[index_common_thread])
                     common_thread_list[index_common_thread].start()
             for index_pi_thread, pi_thread in enumerate(pi_thread_list):
                 if pi_thread and not pi_thread.is_alive():
-                    logger.error({'restart ': index_pi_thread})
+                    logger.error({'restart pi_thread': index_pi_thread})
                     print(index_pi_thread, pi_func_list[index_pi_thread])
                     pi_thread_list[index_pi_thread] = threading.Thread(target=pi_func_list[index_pi_thread])
                     pi_thread_list[index_pi_thread].start()

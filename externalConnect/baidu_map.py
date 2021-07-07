@@ -676,7 +676,7 @@ class BaiduMap(object):
 
 if __name__ == '__main__':
     pass
-    src_point = [114.4314,30.523558]  # 喻家湖
+    src_point = [114.4314, 30.523558]  # 喻家湖
     # src_point = [114.431400, 30.523558]
     obj = BaiduMap(src_point, zoom=15,
                    scale=1, map_type=MapType.gaode)
@@ -735,9 +735,9 @@ if __name__ == '__main__':
     #     all_cnt.extend(list(pool_cnts))
     #     all_cnt.extend(scan_cnts)
     #     gps = obj.pix_to_gps(all_cnt)
-        # print(gps)
-        # 请求指定位置图片
-        # obj.draw_image()
-        # 求坐标点最大外围矩阵
-        # (x, y, w, h) = cv2.boundingRect(pool_cnts)
-        # print('(x, y, w, h)', (x, y, w, h))
+    # print(gps)
+    # 请求指定位置图片
+    # obj.draw_image()
+    # 求坐标点最大外围矩阵
+    # (x, y, w, h) = cv2.boundingRect(pool_cnts)
+    # print('(x, y, w, h)', (x, y, w, h))

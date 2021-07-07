@@ -15,7 +15,7 @@ from messageBus import data_define
 from externalConnect import server_data
 from utils.log import LogHandler
 from externalConnect import baidu_map
-from drivers import audios_manager, drone_kit_control, pi_main
+from drivers import audios_manager, pi_main
 from utils import lng_lat_calculate
 from utils import check_network
 from utils import data_valid
@@ -89,9 +89,8 @@ class DataManager:
         self.data_save_logger = LogHandler('data_save_log', level=20)
         self.com_data_read_logger = LogHandler('com_data_read_logger', level=20)
         self.com_data_send_logger = LogHandler('com_data_send_logger', level=20)
-        self.server_log = LogHandler('server_data')
-        self.map_log = LogHandler('map_log')
-        self.gps_log = LogHandler('gps_log')
+        self.server_log = LogHandler('server_data', level=20)
+        self.gps_log = LogHandler('gps_log', level=20)
         self.path_track_obj = simple_pid.SimplePid()
         # mqtt服务器数据收发对象
         self.server_data_obj = server_data.ServerData(self.server_log, topics=self.data_define_obj.topics)
@@ -104,16 +103,13 @@ class DataManager:
         # 提示消息
         # 距离下一个目标点距离
         self.distance_p = 0
-        # 路径结束计算得分
-        self.distance_move_score = 0
         # 目标点信息
         self.path_info = [0, 0]
         # 抽水开始时间
         self.draw_start_time = None
         # 抽水结束发送数据
         self.b_draw_over_send_data = False
-        # 单片机串口读取到的数据
-        self.second_lng_lat = None
+        # 水质数据
         self.water_data_dict = {}
         # 剩余电量
         self.dump_energy = None
@@ -166,18 +162,15 @@ class DataManager:
         self.lng_lat_list = []
         self.deep_list = []
         # 记录上一次控制的单片机继电器状态
-        self.last_side_light = 0
-        self.last_headlight = 0
-        self.last_audio_light = 0
-        self.last_status_light = 0
+        self.last_side_light = 0  # 舷灯
+        self.last_headlight = 0  # 大灯
+        self.last_audio_light = 0  # 声光报警器
+        self.last_status_light = 0  # 状态灯
         self.last_drain = 0  # 0没有在排水 1 在排水
         self.last_draw_steer = None  # 舵机状态
         self.pi_main_obj = None
-        # 状态灯
-        self.light_status = LightStatus.yellow
         if config.current_platform == config.CurrentPlatform.pi:
             self.pi_main_obj = pi_main.PiMain()
-
         # 使用真实GPS 还是 初始化高德GPS
         self.use_true_gps = 0
         if config.current_platform == config.CurrentPlatform.pi:
@@ -200,6 +193,25 @@ class DataManager:
         self.is_init_motor = 0
         self.area_id = None
 
+    # 测试发送障碍物数据
+    def send_test_distance(self):
+        direction = int(random.random() * 360)
+        distance_info_data = {
+            # 设备号
+            "deviceId": "3c50f4c3-a9c1-4872-9f18-883af014380a",
+            # 船头角度  以北为0度 ，逆时针方向为正
+            "direction": direction,
+            # 距离信息 内部为列表，列中中元素为字典，distance为距离单位米  angle为角度单位度，以船头角度为0度 左正右负
+            "distance_info": [{"distance": 4.5, "angle": 20},
+                              {"distance": 7.5, "angle": -20},
+                              {"distance": 6, "angle": 0}],
+        }
+
+        self.send(method='mqtt',
+                  topic='distance_info_%s' % config.ship_code,
+                  data=distance_info_data,
+                  qos=0)
+
     def connect_mqtt_server(self):
         while True:
             if not self.server_data_obj.mqtt_send_get_obj.is_connected:
@@ -212,10 +224,11 @@ class DataManager:
         :param data:
         :return:
         """
-        if config.b_com_stc:
+        self.com_data_send_logger.info(data)
+        if config.b_pin_stc:
+            self.pi_main_obj.stc_obj.send_stc_data(data)
+        elif os.path.exists(config.stc_port):
             self.pi_main_obj.com_data_obj.send_data(data)
-        elif config.b_pin_stc:
-            self.pi_main_obj.stc_obj.write_data(data)
 
     # 抽水
     def draw(self):
@@ -249,16 +262,10 @@ class DataManager:
             if self.draw_start_time is None:
                 self.draw_start_time = time.time()
                 self.b_sampling = 1
-                if config.b_pin_stc:
-                    self.pi_main_obj.stc_obj.send_stc_data('A1Z')
-                elif config.b_com_stc:
-                    self.pi_main_obj.com_data_obj.send_data('A1Z')
+                self.send_stc_data('A1Z')
         elif self.pi_main_obj.remote_draw_status == 0 and self.b_sampling == 1 \
                 and self.draw_start_time and not self.server_data_obj.mqtt_send_get_obj.b_draw:
-            if config.b_pin_stc:
-                self.pi_main_obj.stc_obj.send_stc_data('A0Z')
-            elif os.path.exists(config.stc_port):
-                self.pi_main_obj.com_data_obj.send_data('A0Z')
+            self.send_stc_data('A0Z')
             if time.time() - self.draw_start_time > config.draw_time:
                 self.b_draw_over_send_data = True
             self.b_sampling = 2
@@ -268,27 +275,18 @@ class DataManager:
             # 判断是否抽水  点击抽水情况
             if self.server_data_obj.mqtt_send_get_obj.b_draw:
                 if self.draw_start_time is None:
-                    if config.b_pin_stc:
-                        self.pi_main_obj.stc_obj.send_stc_data('A1Z')
-                    elif config.b_com_stc:
-                        self.pi_main_obj.com_data_obj.send_data('A1Z')
+                    self.send_stc_data('A1Z')
                     self.b_sampling = 1
                     self.draw_start_time = time.time()
                 else:
                     # 超时中断抽水
                     if time.time() - self.draw_start_time > config.draw_time:
                         self.b_draw_over_send_data = True
-                        if config.b_pin_stc:
-                            self.pi_main_obj.stc_obj.send_stc_data('A0Z')
-                        elif os.path.exists(config.stc_port):
-                            self.pi_main_obj.com_data_obj.send_data('A0Z')
+                        self.send_stc_data('A0Z')
                         self.b_sampling = 2
                         self.draw_start_time = None
             else:
-                if config.b_pin_stc:
-                    self.pi_main_obj.stc_obj.send_stc_data('A0Z')
-                elif os.path.exists(config.stc_port):
-                    self.pi_main_obj.com_data_obj.send_data('A0Z')
+                self.send_stc_data('A0Z')
                 self.b_sampling = 2
                 print('A0Z')
                 self.draw_start_time = None
@@ -308,16 +306,10 @@ class DataManager:
             if self.last_side_light:
                 pass
             else:
-                if config.b_pin_stc:
-                    self.pi_main_obj.stc_obj.send_stc_data('B1Z')
-                elif os.path.exists(config.stc_port):
-                    self.pi_main_obj.com_data_obj.send_data('B1Z')
+                self.send_stc_data('B1Z')
         else:
             if self.last_side_light:
-                if config.b_pin_stc:
-                    self.pi_main_obj.stc_obj.send_stc_data('B0Z')
-                elif os.path.exists(config.stc_port):
-                    self.pi_main_obj.com_data_obj.send_data('B0Z')
+                self.send_stc_data('B0Z')
             else:
                 pass
         self.last_side_light = self.server_data_obj.mqtt_send_get_obj.side_light
@@ -330,16 +322,10 @@ class DataManager:
             if self.last_headlight:
                 pass
             else:
-                if config.b_pin_stc:
-                    self.pi_main_obj.stc_obj.send_stc_data('C1Z')
-                elif os.path.exists(config.stc_port):
-                    self.pi_main_obj.com_data_obj.send_data('C1Z')
+                self.send_stc_data('C1Z')
         else:
             if self.last_headlight:
-                if config.b_pin_stc:
-                    self.pi_main_obj.stc_obj.send_stc_data('C0Z')
-                elif os.path.exists(config.stc_port):
-                    self.pi_main_obj.com_data_obj.send_data('C0Z')
+                self.send_stc_data('C0Z')
             else:
                 pass
         self.last_headlight = self.server_data_obj.mqtt_send_get_obj.headlight
@@ -348,16 +334,10 @@ class DataManager:
             if self.last_audio_light:
                 pass
             else:
-                if config.b_pin_stc:
-                    self.pi_main_obj.stc_obj.send_stc_data('D1Z')
-                elif os.path.exists(config.stc_port):
-                    self.pi_main_obj.com_data_obj.send_data('D1Z')
+                self.send_stc_data('D1Z')
         else:
             if self.last_audio_light:
-                if config.b_pin_stc:
-                    self.pi_main_obj.stc_obj.send_stc_data('D0Z')
-                elif os.path.exists(config.stc_port):
-                    self.pi_main_obj.com_data_obj.send_data('D0Z')
+                self.send_stc_data('D0Z')
             else:
                 pass
         self.last_audio_light = self.server_data_obj.mqtt_send_get_obj.audio_light
@@ -366,16 +346,10 @@ class DataManager:
             if self.last_drain:
                 pass
             else:
-                if config.b_pin_stc:
-                    self.pi_main_obj.stc_obj.send_stc_data('A2Z')
-                elif os.path.exists(config.stc_port):
-                    self.pi_main_obj.com_data_obj.send_data('A2Z')
+                self.send_stc_data('A2Z')
         else:
             if self.last_drain:
-                if config.b_pin_stc:
-                    self.pi_main_obj.stc_obj.send_stc_data('A0Z')
-                elif os.path.exists(config.stc_port):
-                    self.pi_main_obj.com_data_obj.send_data('A0Z')
+                self.send_stc_data('A0Z')
             else:
                 pass
         self.last_drain = self.pi_main_obj.remote_drain_status
@@ -396,13 +370,14 @@ class DataManager:
             # 启动后mqtt连接上亮绿灯
             if self.server_data_obj.mqtt_send_get_obj.is_connected:
                 self.server_data_obj.mqtt_send_get_obj.status_light = 3
+            # 使能遥控器就亮黄灯
             if self.pi_main_obj.b_start_remote:
                 self.server_data_obj.mqtt_send_get_obj.status_light = 2
+            # 低电量蜂鸣
+            if self.low_dump_energy_warnning:
+                self.server_data_obj.mqtt_send_get_obj.status_light = 4
             send_stc_data = 'E%sZ' % (str(self.server_data_obj.mqtt_send_get_obj.status_light))
-            if config.b_pin_stc:
-                self.pi_main_obj.stc_obj.send_stc_data(send_stc_data)
-            elif os.path.exists(config.stc_port):
-                self.pi_main_obj.com_data_obj.send_data(send_stc_data)
+            self.send_stc_data(send_stc_data)
         self.last_status_light = self.server_data_obj.mqtt_send_get_obj.status_light
         if random.random() > 0.9:
             self.last_status_light = 4
@@ -553,150 +528,18 @@ class DataManager:
             self.clear_all_status()
         self.ship_status = target_status
 
-    # 处理状态切换
-    def change_status(self):
-        while True:
-            time.sleep(0.1)
-            d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
-            self.direction = d
-            # 判断是否需要返航
-            return_ship_status = None
-            if self.ship_status != ShipStatus.at_home:
-                return_ship_status = self.check_backhome()
-
-            # 判断空闲状态切换到其他状态
-            if self.ship_status == ShipStatus.idle:
-                # 切换到遥控器控制模式
-                if not config.home_debug and self.pi_main_obj.b_start_remote:
-                    self.change_status_info(target_status=ShipStatus.remote_control)
-                # 切换到电脑手动模式
-                elif d in [-1, 0, 90, 180, 270, 10, 190, 1180, 1270]:
-                    self.change_status_info(target_status=ShipStatus.computer_control)
-                # 切换到返航
-                elif return_ship_status is not None:
-                    self.change_status_info(target_status=return_ship_status)
-                # 切换到自动巡航模式
-                elif self.server_data_obj.mqtt_send_get_obj.keep_point and \
-                        len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
-                    if self.lng_lat is None:
-                        self.logger.error('无当前GPS，不能自主巡航')
-                        time.sleep(0.5)
-                    else:
-                        self.change_status_info(target_status=ShipStatus.computer_auto)
-
-            # 判断电脑手动状态切换到其他状态
-            if self.ship_status == ShipStatus.computer_control:
-                # 切换到遥控器控制
-                if not config.home_debug and self.pi_main_obj.b_start_remote:
-                    # 此时为遥控器控制模式 清除d控制状态
-                    self.change_status_info(target_status=ShipStatus.remote_control)
-                # 切换到自动巡航模式
-                elif d == -1 and \
-                        self.server_data_obj.mqtt_send_get_obj.keep_point and \
-                        len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
-                    if self.lng_lat is None:
-                        self.logger.error('无当前GPS，不能自主巡航')
-                        time.sleep(0.5)
-                    else:
-                        self.change_status_info(target_status=ShipStatus.computer_auto)
-                        d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
-                # 点击抽水
-                elif self.server_data_obj.mqtt_send_get_obj.b_draw:
-                    self.last_ship_status = ShipStatus.computer_control
-                    self.change_status_info(target_status=ShipStatus.tasking)
-                # 切换到返航
-                elif return_ship_status is not None:
-                    self.change_status_info(target_status=return_ship_status)
-
-            # 判断电脑自动切换到其他状态情况
-            if self.ship_status == ShipStatus.computer_auto:
-                # 切换到遥控器控制 使能且摇杆大于60%
-                if not config.home_debug and self.pi_main_obj.b_start_remote:
-                    if len(self.pi_main_obj.remote_control_data) == 14 and \
-                            abs(self.pi_main_obj.remote_control_data[2] - 50) > 30:
-                        self.change_status_info(target_status=ShipStatus.remote_control, b_clear_status=True)
-                # 切换到返航
-                elif return_ship_status is not None:
-                    self.change_status_info(target_status=return_ship_status)
-                # 取消自动模式
-                elif d == -1:
-                    self.change_status_info(target_status=ShipStatus.computer_control, b_clear_status=True)
-                # 切换到手动
-                elif d in [0, 90, 180, 270, 10, 190, 1180, 1270]:
-                    self.change_status_info(target_status=ShipStatus.computer_control)
-                # 到点
-                elif self.b_arrive_point:
-                    self.last_ship_status = ShipStatus.computer_auto
-                    self.change_status_info(target_status=ShipStatus.tasking)
-                # 点击抽水
-                elif self.server_data_obj.mqtt_send_get_obj.b_draw:
-                    self.last_ship_status = ShipStatus.computer_auto
-                    self.change_status_info(target_status=ShipStatus.tasking)
-
-            # 判断任务模式切换到其他状态情况
-            if self.ship_status == ShipStatus.tasking:
-                # 切换到电脑自动模式  切换到电脑手动模式
-                if self.b_sampling == 2:
-                    if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) > 0 and \
-                            all(self.server_data_obj.mqtt_send_get_obj.sampling_points_status):
-                        self.change_status_info(target_status=ShipStatus.computer_control, b_clear_status=True)
-                        # 自动模式下到达最后一个点切换为空闲状态
-                        self.last_ship_status = ShipStatus.idle
-                    self.b_sampling = 0
-                    self.server_data_obj.mqtt_send_get_obj.b_draw = 0
-                    self.change_status_info(self.last_ship_status)
-
-            # 遥控器状态切换到其他状态
-            if self.ship_status == ShipStatus.remote_control:
-                # 切换到返航
-                if return_ship_status is not None:
-                    if len(self.pi_main_obj.remote_control_data) == 14 and \
-                            abs(self.pi_main_obj.remote_control_data[2] - 50) < 30:
-                        self.change_status_info(target_status=return_ship_status)
-                # 切换到空闲状态
-                elif not config.home_debug and self.pi_main_obj.b_start_remote == 0:
-                    self.change_status_info(target_status=ShipStatus.idle)
-                # 切换到任务模式
-                elif not config.home_debug and self.pi_main_obj.remote_draw_status == 1:
-                    self.last_ship_status = ShipStatus.remote_control
-                    self.change_status_info(target_status=ShipStatus.tasking)
-
-            # 返航状态切换到其他状态
-            if self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
-                # 判断是否返航到家
-                if self.b_at_home:
-                    self.change_status_info(target_status=ShipStatus.at_home)
-                # 切换到遥控器模式 使能遥控器 且摇杆推到超过60%
-                if not config.home_debug and self.pi_main_obj.b_start_remote:
-                    if len(self.pi_main_obj.remote_control_data) == 14 and \
-                            abs(self.pi_main_obj.remote_control_data[2] - 50) > 30:
-                        self.change_status_info(target_status=ShipStatus.remote_control)
-                # 切换到电脑手动控制
-                if d == -1:
-                    self.change_status_info(target_status=ShipStatus.computer_control)
-
-            # 返航到家状态切换到其他状态
-            if self.ship_status == ShipStatus.at_home:
-                if d in [-1, 0, 90, 180, 270, 10, 190, 1180, 1270]:
-                    self.change_status_info(target_status=ShipStatus.computer_control)
-                # 切换到遥控器模式 使能遥控器 且摇杆推到超过60%
-                if not config.home_debug and self.pi_main_obj.b_start_remote:
-                    if len(self.pi_main_obj.remote_control_data) == 14 and \
-                            abs(self.pi_main_obj.remote_control_data[2] - 50) > 30:
-                        self.change_status_info(target_status=ShipStatus.remote_control)
-
     # 检查是否需要返航
     def check_backhome(self):
         """
         返回返航状态或者None
-        :return:
+        :return:返回None为不需要返航，返回低电量返航或者断网返航
         """
         return_ship_status = None
-        if config.network_backhome:
+        if config.network_backhome and self.server_data_obj.mqtt_send_get_obj.is_connected:
             if int(config.network_backhome) > 600:
                 network_backhome_time = int(config.network_backhome)
             else:
-                network_backhome_time = 1000
+                network_backhome_time = 600
             if time.time() - self.server_data_obj.mqtt_send_get_obj.last_command_time > network_backhome_time:
                 return_ship_status = ShipStatus.backhome_network
         if self.low_dump_energy_warnning:
@@ -844,6 +687,51 @@ class DataManager:
                 if v < 5:
                     obstacle_map[10 + int(k / 0.9)] = 1
         return obstacle_map
+
+    # 发送数据
+    def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):
+        """
+        :param url:
+        :param http_type:
+        :param qos:
+        :param topic:
+        :param data: 发送数据
+        :param method 获取数据方式　http mqtt com
+        """
+        assert method in ['http', 'mqtt', 'com'], 'method error not in http mqtt com'
+        if method == 'http':
+            return_data = self.server_data_obj.send_server_http_data(http_type, data, url)
+            self.logger.info({'请求 url': url, 'status_code': return_data.status_code})
+            # 如果是POST返回的数据，添加数据到地图数据保存文件中
+            if http_type == 'POST' and r'map/save' in url:
+                content_data = json.loads(return_data.content)
+                self.logger.info({'map/save content_data success': content_data["success"]})
+                if not content_data["success"]:
+                    self.logger.error('POST请求发送地图数据失败')
+                # POST 返回湖泊ID
+                pool_id = content_data['data']['id']
+                return pool_id
+            # http发送检测数据给服务器
+            elif http_type == 'POST' and r'data/save' in url:
+                content_data = json.loads(return_data.content)
+                self.logger.debug({'data/save content_data success': content_data["success"]})
+                if not content_data["success"]:
+                    self.logger.error('POST发送检测请求失败')
+            elif http_type == 'GET' and r'device/binding' in url:
+                content_data = json.loads(return_data.content)
+                if not content_data["success"]:
+                    self.logger.error('GET请求失败')
+                save_data_binding = content_data["data"]
+                return save_data_binding
+            else:
+                # 如果是GET请求，返回所有数据的列表
+                content_data = json.loads(return_data.content)
+                if not content_data["success"]:
+                    self.logger.error('GET请求失败')
+                save_data_map = content_data["data"]["mapList"]
+                return save_data_map
+        elif method == 'mqtt':
+            self.server_data_obj.send_server_mqtt_data(data=data, topic=topic, qos=qos)
 
     # 往东南西北运动控制
     def nesw_control(self, nest):
@@ -1009,6 +897,138 @@ class DataManager:
                 if distance_sample < config.arrive_distance:
                     return True
 
+    # 处理状态切换
+    def change_status(self):
+        while True:
+            time.sleep(0.1)
+            d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
+            self.direction = d
+            # 判断是否需要返航
+            return_ship_status = None
+            if self.ship_status != ShipStatus.at_home:
+                return_ship_status = self.check_backhome()
+
+            # 判断空闲状态切换到其他状态
+            if self.ship_status == ShipStatus.idle:
+                # 切换到遥控器控制模式
+                if not config.home_debug and self.pi_main_obj.b_start_remote:
+                    self.change_status_info(target_status=ShipStatus.remote_control)
+                # 切换到电脑手动模式
+                elif d in [-1, 0, 90, 180, 270, 10, 190, 1180, 1270]:
+                    self.change_status_info(target_status=ShipStatus.computer_control)
+                # 切换到返航
+                elif return_ship_status is not None:
+                    self.change_status_info(target_status=return_ship_status)
+                # 切换到自动巡航模式
+                elif self.server_data_obj.mqtt_send_get_obj.keep_point and \
+                        len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
+                    if self.lng_lat is None:
+                        self.logger.error('无当前GPS，不能自主巡航')
+                        time.sleep(0.5)
+                    else:
+                        self.change_status_info(target_status=ShipStatus.computer_auto)
+
+            # 判断电脑手动状态切换到其他状态
+            if self.ship_status == ShipStatus.computer_control:
+                # 切换到遥控器控制
+                if not config.home_debug and self.pi_main_obj.b_start_remote:
+                    # 此时为遥控器控制模式 清除d控制状态
+                    self.change_status_info(target_status=ShipStatus.remote_control)
+                # 切换到自动巡航模式
+                elif d == -1 and \
+                        self.server_data_obj.mqtt_send_get_obj.keep_point and \
+                        len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
+                    if self.lng_lat is None:
+                        self.logger.error('无当前GPS，不能自主巡航')
+                        time.sleep(0.5)
+                    else:
+                        self.change_status_info(target_status=ShipStatus.computer_auto)
+                        d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
+                # 点击抽水
+                elif self.server_data_obj.mqtt_send_get_obj.b_draw:
+                    self.last_ship_status = ShipStatus.computer_control
+                    self.change_status_info(target_status=ShipStatus.tasking)
+                # 切换到返航
+                elif return_ship_status is not None:
+                    self.change_status_info(target_status=return_ship_status)
+
+            # 判断电脑自动切换到其他状态情况
+            if self.ship_status == ShipStatus.computer_auto:
+                # 切换到遥控器控制 使能且摇杆大于60%
+                if not config.home_debug and self.pi_main_obj.b_start_remote:
+                    if len(self.pi_main_obj.remote_control_data) == 14 and \
+                            abs(self.pi_main_obj.remote_control_data[2] - 50) > 30:
+                        self.change_status_info(target_status=ShipStatus.remote_control, b_clear_status=True)
+                # 切换到返航
+                elif return_ship_status is not None:
+                    self.change_status_info(target_status=return_ship_status)
+                # 取消自动模式
+                elif d == -1:
+                    self.change_status_info(target_status=ShipStatus.computer_control, b_clear_status=True)
+                # 切换到手动
+                elif d in [0, 90, 180, 270, 10, 190, 1180, 1270]:
+                    self.change_status_info(target_status=ShipStatus.computer_control)
+                # 到点
+                elif self.b_arrive_point:
+                    self.last_ship_status = ShipStatus.computer_auto
+                    self.change_status_info(target_status=ShipStatus.tasking)
+                # 点击抽水
+                elif self.server_data_obj.mqtt_send_get_obj.b_draw:
+                    self.last_ship_status = ShipStatus.computer_auto
+                    self.change_status_info(target_status=ShipStatus.tasking)
+
+            # 判断任务模式切换到其他状态情况
+            if self.ship_status == ShipStatus.tasking:
+                # 切换到电脑自动模式  切换到电脑手动模式
+                if self.b_sampling == 2:
+                    if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) > 0 and \
+                            all(self.server_data_obj.mqtt_send_get_obj.sampling_points_status):
+                        self.change_status_info(target_status=ShipStatus.computer_control, b_clear_status=True)
+                        # 自动模式下到达最后一个点切换为空闲状态
+                        self.last_ship_status = ShipStatus.idle
+                    self.b_sampling = 0
+                    self.server_data_obj.mqtt_send_get_obj.b_draw = 0
+                    self.change_status_info(self.last_ship_status)
+
+            # 遥控器状态切换到其他状态
+            if self.ship_status == ShipStatus.remote_control:
+                # 切换到返航
+                if return_ship_status is not None:
+                    if len(self.pi_main_obj.remote_control_data) == 14 and \
+                            abs(self.pi_main_obj.remote_control_data[2] - 50) < 30:
+                        self.change_status_info(target_status=return_ship_status)
+                # 切换到空闲状态
+                elif not config.home_debug and self.pi_main_obj.b_start_remote == 0:
+                    self.change_status_info(target_status=ShipStatus.idle)
+                # 切换到任务模式
+                elif not config.home_debug and self.pi_main_obj.remote_draw_status == 1:
+                    self.last_ship_status = ShipStatus.remote_control
+                    self.change_status_info(target_status=ShipStatus.tasking)
+
+            # 返航状态切换到其他状态
+            if self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
+                # 判断是否返航到家
+                if self.b_at_home:
+                    self.change_status_info(target_status=ShipStatus.at_home)
+                # 切换到遥控器模式 使能遥控器 且摇杆推到超过60%
+                if not config.home_debug and self.pi_main_obj.b_start_remote:
+                    if len(self.pi_main_obj.remote_control_data) == 14 and \
+                            abs(self.pi_main_obj.remote_control_data[2] - 50) > 30:
+                        self.change_status_info(target_status=ShipStatus.remote_control)
+                # 切换到电脑手动控制
+                if d == -1:
+                    self.change_status_info(target_status=ShipStatus.computer_control)
+
+            # 返航到家状态切换到其他状态
+            if self.ship_status == ShipStatus.at_home:
+                if d in [-1, 0, 90, 180, 270, 10, 190, 1180, 1270]:
+                    self.change_status_info(target_status=ShipStatus.computer_control)
+                # 切换到遥控器模式 使能遥控器 且摇杆推到超过60%
+                if not config.home_debug and self.pi_main_obj.b_start_remote:
+                    if len(self.pi_main_obj.remote_control_data) == 14 and \
+                            abs(self.pi_main_obj.remote_control_data[2] - 50) > 30:
+                        self.change_status_info(target_status=ShipStatus.remote_control)
+
     # 处理电机控制
     def move_control(self):
         b_log_points = 1  # 防止寻点模式下等待用户点击开始前一直记录日志
@@ -1081,11 +1101,11 @@ class DataManager:
             elif self.ship_status == ShipStatus.remote_control:
                 # lora遥控器
                 if config.b_lora_remote_control:
-                    remote_left_pwm, remote_right_pwm = self.pi_main_obj.check_lora_remote_pwm()
+                    remote_left_pwm, remote_right_pwm = self.pi_main_obj.check_remote_pwm(b_lora_remote_control=True)
                     self.pi_main_obj.set_pwm(set_left_pwm=remote_left_pwm, set_right_pwm=remote_right_pwm)
                 # 2.4g遥控器
                 elif config.b_use_remote_control:
-                    remote_left_pwm, remote_right_pwm = self.pi_main_obj.check_remote_pwm()
+                    remote_left_pwm, remote_right_pwm = self.pi_main_obj.check_remote_pwm(b_lora_remote_control=False)
                     self.pi_main_obj.set_pwm(set_left_pwm=remote_left_pwm, set_right_pwm=remote_right_pwm)
                 else:
                     continue
@@ -1247,6 +1267,7 @@ class DataManager:
                         self.speed = round(speed_distance / (time.time() - last_read_time), 1)
                         # 替换上一次的值
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
+                        self.gps_log.info({'lng_lat': self.lng_lat})
                         last_read_time = time.time()
                     else:
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
@@ -1260,6 +1281,8 @@ class DataManager:
         last_run_distance = None
         while True:
             time.sleep(config.pi2mqtt_interval)
+            if not self.server_data_obj.mqtt_send_get_obj.is_connected:
+                continue
             if self.server_data_obj.mqtt_send_get_obj.pool_code:
                 self.data_define_obj.pool_code = self.server_data_obj.mqtt_send_get_obj.pool_code
             status_data = self.data_define_obj.status
@@ -1377,6 +1400,13 @@ class DataManager:
                 # 发送结束改为False
                 self.b_draw_over_send_data = False
 
+    # 外围设备控制线程函数
+    def control_peripherals(self):
+        while True:
+            time.sleep(config.thread_sleep_time)
+            if not config.home_debug and self.pi_main_obj:
+                self.control_relay()
+
     # 配置更新
     def update_config(self):
         while True:
@@ -1410,58 +1440,6 @@ class DataManager:
                     # 改为0位置状态，不再重复发送
                     self.server_data_obj.mqtt_send_get_obj.height_setting_data_info = 0
             time.sleep(config.pi2mqtt_interval)
-
-    # 发送数据
-    def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):
-        """
-        :param url:
-        :param http_type:
-        :param qos:
-        :param topic:
-        :param data: 发送数据
-        :param method 获取数据方式　http mqtt com
-        """
-        assert method in ['http', 'mqtt', 'com'], 'method error not in http mqtt com'
-        if method == 'http':
-            return_data = self.server_data_obj.send_server_http_data(http_type, data, url)
-            self.logger.info({'请求 url': url, 'status_code': return_data.status_code})
-            # 如果是POST返回的数据，添加数据到地图数据保存文件中
-            if http_type == 'POST' and r'map/save' in url:
-                content_data = json.loads(return_data.content)
-                self.logger.info({'map/save content_data success': content_data["success"]})
-                if not content_data["success"]:
-                    self.logger.error('POST请求发送地图数据失败')
-                # POST 返回湖泊ID
-                pool_id = content_data['data']['id']
-                return pool_id
-            # http发送检测数据给服务器
-            elif http_type == 'POST' and r'data/save' in url:
-                content_data = json.loads(return_data.content)
-                self.logger.debug({'data/save content_data success': content_data["success"]})
-                if not content_data["success"]:
-                    self.logger.error('POST发送检测请求失败')
-            elif http_type == 'GET' and r'device/binding' in url:
-                content_data = json.loads(return_data.content)
-                if not content_data["success"]:
-                    self.logger.error('GET请求失败')
-                save_data_binding = content_data["data"]
-                return save_data_binding
-            else:
-                # 如果是GET请求，返回所有数据的列表
-                content_data = json.loads(return_data.content)
-                if not content_data["success"]:
-                    self.logger.error('GET请求失败')
-                save_data_map = content_data["data"]["mapList"]
-                return save_data_map
-        elif method == 'mqtt':
-            self.server_data_obj.send_server_mqtt_data(data=data, topic=topic, qos=qos)
-
-    # 外围设备控制
-    def control_peripherals(self):
-        while True:
-            time.sleep(config.thread_sleep_time)
-            if not config.home_debug and self.pi_main_obj:
-                self.control_relay()
 
     # 状态检查函数，检查自身状态发送对应消息
     def check_status(self):
@@ -1562,6 +1540,9 @@ class DataManager:
     def check_ping_delay(self):
         # 检查网络
         while True:
+            time.sleep(config.check_network_interval)
+            if not self.server_data_obj.mqtt_send_get_obj.is_connected:
+                continue
             if config.b_check_network:
                 ping = check_network.get_ping_delay()
                 if not check_network.get_ping_delay():
@@ -1571,30 +1552,13 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.is_connected = 0
                 else:
                     self.ping = ping
-            time.sleep(config.check_network_interval)
 
-    # 测试发送障碍物数据
-    def send_test_distance(self):
-        direction = int(random.random() * 360)
-        distance_info_data = {
-            # 设备号
-            "deviceId": "3c50f4c3-a9c1-4872-9f18-883af014380a",
-            # 船头角度  以北为0度 ，逆时针方向为正
-            "direction": direction,
-            # 距离信息 内部为列表，列中中元素为字典，distance为距离单位米  angle为角度单位度，以船头角度为0度 左正右负
-            "distance_info": [{"distance": 4.5, "angle": 20},
-                              {"distance": 7.5, "angle": -20},
-                              {"distance": 6, "angle": 0}],
-        }
-
-        self.send(method='mqtt',
-                  topic='distance_info_%s' % config.ship_code,
-                  data=distance_info_data,
-                  qos=0)
-
-    # 发送障碍物信息
+    # 发送障碍物信息线程
     def send_distacne(self):
         while True:
+            time.sleep(1)
+            if not self.server_data_obj.mqtt_send_get_obj.is_connected:
+                continue
             distance_info_data = {}
             if len(self.pi_main_obj.distance_dict) > 0:
                 distance_info_data.update({'deviceId': config.ship_code})
@@ -1612,7 +1576,6 @@ class DataManager:
                           topic='distance_info_%s' % config.ship_code,
                           data=distance_info_data,
                           qos=0)
-            time.sleep(1)
 
     # 检查开关相关信息
     def check_switch(self):
@@ -1644,6 +1607,7 @@ class DataManager:
                       data=switch_data,
                       qos=0)
 
+    # 开机启动一次函数
     def start_once_func(self):
         while True:
             if not config.home_debug and not self.is_init_motor:
@@ -1652,21 +1616,8 @@ class DataManager:
             if not self.b_check_get_water_data and self.gaode_lng_lat is not None:
                 adcode = baidu_map.BaiduMap.get_area_code(self.gaode_lng_lat)
                 self.area_id = data_valid.adcode_2_area_id(adcode)
-                print('self.area_id',self.area_id)
+                print('self.area_id', self.area_id)
                 data_valid.get_current_water_data(area_id=self.area_id)
                 self.b_check_get_water_data = 1
-
             time.sleep(3)
 
-
-if __name__ == '__main__':
-    obj = DataManager()
-    obj.send_mqtt_data()
-    # 114.523792, 30.506471;
-    # 114.524232, 30.506255;
-    # 114.523823, 30.505948
-    ############
-    while True:
-        # move_direction = obj.server_data_obj.mqtt_send_get_obj.control_move_direction
-        # obj.logger.info('move_direction: %f' % (float(move_direction)))
-        time.sleep(2)
