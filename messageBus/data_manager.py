@@ -354,8 +354,8 @@ class DataManager:
                 pass
         self.last_drain = self.pi_main_obj.remote_drain_status
         # 舵机
-        if self.pi_main_obj.remote_draw_steer == 500:
-            if self.last_draw_steer == 500:
+        if self.pi_main_obj.remote_draw_steer == 700:
+            if self.last_draw_steer == 700:
                 pass
             else:
                 self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
@@ -376,10 +376,13 @@ class DataManager:
             # 低电量蜂鸣
             if self.low_dump_energy_warnning:
                 self.server_data_obj.mqtt_send_get_obj.status_light = 4
+            # 断网红灯
+            if self.b_network_backhome:
+                self.server_data_obj.mqtt_send_get_obj.status_light = 1
             send_stc_data = 'E%sZ' % (str(self.server_data_obj.mqtt_send_get_obj.status_light))
             self.send_stc_data(send_stc_data)
         self.last_status_light = self.server_data_obj.mqtt_send_get_obj.status_light
-        if random.random() > 0.9:
+        if random.random() > 0.98:
             self.last_status_light = 4
 
     def clear_all_status(self):
@@ -1363,6 +1366,9 @@ class DataManager:
             if self.dump_energy is not None:
                 self.dump_energy_deque.append(self.dump_energy)
                 mqtt_send_status_data.update({'dump_energy': self.dump_energy})
+            if not config.home_debug and self.pi_main_obj.dump_energy is not None:
+                self.dump_energy_deque.append(self.pi_main_obj.dump_energy)
+                mqtt_send_status_data.update({'dump_energy': self.pi_main_obj.dump_energy})
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
                       qos=0)

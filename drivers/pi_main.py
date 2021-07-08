@@ -10,6 +10,7 @@ root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root_dir)
 from utils import log
 from utils import data_valid
+from storage import save_data
 from drivers import pi_softuart
 import config
 from moveControl.pathTrack import simple_pid
@@ -27,7 +28,7 @@ class PiMain:
         # 遥控器控制外设标志位
         self.remote_draw_status = 0  # 遥控器控制抽水状态 0 未抽水 1抽水
         self.remote_drain_status = 0  # 遥控器控制排水状态 0 未排水 1排水
-        self.remote_draw_steer = 500  # 遥控器控制排水状态 0 未排水 1排水
+        self.remote_draw_steer = 2500  #
         self.remote_side_light_status = 2  # 遥控器控制舷灯状态 0 关闭 1 打开  2不管
         self.remote_head_light_status = 2  # 遥控器控制大灯状态 0 关闭 1 打开   2 不管
         # 树莓派pwm波控制对象
@@ -118,7 +119,8 @@ class PiMain:
         self.pid_obj = simple_pid.SimplePid()
         # 将舵机归位
         # self.set_draw_deep(deep_pwm=500)
-        # 记录罗盘数据用于分析
+        # 记录罗盘数据用于分析 每一千次存储一次
+        self.compass_data_list = []
         # 记录上一次收到有效lora遥控器数据时间
         self.lora_control_receive_time = None
         # 串口数据收发对象
@@ -127,6 +129,7 @@ class PiMain:
                                                  baud=config.stc_baud,
                                                  timeout=config.stc2pi_timeout
                                                  )
+        self.dump_energy = None
 
     # 获取串口对象
     @staticmethod
@@ -435,6 +438,35 @@ class PiMain:
     def set_steer_engine(self, angle):
         self.pi.set_PWM_dutycycle(26, angle)
 
+    # 记录罗盘数据
+    def save_compass_data(self, theta_):
+        int_time_x = int(time.time() * 10)
+        self.compass_data_list.append((int_time_x, theta_))
+        save_compass_data_path = os.path.join(config.save_compass_data_dir, 'compass_data.json')
+        if len(self.compass_data_list) >= 1000:
+            if os.path.exists(save_compass_data_path):
+                temp_data_dict = save_data.get_data(save_compass_data_path)
+                if temp_data_dict:
+                    temp_data_list = temp_data_dict.get('compass_data')
+                    if temp_data_list:
+                        temp_data_list.extend(self.compass_data_list)
+                    else:
+                        temp_data_list = []
+                        temp_data_list.extend(self.compass_data_list)
+                    temp_data_dict.update({'compass_data': temp_data_list})
+                    print('save_data')
+                else:
+                    temp_data_dict = {'compass_data': self.compass_data_list}
+            else:
+                temp_data_dict = {'compass_data': self.compass_data_list}
+                print('save_data')
+            if len(temp_data_dict.get('compass_data')) > 36000:
+                temp_data_list = temp_data_dict.get('compass_data')
+                del temp_data_list[:18000]
+                temp_data_dict.update({'compass_data': temp_data_list})
+                save_data.set_data(temp_data_dict, save_compass_data_path)
+            self.compass_data_list.clear()
+
     # 获取舵机＋激光雷达数据距离字典
     def get_distance_dict(self):
         if config.b_laser:
@@ -578,15 +610,20 @@ class PiMain:
             count %= max_count
             time.sleep(0.001)
 
+    # 读取单片机数据
     def get_stc_data(self):
         """
         读取单片机数据
         :return:
         """
         while True:
-            data = self.stc_obj.read_stc_data()
-            if data:
-                self.logger_obj.info(data)
+            stc_data_read = self.stc_obj.read_stc_data()
+            print('stc_data_read', stc_data_read)
+            if stc_data_read and len(stc_data_read) == 1:
+                self.dump_energy = stc_data_read[0]
+                self.logger_obj.info({'stc_data dump energy', stc_data_read})
+            elif stc_data_read and len(stc_data_read) == 5:
+                pass
             time.sleep(1)
 
     def get_sonar_data(self):
@@ -686,6 +723,10 @@ class PiMain:
                         config.write_setting(b_height=True)
                 else:
                     theta_ = self.compass_obj.read_compass(send_data='31')
+                    try:
+                        self.save_compass_data(theta_=theta_)
+                    except Exception as s_e:
+                        self.logger_obj.error({'save_compass_data': s_e})
                     theta_ = self.compass_filter(theta_)
                     if theta_:
                         self.theta = theta_
@@ -765,9 +806,9 @@ class PiMain:
                         self.remote_drain_status = 0
                     # 判断收起舵机  展开舵机
                     if int(self.remote_control_data[10]) == 1:
-                        self.remote_draw_steer = 2500
+                        self.remote_draw_steer = 700
                     else:
-                        self.remote_draw_steer = 500
+                        self.remote_draw_steer = 2500
                     # 判断打开舷灯  关闭舷灯
                     if int(self.remote_control_data[6]) == 10:
                         self.remote_side_light_status = 1
@@ -890,7 +931,7 @@ if __name__ == '__main__':
                 time.sleep(3)
             # 获取读取单片机数据
             elif key_input.startswith('f'):
-                stc_data = pi_main_obj.stc_obj.pin_stc_read(debug=True)
+                stc_data = pi_main_obj.stc_obj.read_stc_data(debug=True)
             elif key_input.startswith('g'):
                 gps_data = pi_main_obj.gps_obj.read_gps(debug=True)
                 print('gps_data', gps_data)

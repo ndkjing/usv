@@ -27,7 +27,9 @@ save_sonar_path = os.path.join(root_path, 'statics', 'geojeson_data.json')
 save_water_data_path = os.path.join(root_path, 'statics', 'water_data.json')
 # 保存返航点地址路径
 home_location_path = os.path.join(root_path, 'home_location.json')
-
+# 记录罗盘数据
+save_compass_data_dir = os.path.join(root_path, 'statics')
+# 记录gps数据
 
 class CurrentPlatform(enum.Enum):
     windows = 1

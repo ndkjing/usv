@@ -866,3 +866,513 @@
 2021-07-07 10:41:37,000 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
 2021-07-07 10:41:41,995 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
 2021-07-07 10:41:47,014 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380a', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:00:58,142 server_data.py[line:27] INFO http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/3c50f4c3-a9c1-4872-9f18-883af014380d
+2021-07-07 17:00:58,262 server_data.py[line:531] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,274 server_data.py[line:531] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,280 server_data.py[line:190] INFO Connected with result code:  0
+2021-07-07 17:00:58,292 server_data.py[line:531] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,320 server_data.py[line:531] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,337 server_data.py[line:531] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,348 server_data.py[line:531] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,365 server_data.py[line:531] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,381 server_data.py[line:531] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,403 server_data.py[line:531] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,420 server_data.py[line:531] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,431 server_data.py[line:531] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,448 server_data.py[line:531] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,453 server_data.py[line:531] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,464 server_data.py[line:531] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,490 server_data.py[line:531] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,490 server_data.py[line:531] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:00:58,508 server_data.py[line:531] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380d', 'qos': 0}
+2021-07-07 17:01:03,247 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:01:08,284 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:01:13,277 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:01:18,308 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:01:23,294 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:01:28,299 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:01:33,323 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:01:38,351 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:01:43,369 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:01:48,394 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:01:53,381 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:01:58,403 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:02:03,404 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:02:08,420 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:02:13,446 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:02:18,467 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:02:23,470 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:02:28,478 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:02:33,496 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:02:38,525 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:02:43,528 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:02:48,560 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:02:53,563 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:02:58,563 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:03:03,580 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:03:08,581 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:03:13,611 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:03:18,612 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:03:23,639 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:03:28,643 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:03:33,643 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:03:38,698 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:03:43,710 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:03:48,714 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:03:53,716 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:03:58,717 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:04:03,740 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:04:08,751 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:04:13,770 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:04:18,760 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:04:23,783 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:04:28,808 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:04:33,827 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:04:38,838 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:04:43,852 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:04:48,878 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:04:53,907 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:04:58,914 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:05:03,915 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:05:08,938 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:05:13,926 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:05:18,952 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:05:23,981 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:05:28,991 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:05:34,001 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:05:39,009 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:05:44,000 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:05:49,027 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:05:54,039 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:05:59,068 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:06:04,101 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:06:09,107 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:06:14,121 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:06:19,133 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:06:24,140 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:06:29,151 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:06:34,171 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:06:39,188 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:06:44,217 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:06:49,247 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:06:54,243 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:06:59,259 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:07:04,289 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:07:09,280 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:07:14,287 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:07:19,341 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:07:24,331 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:07:29,354 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:07:34,343 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:07:39,343 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:07:44,363 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:07:49,398 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:07:54,414 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:07:59,443 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:08:04,439 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:08:09,449 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:08:14,485 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:08:19,491 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:08:24,502 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:08:29,497 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:08:34,543 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:08:39,521 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:08:44,543 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:08:49,596 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:08:54,593 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:08:59,597 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:09:04,590 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:09:09,620 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:09:14,626 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:09:19,645 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:09:24,664 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:09:29,665 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:09:34,691 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:09:39,691 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:09:44,715 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:09:49,713 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:09:54,726 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:09:59,739 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:10:04,755 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:10:09,768 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:10:14,775 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:10:19,806 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:10:24,795 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:10:29,845 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:10:34,857 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:10:39,855 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:10:44,885 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:10:49,907 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:10:54,918 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:10:59,936 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:11:04,954 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:11:09,986 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:11:14,999 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:11:19,986 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:11:24,988 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:11:29,994 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:11:35,043 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:11:40,021 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:11:45,026 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:11:50,056 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:11:55,068 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:12:00,126 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:12:05,109 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:12:10,132 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:12:15,136 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:12:20,156 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:12:25,183 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:12:30,189 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:12:35,208 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:12:40,212 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:12:45,212 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:12:50,236 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:12:55,244 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:13:00,246 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:13:05,269 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:13:10,297 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:13:15,305 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:13:20,334 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:13:25,335 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:13:30,354 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:13:35,372 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:13:40,383 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:13:45,407 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:13:50,420 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:13:55,463 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:14:00,450 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:14:05,453 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:14:10,503 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:14:15,488 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:14:20,516 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:14:25,506 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:14:30,537 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:14:35,532 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:14:40,545 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:14:45,568 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:14:50,586 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:14:55,585 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:15:00,653 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:15:05,635 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:15:10,647 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:15:15,657 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:15:20,647 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:15:25,660 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:15:30,690 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:15:35,690 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:15:40,704 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:15:45,720 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:15:50,720 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:15:55,753 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:16:00,750 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:16:05,794 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:16:10,793 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:16:15,811 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:16:20,822 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:16:25,824 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:16:30,815 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:16:35,857 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:16:40,843 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:16:45,885 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:16:50,897 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:16:55,929 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:17:00,927 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:17:05,931 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:17:10,970 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:17:15,977 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:17:20,996 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:17:26,024 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:17:31,032 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:17:36,050 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:17:41,060 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:17:46,049 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:17:51,105 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:17:56,083 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:18:01,084 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:18:06,124 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:18:11,136 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:18:16,147 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:18:21,162 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:18:26,171 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:18:31,162 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:18:36,207 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:18:41,193 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:18:46,200 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:18:51,236 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:18:56,224 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:19:01,249 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:19:06,278 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:19:11,281 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:19:16,289 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:19:21,287 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:19:26,354 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:19:31,340 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:19:36,358 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:19:41,371 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:19:46,365 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:19:51,402 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:19:56,395 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:20:01,416 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:20:06,409 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:20:11,423 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:20:16,460 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:20:21,467 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:20:26,478 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:20:31,514 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:20:36,518 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:20:41,510 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:20:46,538 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:20:51,564 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:20:56,550 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:21:01,578 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:21:06,589 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:21:11,584 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:21:16,612 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:21:21,634 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:21:26,637 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:21:31,645 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:21:36,656 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:21:41,674 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:21:46,683 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:21:51,706 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:21:56,729 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:22:01,726 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:22:06,770 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:22:11,766 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:22:16,783 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:22:21,824 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:22:26,813 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:22:31,821 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:22:36,833 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:22:41,846 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:22:46,876 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:22:51,918 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:22:56,930 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:23:01,939 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:23:06,962 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:23:11,963 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:23:16,987 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:23:21,974 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:23:27,011 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:23:32,041 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:23:37,037 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:23:42,041 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:23:47,066 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:23:52,094 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:23:57,111 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:24:02,095 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:24:07,132 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:24:12,159 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:24:17,155 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:24:22,168 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:24:27,186 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:24:32,215 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:24:37,216 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:24:42,228 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:24:47,234 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:24:52,268 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:24:57,280 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:25:02,269 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:25:07,281 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:25:12,301 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:25:17,318 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:25:22,337 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:25:27,338 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:25:32,373 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:25:37,366 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:25:42,378 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:25:47,416 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:25:52,418 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:25:57,443 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:26:02,438 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:26:07,463 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:26:12,468 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:26:17,486 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:26:22,473 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:26:27,535 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:26:32,553 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:26:37,540 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:26:42,574 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:26:47,576 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:26:52,606 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:26:57,624 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:27:02,631 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:27:07,640 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:27:12,663 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:27:17,705 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:27:22,685 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:27:27,725 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:27:32,722 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:27:37,741 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:27:42,766 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:27:47,785 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:27:52,791 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:27:57,822 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:28:02,829 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:28:07,835 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:28:12,847 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:28:17,866 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:28:22,874 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:28:27,885 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:28:32,917 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:28:37,927 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:28:42,952 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:28:47,970 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:28:52,977 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:28:58,002 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:29:03,014 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:29:08,044 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:29:13,039 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:29:18,051 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:29:23,048 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:29:28,090 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:29:33,102 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:29:38,126 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:29:43,125 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:29:48,151 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:29:53,143 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:29:58,193 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:30:03,181 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:30:08,215 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:30:13,205 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:30:18,231 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:30:23,244 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:30:28,266 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:30:33,274 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:30:38,293 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:30:43,306 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:30:48,340 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:30:53,319 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:30:58,331 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:31:03,370 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:31:08,381 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:31:13,405 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:31:18,414 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:31:23,430 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:31:28,426 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:31:33,466 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:31:38,449 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:31:43,466 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:31:48,492 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:31:53,516 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:31:58,515 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:32:03,549 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:32:08,561 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:32:13,567 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:32:18,598 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:32:23,583 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:32:28,628 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:32:33,619 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:32:38,631 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:32:43,662 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:32:48,664 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:32:53,677 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:32:58,699 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:33:03,718 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:33:08,724 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:33:13,741 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:33:18,779 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:33:23,782 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:33:28,783 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:33:33,826 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:33:38,837 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:33:43,850 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:33:48,863 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:33:53,864 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:33:58,865 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:34:03,891 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:34:08,902 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:34:13,921 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:34:18,931 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:34:23,962 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:34:28,960 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:34:33,990 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:34:39,019 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:34:44,037 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:34:49,030 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:34:54,067 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:34:59,079 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:35:04,102 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:35:09,128 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:35:14,134 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:35:19,139 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:35:24,141 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:35:29,171 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:35:34,167 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:35:39,206 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:35:44,215 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:35:49,231 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:35:54,244 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:35:59,258 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:36:04,253 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:36:09,271 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:36:14,284 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:36:19,285 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:36:24,300 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:36:29,360 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:36:34,367 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:36:39,356 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:36:44,387 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:36:49,381 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:36:54,415 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-07 17:36:59,414 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380d', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-08 09:44:19,687 server_data.py[line:531] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,699 server_data.py[line:531] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,717 server_data.py[line:531] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,723 server_data.py[line:190] INFO Connected with result code:  0
+2021-07-08 09:44:19,730 server_data.py[line:531] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,762 server_data.py[line:531] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,780 server_data.py[line:531] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,798 server_data.py[line:531] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,816 server_data.py[line:531] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,840 server_data.py[line:531] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,864 server_data.py[line:531] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,882 server_data.py[line:531] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,894 server_data.py[line:531] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,918 server_data.py[line:531] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,936 server_data.py[line:531] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,954 server_data.py[line:531] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,961 server_data.py[line:531] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:19,973 server_data.py[line:531] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:44:24,708 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380c', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-08 09:44:29,716 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380c', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-08 09:44:34,736 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380c', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-08 09:44:39,741 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380c', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-08 09:46:12,056 server_data.py[line:531] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,068 server_data.py[line:531] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,092 server_data.py[line:190] INFO Connected with result code:  0
+2021-07-08 09:46:12,111 server_data.py[line:531] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,129 server_data.py[line:531] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,153 server_data.py[line:531] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,177 server_data.py[line:531] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,189 server_data.py[line:531] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,207 server_data.py[line:531] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,231 server_data.py[line:531] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,260 server_data.py[line:531] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,272 server_data.py[line:531] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,290 server_data.py[line:531] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,302 server_data.py[line:531] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,326 server_data.py[line:531] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,363 server_data.py[line:531] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,393 server_data.py[line:531] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:12,405 server_data.py[line:531] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:17,035 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380c', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-08 09:46:22,064 server_data.py[line:256] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380c', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-07-08 09:46:25,682 server_data.py[line:531] INFO {'topic': 'pool_click_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,694 server_data.py[line:531] INFO {'topic': 'control_data_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,711 server_data.py[line:531] INFO {'topic': 'path_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,711 server_data.py[line:531] INFO {'topic': 'user_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,711 server_data.py[line:531] INFO {'topic': 'start_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,711 server_data.py[line:531] INFO {'topic': 'switch_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,712 server_data.py[line:531] INFO {'topic': 'pool_info_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,712 server_data.py[line:531] INFO {'topic': 'auto_lng_lat_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,712 server_data.py[line:531] INFO {'topic': 'path_planning_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,712 server_data.py[line:531] INFO {'topic': 'base_setting_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,712 server_data.py[line:531] INFO {'topic': 'height_setting_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,713 server_data.py[line:531] INFO {'topic': 'refresh_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,713 server_data.py[line:531] INFO {'topic': 'reset_pool_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,713 server_data.py[line:531] INFO {'topic': 'heart_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,718 server_data.py[line:531] INFO {'topic': 'set_home_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,718 server_data.py[line:531] INFO {'topic': 'poweroff_restart_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,718 server_data.py[line:531] INFO {'topic': 'path_planning_confirm_3c50f4c3-a9c1-4872-9f18-883af014380c', 'qos': 0}
+2021-07-08 09:46:25,726 server_data.py[line:190] INFO Connected with result code:  0
