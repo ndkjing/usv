@@ -326,9 +326,10 @@ class PiMain:
         self.tilt_angle_pwm = tilt_angle_pwm_
 
     # 设置抽水泵舵深度
-    def set_draw_deep(self, deep_pwm,b_slow=True):
+    def set_draw_deep(self, deep_pwm, b_slow=True):
         """
         设置抽水泵深度
+        :param b_slow:
         :param deep_pwm:
         :return:
         """
@@ -338,10 +339,11 @@ class PiMain:
                 add_or_sub = 1 if deep_pwm - self.draw_steer_pwm > 0 else -1
                 self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
                 self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
-                if self.draw_steer_pwm< 1500:
-                    time.sleep(0.07)
-                else:
-                    time.sleep(0.001)
+                time.sleep(0.07)
+                # if self.draw_steer_pwm < 1500:
+                #     time.sleep(0.07)
+                # else:
+                #     time.sleep(0.01)
         else:
             self.pi.set_servo_pulsewidth(config.draw_steer, deep_pwm)
             self.draw_steer_pwm = deep_pwm
