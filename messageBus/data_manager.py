@@ -354,17 +354,18 @@ class DataManager:
                 pass
         self.last_drain = self.pi_main_obj.remote_drain_status
         # 舵机
-        if self.pi_main_obj.remote_draw_steer == 700:
-            if self.last_draw_steer == 700:
-                pass
+        if self.is_init_motor:
+            if self.pi_main_obj.remote_draw_steer == config.min_deep_steer_pwm:
+                if self.last_draw_steer == config.min_deep_steer_pwm:
+                    pass
+                else:
+                    self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
             else:
-                self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
-        else:
-            if self.last_draw_steer == 2500:
-                pass
-            else:
-                self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
-        self.last_draw_steer = self.pi_main_obj.remote_draw_steer
+                if self.last_draw_steer == 2500:
+                    pass
+                else:
+                    self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
+            self.last_draw_steer = self.pi_main_obj.remote_draw_steer
         # 状态灯
         if self.server_data_obj.mqtt_send_get_obj.status_light != self.last_status_light:
             # 启动后mqtt连接上亮绿灯
@@ -1618,6 +1619,7 @@ class DataManager:
         while True:
             if not config.home_debug and not self.is_init_motor:
                 self.pi_main_obj.init_motor()
+                self.pi_main_obj.set_draw_deep(deep_pwm=2500,b_slow=False)
                 self.is_init_motor = 1
             if not self.b_check_get_water_data and self.gaode_lng_lat is not None:
                 adcode = baidu_map.BaiduMap.get_area_code(self.gaode_lng_lat)

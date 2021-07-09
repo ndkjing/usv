@@ -807,6 +807,7 @@ if home_debug:
 else:
     use_shape_theta_type = 1
 
+min_deep_steer_pwm = 600
 
 
 class WaterType(enum.Enum):

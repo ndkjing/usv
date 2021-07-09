@@ -99,7 +99,7 @@ class PiMain:
         self.pi.set_mode(config.draw_right_gpio_pin, pigpio.OUTPUT)
         """
         # 抽水泵舵机
-        self.draw_steer_pwm = 500
+        self.draw_steer_pwm = 0
         # 云台舵机角度
         self.pan_angle_pwm = 1500
         self.tilt_angle_pwm = 1500
@@ -118,7 +118,7 @@ class PiMain:
         self.last_angular_velocity = None
         self.pid_obj = simple_pid.SimplePid()
         # 将舵机归位
-        # self.set_draw_deep(deep_pwm=500)
+        # self.set_draw_deep(deep_pwm=self.draw_steer_pwm)
         # 记录罗盘数据用于分析 每一千次存储一次
         self.compass_data_list = []
         # 记录上一次收到有效lora遥控器数据时间
@@ -326,14 +326,25 @@ class PiMain:
         self.tilt_angle_pwm = tilt_angle_pwm_
 
     # 设置抽水泵舵深度
-    def set_draw_deep(self, deep_pwm=500):
+    def set_draw_deep(self, deep_pwm,b_slow=True):
         """
         设置抽水泵深度
         :param deep_pwm:
         :return:
         """
-        self.pi.set_servo_pulsewidth(config.draw_steer, deep_pwm)
-        self.draw_steer_pwm = deep_pwm
+        if b_slow:
+            delta_change = 10
+            while self.draw_steer_pwm != deep_pwm:
+                add_or_sub = 1 if deep_pwm - self.draw_steer_pwm > 0 else -1
+                self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
+                self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
+                if self.draw_steer_pwm< 1500:
+                    time.sleep(0.07)
+                else:
+                    time.sleep(0.001)
+        else:
+            self.pi.set_servo_pulsewidth(config.draw_steer, deep_pwm)
+            self.draw_steer_pwm = deep_pwm
 
     # 固定速度转向
     def turn_angular_velocity(self, is_left=1, debug=False):
@@ -621,7 +632,7 @@ class PiMain:
             print('stc_data_read', stc_data_read)
             if stc_data_read and len(stc_data_read) == 1:
                 self.dump_energy = stc_data_read[0]
-                self.logger_obj.info({'stc_data dump energy', stc_data_read})
+                self.logger_obj.info({'stc_data dump energy', stc_data_read[0]})
             elif stc_data_read and len(stc_data_read) == 5:
                 pass
             time.sleep(1)
@@ -806,7 +817,7 @@ class PiMain:
                         self.remote_drain_status = 0
                     # 判断收起舵机  展开舵机
                     if int(self.remote_control_data[10]) == 1:
-                        self.remote_draw_steer = 700
+                        self.remote_draw_steer = config.min_deep_steer_pwm
                     else:
                         self.remote_draw_steer = 2500
                     # 判断打开舷灯  关闭舷灯
@@ -927,7 +938,7 @@ if __name__ == '__main__':
                 pi_main_obj.stc_obj.pin_stc_write('A1Z', debug=True)
                 time.sleep(5)
                 pi_main_obj.stc_obj.pin_stc_write('A0Z', debug=True)
-                pi_main_obj.set_draw_deep(deep_pwm=500)
+                pi_main_obj.set_draw_deep(deep_pwm=config.min_deep_steer_pwm)
                 time.sleep(3)
             # 获取读取单片机数据
             elif key_input.startswith('f'):
