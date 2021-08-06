@@ -10,7 +10,6 @@ requests~=2.25.1
 tqdm~=4.57.0
 tsp_solver
 playsound
-matplotlib
 Scikit-Fuzzy~=0.4.2
 pigpio~=1.78
 pygame~=2.0.1

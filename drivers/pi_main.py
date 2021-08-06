@@ -935,13 +935,21 @@ if __name__ == '__main__':
                 else:
                     pi_main_obj.remote_control_obj.read_remote_control(debug=True)
             elif key_input.startswith('t'):
-                pi_main_obj.set_draw_deep(deep_pwm=2500)  # 旋转舵机
-                time.sleep(3)
-                pi_main_obj.stc_obj.pin_stc_write('A1Z', debug=True)
-                time.sleep(5)
-                pi_main_obj.stc_obj.pin_stc_write('A0Z', debug=True)
-                pi_main_obj.set_draw_deep(deep_pwm=config.min_deep_steer_pwm)
-                time.sleep(3)
+                if len(key_input) > 1:
+                    try:
+                        pwm_deep = int(key_input[1:])
+                        print('pwm_deep',pwm_deep)
+                        pi_main_obj.set_draw_deep(deep_pwm=pwm_deep)
+                    except Exception as e:
+                        print('pwm_deep', e)
+                else:
+                    pi_main_obj.set_draw_deep(deep_pwm=2500)  # 旋转舵机
+                    time.sleep(3)
+                    pi_main_obj.stc_obj.pin_stc_write('A1Z', debug=True)
+                    time.sleep(5)
+                    pi_main_obj.stc_obj.pin_stc_write('A0Z', debug=True)
+                    pi_main_obj.set_draw_deep(deep_pwm=config.min_deep_steer_pwm)
+                    time.sleep(3)
             # 获取读取单片机数据
             elif key_input.startswith('f'):
                 stc_data = pi_main_obj.stc_obj.read_stc_data(debug=True)

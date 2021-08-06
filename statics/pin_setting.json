@@ -1,0 +1,62 @@
+{
+  "laser": {
+    "b_laser":0,
+    "laser_tx":13,
+    "laser_rx":19,
+    "laser_baud":115200,
+    "laser_hz":40
+  },
+  "motor": {
+    "left_pwm_pin":6,
+    "right_pwm_pin":5
+  },
+  "compass": {
+    "b_pin_compass":1,
+    "pin_compass_baud":9600,
+    "pin_compass_tx":27,
+    "pin_compass_rx":22
+  },
+  "gps": {
+    "b_pin_gps":1,
+    "pin_gps_baud":9600,
+    "pin_gps_tx":23,
+    "pin_gps_rx":24
+  },
+  "remote_control": {
+    "b_lora_remote_control" :1,
+    "lora_tx":25,
+    "lora_rx":8,
+    "lora_baud":9600
+  },
+  "pin_stc": {
+    "b_pin_stc":1,
+    "stc_tx": 3,
+    "stc_rx" : 4,
+    "stc_baud" :115200
+  },
+  "millimeter_wave": {
+    "b_millimeter_wave": 1,
+    "field_of_view":90,
+    "view_cell" :5,
+    "ceil_max" : 3,
+    "millimeter_wave_tx" :16,
+    "millimeter_wave_rx" : 20,
+    "millimeter_wave_baud" :115200,
+    "millimeter_wave_hz" : 40
+  },
+  "sonar": {
+    "b_sonar" : 0,
+    "sonar_rx" :16,
+    "sonar_tx": 20 ,
+    "sonar_baud" : 9600,
+    "sonar_steer" : 21
+  },
+  "draw": {
+    "b_draw" : 1,
+    "b_control_deep" : 1 ,
+    "draw_steer" : 13
+  },
+  "drain": {
+    "b_drain" : 1
+  }
+}

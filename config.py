@@ -4,6 +4,7 @@ import json
 import os
 import platform
 import ship_code_config
+
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
@@ -29,6 +30,8 @@ save_water_data_path = os.path.join(root_path, 'statics', 'water_data.json')
 home_location_path = os.path.join(root_path, 'home_location.json')
 # 记录罗盘数据
 save_compass_data_dir = os.path.join(root_path, 'statics')
+
+
 # 记录gps数据
 
 class CurrentPlatform(enum.Enum):
@@ -252,7 +255,7 @@ else:
     home_debug = 1
 # 添加避障方式设置0 不避障 1 避障停止  2 自动避障绕行 3 自动避障绕行和手动模式下避障停止
 obstacle_avoid_type = 0
-control_obstacle_distance = 2.5   # 手动模式避障距离 单位m
+control_obstacle_distance = 2.5  # 手动模式避障距离 单位m
 # 路径规划方式  0 不平滑路径 1 平滑路径
 path_plan_type = 1
 # 路径跟踪方式  1 pid
@@ -270,11 +273,12 @@ forward_see_distance = 9
 # 舵机最大扫描角度单侧 左边为正右边为负
 steer_max_angle = 30
 # 最小转向距离
-min_steer_distance = 10   # 自动模式下避障距离 单位m
+min_steer_distance = 10  # 自动模式下避障距离 单位m
 # 测试在家调试也发送数据
 debug_send_detect_data = 0
 # 转向速度
 angular_velocity = 90
+
 
 def update_height_setting():
     global motor_forward
@@ -797,9 +801,12 @@ sonar_baud = 9600
 sonar_steer = 21  # 声呐舵机
 
 # 抽水
-b_draw = 1     # 是否有抽水泵
+b_draw = 1  # 是否有抽水泵
 b_control_deep = 1  # 是否可调深度
 draw_steer = 13  # 舵机接口
+
+# 排水
+b_drain = 1  # 是否有排水泵
 
 # 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
 if home_debug:
