@@ -821,7 +821,7 @@ class PiMain:
                     if int(self.remote_control_data[10]) == 1:
                         self.remote_draw_steer = config.min_deep_steer_pwm
                     else:
-                        self.remote_draw_steer = 2500
+                        self.remote_draw_steer = config.max_deep_steer_pwm
                     # 判断打开舷灯  关闭舷灯
                     if int(self.remote_control_data[6]) == 10:
                         self.remote_side_light_status = 1

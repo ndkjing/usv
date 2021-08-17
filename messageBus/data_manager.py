@@ -361,7 +361,7 @@ class DataManager:
                 else:
                     self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
             else:
-                if self.last_draw_steer == 2500:
+                if self.last_draw_steer == config.max_deep_steer_pwm:
                     pass
                 else:
                     self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
@@ -1619,7 +1619,7 @@ class DataManager:
         while True:
             if not config.home_debug and not self.is_init_motor:
                 self.pi_main_obj.init_motor()
-                self.pi_main_obj.set_draw_deep(deep_pwm=2500,b_slow=False)
+                self.pi_main_obj.set_draw_deep(deep_pwm=config.max_deep_steer_pwm,b_slow=False)
                 self.is_init_motor = 1
             if not self.b_check_get_water_data and self.gaode_lng_lat is not None:
                 adcode = baidu_map.BaiduMap.get_area_code(self.gaode_lng_lat)
