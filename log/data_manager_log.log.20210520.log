@@ -1,0 +1,384 @@
+2021-05-18 17:51:00,339 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-18 17:51:00,844 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-18 17:51:50,003 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-18 17:51:50,504 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-18 17:52:00,024 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-18 17:52:00,525 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-18 17:52:10,040 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-18 17:52:10,541 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-18 17:52:14,700 data_manager.py[line:939] INFO {'点击地点': [[114.523866, 30.506201]]}
+2021-05-18 17:52:14,700 data_manager.py[line:964] INFO {'全部距离': 75.77360661173643}
+2021-05-18 17:52:20,097 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '43.99 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 25.93, 'mapId': '1354291518018142209'}}
+2021-05-18 17:52:20,599 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '35.75 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 11.74, 'mapId': '1354291518018142209'}}
+2021-05-18 17:52:30,138 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 67.6', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 2.55, 'mapId': '1354291518018142209'}}
+2021-05-18 17:52:30,640 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 67.6', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 2.55, 'mapId': '1354291518018142209'}}
+2021-05-18 17:52:34,718 data_manager.py[line:939] INFO {'点击地点': [[114.523453, 30.506211]]}
+2021-05-18 17:52:34,718 data_manager.py[line:964] INFO {'全部距离': 40.05308255804279}
+2021-05-18 17:52:40,171 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 88.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 2.78, 'mapId': '1354291518018142209'}}
+2021-05-18 17:52:40,673 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 88.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 2.78, 'mapId': '1354291518018142209'}}
+2021-05-18 17:52:43,734 data_manager.py[line:939] INFO {'点击地点': [[114.523689, 30.505707]]}
+2021-05-18 17:52:43,734 data_manager.py[line:964] INFO {'全部距离': 60.011522089376236}
+2021-05-18 17:52:50,211 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:52:50,712 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:53:00,248 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:53:00,749 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:53:10,280 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:53:10,782 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:53:20,316 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:53:20,817 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:53:30,352 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:53:30,853 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:53:40,386 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:53:40,888 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:53:50,421 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:53:50,923 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:54:00,460 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:54:00,962 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 89.3', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.68, 'mapId': '1354291518018142209'}}
+2021-05-18 17:55:07,840 data_manager.py[line:939] INFO {'点击地点': [[114.524248, 30.505961]]}
+2021-05-18 17:55:07,840 data_manager.py[line:964] INFO {'全部距离': 100.24913409141114}
+2021-05-18 17:55:10,381 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '92.37 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': -67.03, 'mapId': ''}}
+2021-05-18 17:55:10,883 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '86.4 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': -33.58, 'mapId': ''}}
+2021-05-18 17:55:20,399 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 71.2', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.86, 'mapId': ''}}
+2021-05-18 17:55:20,900 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 71.2', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.86, 'mapId': ''}}
+2021-05-18 17:55:23,216 data_manager.py[line:939] INFO {'点击地点': [[114.524047, 30.505763]]}
+2021-05-18 17:55:23,216 data_manager.py[line:964] INFO {'全部距离': 29.71091627901933}
+2021-05-18 17:55:29,659 data_manager.py[line:939] INFO {'点击地点': [[114.523887, 30.506638]]}
+2021-05-18 17:55:29,659 data_manager.py[line:964] INFO {'全部距离': 98.61779948987035}
+2021-05-18 17:55:30,446 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '98.69 s 97.2', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': -119.59, 'mapId': '1354291518018142209'}}
+2021-05-18 17:55:30,948 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '94.18 s 97.2', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': -111.47, 'mapId': '1354291518018142209'}}
+2021-05-18 17:55:40,326 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 84.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.96, 'mapId': '1354291518018142209'}}
+2021-05-18 17:55:40,827 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 84.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -2.96, 'mapId': '1354291518018142209'}}
+2021-05-18 17:55:46,881 data_manager.py[line:939] INFO {'点击地点': [[114.524197, 30.506804]]}
+2021-05-18 17:55:46,881 data_manager.py[line:964] INFO {'全部距离': 35.08534625245242}
+2021-05-18 17:55:50,362 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 94.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.06, 'mapId': '1354291518018142209'}}
+2021-05-18 17:55:50,864 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 94.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.06, 'mapId': '1354291518018142209'}}
+2021-05-18 17:56:00,401 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 94.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.06, 'mapId': '1354291518018142209'}}
+2021-05-18 17:56:00,903 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 94.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.06, 'mapId': '1354291518018142209'}}
+2021-05-18 17:56:10,147 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 94.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.06, 'mapId': '1354291518018142209'}}
+2021-05-18 17:56:10,648 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 94.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.06, 'mapId': '1354291518018142209'}}
+2021-05-18 17:56:20,182 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 94.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.06, 'mapId': '1354291518018142209'}}
+2021-05-18 17:56:20,684 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 94.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.06, 'mapId': '1354291518018142209'}}
+2021-05-18 17:56:30,219 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 94.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.06, 'mapId': '1354291518018142209'}}
+2021-05-18 17:56:30,720 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 94.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -0.06, 'mapId': '1354291518018142209'}}
+2021-05-18 17:56:33,157 data_manager.py[line:939] INFO {'点击地点': [[114.523612, 30.506212]]}
+2021-05-18 17:56:33,157 data_manager.py[line:964] INFO {'全部距离': 86.05307347826228}
+2021-05-18 17:56:40,253 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:56:40,754 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:56:50,289 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:56:50,791 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:57:00,325 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:57:00,826 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:57:10,359 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:57:10,861 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:57:20,398 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:57:20,900 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:57:30,434 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:57:30,936 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:57:40,473 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:57:40,974 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:57:50,025 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:57:50,526 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:58:00,057 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:58:00,559 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:58:10,090 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:58:10,592 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:58:20,125 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:58:20,628 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 70.9', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.4, 'mapId': '1354291518018142209'}}
+2021-05-18 17:58:26,147 data_manager.py[line:939] INFO {'点击地点': [[114.524708, 30.505929]]}
+2021-05-18 17:58:26,147 data_manager.py[line:964] INFO {'全部距离': 109.45850501831704}
+2021-05-18 17:58:30,218 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '53.97 s 70.9', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 0.37, 'mapId': '1354291518018142209'}}
+2021-05-18 17:58:30,721 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '39.88 s 70.9', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 0.1, 'mapId': '1354291518018142209'}}
+2021-05-18 17:58:40,176 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:58:40,677 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:58:50,211 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:58:50,714 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:59:00,249 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:59:00,752 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:59:10,292 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:59:10,794 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:59:20,103 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:59:20,605 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:59:30,142 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:59:30,645 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:59:40,179 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:59:40,682 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:59:50,215 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 17:59:50,718 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:00:00,249 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:00:00,751 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:00:10,285 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:00:10,787 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:00:20,321 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:00:20,824 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:00:30,361 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:00:30,864 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:00:40,402 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:00:40,903 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:00:50,439 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:00:50,941 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:01:00,473 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:01:00,977 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:01:10,046 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:01:10,548 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:01:20,087 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:01:20,590 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:01:30,127 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:01:30,630 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:01:40,165 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:01:40,667 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:01:50,206 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:01:50,708 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:02:00,244 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:02:00,746 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:02:10,281 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:02:10,784 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:02:20,326 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:02:20,829 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 91.7', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0.08, 'mapId': '1354291518018142209'}}
+2021-05-18 18:03:20,470 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-18 18:03:20,971 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-18 18:03:30,486 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-18 18:03:30,987 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-18 18:03:39,256 data_manager.py[line:939] INFO {'点击地点': [[114.524023, 30.506538]]}
+2021-05-18 18:03:39,256 data_manager.py[line:964] INFO {'全部距离': 35.71776469805116}
+2021-05-18 18:03:40,028 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '41.13 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 137.73, 'mapId': '1354291518018142209'}}
+2021-05-18 18:03:40,530 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '42.18 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 121.96, 'mapId': '1354291518018142209'}}
+2021-05-18 18:03:50,065 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 46.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -28.8, 'mapId': '1354291518018142209'}}
+2021-05-18 18:03:50,567 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 46.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -28.8, 'mapId': '1354291518018142209'}}
+2021-05-18 18:03:51,499 data_manager.py[line:939] INFO {'点击地点': [[114.523807, 30.506173]]}
+2021-05-18 18:03:51,499 data_manager.py[line:964] INFO {'全部距离': 45.49530302169923}
+2021-05-18 18:03:57,473 data_manager.py[line:939] INFO {'点击地点': [[114.524371, 30.506136]]}
+2021-05-18 18:03:57,473 data_manager.py[line:964] INFO {'全部距离': 53.60758960450092}
+2021-05-18 18:04:00,100 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '32.28 s 96.3', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': -24.1, 'mapId': '1354291518018142209'}}
+2021-05-18 18:04:00,603 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '22.76 s 96.3', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': -1.68, 'mapId': '1354291518018142209'}}
+2021-05-18 18:04:10,137 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 82.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 1.05, 'mapId': '1354291518018142209'}}
+2021-05-18 18:04:10,639 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 82.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 1.05, 'mapId': '1354291518018142209'}}
+2021-05-18 18:04:20,171 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 82.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 1.05, 'mapId': '1354291518018142209'}}
+2021-05-18 18:04:20,675 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 82.8', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 1.05, 'mapId': '1354291518018142209'}}
+2021-05-18 18:04:23,353 data_manager.py[line:939] INFO {'点击地点': [[114.52464, 30.505955]]}
+2021-05-18 18:04:23,353 data_manager.py[line:964] INFO {'全部距离': 32.27483639013639}
+2021-05-18 18:04:27,964 data_manager.py[line:939] INFO {'点击地点': [[114.523861, 30.505918]]}
+2021-05-18 18:04:27,964 data_manager.py[line:964] INFO {'全部距离': 75.3117716084933}
+2021-05-18 18:04:30,208 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '61.2 s 96.0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': -46.67, 'mapId': '1354291518018142209'}}
+2021-05-18 18:04:30,711 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '57.97 s 96.0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 53.85, 'mapId': '1354291518018142209'}}
+2021-05-18 18:04:40,244 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 78.2', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 1.88, 'mapId': '1354291518018142209'}}
+2021-05-18 18:04:40,746 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 78.2', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 1.88, 'mapId': '1354291518018142209'}}
+2021-05-18 18:04:40,819 data_manager.py[line:939] INFO {'点击地点': [[114.524216, 30.505446]]}
+2021-05-18 18:04:40,819 data_manager.py[line:964] INFO {'全部距离': 62.09357736884778}
+2021-05-18 18:04:50,280 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 84.2', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 1.76, 'mapId': '1354291518018142209'}}
+2021-05-18 18:04:50,782 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 84.2', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 1.76, 'mapId': '1354291518018142209'}}
+2021-05-19 10:19:30,170 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 10:19:30,672 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 10:19:40,185 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 10:19:40,687 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 10:19:43,877 data_manager.py[line:939] INFO {'点击地点': [[114.523805, 30.505894]]}
+2021-05-19 10:19:43,877 data_manager.py[line:964] INFO {'全部距离': 110.21993950083724}
+2021-05-19 10:19:50,228 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '68.26 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 8.72, 'mapId': '1354291518018142209'}}
+2021-05-19 10:19:50,730 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '55.46 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': -1.94, 'mapId': '1354291518018142209'}}
+2021-05-19 10:19:58,490 data_manager.py[line:939] INFO {'点击地点': [[114.524127, 30.505949]]}
+2021-05-19 10:19:58,490 data_manager.py[line:964] INFO {'全部距离': 30.700446068690585}
+2021-05-19 10:20:00,279 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '20.84 s 72.7', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 72.77, 'mapId': '1354291518018142209'}}
+2021-05-19 10:20:00,781 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '15.27 s 72.7', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': -37.82, 'mapId': '1354291518018142209'}}
+2021-05-19 10:20:10,327 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:20:10,830 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:20:20,373 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:20:20,876 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:20:30,418 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:20:30,921 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:20:40,460 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:20:40,963 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:20:50,007 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:20:50,509 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:21:00,056 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:21:00,558 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:21:10,104 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:21:10,606 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:21:20,151 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:21:20,654 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:21:30,197 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:21:30,700 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:21:40,243 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:21:40,745 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:21:50,291 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:21:50,793 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:22:00,336 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:22:00,838 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:22:10,383 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:22:10,886 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:22:20,427 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:22:20,930 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:22:30,477 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:22:30,980 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:22:40,027 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:22:40,529 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:22:50,277 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:22:50,780 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:23:00,324 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:23:00,827 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:23:10,371 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:23:10,874 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:23:20,417 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:23:20,919 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:23:30,464 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:23:30,966 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:23:40,010 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:23:40,513 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:23:49,757 data_manager.py[line:1238] INFO {'height_setting': {'motor_forward': 200, 'motor_steer': 200, 'kp': '3.0', 'ki': '0.3', 'kd': '1', 'full_speed_meter': 6, 'check_status_interval': 1, 'max_pwm': 1800, 'min_pwm': 1200, 'left_motor_cw': 1, 'right_motor_cw': 0, 'draw_time': 30, 'pid_interval': 0.1, 'start_sleep_time': 6, 'motor_init_time': 4, 'check_network_interval': 10, 'stop_pwm': 1510, 'network_backhome': 0, 'energy_backhome': 0, 'find_points_num': 5, 'b_tsp': 0, 'b_check_network': 0, 'b_play_audio': 0, 'home_debug': 1, 'obstacle_avoid_type': 1, 'path_plan_type': 1, 'path_track_type': '1', 'calibration_compass': 0, 'info_type': 3}}
+2021-05-19 10:23:50,058 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:23:50,561 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:24:00,104 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:24:00,607 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:24:10,153 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:24:10,655 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:24:20,204 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:24:20,706 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:24:30,251 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:24:30,753 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:24:40,299 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:24:40,802 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:24:50,014 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:24:50,517 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:25:00,058 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:25:00,562 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:25:10,109 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:25:10,612 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:25:20,158 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:25:20,661 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:25:30,202 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 10:25:30,705 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 76.0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -10.29, 'mapId': '1354291518018142209'}}
+2021-05-19 13:42:40,254 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 13:42:40,755 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 13:42:50,269 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 13:42:50,771 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 13:42:53,339 data_manager.py[line:939] INFO {'点击地点': [[114.523858, 30.506169]]}
+2021-05-19 13:42:53,339 data_manager.py[line:964] INFO {'全部距离': 79.4015205307056}
+2021-05-19 15:23:00,322 data_manager.py[line:1224] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '梁子湖', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-05-19 15:23:00,326 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:23:00,828 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:23:10,343 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:23:10,844 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:23:20,357 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:23:20,859 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:23:30,371 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:23:30,873 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:23:33,334 data_manager.py[line:1224] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '梁子湖', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-05-19 15:23:40,388 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:23:40,889 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:23:50,404 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:23:50,906 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:24:00,420 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:24:00,921 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:34:50,043 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:34:50,545 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:35:00,058 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:35:00,559 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:35:03,548 data_manager.py[line:1224] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '梁子湖', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-05-19 15:35:10,074 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:35:10,575 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:35:20,089 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:35:20,590 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:35:30,103 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:35:30,605 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:35:40,118 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:35:40,620 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:35:50,133 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:35:50,635 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:36:00,149 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:36:00,650 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:36:10,163 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:36:10,665 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:36:20,179 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:36:20,681 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:36:30,194 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:36:30,696 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:36:40,209 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:36:40,711 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:36:50,224 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:36:50,725 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:37:00,239 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:37:00,740 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:37:10,253 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:37:10,755 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:37:20,269 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:37:20,771 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:37:30,285 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:37:30,786 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:37:40,299 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:37:40,799 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:37:50,313 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 15:37:50,815 data_manager.py[line:1359] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:41:00,225 data_manager.py[line:1223] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '梁子湖', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-05-19 16:41:00,226 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:41:00,728 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:41:10,241 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:41:10,742 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:41:20,255 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:41:20,757 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:41:30,271 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:41:30,772 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:41:40,286 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:41:40,787 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:41:50,300 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:41:50,802 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:42:00,314 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:42:00,816 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:42:10,329 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:42:10,831 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:42:20,345 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:42:20,845 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:42:30,359 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:42:30,861 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:42:40,374 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:42:40,876 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:42:50,389 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:42:50,890 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:43:00,404 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:43:00,905 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:43:10,419 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:43:10,920 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:43:20,434 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:43:20,936 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:43:30,449 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:43:30,951 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:43:40,464 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:43:40,966 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:43:50,480 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:43:50,980 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:44:00,494 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:44:00,995 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:44:10,008 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:44:10,510 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:44:20,023 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:44:20,523 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:44:30,038 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:44:30,539 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:44:40,053 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:44:40,555 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:44:50,068 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:44:50,570 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:45:00,083 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-19 16:45:00,585 data_manager.py[line:1358] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-20 08:57:30,090 data_manager.py[line:1360] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-20 08:57:38,932 data_manager.py[line:938] INFO {'点击地点': [[114.523811, 30.506145]]}
+2021-05-20 08:57:38,932 data_manager.py[line:963] INFO {'全部距离': 83.326318400463}
+2021-05-20 08:57:40,108 data_manager.py[line:1360] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': '1354291518018142209'}}
+2021-05-20 08:57:50,148 data_manager.py[line:1360] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': '1354291518018142209'}}
+2021-05-20 08:58:00,183 data_manager.py[line:1360] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': '1354291518018142209'}}
+2021-05-20 08:58:10,207 data_manager.py[line:1360] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': '1354291518018142209'}}
+2021-05-20 08:58:20,397 data_manager.py[line:1360] INFO {'notice_info_': {'distance': '84.9 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': '1354291518018142209'}}
+2021-05-20 08:58:30,439 data_manager.py[line:1360] INFO {'notice_info_': {'distance': '84.9 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 160.88, 'mapId': '1354291518018142209'}}
+2021-05-20 08:58:40,470 data_manager.py[line:1360] INFO {'notice_info_': {'distance': '84.9 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 160.88, 'mapId': '1354291518018142209'}}
+2021-05-20 09:00:30,820 data_manager.py[line:1362] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-20 09:00:40,832 data_manager.py[line:1362] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-20 09:00:50,844 data_manager.py[line:1362] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-20 09:01:00,856 data_manager.py[line:1362] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-20 09:01:05,832 data_manager.py[line:940] INFO {'点击地点': [[114.523853, 30.506009]]}
+2021-05-20 09:01:05,832 data_manager.py[line:965] INFO {'全部距离': 96.6928260072789}
+2021-05-20 09:01:06,882 data_manager.py[line:940] INFO {'点击地点': [[114.523853, 30.506009]]}
+2021-05-20 09:01:06,882 data_manager.py[line:965] INFO {'全部距离': 193.3856520145578}
+2021-05-20 09:01:08,883 data_manager.py[line:940] INFO {'点击地点': [[114.523853, 30.506009]]}
+2021-05-20 09:01:08,883 data_manager.py[line:965] INFO {'全部距离': 290.0784780218367}
+2021-05-20 09:01:30,054 data_manager.py[line:1362] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-05-20 09:01:34,528 data_manager.py[line:940] INFO {'点击地点': [[114.523878, 30.50601]]}
+2021-05-20 09:01:34,528 data_manager.py[line:965] INFO {'全部距离': 96.0357552059997}
+2021-05-20 09:01:40,075 data_manager.py[line:1362] INFO {'notice_info_': {'distance': '63.37 s 0', 'path_info': '当前目标点:0 目标点总数: 1', 'control_info': '', 'draw_info': 0, 'theta_error': 29.2, 'mapId': '1354291518018142209'}}
+2021-05-20 09:01:50,097 data_manager.py[line:1362] INFO {'notice_info_': {'distance': '0 s 72.6', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': -1.97, 'mapId': '1354291518018142209'}}

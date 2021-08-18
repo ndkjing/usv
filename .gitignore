@@ -4,3 +4,5 @@
 .git/
 .log
 .log/
+*.json
+*.log

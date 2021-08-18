@@ -1,0 +1,2 @@
+2021-06-18 13:09:09,768 log.py[line:86] INFO this is a test msg
+2021-06-18 13:09:09,768 log.py[line:87] INFO {'123': {1: 2}}
