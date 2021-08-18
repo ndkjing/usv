@@ -4,7 +4,6 @@
 .git/
 .log
 .log/
-*.json
 *.log
 __pycache__/
 __pycache__/*
