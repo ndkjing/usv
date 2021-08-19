@@ -814,7 +814,7 @@ if home_debug:
 else:
     use_shape_theta_type = 1
 
-min_deep_steer_pwm = 600  # 最下面
+min_deep_steer_pwm = 800  # 最下面
 max_deep_steer_pwm = 2400 # 最上面
 
 

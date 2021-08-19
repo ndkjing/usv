@@ -1,7 +1,7 @@
 """
 存放船编号
 """
-ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380c'
+ship_code = '3c50f4c3-a9c1-4872-9f18-883af014380b'
 ship_code_video_dict = {
     '3c50f4c3-a9c1-4872-9f18-883af014380a':'https://open.ys7.com/v3/openlive/F77671789_1_2.m3u8?expire=1656031904&id=329906774170845184&t=edf269f932bc49f1bd29178401a3285d5e53fd311953fda4a00fd402ffcf0fbb&ev=100',
     '3c50f4c3-a9c1-4872-9f18-883af014380b':'https://open.ys7.com/v3/openlive/F77671789_1_2.m3u8?expire=1656031904&id=329906774170845184&t=edf269f932bc49f1bd29178401a3285d5e53fd311953fda4a00fd402ffcf0fbb&ev=100',
