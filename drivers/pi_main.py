@@ -28,7 +28,7 @@ class PiMain:
         # 遥控器控制外设标志位
         self.remote_draw_status = 0  # 遥控器控制抽水状态 0 未抽水 1抽水
         self.remote_drain_status = 0  # 遥控器控制排水状态 0 未排水 1排水
-        self.remote_draw_steer = 2500  #
+        self.remote_draw_steer = config.max_deep_steer_pwm  #
         self.remote_side_light_status = 2  # 遥控器控制舷灯状态 0 关闭 1 打开  2不管
         self.remote_head_light_status = 2  # 遥控器控制大灯状态 0 关闭 1 打开   2 不管
         # 树莓派pwm波控制对象
@@ -333,13 +333,16 @@ class PiMain:
         :param deep_pwm:
         :return:
         """
+        # 如果没有可调节深度舵机跳过调节
+        if not config.b_control_deep:
+            return
         if b_slow:
             delta_change = 10
             while self.draw_steer_pwm != deep_pwm:
                 add_or_sub = 1 if deep_pwm - self.draw_steer_pwm > 0 else -1
                 self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
                 self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
-                time.sleep(0.07)
+                time.sleep(0.06)
                 # if self.draw_steer_pwm < 1500:
                 #     time.sleep(0.07)
                 # else:
@@ -943,12 +946,12 @@ if __name__ == '__main__':
                     except Exception as e:
                         print('pwm_deep', e)
                 else:
-                    pi_main_obj.set_draw_deep(deep_pwm=2500)  # 旋转舵机
+                    pi_main_obj.set_draw_deep(deep_pwm=config.min_deep_steer_pwm)  # 旋转舵机
                     time.sleep(3)
                     pi_main_obj.stc_obj.pin_stc_write('A1Z', debug=True)
                     time.sleep(5)
                     pi_main_obj.stc_obj.pin_stc_write('A0Z', debug=True)
-                    pi_main_obj.set_draw_deep(deep_pwm=config.min_deep_steer_pwm)
+                    pi_main_obj.set_draw_deep(deep_pwm=config.max_deep_steer_pwm)
                     time.sleep(3)
             # 获取读取单片机数据
             elif key_input.startswith('f'):
