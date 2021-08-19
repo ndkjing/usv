@@ -1,0 +1,2 @@
+2021-04-27 10:29:50,451 data_manager.py[line:1371] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}
+2021-04-27 10:29:50,955 data_manager.py[line:1371] INFO {'notice_info_': {'distance': '0 s 0', 'path_info': '当前目标点:0 目标点总数: 0', 'control_info': '', 'draw_info': 0, 'theta_error': 0, 'mapId': ''}}

@@ -1,0 +1,5 @@
+2021-06-11 13:26:09,092 multi_web_server.py[line:420] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 10, 'row': '40', 'col': 50, 'pool_name': '梁子湖', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-06-11 13:26:31,687 multi_web_server.py[line:215] INFO {'pool_center_lng_lat': [[114.52368, 30.505644]]}
+2021-06-11 13:26:31,806 multi_web_server.py[line:227] INFO {'config.pool_name': '湖北省武汉市江夏区豹澥街道提顶路'}
+2021-06-11 13:26:31,858 multi_web_server.py[line:281] INFO {'在本地找到湖泊 poolid': '1354291518018142209'}
+2021-06-11 13:26:31,859 multi_web_server.py[line:348] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 10, 'row': '40', 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}

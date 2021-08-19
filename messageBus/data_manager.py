@@ -192,6 +192,8 @@ class DataManager:
         # 是否已经初始化电机
         self.is_init_motor = 0
         self.area_id = None
+        # 检测完成收回杆子标志
+        self.is_draw_finish = 0
 
     # 测试发送障碍物数据
     def send_test_distance(self):
@@ -251,7 +253,7 @@ class DataManager:
             if self.draw_start_time is None:
                 self.draw_start_time = time.time()
             else:
-                print('抽水时间', time.time() - self.draw_start_time)
+                # print('抽水时间', time.time() - self.draw_start_time)
                 if time.time() - self.draw_start_time > config.draw_time:
                     self.b_sampling = 2
                     self.draw_start_time = None
@@ -356,14 +358,10 @@ class DataManager:
         # 舵机
         if self.is_init_motor:
             if self.pi_main_obj.remote_draw_steer == config.min_deep_steer_pwm:
-                if self.last_draw_steer == config.min_deep_steer_pwm:
-                    pass
-                else:
+                if self.last_draw_steer != config.min_deep_steer_pwm:
                     self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
             else:
-                if self.last_draw_steer == config.max_deep_steer_pwm:
-                    pass
-                else:
+                if self.last_draw_steer != config.max_deep_steer_pwm:
                     self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
             self.last_draw_steer = self.pi_main_obj.remote_draw_steer
         # 状态灯
@@ -1051,6 +1049,12 @@ class DataManager:
             self.control_info = ''
             if self.ship_status in control_info_dict:
                 self.control_info += control_info_dict[self.ship_status]
+            # 当状态不是遥控器控制,不在执行任务状态且不在抽水过程中收回抽水杆子
+            if self.ship_status != ShipStatus.remote_control \
+                    and self.ship_status != ShipStatus.tasking \
+                    and self.b_sampling != 1:
+                self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
+
             # 电脑手动
             if self.ship_status == ShipStatus.computer_control:
                 # 手动模式避障距离
@@ -1206,7 +1210,11 @@ class DataManager:
             elif self.ship_status == ShipStatus.tasking:
                 if not config.home_debug:
                     self.pi_main_obj.stop()
+                # 放下抽水杆子
+                self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
+                # 执行抽水
                 self.draw()
+
             # 返航 断网返航 低电量返航
             elif self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
                 # 有返航点下情况下返回返航点，没有则停止
@@ -1373,7 +1381,7 @@ class DataManager:
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
                       qos=0)
-            if config.home_debug and time.time() - last_read_time > 60:
+            if config.home_debug and time.time() - last_read_time > 300:
                 last_read_time = time.time()
                 self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
                 self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
@@ -1619,7 +1627,7 @@ class DataManager:
         while True:
             if not config.home_debug and not self.is_init_motor:
                 self.pi_main_obj.init_motor()
-                self.pi_main_obj.set_draw_deep(deep_pwm=config.max_deep_steer_pwm,b_slow=False)
+                self.pi_main_obj.set_draw_deep(deep_pwm=config.max_deep_steer_pwm, b_slow=False)
                 self.is_init_motor = 1
             if not self.b_check_get_water_data and self.gaode_lng_lat is not None:
                 adcode = baidu_map.BaiduMap.get_area_code(self.gaode_lng_lat)
@@ -1628,4 +1636,3 @@ class DataManager:
                 data_valid.get_current_water_data(area_id=self.area_id)
                 self.b_check_get_water_data = 1
             time.sleep(3)
-
