@@ -1,0 +1,9 @@
+.idea
+.idea/
+.git
+.git/
+.log/
+*.log
+__pycache__/
+__pycache__/*
+*.pyc
