@@ -21,3 +21,8 @@ ship_code_video_dict = {
     '3c50f4c3-a9c1-4872-9f18-883af014380d': 'https://open.ys7.com/v3/openlive/D50551834_1_2.m3u8?expire=1656031846&id=329906531464740864&t=f46ffbe870ee3cb6e078d333ed517132cad8752f8162868c6811e27ac9ec6a21&ev=100',
     '3c50f4c3-a9c1-4872-9f18-883af014380e': 'https://open.ys7.com/v3/openlive/D50551834_1_2.m3u8?expire=1656031846&id=329906531464740864&t=f46ffbe870ee3cb6e078d333ed517132cad8752f8162868c6811e27ac9ec6a21&ev=100'
 }
+
+save_map_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mapsData')
+print('save_map_dir', save_map_dir)
+if not os.path.exists(save_map_dir):
+    os.mkdir(save_map_dir)

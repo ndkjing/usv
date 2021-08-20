@@ -1050,10 +1050,11 @@ class DataManager:
             if self.ship_status in control_info_dict:
                 self.control_info += control_info_dict[self.ship_status]
             # 当状态不是遥控器控制,不在执行任务状态且不在抽水过程中收回抽水杆子
-            if self.ship_status != ShipStatus.remote_control \
-                    and self.ship_status != ShipStatus.tasking \
-                    and self.b_sampling != 1:
-                self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
+            if not config.home_debug:
+                if self.ship_status != ShipStatus.remote_control \
+                        and self.ship_status != ShipStatus.tasking \
+                        and self.b_sampling != 1:
+                    self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
 
             # 电脑手动
             if self.ship_status == ShipStatus.computer_control:
@@ -1210,10 +1211,11 @@ class DataManager:
             elif self.ship_status == ShipStatus.tasking:
                 if not config.home_debug:
                     self.pi_main_obj.stop()
-                # 放下抽水杆子
-                self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
-                # 执行抽水
-                self.draw()
+                if not config.home_debug:
+                    # 放下抽水杆子
+                    self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
+                    # 执行抽水
+                    self.draw()
 
             # 返航 断网返航 低电量返航
             elif self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
@@ -1381,7 +1383,7 @@ class DataManager:
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
                       qos=0)
-            if config.home_debug and time.time() - last_read_time > 300:
+            if config.home_debug and time.time() - last_read_time > 10:
                 last_read_time = time.time()
                 self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
                 self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
@@ -1409,7 +1411,6 @@ class DataManager:
                               http_type='POST')
                     self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
                 save_detect_data = copy.deepcopy(mqtt_send_detect_data)
-                # save_detect_data.update({'lng_lat': self.lng_lat})
                 self.logger.info({"本地保存检测数据": save_detect_data})
                 del save_detect_data
                 # 发送结束改为False
