@@ -194,6 +194,7 @@ class DataManager:
         self.area_id = None
         # 检测完成收回杆子标志
         self.is_draw_finish = 0
+        self.is_drain_finish =False
 
     # 测试发送障碍物数据
     def send_test_distance(self):
@@ -1054,6 +1055,12 @@ class DataManager:
                 if self.ship_status != ShipStatus.remote_control \
                         and self.ship_status != ShipStatus.tasking \
                         and self.b_sampling != 1:
+                    # 判断没有排水则先排水再收杆子
+                    if not self.is_drain_finish:
+                        self.send_stc_data('A2Z')
+                        time.sleep(config.draw_time)
+                        self.is_drain_finish=True
+                    self.send_stc_data('A0Z')
                     self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
 
             # 电脑手动
@@ -1423,9 +1430,6 @@ class DataManager:
                 save_detect_data = copy.deepcopy(mqtt_send_detect_data)
                 self.logger.info({"本地保存检测数据": save_detect_data})
                 del save_detect_data
-                self.send_stc_data('A2Z')
-                time.sleep(config.draw_time)
-                self.send_stc_data('A0Z')
                 # 发送结束改为False
                 self.b_draw_over_send_data = False
 
