@@ -982,7 +982,7 @@ class DataManager:
             # 判断任务模式切换到其他状态情况
             if self.ship_status == ShipStatus.tasking:
                 # 切换到电脑自动模式  切换到电脑手动模式
-                if self.b_sampling == 2:
+                if self.b_sampling == 2 and not self.b_draw_over_send_data:
                     if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) > 0 and \
                             all(self.server_data_obj.mqtt_send_get_obj.sampling_points_status):
                         self.change_status_info(target_status=ShipStatus.computer_control, b_clear_status=True)
@@ -1404,14 +1404,27 @@ class DataManager:
                 self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
                           qos=0)
                 if len(self.data_define_obj.pool_code) > 0:
-                    self.send(method='http', data=mqtt_send_detect_data,
-                              url=config.http_data_save,
-                              http_type='POST')
-                    self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
+                    try:
+                        self.send(method='http', data=mqtt_send_detect_data,
+                                  url=config.http_data_save,
+                                  http_type='POST')
+                    except Exception as e:
+                        self.data_save_logger.info({"发送检测数据error": e})
+                else:
+                    try:
+                        self.send(method='http', data=mqtt_send_detect_data,
+                                  url=config.http_data_save,
+                                  http_type='POST')
+                    except Exception as e:
+                        self.data_save_logger.info({"发送检测数据error": e})
+                self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
                 save_detect_data = copy.deepcopy(mqtt_send_detect_data)
                 # save_detect_data.update({'lng_lat': self.lng_lat})
                 self.logger.info({"本地保存检测数据": save_detect_data})
                 del save_detect_data
+                self.send_stc_data('A2Z')
+                time.sleep(config.draw_time)
+                self.send_stc_data('A0Z')
                 # 发送结束改为False
                 self.b_draw_over_send_data = False
 

@@ -99,7 +99,7 @@ class PiMain:
         self.pi.set_mode(config.draw_right_gpio_pin, pigpio.OUTPUT)
         """
         # 抽水泵舵机
-        self.draw_steer_pwm = 0
+        self.draw_steer_pwm = config.max_deep_steer_pwm
         # 云台舵机角度
         self.pan_angle_pwm = 1500
         self.tilt_angle_pwm = 1500
@@ -333,6 +333,7 @@ class PiMain:
         :param deep_pwm:
         :return:
         """
+        print('deep_pwm',deep_pwm)
         # 如果没有可调节深度舵机跳过调节
         if not config.b_control_deep:
             return
@@ -341,6 +342,7 @@ class PiMain:
             while self.draw_steer_pwm != deep_pwm:
                 add_or_sub = 1 if deep_pwm - self.draw_steer_pwm > 0 else -1
                 self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
+                print()
                 self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
                 time.sleep(0.06)
                 # if self.draw_steer_pwm < 1500:
