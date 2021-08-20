@@ -130,6 +130,7 @@ class WebServer:
             # 循环等待一定时间
             time.sleep(0.1)
             for ship_code in server_config.ship_code_list:
+                save_map_path = os.path.join(server_config.save_map_dir, 'map_%s.json' % ship_code)
                 # 若是用户没有点击点
                 if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat is None or \
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom is None:
@@ -235,7 +236,7 @@ class WebServer:
                     # 本地保存经纬度信息，放大1000000倍 用来只保存整数
                     save_pool_lng_lats = [[int(i[0] * 1000000), int(i[1] * 1000000)]
                                           for i in self.baidu_map_obj_dict.get(ship_code).pool_lng_lats]
-                    if not os.path.exists(config.local_map_data_path):
+                    if not os.path.exists(save_map_path):
                         # 发送请求获取湖泊ID
                         self.logger.debug({'send_data': send_data})
                         try:
@@ -260,10 +261,10 @@ class WebServer:
                                     "pool_lng_lats": save_pool_lng_lats,
                                     "pool_cnts": save_pool_cnts}]}
                         self.logger.info({'pool_id': pool_id})
-                        with open(config.local_map_data_path, 'w') as f:
+                        with open(save_map_path, 'w') as f:
                             json.dump(save_data, f)
                     else:
-                        with open(config.local_map_data_path, 'r') as f:
+                        with open(save_map_path, 'r') as f:
                             local_map_data = json.load(f)
                             pool_id = baidu_map.is_in_contours(
                                 (self.baidu_map_obj_dict.get(ship_code).lng_lat[0] * 1000000,
@@ -286,7 +287,7 @@ class WebServer:
                                 # self.logger.info({config.http_save: send_data})
                                 self.logger.error({'error': e})
                             self.logger.info({'新的湖泊 poolid': pool_id})
-                            with open(config.local_map_data_path, 'w') as f:
+                            with open(save_map_path, 'w') as f:
                                 # 以前存储键值
                                 # local_map_data["mapList"].append({"id": pool_id,
                                 #                                   "longitudeLatitude": self.baidu_map_obj.pool_center_lng_lat,
