@@ -254,7 +254,6 @@ class DataManager:
             if self.draw_start_time is None:
                 self.draw_start_time = time.time()
             else:
-                # print('抽水时间', time.time() - self.draw_start_time)
                 if time.time() - self.draw_start_time > config.draw_time:
                     self.b_sampling = 2
                     self.draw_start_time = None
@@ -1033,6 +1032,22 @@ class DataManager:
                             abs(self.pi_main_obj.remote_control_data[2] - 50) > 30:
                         self.change_status_info(target_status=ShipStatus.remote_control)
 
+    def control_draw_thread(self):
+        while True:
+            time.sleep(1)
+            # 当状态不是遥控器控制,不在执行任务状态且不在抽水过程中收回抽水杆子
+            if not config.home_debug:
+                if self.ship_status != ShipStatus.remote_control \
+                        and self.ship_status != ShipStatus.tasking \
+                        and self.b_sampling != 1:
+                    # 判断没有排水则先排水再收杆子
+                    if not self.is_drain_finish:
+                        self.send_stc_data('A2Z')
+                        time.sleep(config.draw_time)
+                        self.is_drain_finish = True
+                    self.send_stc_data('A0Z')
+                    self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
+
     # 处理电机控制
     def move_control(self):
         b_log_points = 1  # 防止寻点模式下等待用户点击开始前一直记录日志
@@ -1051,19 +1066,6 @@ class DataManager:
             self.control_info = ''
             if self.ship_status in control_info_dict:
                 self.control_info += control_info_dict[self.ship_status]
-            # 当状态不是遥控器控制,不在执行任务状态且不在抽水过程中收回抽水杆子
-            if not config.home_debug:
-                if self.ship_status != ShipStatus.remote_control \
-                        and self.ship_status != ShipStatus.tasking \
-                        and self.ship_status != ShipStatus.tasking \
-                        and self.b_sampling != 1:
-                    # 判断没有排水则先排水再收杆子
-                    if not self.is_drain_finish:
-                        self.send_stc_data('A2Z')
-                        time.sleep(config.draw_time)
-                        self.is_drain_finish = True
-                    self.send_stc_data('A0Z')
-                    self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
 
             # 电脑手动
             if self.ship_status == ShipStatus.computer_control:
@@ -1220,14 +1222,13 @@ class DataManager:
             elif self.ship_status == ShipStatus.tasking:
                 if not config.home_debug:
                     self.pi_main_obj.stop()
-                if not config.home_debug:
+                # 不是使能遥控导致进入任务模式就需要放下抽水管
+                if not config.home_debug and not self.pi_main_obj.b_start_remote:
                     # 放下抽水杆子
                     self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
-                    # 执行抽水
-                    self.draw()
-                else:
-                    # 执行抽水
-                    self.draw()
+                # 执行抽水
+                self.draw()
+
             # 返航 断网返航 低电量返航
             elif self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
                 # 有返航点下情况下返回返航点，没有则停止

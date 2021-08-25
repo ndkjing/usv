@@ -82,7 +82,8 @@ def main():
                         data_manager_obj.change_status,
                         data_manager_obj.check_switch,
                         data_manager_obj.connect_mqtt_server,
-                        data_manager_obj.start_once_func
+                        data_manager_obj.start_once_func,
+                        data_manager_obj.control_draw_thread,
                         ]
     common_thread_list = []
     # 树莓派对象数据处理
