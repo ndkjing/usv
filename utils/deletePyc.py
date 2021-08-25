@@ -1,5 +1,6 @@
 import os
 
+
 def clear(filepath):
     files = os.listdir(filepath)
     for fd in files:
@@ -20,6 +21,7 @@ def clear(filepath):
             # elif ".gitignore" in fd:
             #     print("rm -rf {}".format(cur_path))
             #     os.remove(cur_path)
+
 
 if __name__ == "__main__":
     clear(r"F:\pythonProject\usv")

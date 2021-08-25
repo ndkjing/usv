@@ -194,7 +194,7 @@ class DataManager:
         self.area_id = None
         # 检测完成收回杆子标志
         self.is_draw_finish = 0
-        self.is_drain_finish =False
+        self.is_drain_finish = True
 
     # 测试发送障碍物数据
     def send_test_distance(self):
@@ -982,6 +982,7 @@ class DataManager:
 
             # 判断任务模式切换到其他状态情况
             if self.ship_status == ShipStatus.tasking:
+                print('self.b_sampling', self.b_sampling, self.b_draw_over_send_data)
                 # 切换到电脑自动模式  切换到电脑手动模式
                 if self.b_sampling == 2 and not self.b_draw_over_send_data:
                     if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) > 0 and \
@@ -1054,12 +1055,13 @@ class DataManager:
             if not config.home_debug:
                 if self.ship_status != ShipStatus.remote_control \
                         and self.ship_status != ShipStatus.tasking \
+                        and self.ship_status != ShipStatus.tasking \
                         and self.b_sampling != 1:
                     # 判断没有排水则先排水再收杆子
                     if not self.is_drain_finish:
                         self.send_stc_data('A2Z')
                         time.sleep(config.draw_time)
-                        self.is_drain_finish=True
+                        self.is_drain_finish = True
                     self.send_stc_data('A0Z')
                     self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
 
@@ -1223,7 +1225,9 @@ class DataManager:
                     self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
                     # 执行抽水
                     self.draw()
-
+                else:
+                    # 执行抽水
+                    self.draw()
             # 返航 断网返航 低电量返航
             elif self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
                 # 有返航点下情况下返回返航点，没有则停止
@@ -1390,7 +1394,7 @@ class DataManager:
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
                       qos=0)
-            if config.home_debug and time.time() - last_read_time > 10:
+            if config.home_debug and time.time() - last_read_time > 30:
                 last_read_time = time.time()
                 self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
                 self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
@@ -1432,6 +1436,8 @@ class DataManager:
                 del save_detect_data
                 # 发送结束改为False
                 self.b_draw_over_send_data = False
+                # 开始排水
+                self.is_drain_finish = False
 
     # 外围设备控制线程函数
     def control_peripherals(self):
