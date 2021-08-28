@@ -365,7 +365,7 @@ class PiSoftuart(object):
             print({'error send_stc_data': e})
             return None
 
-    def read_stc_data(self,debug = False):
+    def read_stc_data(self, debug=False):
         try:
             count, data = self._pi.bb_serial_read(self._rx_pin)
             if debug:
@@ -373,12 +373,12 @@ class PiSoftuart(object):
             if count > 4:
                 str_data = data.decode('utf-8')[0:-1]
                 if debug:
-                    print('str_data',str_data,str_data.startswith('G'))
+                    print('str_data', str_data, str_data.startswith('G'))
                 # 返回电量
                 if str_data.startswith('G'):
                     int_data = int(str_data[1:5])
                     if debug:
-                        print('[int_data]',[int_data])
+                        print('[int_data]', [int_data])
                     return [int_data]
             # time.sleep(self._thread_ts * 10)
         except Exception as e:

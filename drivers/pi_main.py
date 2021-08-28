@@ -636,6 +636,16 @@ class PiMain:
             stc_data_read = self.stc_obj.read_stc_data()
             if stc_data_read and len(stc_data_read) == 1:
                 self.dump_energy = stc_data_read[0]
+                # 处理剩余电量数据
+                try:
+                    self.dump_energy = float(self.dump_energy)
+                    if self.dump_energy > 100:
+                        if self.dump_energy < 3609:
+                            self.dump_energy = 0
+                        else:
+                            self.dump_energy = int((self.dump_energy - 3609) / 4.8)
+                except Exception as e1:
+                    self.logger_obj.error({'error': e1})
                 self.logger_obj.info({'stc_data dump energy', stc_data_read[0]})
             elif stc_data_read and len(stc_data_read) == 5:
                 pass
@@ -940,7 +950,7 @@ if __name__ == '__main__':
                 if len(key_input) > 1:
                     try:
                         pwm_deep = int(key_input[1:])
-                        print('pwm_deep',pwm_deep)
+                        print('pwm_deep', pwm_deep)
                         pi_main_obj.set_draw_deep(deep_pwm=pwm_deep)
                     except Exception as e:
                         print('pwm_deep', e)
