@@ -158,7 +158,7 @@ class PiMain:
         :return:
         """
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
-                                      baud=config.lora_baud, time_out=0.2)
+                                      baud=config.lora_baud, time_out=0.1)
 
     def get_gps_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx,
@@ -447,9 +447,15 @@ class PiMain:
                         self.target_right_pwm - self.right_pwm) * change_pwm_ceil
                 self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
                 self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
-                time.sleep(sleep_time)
+                if self.b_start_remote:
+                    time.sleep(sleep_time / 4)
+                else:
+                    time.sleep(sleep_time)
             else:
-                time.sleep(sleep_time)
+                if self.b_start_remote:
+                    time.sleep(sleep_time / 4)
+                else:
+                    time.sleep(sleep_time)
 
     def set_steer_engine(self, angle):
         self.pi.set_PWM_dutycycle(26, angle)
@@ -641,14 +647,28 @@ class PiMain:
                     self.dump_energy = float(self.dump_energy)
                     if self.dump_energy > 100:
                         if self.dump_energy < 3609:
-                            self.dump_energy = 0
+                            self.dump_energy = 1
                         else:
-                            self.dump_energy = int((self.dump_energy - 3609) / 4.8)
+                            self.dump_energy = min(int((self.dump_energy - 3609) / 4.8),1)
                 except Exception as e1:
                     self.logger_obj.error({'error': e1})
                 self.logger_obj.info({'stc_data dump energy', stc_data_read[0]})
             elif stc_data_read and len(stc_data_read) == 5:
-                pass
+                ec_data = stc_data_read[4]
+                ec_data = data_valid.valid_water_data(config.WaterType.EC, ec_data)
+                self.water_data_dict.update({'EC': ec_data})
+                do_data = stc_data_read[1]
+                do_data = data_valid.valid_water_data(config.WaterType.DO, do_data)
+                self.water_data_dict.update({'DO': do_data})
+                td_data = stc_data_read[2]
+                td_data = data_valid.valid_water_data(config.WaterType.TD, td_data)
+                self.water_data_dict.update({'TD': td_data})
+                ph_data = stc_data_read[3]
+                ph_data = data_valid.valid_water_data(config.WaterType.pH, ph_data)
+                self.water_data_dict.update({'pH': ph_data})
+                wt_data = stc_data_read[0]
+                wt_data = data_valid.valid_water_data(config.WaterType.wt, wt_data)
+                self.water_data_dict.update({'wt': wt_data})
             time.sleep(1)
 
     def get_sonar_data(self):
@@ -807,6 +827,8 @@ class PiMain:
         while True:
             return_remote_data = self.remote_control_obj.read_remote_control(debug=debug)
             if return_remote_data and len(return_remote_data) >= 13:
+                if debug:
+                    print("######################", time.time(), 'return_remote_data', return_remote_data)
                 self.remote_control_data = return_remote_data
                 self.lora_control_receive_time = time.time()
                 # 判断遥控器使能
@@ -848,11 +870,9 @@ class PiMain:
                         self.remote_head_light_status = 0
                     else:
                         self.remote_head_light_status = 2
-
             else:
                 if self.lora_control_receive_time and time.time() - self.lora_control_receive_time > 20:
                     self.b_start_remote = 0
-
             time.sleep(0.01)
 
 

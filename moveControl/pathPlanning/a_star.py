@@ -639,7 +639,6 @@ def get_path(baidu_map_obj,
 
 
 if __name__ == '__main__':
-    config.home_debug = True
     # 114.431299,30.521363
     # 114.433853,30.519553
     # 114.432477, 30.521501

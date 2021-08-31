@@ -223,7 +223,7 @@ class DataManager:
 
     def send_stc_data(self, data):
         """
-
+        发送给单片机数据
         :param data:
         :return:
         """
@@ -259,6 +259,7 @@ class DataManager:
                     self.draw_start_time = None
                 else:
                     self.b_sampling = 1
+
         # 判断遥控器控制抽水
         elif self.pi_main_obj.remote_draw_status == 1:
             if self.draw_start_time is None:
@@ -365,24 +366,24 @@ class DataManager:
                     self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
             self.last_draw_steer = self.pi_main_obj.remote_draw_steer
         # 状态灯
-        if self.server_data_obj.mqtt_send_get_obj.status_light != self.last_status_light:
-            # 启动后mqtt连接上亮绿灯
-            if self.server_data_obj.mqtt_send_get_obj.is_connected:
-                self.server_data_obj.mqtt_send_get_obj.status_light = 3
-            # 使能遥控器就亮黄灯
-            if self.pi_main_obj.b_start_remote:
-                self.server_data_obj.mqtt_send_get_obj.status_light = 2
-            # 低电量蜂鸣
-            if self.low_dump_energy_warnning:
-                self.server_data_obj.mqtt_send_get_obj.status_light = 4
-            # 断网红灯
-            if self.b_network_backhome:
-                self.server_data_obj.mqtt_send_get_obj.status_light = 1
-            send_stc_data = 'E%sZ' % (str(self.server_data_obj.mqtt_send_get_obj.status_light))
-            self.send_stc_data(send_stc_data)
+        # if self.server_data_obj.mqtt_send_get_obj.status_light != self.last_status_light:
+        # 启动后mqtt连接上亮绿灯
+        if self.server_data_obj.mqtt_send_get_obj.is_connected:
+            self.server_data_obj.mqtt_send_get_obj.status_light = 3
+        # 使能遥控器就亮黄灯
+        if self.pi_main_obj.b_start_remote:
+            self.server_data_obj.mqtt_send_get_obj.status_light = 2
+        # 低电量蜂鸣改为红灯
+        if self.low_dump_energy_warnning:
+            self.server_data_obj.mqtt_send_get_obj.status_light = 4
+        # 断网红灯
+        if self.b_network_backhome:
+            self.server_data_obj.mqtt_send_get_obj.status_light = 1
+        send_stc_data = 'E%sZ' % (str(self.server_data_obj.mqtt_send_get_obj.status_light))
+        self.send_stc_data(send_stc_data)
         self.last_status_light = self.server_data_obj.mqtt_send_get_obj.status_light
         if random.random() > 0.98:
-            self.last_status_light = 4
+            self.last_status_light = 1
 
     def clear_all_status(self):
         self.logger.info('清除自动状态数据')
@@ -1300,8 +1301,53 @@ class DataManager:
                         last_read_time = time.time()
             time.sleep(0.5)
 
-    # 读取函数会阻塞 必须使用线程发送mqtt状态数据和检测数据
-    def send_mqtt_data(self):
+    # 必须使用线程发送发送检测数据
+    def send_mqtt_detect_data(self):
+        while True:
+            time.sleep(config.pi2mqtt_interval)
+            if not self.server_data_obj.mqtt_send_get_obj.is_connected:
+                continue
+            if self.server_data_obj.mqtt_send_get_obj.pool_code:
+                self.data_define_obj.pool_code = self.server_data_obj.mqtt_send_get_obj.pool_code
+
+            detect_data = self.data_define_obj.detect
+            detect_data.update({'mapId': self.data_define_obj.pool_code})
+            # 更新真实数据
+            if not config.home_debug:
+                mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
+                mqtt_send_detect_data['water'].update(self.pi_main_obj.water_data_dict)
+            # 更新模拟数据
+            else:
+                mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
+            # 替换键
+            for k_all, v_all in data_define.name_mappings.items():
+                for old_key, new_key in v_all.items():
+                    pop_value = mqtt_send_detect_data[k_all].pop(old_key)
+                    mqtt_send_detect_data[k_all].update({new_key: pop_value})
+
+            if self.b_draw_over_send_data:
+                # 添加经纬度
+                mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})
+                mqtt_send_detect_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
+                self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
+                          qos=0)
+                if len(self.data_define_obj.pool_code) > 0:
+                    mqtt_send_detect_data.update({'mapId': self.data_define_obj.pool_code})
+                    try:
+                        self.send(method='http', data=mqtt_send_detect_data,
+                                  url=config.http_data_save,
+                                  http_type='POST')
+                    except Exception as e:
+                        self.data_save_logger.info({"发送检测数据error": e})
+                    self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
+                    self.logger.info({"本地保存检测数据": mqtt_send_detect_data})
+                    # 发送结束改为False
+                    self.b_draw_over_send_data = False
+                    # 开始排水
+                    self.is_drain_finish = False
+
+    # 必须使用线程发送mqtt状态数据
+    def send_mqtt_status_data(self):
         last_read_time = time.time()
         last_runtime = None
         last_run_distance = None
@@ -1375,7 +1421,7 @@ class DataManager:
             # 更新真实数据
             if not config.home_debug:
                 mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
-                mqtt_send_detect_data['water'].update(self.water_data_dict)
+                mqtt_send_detect_data['water'].update(self.pi_main_obj.water_data_dict)
                 mqtt_send_status_data = data_define.fake_status_data(status_data)
             # 更新模拟数据
             else:
@@ -1395,57 +1441,12 @@ class DataManager:
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
                       qos=0)
-            if config.home_debug and time.time() - last_read_time > 30:
-                last_read_time = time.time()
-                self.data_save_logger.info({"发送状态数据": mqtt_send_status_data})
-                self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
-                          qos=0)
-                self.logger.info({'fakedate': mqtt_send_detect_data})
-                # 调试时使用发送检测数据
-                if config.debug_send_detect_data:
-                    mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})
-                    mqtt_send_detect_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
-                    if len(self.data_define_obj.pool_code) > 0:
-                        mqtt_send_detect_data.update({'mapId': self.data_define_obj.pool_code})
-                        self.send(method='http', data=mqtt_send_detect_data,
-                                  url=config.http_data_save,
-                                  http_type='POST')
-                        time.sleep(0.5)
-                        self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
-            if self.b_draw_over_send_data:
-                # 添加经纬度
-                mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})
-                mqtt_send_detect_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
-                self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
-                          qos=0)
-                if len(self.data_define_obj.pool_code) > 0:
-                    mqtt_send_detect_data.update({'mapId': self.data_define_obj.pool_code})
-                    try:
-                        self.send(method='http', data=mqtt_send_detect_data,
-                                  url=config.http_data_save,
-                                  http_type='POST')
-                    except Exception as e:
-                        self.data_save_logger.info({"发送检测数据error": e})
-                else:
-                    try:
-                        self.send(method='http', data=mqtt_send_detect_data,
-                                  url=config.http_data_save,
-                                  http_type='POST')
-                    except Exception as e:
-                        self.data_save_logger.info({"发送检测数据error": e})
-                self.data_save_logger.info({"发送检测数据": mqtt_send_detect_data})
-                save_detect_data = copy.deepcopy(mqtt_send_detect_data)
-                self.logger.info({"本地保存检测数据": save_detect_data})
-                del save_detect_data
-                # 发送结束改为False
-                self.b_draw_over_send_data = False
-                # 开始排水
-                self.is_drain_finish = False
+
 
     # 外围设备控制线程函数
     def control_peripherals(self):
         while True:
-            time.sleep(config.thread_sleep_time)
+            time.sleep(config.thread_sleep_time*2)
             if not config.home_debug and self.pi_main_obj:
                 self.control_relay()
 

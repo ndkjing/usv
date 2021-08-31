@@ -73,7 +73,8 @@ def main():
     # 通用调用函数
     common_func_list = [data_manager_obj.move_control,
                         data_manager_obj.check_status,
-                        data_manager_obj.send_mqtt_data,
+                        data_manager_obj.send_mqtt_status_data,
+                        data_manager_obj.send_mqtt_detect_data,
                         data_manager_obj.update_ship_gaode_lng_lat,
                         data_manager_obj.update_lng_lat,
                         data_manager_obj.update_config,

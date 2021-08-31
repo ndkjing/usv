@@ -256,7 +256,7 @@ class PiSoftuart(object):
                     self.write_data(str_16, baud=self.baud, debug=debug)
                     self.last_send = time.time()
                 else:
-                    if time.time() - self.last_send > 1:
+                    if time.time() - self.last_send > 0.5:
                         self.write_data(str_16, baud=self.baud, debug=debug)
                         self.last_send = time.time()
                 count, data = self._pi.bb_serial_read(self._rx_pin)
@@ -264,7 +264,7 @@ class PiSoftuart(object):
                     print(time.time(), 'count', count, 'data', data)
                 if count > 40:
                     str_data = str(data, encoding="utf8")
-                    data_list = str_data.split(r'\r\nZ')
+                    data_list = str_data.split(r'\r\n')
                     if debug:
                         print(time.time(), 'str_data', str_data, 'data_list', data_list)
                     for item in data_list:
@@ -378,8 +378,15 @@ class PiSoftuart(object):
                 if str_data.startswith('G'):
                     int_data = int(str_data[1:5])
                     if debug:
-                        print('[int_data]', [int_data])
+                        print('电压数据', [int_data])
                     return [int_data]
+                elif str_data.startswith('F'):
+                    str_data = str_data[1:]
+                    water_data_str = str_data.split('Z')[0]
+                    water_data_list = [float(i) for i in water_data_str.split(',')]
+                    if debug:
+                        print('水质数据', water_data_list)
+                    return water_data_list
             # time.sleep(self._thread_ts * 10)
         except Exception as e:
             print({'error read_stc_data': e})
