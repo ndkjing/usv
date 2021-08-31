@@ -275,7 +275,7 @@ steer_max_angle = 30
 # 最小转向距离
 min_steer_distance = 10  # 自动模式下避障距离 单位m
 # 测试在家调试也发送数据
-debug_send_detect_data = 1
+debug_send_detect_data = 0
 # 转向速度
 angular_velocity = 90
 

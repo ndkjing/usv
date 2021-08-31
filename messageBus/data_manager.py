@@ -1406,6 +1406,7 @@ class DataManager:
                     mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})
                     mqtt_send_detect_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
                     if len(self.data_define_obj.pool_code) > 0:
+                        mqtt_send_detect_data.update({'mapId': self.data_define_obj.pool_code})
                         self.send(method='http', data=mqtt_send_detect_data,
                                   url=config.http_data_save,
                                   http_type='POST')
@@ -1418,6 +1419,7 @@ class DataManager:
                 self.send(method='mqtt', topic='detect_data_%s' % config.ship_code, data=mqtt_send_detect_data,
                           qos=0)
                 if len(self.data_define_obj.pool_code) > 0:
+                    mqtt_send_detect_data.update({'mapId': self.data_define_obj.pool_code})
                     try:
                         self.send(method='http', data=mqtt_send_detect_data,
                                   url=config.http_data_save,
