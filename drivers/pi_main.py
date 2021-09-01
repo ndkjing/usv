@@ -158,7 +158,7 @@ class PiMain:
         :return:
         """
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
-                                      baud=config.lora_baud, time_out=0.1)
+                                      baud=config.lora_baud, time_out=0.16)
 
     def get_gps_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx,
@@ -641,9 +641,12 @@ class PiMain:
         while True:
             stc_data_read = self.stc_obj.read_stc_data()
             if stc_data_read and len(stc_data_read) == 1:
-                self.dump_energy = stc_data_read[0]
+                self.dump_energy = 99.9
                 # 处理剩余电量数据
-                try:
+                """
+                                self.dump_energy = stc_data_read[0]
+
+                                try:
                     self.dump_energy = float(self.dump_energy)
                     if self.dump_energy > 100:
                         if self.dump_energy < 3609:
@@ -653,6 +656,8 @@ class PiMain:
                 except Exception as e1:
                     self.logger_obj.error({'error': e1})
                 self.logger_obj.info({'stc_data dump energy', stc_data_read[0]})
+                """
+
             elif stc_data_read and len(stc_data_read) == 5:
                 ec_data = stc_data_read[4]
                 ec_data = data_valid.valid_water_data(config.WaterType.EC, ec_data)

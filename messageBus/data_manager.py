@@ -1442,11 +1442,10 @@ class DataManager:
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
                       qos=0)
 
-
     # 外围设备控制线程函数
     def control_peripherals(self):
         while True:
-            time.sleep(config.thread_sleep_time*2)
+            time.sleep(config.thread_sleep_time * 2)
             if not config.home_debug and self.pi_main_obj:
                 self.control_relay()
 

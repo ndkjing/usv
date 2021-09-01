@@ -35,6 +35,7 @@ class PiSoftuart(object):
         self._thread_ts = time_out
         self.flushInput()
         self.last_send = None
+        self.last_lora_data = None  # 数据一次没有收完等待下次数据用于拼接
 
     def flushInput(self):
         pigpio.exceptions = False  # fatal exceptions off (so that closing an unopened gpio doesn't error)
@@ -239,6 +240,42 @@ class PiSoftuart(object):
         str_16_stc_write_data = str(binascii.b2a_hex(stc_write_data.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
         self.write_data(str_16_stc_write_data, baud=self.baud, debug=debug)
 
+    @staticmethod
+    def split_lora_data(data: str) -> list:
+        item_data = data[1:-1]
+        item_data_list = item_data.split(',')
+        if len(item_data_list) >= 13:
+            left_row = int(item_data_list[1])
+            left_col = int(item_data_list[0])
+            right_row = int(item_data_list[3])
+            right_col = int(item_data_list[2])
+            fine_tuning = int(item_data_list[4])
+            button_10 = int(item_data_list[9])
+            button_11 = int(item_data_list[10])
+            button_12 = int(item_data_list[11])
+            button_13 = int(item_data_list[12])
+            lever_6 = int(item_data_list[5])
+            lever_7 = int(item_data_list[6])
+            lever_8 = int(item_data_list[7])
+            lever_9 = int(item_data_list[8])
+            return_list = [left_col,
+                           left_row,
+                           right_col,
+                           right_row,
+                           fine_tuning,
+                           lever_6,
+                           lever_7,
+                           lever_8,
+                           lever_9,
+                           button_10,
+                           button_11,
+                           button_12,
+                           button_13,
+                           ]
+            return return_list
+        else:
+            return []
+
     def read_remote_control(self, len_data=None, debug=False):
         """
         读取自己做的lora遥控器数据
@@ -248,6 +285,8 @@ class PiSoftuart(object):
         """
         if len_data is None:
             try:
+                time.sleep(self._thread_ts)
+                return_list = None
                 # 发送数据让遥控器接受变为绿灯
                 s = 'S9'
                 str_16 = str(binascii.b2a_hex(s.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
@@ -263,45 +302,46 @@ class PiSoftuart(object):
                 if debug:
                     print(time.time(), 'count', count, 'data', data)
                 if count > 40:
+                    # 转换数据然后按照换行符分隔
                     str_data = str(data, encoding="utf8")
-                    data_list = str_data.split(r'\r\n')
+                    data_list = str_data.split('\r\n')
                     if debug:
                         print(time.time(), 'str_data', str_data, 'data_list', data_list)
                     for item in data_list:
                         temp_data = item.strip()
+                        if len(temp_data) < 2:
+                            continue
+                        # 开头结尾都存在是完整的一帧数据
                         if temp_data[0] == 'A' and temp_data[-1] == 'Z':
-                            item_data = temp_data[1:-1]
-                            item_data_list = item_data.split(',')
-                            if len(item_data_list) >= 13:
-                                left_row = int(item_data_list[1])
-                                left_col = int(item_data_list[0])
-                                right_row = int(item_data_list[3])
-                                right_col = int(item_data_list[2])
-                                fine_tuning = int(item_data_list[4])
-                                button_10 = int(item_data_list[9])
-                                button_11 = int(item_data_list[10])
-                                button_12 = int(item_data_list[11])
-                                button_13 = int(item_data_list[12])
-                                lever_6 = int(item_data_list[5])
-                                lever_7 = int(item_data_list[6])
-                                lever_8 = int(item_data_list[7])
-                                lever_9 = int(item_data_list[8])
-                                return [left_col,
-                                        left_row,
-                                        right_col,
-                                        right_row,
-                                        fine_tuning,
-                                        lever_6,
-                                        lever_7,
-                                        lever_8,
-                                        lever_9,
-                                        button_10,
-                                        button_11,
-                                        button_12,
-                                        button_13,
-                                        ]
-
-                time.sleep(self._thread_ts)
+                            return_list = PiSoftuart.split_lora_data(temp_data)
+                        # 数据不够一次完整的数据查看是否能拼接上次数据
+                        # 开头存在，结尾不存在保存为遗留数据
+                        elif temp_data[0] == 'A' and temp_data[-1] != 'Z':
+                            self.last_lora_data = temp_data
+                        # 开头不存在，结尾存在，看是否存在遗留数据可以拼接
+                        elif temp_data[0] != 'A' and temp_data[-1] == 'Z':
+                            if self.last_lora_data is not None:
+                                concate_lora_data = self.last_lora_data + temp_data
+                                if concate_lora_data[0] == 'A' and concate_lora_data[-1] == 'Z':
+                                    print("################condate data")
+                                    return_list = PiSoftuart.split_lora_data(concate_lora_data)
+                elif count > 0:
+                    str_data = str(data, encoding="utf8")
+                    data_list = str_data.split('\r\n')
+                    for item in data_list:
+                        temp_data = item.strip()
+                        if len(temp_data) < 2:
+                            continue
+                        if temp_data[0] == 'A' and temp_data[-1] != 'Z':
+                            self.last_lora_data = temp_data
+                            # 开头不存在，结尾存在，看是否存在遗留数据可以拼接
+                        elif temp_data[0] != 'A' and temp_data[-1] == 'Z':
+                            if self.last_lora_data is not None:
+                                concate_lora_data = self.last_lora_data + temp_data
+                                if concate_lora_data[0] == 'A' and concate_lora_data[-1] == 'Z':
+                                    print("################condate data")
+                                    return_list = PiSoftuart.split_lora_data(concate_lora_data)
+                return return_list
             except Exception as e:
                 time.sleep(self._thread_ts)
                 print({'error read_remote_control': e})
