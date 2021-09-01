@@ -19,9 +19,9 @@ def get_app_key(data, url, request_type='POST'):
     print('return_data.json()', return_data.json())
     return return_data.json().get('data').get('accessToken')
 
-def get_url(serial_str,protocol=2):
+def get_url(serial_str,protocol=3):
     """
-
+    流播放协议，1-ezopen、2-hls、3-rtmp、4-flv，默认为1
     """
     payload_header = {
         # 'Content-Type': 'application/json',

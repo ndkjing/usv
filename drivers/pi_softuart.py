@@ -2,7 +2,9 @@ import time
 import pigpio
 import os
 import sys
+from collections import deque
 import binascii
+
 import config
 
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,6 +38,7 @@ class PiSoftuart(object):
         self.flushInput()
         self.last_send = None
         self.last_lora_data = None  # 数据一次没有收完等待下次数据用于拼接
+        self.dump_energy_queue = deque(maxlen=25)
 
     def flushInput(self):
         pigpio.exceptions = False  # fatal exceptions off (so that closing an unopened gpio doesn't error)
@@ -323,7 +326,6 @@ class PiSoftuart(object):
                             if self.last_lora_data is not None:
                                 concate_lora_data = self.last_lora_data + temp_data
                                 if concate_lora_data[0] == 'A' and concate_lora_data[-1] == 'Z':
-                                    print("################condate data")
                                     return_list = PiSoftuart.split_lora_data(concate_lora_data)
                 elif count > 0:
                     str_data = str(data, encoding="utf8")
@@ -407,27 +409,40 @@ class PiSoftuart(object):
 
     def read_stc_data(self, debug=False):
         try:
+            # time.sleep(self._thread_ts)
             count, data = self._pi.bb_serial_read(self._rx_pin)
+            return_dict = {}
+            water_data_list = None
             if debug:
-                print(count, data, )
+                print('read_stc_data', count, data)
             if count > 4:
-                str_data = data.decode('utf-8')[0:-1]
+                # 转换数据然后按照换行符分隔
+                str_data = str(data, encoding="utf8")
+                data_list = str_data.split('\r\n')
                 if debug:
-                    print('str_data', str_data, str_data.startswith('G'))
-                # 返回电量
-                if str_data.startswith('G'):
-                    int_data = int(str_data[1:5])
-                    if debug:
-                        print('电压数据', [int_data])
-                    return [int_data]
-                elif str_data.startswith('F'):
-                    str_data = str_data[1:]
-                    water_data_str = str_data.split('Z')[0]
-                    water_data_list = [float(i) for i in water_data_str.split(',')]
-                    if debug:
-                        print('水质数据', water_data_list)
-                    return water_data_list
-            # time.sleep(self._thread_ts * 10)
+                    print(time.time(), 'str_data', str_data, 'data_list', data_list)
+                for item in data_list:
+                    temp_data = item.strip()
+                    if len(temp_data) < 2:  # 去除空字符串
+                        continue
+                    # 开头结尾都存在是完整的一帧数据
+                    if temp_data[0] == 'G' and temp_data[-1] == 'Z':
+                        int_data = int(temp_data[1:-1])
+                        self.dump_energy_queue.append(int_data)
+                    elif str_data.startswith('F') and temp_data[-1] == 'Z':
+                        water_data_str = str_data[1:-1]
+                        water_data_list = [float(i) for i in water_data_str.split(',')]
+            if debug:
+                if len(self.dump_energy_queue) >= 1:
+                    print('dump_energy_queue,average', self.dump_energy_queue,
+                          sum(self.dump_energy_queue) / len(self.dump_energy_queue))
+                if return_dict:
+                    print('return_dict', return_dict)
+            if len(self.dump_energy_queue) > 20:
+                return_dict.update({'dump_energy': [round(sum(self.dump_energy_queue) / len(self.dump_energy_queue), 1)]})
+            if water_data_list is not None:
+                return_dict.update({'water': water_data_list})
+            return return_dict
         except Exception as e:
             print({'error read_stc_data': e})
-            return None
+            return {}

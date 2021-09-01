@@ -195,6 +195,7 @@ class DataManager:
         # 检测完成收回杆子标志
         self.is_draw_finish = 0
         self.is_drain_finish = True
+        self.last_send_stc_log_data = None  # 记录上一次发送给单片机数据重复就不用记录日志
 
     # 测试发送障碍物数据
     def send_test_distance(self):
@@ -227,7 +228,9 @@ class DataManager:
         :param data:
         :return:
         """
-        self.com_data_send_logger.info(data)
+        if self.last_send_stc_log_data is not None and self.last_send_stc_log_data != data:
+            self.com_data_send_logger.info(data)
+            self.last_send_stc_log_data = data
         if config.b_pin_stc:
             self.pi_main_obj.stc_obj.send_stc_data(data)
         elif os.path.exists(config.stc_port):
@@ -375,7 +378,7 @@ class DataManager:
             self.server_data_obj.mqtt_send_get_obj.status_light = 2
         # 低电量蜂鸣改为红灯
         if self.low_dump_energy_warnning:
-            self.server_data_obj.mqtt_send_get_obj.status_light = 4
+            self.server_data_obj.mqtt_send_get_obj.status_light = 1
         # 断网红灯
         if self.b_network_backhome:
             self.server_data_obj.mqtt_send_get_obj.status_light = 1
@@ -413,6 +416,7 @@ class DataManager:
             (ShipStatus.idle, ShipStatus.computer_control): 0,
             (ShipStatus.idle, ShipStatus.computer_auto): 24,
             (ShipStatus.idle, ShipStatus.backhome_network): 26,
+            (ShipStatus.idle, ShipStatus.backhome_low_energy): 27,
             (ShipStatus.idle, ShipStatus.remote_control): 1,
             (ShipStatus.computer_control, ShipStatus.tasking): 2,
             (ShipStatus.computer_control, ShipStatus.remote_control): 3,
@@ -543,8 +547,10 @@ class DataManager:
                 network_backhome_time = int(config.network_backhome)
             else:
                 network_backhome_time = 600
-            if time.time() - self.server_data_obj.mqtt_send_get_obj.last_command_time > network_backhome_time:
-                return_ship_status = ShipStatus.backhome_network
+            # 使用过电脑端按键操作过才能进行断网返航
+            if  self.server_data_obj.mqtt_send_get_obj.b_receive_mqtt:
+                if time.time() - self.server_data_obj.mqtt_send_get_obj.last_command_time > network_backhome_time:
+                    return_ship_status = ShipStatus.backhome_network
         if self.low_dump_energy_warnning:
             # 记录是因为按了低电量判断为返航
             return_ship_status = ShipStatus.backhome_low_energy
@@ -1022,7 +1028,6 @@ class DataManager:
                 # 切换到电脑手动控制
                 if d == -1:
                     self.change_status_info(target_status=ShipStatus.computer_control)
-
             # 返航到家状态切换到其他状态
             if self.ship_status == ShipStatus.at_home:
                 if d in [-1, 0, 90, 180, 270, 10, 190, 1180, 1270]:
@@ -1239,9 +1244,11 @@ class DataManager:
                     if back_home_flag:
                         self.b_at_home = 1
                 else:
-                    continue
+                    if not config.home_debug:
+                        self.pi_main_obj.stop()
 
-    # 将经纬度转换为高德经纬度
+                # 将经纬度转换为高德经纬度
+
     def update_ship_gaode_lng_lat(self):
         # 更新经纬度为高德经纬度
         while True:
@@ -1348,7 +1355,6 @@ class DataManager:
 
     # 必须使用线程发送mqtt状态数据
     def send_mqtt_status_data(self):
-        last_read_time = time.time()
         last_runtime = None
         last_run_distance = None
         while True:
@@ -1510,8 +1516,9 @@ class DataManager:
                 self.current_theta = ship_theta
             # 检查电量 如果连续20次检测电量平均值低于电量阈值就报警
             if config.energy_backhome:
-                if len(list(self.dump_energy_deque)) > 0 and sum(list(self.dump_energy_deque)) / len(
-                        list(self.dump_energy_deque)) < config.energy_backhome:
+                energy_backhome_threshold = min(20, config.energy_backhome)
+                if len(self.dump_energy_deque) > 0 and sum(self.dump_energy_deque) / len(
+                        self.dump_energy_deque) < energy_backhome_threshold:
                     self.low_dump_energy_warnning = 1
                 else:
                     self.low_dump_energy_warnning = 0

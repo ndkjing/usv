@@ -11,7 +11,7 @@ sys.path.append(root_dir)
 from utils import log
 from utils import data_valid
 from storage import save_data
-from drivers import pi_softuart
+from drivers import pi_softuart, com_data
 import config
 from moveControl.pathTrack import simple_pid
 
@@ -130,6 +130,7 @@ class PiMain:
                                                  timeout=config.stc2pi_timeout
                                                  )
         self.dump_energy = None
+        self.last_dump_energy = None  # 用于判断记录日志用
 
     # 获取串口对象
     @staticmethod
@@ -173,7 +174,7 @@ class PiMain:
 
     def get_stc_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.stc_rx, tx_pin=config.stc_tx,
-                                      baud=config.stc_baud, time_out=0.1)
+                                      baud=config.stc_baud, time_out=1)
 
     # 罗盘角度滤波
     def compass_filter(self, theta_):
@@ -632,33 +633,81 @@ class PiMain:
             count %= max_count
             time.sleep(0.001)
 
-    # 读取单片机数据
+    @staticmethod
+    def dump_energy_cal(adc):
+        """
+        输入ADC采集电压返回剩余电量
+        电量与电压对应关系  各个阶段之内用线性函数计算  下表为实验数据
+        电量     电压      6S电池     ADC采集数值
+        100%----4.20V     25.2      3900
+        90%-----4.06V     24.36     3755
+        80%-----3.98V     23.88     3662
+        70%-----3.92V     23.52     3561
+        60%-----3.87V     23.22     3536
+        50%-----3.82V     22.92     3535
+        40%-----3.79V▲    22.74     3520
+        30%-----3.77V     22.62     3432
+        20%-----3.74V     22.44     3461
+        0%-----3.7V       22.2      3318
+        """
+        adc_list = [3900, 3755, 3662, 3561, 3536, 3520, 3432, 3318]
+        cap_list = [100, 90, 80, 70, 60, 40, 20, 1]
+        # for index, adc_item in enumerate(adc_list):
+        #     if index == 0:
+        #         if adc > adc_item:
+        #             return_cap = cap_list[index]
+        #             break
+        #     elif index == (len(adc_list) - 1):
+        #         if adc < adc_item:
+        #             return_cap = cap_list[index]
+        #             break
+        #     else:
+        #         if adc_list[index + 1] < adc < adc_list[index]:
+        #             return_cap = cap_list[index + 1] + (adc - adc_list[index + 1]) / (
+        #                         adc_list[index] - adc_list[index + 1])
+        if adc_list[0] <= adc:
+            return_cap = cap_list[0]
+        elif adc_list[1] <= adc < adc_list[0]:
+            return_cap = cap_list[1] + (adc - adc_list[1]) * (cap_list[0] - cap_list[1]) / (
+                    adc_list[0] - adc_list[1])
+        elif adc_list[2] <= adc < adc_list[1]:
+            return_cap = cap_list[2] + (adc - adc_list[2]) * (cap_list[1] - cap_list[2]) / (
+                    adc_list[1] - adc_list[2])
+        elif adc_list[3] <= adc < adc_list[2]:
+            return_cap = cap_list[3] + (adc - adc_list[3]) * (cap_list[2] - cap_list[3]) / (
+                    adc_list[2] - adc_list[3])
+        elif adc_list[4] <= adc < adc_list[3]:
+            return_cap = cap_list[4] + (adc - adc_list[4]) * (cap_list[3] - cap_list[4]) / (
+                    adc_list[3] - adc_list[4])
+        elif adc_list[5] <= adc < adc_list[4]:
+            return_cap = cap_list[5] + (adc - adc_list[5]) * (cap_list[4] - cap_list[5]) / (
+                    adc_list[4] - adc_list[5])
+        elif adc_list[6] <= adc < adc_list[5]:
+            return_cap = cap_list[6] + (adc - adc_list[6]) * (cap_list[5] - cap_list[6]) / (
+                    adc_list[5] - adc_list[6])
+        elif adc_list[7] <= adc < adc_list[6]:
+            return_cap = cap_list[7] + (adc - adc_list[7]) * (cap_list[6] - cap_list[7]) / (
+                    adc_list[6] - adc_list[7])
+        else:
+            return_cap = 1  # 小于最小电量置为1
+        return int(return_cap)
+
+    # 读取单片机数据 软串口
     def get_stc_data(self):
         """
         读取单片机数据
         :return:
         """
         while True:
-            stc_data_read = self.stc_obj.read_stc_data()
-            if stc_data_read and len(stc_data_read) == 1:
-                self.dump_energy = 99.9
+            stc_data_read_dict = self.stc_obj.read_stc_data()
+            if stc_data_read_dict.get('dump_energy') and len(stc_data_read_dict.get('dump_energy')) == 1:
                 # 处理剩余电量数据
-                """
-                                self.dump_energy = stc_data_read[0]
-
-                                try:
-                    self.dump_energy = float(self.dump_energy)
-                    if self.dump_energy > 100:
-                        if self.dump_energy < 3609:
-                            self.dump_energy = 1
-                        else:
-                            self.dump_energy = min(int((self.dump_energy - 3609) / 4.8),1)
-                except Exception as e1:
-                    self.logger_obj.error({'error': e1})
-                self.logger_obj.info({'stc_data dump energy', stc_data_read[0]})
-                """
-
-            elif stc_data_read and len(stc_data_read) == 5:
+                self.dump_energy = PiMain.dump_energy_cal(stc_data_read_dict.get('dump_energy')[0])
+                if self.last_dump_energy is None or abs(self.dump_energy - self.last_dump_energy) > 5:
+                    self.logger_obj.info({'stc_data dump energy', self.dump_energy})
+                    self.last_dump_energy = self.dump_energy
+            elif stc_data_read_dict.get('water') and len(stc_data_read_dict.get('water')) == 5:
+                stc_data_read = stc_data_read_dict.get('water')
                 ec_data = stc_data_read[4]
                 ec_data = data_valid.valid_water_data(config.WaterType.EC, ec_data)
                 self.water_data_dict.update({'EC': ec_data})
@@ -674,7 +723,7 @@ class PiMain:
                 wt_data = stc_data_read[0]
                 wt_data = data_valid.valid_water_data(config.WaterType.wt, wt_data)
                 self.water_data_dict.update({'wt': wt_data})
-            time.sleep(1)
+            time.sleep(0.5)
 
     def get_sonar_data(self):
         """
@@ -922,6 +971,7 @@ if __name__ == '__main__':
             if key_input.startswith('w') or key_input.startswith(
                     'a') or key_input.startswith('s') or key_input.startswith('d'):
                 try:
+                    print(config.left_pwm_pin, )
                     if len(key_input) > 1:
                         gear = int(key_input[1])
                 except Exception as e:
@@ -990,6 +1040,7 @@ if __name__ == '__main__':
             # 获取读取单片机数据
             elif key_input.startswith('f'):
                 stc_data = pi_main_obj.stc_obj.read_stc_data(debug=True)
+                print('stc_data', stc_data)
             elif key_input.startswith('g'):
                 gps_data = pi_main_obj.gps_obj.read_gps(debug=True)
                 print('gps_data', gps_data)

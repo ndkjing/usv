@@ -170,6 +170,8 @@ class MqttSendGet:
         self.back_home = 0
         self.fix_point = 0
         self.is_connected = 0
+        # 是否接受到电脑端点击过任何按键
+        self.b_receive_mqtt=False
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -198,9 +200,11 @@ class MqttSendGet:
         try:
             # 回调更新控制数据
             topic = msg.topic
+
             self.last_command_time = time.time()
             # 处理控制数据
             if topic == 'control_data_%s' % config.ship_code:
+                self.b_receive_mqtt = True
                 control_data = json.loads(msg.payload)
                 if control_data.get('move_direction') is None:
                     self.logger.error('control_data_处理控制数据没有move_direction')
@@ -233,6 +237,7 @@ class MqttSendGet:
 
             # 处理开关信息
             if topic == 'switch_%s' % config.ship_code:
+                self.b_receive_mqtt = True
                 switch_data = json.loads(msg.payload)
                 # 改变了暂时没用
                 if switch_data.get('b_sampling') is not None:
@@ -258,6 +263,7 @@ class MqttSendGet:
 
             # 处理初始点击确定湖数据
             elif topic == 'pool_click_%s' % config.ship_code:
+                self.b_receive_mqtt = True
                 pool_click_data = json.loads(msg.payload)
                 if pool_click_data.get('lng_lat') is None:
                     self.logger.error('pool_click  用户点击经纬度数据没有经纬度字段')

@@ -5,6 +5,7 @@ import os
 import platform
 import ship_code_config
 import time
+from utils import get_eviz_url
 
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
@@ -29,7 +30,8 @@ save_sonar_path = os.path.join(root_path, 'statics', 'geojeson_data.json')
 save_water_data_path = os.path.join(root_path, 'statics', 'water_data.json')
 # 保存返航点地址路径
 home_location_path = os.path.join(root_path, 'home_location.json')
-
+# 记录罗盘数据
+save_compass_data_dir = os.path.join(root_path, 'statics')
 
 class CurrentPlatform(enum.Enum):
     windows = 1
@@ -74,7 +76,12 @@ col_gap = 50
 # 湖泊名称
 pool_name = "梁子湖"
 # 视频链接
-video_url = ship_code_config.ship_code_video_dict[ship_code_config.ship_code]
+# 视频链接
+try:
+    video_url = get_eviz_url.get_url(ship_code_config.video_code,protocol=2)
+except Exception as e_video_url:
+    video_url = "url获取错误"
+    print({'e_video_url':e_video_url})
 
 
 def update_base_setting():
@@ -186,10 +193,11 @@ ship_code = ship_code_config.ship_code
 # stc_port = '/dev/ttyAMA0'
 stc_port = '/dev/ttyUSB0'
 stc_baud = 115200
+b_com_stc = os.path.exists(stc_port)
+
 # imu
 imu_port = '/dev/imu'
 imu_baud = 115200
-
 if current_platform == CurrentPlatform.pi:
     pix_port = '/dev/ttyACM0'
 else:
@@ -663,9 +671,9 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
 
 ########### 树莓派GPIO端口相关设置 均使用BCM编码端口
 # 左侧电机信号输出控制口
-left_pwm_pin = 6
+left_pwm_pin = 20
 # 右侧电机信号输出控制口
-right_pwm_pin = 5
+right_pwm_pin = 21
 # 软串口罗盘
 b_pin_compass = 1
 pin_compass_baud = 9600
@@ -681,7 +689,7 @@ b_lora_remote_control = 1
 lora_tx = 25
 lora_rx = 8
 # 单片机串口
-b_pin_stc = 1
+b_pin_stc = 0
 stc_tx = 3
 stc_rx = 4
 stc_baud = 115200
@@ -691,7 +699,12 @@ b_use_remote_control = 0
 channel_1_pin = 5  # 水平是1通道
 channel_3_pin = 6  # 垂直是2通道
 channel_remote_pin = 11  # 开启遥控器输入pin口
-
+# 声呐
+b_sonar = 0
+sonar_rx = 16  # RX
+sonar_tx = 20  # TX
+sonar_baud = 9600
+sonar_steer = 21  # 声呐舵机
 # 毫米波雷达 millimeter wave radar
 b_millimeter_wave = 1
 field_of_view = 90
@@ -702,21 +715,27 @@ millimeter_wave_rx = 20
 millimeter_wave_baud = 115200
 millimeter_wave_hz = 40
 
+lora_baud = 9600
+# 激光雷达
+b_laser = 0
+laser_tx = 13
+laser_rx = 19
+laser_baud = 115200
+laser_hz = 40
+# 排水
+b_drain = 0  # 是否有排水泵
 # 抽水
-b_draw = 1     # 是否有抽水泵
-b_control_deep = 1  # 是否可调深度
+b_draw = 1  # 是否有抽水泵
+b_control_deep = 0 # 是否可调深度
 draw_steer = 13  # 舵机接口
-
 # 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
 if home_debug:
     use_shape_theta_type = 3
 else:
     use_shape_theta_type = 1
 
-# 测试在家调试也发送数据
-debug_send_detect_data = 0
-# 转向速度
-angular_velocity = 90
+min_deep_steer_pwm = 800  # 最下面
+max_deep_steer_pwm = 2400  # 最上面
 
 
 class WaterType(enum.Enum):

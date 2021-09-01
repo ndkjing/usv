@@ -4,7 +4,7 @@ import json
 import os
 import platform
 import ship_code_config
-
+from utils import get_eviz_url
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
@@ -77,8 +77,11 @@ col_gap = 50
 # 湖泊名称
 pool_name = "梁子湖"
 # 视频链接
-video_url = ship_code_config.ship_code_video_dict[ship_code_config.ship_code]
-
+try:
+    video_url = get_eviz_url.get_url(ship_code_config.video_code,protocol=2)
+except Exception as e_video_url:
+    video_url = "url获取错误"
+    print({'e_video_url':e_video_url})
 
 def update_base_setting():
     global speed_grade
@@ -815,7 +818,7 @@ else:
     use_shape_theta_type = 1
 
 min_deep_steer_pwm = 800  # 最下面
-max_deep_steer_pwm = 2400 # 最上面
+max_deep_steer_pwm = 2400  # 最上面
 
 
 class WaterType(enum.Enum):
@@ -826,6 +829,21 @@ class WaterType(enum.Enum):
     TD = 4
     NH3_NH4 = 5
 
+
+"""
+电量与电压对应关系  各个阶段之内用线性函数计算
+电量     电压      6S电池     ADC采集数值
+100%----4.20V     25.2      3900  
+90%-----4.06V     24.36     3755       
+80%-----3.98V     23.88     3662       
+70%-----3.92V     23.52     3561 
+60%-----3.87V     23.22     3536
+50%-----3.82V     22.92     3535
+40%-----3.79V▲    22.74     3520
+30%-----3.77V     22.62     3432
+20%-----3.74V     22.44     3461
+0%-----3.7V       22.2      3318
+"""
 
 if __name__ == '__main__':
     write_setting(True, True, True, True)
