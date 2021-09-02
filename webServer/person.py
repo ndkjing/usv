@@ -10,8 +10,10 @@ class DetectVideo:
         self.last_save_time = None
         self.save_interval = 300  # 暂时设置保存间隔时间300秒
         self.max_save_interval = 5 * 60 * 60  # 暂时设置最大保存间隔时间5*60*60秒
-        self.url_data = "http://192.168.199.186:8009/union/admin/uploadFile"
-        self.url_descpi = "http://192.168.199.186:8009/union/admin/xxl/data/monitoring"
+        ip_local = '192.168.199.186:8009'
+        ip_xxl = 'wuhanligong.xxlun.com'
+        self.url_data = "http://%s/union/admin/uploadFile" % ip_xxl
+        self.url_descpi = "http://%s/union/admin/xxl/data/monitoring" % ip_xxl
 
     @staticmethod
     def is_inside(o, i):

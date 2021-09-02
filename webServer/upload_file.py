@@ -35,10 +35,13 @@ def post_descip(data, url, request_type='POST'):
 
 
 if __name__ == "__main__":
-    url_data = "http://192.168.199.186:8009/union/admin/uploadFile"
-    url_descpi = "http://192.168.199.186:8009/union/admin/xxl/data/monitoring"
+    ip_local = '192.168.199.186:8009'
+    ip_xxl = 'wuhanligong.xxlun.com'
+    url_data = "http://%s/union/admin/uploadFile" % ip_xxl
+    url_descpi = "http://%s/union/admin/xxl/data/monitoring" % ip_xxl
     # file = "weixin.jpg"
-    file = "demo.png"
+    # file = "demo.png"
+    file = "F:\downloads\SampleVideo_1280x720_5mb.mp4"
     save_name = post_data(url=url_data, file=file)
     if save_name:
         print('save_name', save_name)
