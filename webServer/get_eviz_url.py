@@ -30,6 +30,7 @@ def get_url(serial_str,protocol=2):
     }
     app_key = get_app_key(data={'appKey': '1c7ea7dcea734a239a528fa458568f48', 'appSecret': '7efe513b44b4f81fc5cb97a7ab5afe55'},
                 url='https://open.ys7.com/api/lapp/token/get?appKey=1c7ea7dcea734a239a528fa458568f48&appSecret=7efe513b44b4f81fc5cb97a7ab5afe55')
+    print('app_key',app_key)
     url = 'https://open.ys7.com/api/lapp/v2/live/address/get?accessToken=%s&deviceSerial=%s&channelNo=1&protocol=%s&quality=2'%(app_key,serial_str,protocol)
     return_data = requests.post(
         url=url, headers=payload_header)

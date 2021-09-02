@@ -41,6 +41,7 @@ from webServer import server_data_define
 from webServer import server_config
 import get_eviz_url
 
+
 class WebServer:
     def __init__(self):
         self.data_define_obj_dict = {}
@@ -392,8 +393,14 @@ class WebServer:
                     else:
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.update(
                             {'info_type': 3})
+                        try:
+                            video_url = get_eviz_url.get_url(server_config.ship_code_video_dict[ship_code],
+                                                             protocol=2)
+                        except Exception as e_get_url:
+                            video_url = None
+                            print({'e_get_url': e_get_url})
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.update(
-                            {'video_url': get_eviz_url.get_url(server_config.ship_code_video_dict[ship_code],protocol=2)})
+                            {'video_url': video_url})
                         self.send(method='mqtt',
                                   ship_code=ship_code,
                                   topic='base_setting_%s' % (ship_code),

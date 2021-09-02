@@ -5,6 +5,7 @@ import os
 import platform
 import ship_code_config
 from utils import get_eviz_url
+
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(maps_dir):
@@ -78,10 +79,11 @@ col_gap = 50
 pool_name = "梁子湖"
 # 视频链接
 try:
-    video_url = get_eviz_url.get_url(ship_code_config.video_code,protocol=2)
+    video_url = get_eviz_url.get_url(ship_code_config.video_code, protocol=2)
 except Exception as e_video_url:
     video_url = "url获取错误"
-    print({'e_video_url':e_video_url})
+    print({'e_video_url': e_video_url})
+
 
 def update_base_setting():
     global speed_grade
