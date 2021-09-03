@@ -260,6 +260,7 @@ class DataManager:
                 if time.time() - self.draw_start_time > config.draw_time:
                     self.b_sampling = 2
                     self.draw_start_time = None
+                    self.b_draw_over_send_data = True
                 else:
                     self.b_sampling = 1
 
