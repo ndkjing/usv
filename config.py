@@ -32,7 +32,6 @@ home_location_path = os.path.join(root_path, 'home_location.json')
 # 记录罗盘数据
 save_compass_data_dir = os.path.join(root_path, 'statics')
 
-
 # 记录gps数据
 
 class CurrentPlatform(enum.Enum):

@@ -37,6 +37,5 @@ def get_data(save_path):
 
 
 if __name__ == '__main__':
-    set_data({1:2},'test.json')
+    set_data({1: 2}, 'test.json')
     print(get_data('test.json'))
-

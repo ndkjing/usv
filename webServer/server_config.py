@@ -22,3 +22,4 @@ save_map_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mapsDat
 print('save_map_dir', save_map_dir)
 if not os.path.exists(save_map_dir):
     os.mkdir(save_map_dir)
+save_token_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'save_token.json')
