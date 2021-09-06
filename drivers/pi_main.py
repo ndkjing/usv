@@ -331,7 +331,7 @@ class PiMain:
         """
         设置抽水泵深度
         :param b_slow:
-        :param deep_pwm:
+        :param deep_pwm:电机目标深度
         :return:
         """
         # 如果没有可调节深度舵机跳过调节

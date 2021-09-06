@@ -178,7 +178,7 @@ class DataManager:
                 self.use_true_gps = 1
         # 当前路径平滑搜索列表
         self.search_list = []
-        self.b_sampling = 0  # 在抽水中  0没有在抽水  1 在抽水中   2 抽水结束
+        self.b_sampling = 0  # 在抽水中  0没有在抽水  1 在抽水中   2 抽水结束切换到其他状态
         # 是否到达目标点
         self.b_arrive_point = 0
         # 当前运动方向 -1 空闲 0 前 90左 180 后 270 右     10 北  190 西 1180 南  1270东
@@ -193,8 +193,8 @@ class DataManager:
         self.is_init_motor = 0
         self.area_id = None
         # 检测完成收回杆子标志
-        self.is_draw_finish = 0
-        self.is_drain_finish = True
+        self.is_need_drain = False  # 判断是否需要排水
+        self.drain_start_time = None  # 记录排水时间
         self.last_send_stc_log_data = None  # 记录上一次发送给单片机数据重复就不用记录日志
 
     # 测试发送障碍物数据
@@ -239,18 +239,6 @@ class DataManager:
     # 抽水
     def draw(self):
         """
-        接受mqtt抽水开始
-            当前在抽水：
-                已经超时：
-                    停止抽水并更新发送数据标志位
-                未超时：
-                    继续抽水
-            未抽水：
-                开始抽水并开始计时
-        接受mqtt停止抽水：
-            当前在抽水：
-                发送停止
-        :return:无
         """
         time.sleep(1)
         # 判断开关是否需要打开或者关闭
@@ -259,28 +247,34 @@ class DataManager:
                 self.draw_start_time = time.time()
             else:
                 if time.time() - self.draw_start_time > config.draw_time:
-                    self.b_sampling = 2
                     self.draw_start_time = None
                     self.b_draw_over_send_data = True
-                else:
-                    self.b_sampling = 1
+                    self.b_sampling = 2
         else:
+            # 开启了遥控器
             if self.pi_main_obj.b_start_remote:
                 # 判断遥控器控制抽水
                 if self.pi_main_obj.remote_draw_status == 1:
                     if self.draw_start_time is None:
                         self.draw_start_time = time.time()
-                    self.b_sampling = 1
                     self.send_stc_data('A1Z')
                 else:
                     if self.draw_start_time is not None:
                         # 超过抽水时间发送数据
-                        if time.time()- self.draw_start_time > config.draw_time:
+                        if time.time() - self.draw_start_time > config.draw_time:
                             self.b_draw_over_send_data = True
                     # 将时间置空
                     self.draw_start_time = None
                     # 结束抽水
                     self.send_stc_data('A0Z')
+                # 排水
+                if self.pi_main_obj.remote_drain_status:
+                    self.send_stc_data('A2Z')
+                    time.sleep(0.1)
+                else:
+                    self.send_stc_data('A0Z')
+                    time.sleep(0.1)
+            # 没有开启遥控器
             else:
                 # 判断是否抽水  点击抽水情况
                 if self.server_data_obj.mqtt_send_get_obj.b_draw:
@@ -291,33 +285,61 @@ class DataManager:
                         if time.time() - self.draw_start_time > config.draw_time:
                             self.b_draw_over_send_data = True
                             self.server_data_obj.mqtt_send_get_obj.b_draw = 0
-                    self.b_sampling = 1
+                            self.is_need_drain = True
+                            self.b_sampling = 2
+                    # 放下杆子
+                    self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
                     self.send_stc_data('A1Z')
                 else:
                     self.send_stc_data('A0Z')
+                    # 没有抽水的情况下杆子都要收回来
+                    self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
                     self.draw_start_time = None
 
-    # 控制外设
+                # 判断没有排水则先排水再收杆子
+                if self.is_need_drain:
+                    if self.drain_start_time is None:
+                        self.drain_start_time = time.time()
+                    else:
+                        # 超时中断排水
+                        if time.time() - self.drain_start_time > config.draw_time:
+                            self.is_need_drain = False
+                            self.send_stc_data('A0Z')
+                            # 收回杆子
+                            self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
+                    self.send_stc_data('A2Z')
+
+    # 控制继电器
     def control_relay(self):
         """
         控制继电器
         :return:
         """
+        # 改为一直发送模式
+        is_continue_send = 1
         # 舷灯
         if self.pi_main_obj.remote_side_light_status == 1:
             self.server_data_obj.mqtt_send_get_obj.side_light = 1
         elif self.pi_main_obj.remote_side_light_status == 0:
             self.server_data_obj.mqtt_send_get_obj.side_light = 0
         if self.server_data_obj.mqtt_send_get_obj.side_light:
-            if self.last_side_light:
-                pass
-            else:
+            if is_continue_send:
                 self.send_stc_data('B1Z')
-        else:
-            if self.last_side_light:
-                self.send_stc_data('B0Z')
+                time.sleep(0.1)
             else:
-                pass
+                if self.last_side_light:
+                    pass
+                else:
+                    self.send_stc_data('B1Z')
+        else:
+            if is_continue_send:
+                self.send_stc_data('B0Z')
+                time.sleep(0.1)
+            else:
+                if self.last_side_light:
+                    self.send_stc_data('B0Z')
+                else:
+                    pass
         self.last_side_light = self.server_data_obj.mqtt_send_get_obj.side_light
         # 大灯
         if self.pi_main_obj.remote_head_light_status == 1:
@@ -325,49 +347,50 @@ class DataManager:
         elif self.pi_main_obj.remote_head_light_status == 0:
             self.server_data_obj.mqtt_send_get_obj.headlight = 0
         if self.server_data_obj.mqtt_send_get_obj.headlight:
-            if self.last_headlight:
-                pass
-            else:
+            if is_continue_send:
                 self.send_stc_data('C1Z')
-        else:
-            if self.last_headlight:
-                self.send_stc_data('C0Z')
+                time.sleep(0.1)
             else:
-                pass
+                if self.last_headlight:
+                    pass
+                else:
+                    self.send_stc_data('C1Z')
+        else:
+            if is_continue_send:
+                self.send_stc_data('C0Z')
+                time.sleep(0.1)
+            else:
+                if self.last_headlight:
+                    self.send_stc_data('C0Z')
+                else:
+                    pass
         self.last_headlight = self.server_data_obj.mqtt_send_get_obj.headlight
         # 声光报警器
         if self.server_data_obj.mqtt_send_get_obj.audio_light:
-            if self.last_audio_light:
-                pass
-            else:
+            if is_continue_send:
                 self.send_stc_data('D1Z')
+                time.sleep(0.1)
+            else:
+                if self.last_audio_light:
+                    pass
+                else:
+                    self.send_stc_data('D1Z')
         else:
-            if self.last_audio_light:
+            if is_continue_send:
                 self.send_stc_data('D0Z')
+                time.sleep(0.1)
             else:
-                pass
+                if self.last_audio_light:
+                    self.send_stc_data('D0Z')
+                else:
+                    pass
         self.last_audio_light = self.server_data_obj.mqtt_send_get_obj.audio_light
-        # 排水
-        if self.pi_main_obj.remote_drain_status:
-            if self.last_drain:
-                pass
-            else:
-                self.send_stc_data('A2Z')
-        else:
-            if self.last_drain:
-                self.send_stc_data('A0Z')
-            else:
-                pass
-        self.last_drain = self.pi_main_obj.remote_drain_status
+
         # 舵机
         if self.is_init_motor:
-            if self.pi_main_obj.remote_draw_steer == config.min_deep_steer_pwm:
-                if self.last_draw_steer != config.min_deep_steer_pwm:
-                    self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
-            else:
-                if self.last_draw_steer != config.max_deep_steer_pwm:
-                    self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
-            self.last_draw_steer = self.pi_main_obj.remote_draw_steer
+            if self.pi_main_obj.remote_draw_steer != self.last_draw_steer:
+                self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
+                self.last_draw_steer = self.pi_main_obj.remote_draw_steer
         # 状态灯
         # if self.server_data_obj.mqtt_send_get_obj.status_light != self.last_status_light:
         # 启动后mqtt连接上亮绿灯
@@ -383,6 +406,7 @@ class DataManager:
         if self.b_network_backhome:
             self.server_data_obj.mqtt_send_get_obj.status_light = 1
         send_stc_data = 'E%sZ' % (str(self.server_data_obj.mqtt_send_get_obj.status_light))
+        time.sleep(0.1)
         self.send_stc_data(send_stc_data)
         self.last_status_light = self.server_data_obj.mqtt_send_get_obj.status_light
         if random.random() > 0.98:
@@ -548,7 +572,7 @@ class DataManager:
             else:
                 network_backhome_time = 600
             # 使用过电脑端按键操作过才能进行断网返航
-            if  self.server_data_obj.mqtt_send_get_obj.b_receive_mqtt:
+            if self.server_data_obj.mqtt_send_get_obj.b_receive_mqtt:
                 if time.time() - self.server_data_obj.mqtt_send_get_obj.last_command_time > network_backhome_time:
                     return_ship_status = ShipStatus.backhome_network
         if self.low_dump_energy_warnning:
@@ -909,6 +933,7 @@ class DataManager:
     # 处理状态切换
     def change_status(self):
         while True:
+            # 删除任务模式，将抽水单独控制
             time.sleep(0.1)
             d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
             self.direction = d
@@ -963,11 +988,9 @@ class DataManager:
 
             # 判断电脑自动切换到其他状态情况
             if self.ship_status == ShipStatus.computer_auto:
-                # 切换到遥控器控制 使能且摇杆大于60%
+                # 切换到遥控器控制
                 if not config.home_debug and self.pi_main_obj.b_start_remote:
-                    if len(self.pi_main_obj.remote_control_data) == 14 and \
-                            abs(self.pi_main_obj.remote_control_data[2] - 50) > 30:
-                        self.change_status_info(target_status=ShipStatus.remote_control, b_clear_status=True)
+                    self.change_status_info(target_status=ShipStatus.remote_control, b_clear_status=True)
                 # 切换到返航
                 elif return_ship_status is not None:
                     self.change_status_info(target_status=return_ship_status)
@@ -990,7 +1013,7 @@ class DataManager:
             if self.ship_status == ShipStatus.tasking:
                 print('self.b_sampling', self.b_sampling, self.b_draw_over_send_data)
                 # 切换到电脑自动模式  切换到电脑手动模式
-                if self.b_sampling == 2 and not self.b_draw_over_send_data:
+                if self.b_sampling == 2 or self.server_data_obj.mqtt_send_get_obj.b_draw == 0:
                     if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) > 0 and \
                             all(self.server_data_obj.mqtt_send_get_obj.sampling_points_status):
                         self.change_status_info(target_status=ShipStatus.computer_control, b_clear_status=True)
@@ -1020,39 +1043,28 @@ class DataManager:
                 # 判断是否返航到家
                 if self.b_at_home:
                     self.change_status_info(target_status=ShipStatus.at_home)
-                # 切换到遥控器模式 使能遥控器 且摇杆推到超过60%
+                # 切换到遥控器模式 使能遥控器
                 if not config.home_debug and self.pi_main_obj.b_start_remote:
-                    if len(self.pi_main_obj.remote_control_data) == 14 and \
-                            abs(self.pi_main_obj.remote_control_data[2] - 50) > 30:
-                        self.change_status_info(target_status=ShipStatus.remote_control)
+                    self.change_status_info(target_status=ShipStatus.remote_control)
                 # 切换到电脑手动控制
                 if d == -1:
                     self.change_status_info(target_status=ShipStatus.computer_control)
+
             # 返航到家状态切换到其他状态
             if self.ship_status == ShipStatus.at_home:
                 if d in [-1, 0, 90, 180, 270, 10, 190, 1180, 1270]:
                     self.change_status_info(target_status=ShipStatus.computer_control)
-                # 切换到遥控器模式 使能遥控器 且摇杆推到超过60%
+                # 切换到遥控器模式 使能遥控器
                 if not config.home_debug and self.pi_main_obj.b_start_remote:
-                    if len(self.pi_main_obj.remote_control_data) == 14 and \
-                            abs(self.pi_main_obj.remote_control_data[2] - 50) > 30:
-                        self.change_status_info(target_status=ShipStatus.remote_control)
+                    self.change_status_info(target_status=ShipStatus.remote_control)
 
+    # 抽水排水控制
     def control_draw_thread(self):
         while True:
             time.sleep(1)
             # 当状态不是遥控器控制,不在执行任务状态且不在抽水过程中收回抽水杆子
             if not config.home_debug:
-                if self.ship_status != ShipStatus.remote_control \
-                        and self.ship_status != ShipStatus.tasking \
-                        and self.b_sampling != 1:
-                    # 判断没有排水则先排水再收杆子
-                    if not self.is_drain_finish:
-                        self.send_stc_data('A2Z')
-                        time.sleep(config.draw_time)
-                        self.is_drain_finish = True
-                    self.send_stc_data('A0Z')
-                    self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
+                self.draw()
 
     # 处理电机控制
     def move_control(self):
@@ -1123,7 +1135,7 @@ class DataManager:
                         self.control_info += ' 向东'
                         self.nesw_control(nest=Nwse.east)
             # 遥控器控制
-            elif self.ship_status == ShipStatus.remote_control:
+            elif self.ship_status == ShipStatus.remote_control or self.ship_status == ShipStatus.tasking:
                 # lora遥控器
                 if config.b_lora_remote_control:
                     remote_left_pwm, remote_right_pwm = self.pi_main_obj.check_remote_pwm(b_lora_remote_control=True)
@@ -1216,7 +1228,7 @@ class DataManager:
                     if b_arrive_sample:
                         print('b_arrive_sample', b_arrive_sample)
                         # 更新目标点提示消息
-                        self.b_arrive_point = 1
+                        self.b_arrive_point = 1  # 到点了用于通知抽水
                         self.point_arrive_start_time = None
                         self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] = 1
                         self.path_info = [index + 1, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
@@ -1234,18 +1246,16 @@ class DataManager:
                 else:
                     if not config.home_debug:
                         self.pi_main_obj.stop()
-
-                # 将经纬度转换为高德经纬度
             # 执行任务中
-            elif self.ship_status == ShipStatus.tasking:
-                if not config.home_debug:
-                    self.pi_main_obj.stop()
-                # 不是使能遥控导致进入任务模式就需要放下抽水管
-                if not config.home_debug and not self.pi_main_obj.b_start_remote:
-                    # 放下抽水杆子
-                    self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
-                # 执行抽水
-                self.draw()
+            # elif self.ship_status == ShipStatus.tasking:
+            #     if not config.home_debug:
+            #         self.pi_main_obj.stop()
+            #     # 不是使能遥控导致进入任务模式就需要放下抽水管
+            #     if not config.home_debug and not self.pi_main_obj.b_start_remote:
+            #         # 放下抽水杆子
+            #         self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
+            #     # 执行抽水
+            #     self.draw()
 
     def update_ship_gaode_lng_lat(self):
         # 更新经纬度为高德经纬度
@@ -1348,8 +1358,6 @@ class DataManager:
                     self.logger.info({"本地保存检测数据": mqtt_send_detect_data})
                     # 发送结束改为False
                     self.b_draw_over_send_data = False
-                    # 开始排水
-                    self.is_drain_finish = False
 
     # 必须使用线程发送mqtt状态数据
     def send_mqtt_status_data(self):
@@ -1449,7 +1457,7 @@ class DataManager:
     # 外围设备控制线程函数
     def control_peripherals(self):
         while True:
-            time.sleep(config.thread_sleep_time * 2)
+            time.sleep(config.thread_sleep_time)
             if not config.home_debug and self.pi_main_obj:
                 self.control_relay()
 

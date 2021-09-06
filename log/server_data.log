@@ -3583,3 +3583,23 @@
 2021-09-03 16:17:37,186 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
 2021-09-03 16:17:42,187 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
 2021-09-03 16:17:47,187 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-06 19:43:02,866 server_data.py[line:537] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:02,897 server_data.py[line:537] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:02,897 server_data.py[line:192] INFO Connected with result code:  0
+2021-09-06 19:43:02,959 server_data.py[line:537] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,007 server_data.py[line:537] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,007 server_data.py[line:537] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,007 server_data.py[line:537] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,039 server_data.py[line:537] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,055 server_data.py[line:537] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,055 server_data.py[line:537] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,070 server_data.py[line:537] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,070 server_data.py[line:537] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,085 server_data.py[line:537] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,133 server_data.py[line:537] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,150 server_data.py[line:537] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,150 server_data.py[line:537] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,181 server_data.py[line:537] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:03,197 server_data.py[line:537] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-09-06 19:43:07,880 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-06 19:43:12,974 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
