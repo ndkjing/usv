@@ -252,6 +252,7 @@ class DataManager:
                 发送停止
         :return:无
         """
+        time.sleep(1)
         # 判断开关是否需要打开或者关闭
         if config.home_debug or not config.b_draw:
             if self.draw_start_time is None:
@@ -263,40 +264,38 @@ class DataManager:
                     self.b_draw_over_send_data = True
                 else:
                     self.b_sampling = 1
-
-        # 判断遥控器控制抽水
-        elif self.pi_main_obj.remote_draw_status == 1:
-            if self.draw_start_time is None:
-                self.draw_start_time = time.time()
-                self.b_sampling = 1
-                self.send_stc_data('A1Z')
-        elif self.pi_main_obj.remote_draw_status == 0 and self.b_sampling == 1 \
-                and self.draw_start_time and not self.server_data_obj.mqtt_send_get_obj.b_draw:
-            self.send_stc_data('A0Z')
-            if time.time() - self.draw_start_time > config.draw_time:
-                self.b_draw_over_send_data = True
-            self.b_sampling = 2
-            self.draw_start_time = None
-        # 到点和点击按键抽水
         else:
-            # 判断是否抽水  点击抽水情况
-            if self.server_data_obj.mqtt_send_get_obj.b_draw:
-                if self.draw_start_time is None:
-                    self.send_stc_data('A1Z')
+            if self.pi_main_obj.b_start_remote:
+                # 判断遥控器控制抽水
+                if self.pi_main_obj.remote_draw_status == 1:
+                    if self.draw_start_time is None:
+                        self.draw_start_time = time.time()
                     self.b_sampling = 1
-                    self.draw_start_time = time.time()
+                    self.send_stc_data('A1Z')
                 else:
-                    # 超时中断抽水
-                    if time.time() - self.draw_start_time > config.draw_time:
-                        self.b_draw_over_send_data = True
-                        self.send_stc_data('A0Z')
-                        self.b_sampling = 2
-                        self.draw_start_time = None
+                    if self.draw_start_time is not None:
+                        # 超过抽水时间发送数据
+                        if time.time()- self.draw_start_time > config.draw_time:
+                            self.b_draw_over_send_data = True
+                    # 将时间置空
+                    self.draw_start_time = None
+                    # 结束抽水
+                    self.send_stc_data('A0Z')
             else:
-                self.send_stc_data('A0Z')
-                self.b_sampling = 2
-                print('A0Z')
-                self.draw_start_time = None
+                # 判断是否抽水  点击抽水情况
+                if self.server_data_obj.mqtt_send_get_obj.b_draw:
+                    if self.draw_start_time is None:
+                        self.draw_start_time = time.time()
+                    else:
+                        # 超时中断抽水
+                        if time.time() - self.draw_start_time > config.draw_time:
+                            self.b_draw_over_send_data = True
+                            self.server_data_obj.mqtt_send_get_obj.b_draw = 0
+                    self.b_sampling = 1
+                    self.send_stc_data('A1Z')
+                else:
+                    self.send_stc_data('A0Z')
+                    self.draw_start_time = None
 
     # 控制外设
     def control_relay(self):
@@ -1073,9 +1072,8 @@ class DataManager:
             self.control_info = ''
             if self.ship_status in control_info_dict:
                 self.control_info += control_info_dict[self.ship_status]
-
             # 电脑手动
-            if self.ship_status == ShipStatus.computer_control:
+            if self.ship_status == ShipStatus.computer_control or self.ship_status == ShipStatus.tasking:
                 # 手动模式避障距离
                 if config.obstacle_avoid_type == 3:
                     if 1 in self.pi_main_obj.control_obstacle_list[
@@ -1225,17 +1223,6 @@ class DataManager:
                         time.sleep(1)
                     if self.ship_status != ShipStatus.computer_auto:
                         break
-            # 执行任务中
-            elif self.ship_status == ShipStatus.tasking:
-                if not config.home_debug:
-                    self.pi_main_obj.stop()
-                # 不是使能遥控导致进入任务模式就需要放下抽水管
-                if not config.home_debug and not self.pi_main_obj.b_start_remote:
-                    # 放下抽水杆子
-                    self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
-                # 执行抽水
-                self.draw()
-
             # 返航 断网返航 低电量返航
             elif self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
                 # 有返航点下情况下返回返航点，没有则停止
@@ -1249,6 +1236,16 @@ class DataManager:
                         self.pi_main_obj.stop()
 
                 # 将经纬度转换为高德经纬度
+            # 执行任务中
+            elif self.ship_status == ShipStatus.tasking:
+                if not config.home_debug:
+                    self.pi_main_obj.stop()
+                # 不是使能遥控导致进入任务模式就需要放下抽水管
+                if not config.home_debug and not self.pi_main_obj.b_start_remote:
+                    # 放下抽水杆子
+                    self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
+                # 执行抽水
+                self.draw()
 
     def update_ship_gaode_lng_lat(self):
         # 更新经纬度为高德经纬度
