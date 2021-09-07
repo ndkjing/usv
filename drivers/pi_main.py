@@ -100,6 +100,8 @@ class PiMain:
         """
         # 抽水泵舵机
         self.draw_steer_pwm = config.max_deep_steer_pwm
+        # 目标舵机位置
+        self.target_draw_steer_pwm = config.max_deep_steer_pwm
         # 云台舵机角度
         self.pan_angle_pwm = 1500
         self.tilt_angle_pwm = 1500
@@ -117,8 +119,6 @@ class PiMain:
         self.angular_velocity = None
         self.last_angular_velocity = None
         self.pid_obj = simple_pid.SimplePid()
-        # 将舵机归位
-        # self.set_draw_deep(deep_pwm=self.draw_steer_pwm)
         # 记录罗盘数据用于分析 每一千次存储一次
         self.compass_data_list = []
         # 记录上一次收到有效lora遥控器数据时间
@@ -334,23 +334,38 @@ class PiMain:
         :param deep_pwm:电机目标深度
         :return:
         """
+        self.target_draw_steer_pwm = deep_pwm
         # 如果没有可调节深度舵机跳过调节
-        if not config.b_control_deep:
-            return
-        if b_slow:
-            delta_change = 10
-            while self.draw_steer_pwm != deep_pwm:
-                add_or_sub = 1 if deep_pwm - self.draw_steer_pwm > 0 else -1
+        # if not config.b_control_deep:
+        #     return
+        # if b_slow:
+        #     delta_change = 10
+        #     while self.draw_steer_pwm != deep_pwm:
+        #         add_or_sub = 1 if deep_pwm - self.draw_steer_pwm > 0 else -1
+        #         self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
+        #         self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
+        #         time.sleep(0.06)
+        #         # if self.draw_steer_pwm < 1500:
+        #         #     time.sleep(0.07)
+        #         # else:
+        #         #     time.sleep(0.01)
+        # else:
+        #     self.pi.set_servo_pulsewidth(config.draw_steer, deep_pwm)
+        #     self.draw_steer_pwm = deep_pwm
+
+    def loop_change_draw_steer(self, b_slow=True):
+        delta_change = 10
+        while 1:
+            if not config.b_control_deep:
+                time.sleep(1)
+                continue
+            if self.draw_steer_pwm != self.target_draw_steer_pwm:
+                add_or_sub = 1 if self.target_draw_steer_pwm - self.draw_steer_pwm > 0 else -1
                 self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
                 self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
                 time.sleep(0.06)
-                # if self.draw_steer_pwm < 1500:
-                #     time.sleep(0.07)
-                # else:
-                #     time.sleep(0.01)
-        else:
-            self.pi.set_servo_pulsewidth(config.draw_steer, deep_pwm)
-            self.draw_steer_pwm = deep_pwm
+            else:
+                time.sleep(0.1)
 
     # 固定速度转向
     def turn_angular_velocity(self, is_left=1, debug=False):
@@ -432,7 +447,7 @@ class PiMain:
         一直修改输出pwm波到目标pwm波
         :return:
         """
-        sleep_time = 0.01
+        sleep_time = 0.008
         change_pwm_ceil = 5
         while True:
             if abs(self.left_pwm - self.target_left_pwm) != 0 or abs(self.right_pwm != self.target_right_pwm) != 0:
@@ -822,10 +837,10 @@ class PiMain:
                         config.write_setting(b_height=True)
                 else:
                     theta_ = self.compass_obj.read_compass(send_data='31')
-                    try:
-                        self.save_compass_data(theta_=theta_)
-                    except Exception as s_e:
-                        self.logger_obj.error({'save_compass_data': s_e})
+                    # try:
+                    #     self.save_compass_data(theta_=theta_)
+                    # except Exception as s_e:
+                    #     self.logger_obj.error({'save_compass_data': s_e})
                     theta_ = self.compass_filter(theta_)
                     if theta_:
                         self.theta = theta_

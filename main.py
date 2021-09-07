@@ -101,6 +101,7 @@ def main():
                         data_manager_obj.send_distacne,
                         data_manager_obj.pi_main_obj.get_stc_data,
                         data_manager_obj.pi_main_obj.get_remote_control_data,
+                        data_manager_obj.pi_main_obj.loop_change_draw_steer,
                         ]
         pi_func_flag.append(True)
         pi_func_flag.append(True)
@@ -111,6 +112,7 @@ def main():
         pi_func_flag.append(True if config.b_laser or config.b_millimeter_wave else False)
         pi_func_flag.append(True if config.b_pin_stc else False)
         pi_func_flag.append(True if config.b_lora_remote_control else False)
+        pi_func_flag.append(True if config.b_control_deep else False)
     for common_func in common_func_list:
         common_thread_list.append(threading.Thread(target=common_func))
     if config.current_platform == config.CurrentPlatform.pi:

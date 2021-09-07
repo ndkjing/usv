@@ -167,7 +167,7 @@ class DataManager:
         self.last_audio_light = 0  # 声光报警器
         self.last_status_light = 0  # 状态灯
         self.last_drain = 0  # 0没有在排水 1 在排水
-        self.last_draw_steer = None  # 舵机状态
+        self.last_draw_steer = config.max_deep_steer_pwm  # 舵机状态
         self.pi_main_obj = None
         if config.current_platform == config.CurrentPlatform.pi:
             self.pi_main_obj = pi_main.PiMain()
@@ -289,7 +289,8 @@ class DataManager:
                             self.b_sampling = 2
                     # 放下杆子
                     self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
-                    self.send_stc_data('A1Z')
+                    if self.pi_main_obj.draw_steer_pwm==self.pi_main_obj.target_draw_steer_pwm:
+                        self.send_stc_data('A1Z')
                 else:
                     self.send_stc_data('A0Z')
                     # 没有抽水的情况下杆子都要收回来
@@ -388,9 +389,10 @@ class DataManager:
 
         # 舵机
         if self.is_init_motor:
-            if self.pi_main_obj.remote_draw_steer != self.last_draw_steer:
-                self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
-                self.last_draw_steer = self.pi_main_obj.remote_draw_steer
+            if self.pi_main_obj.b_start_remote:
+                if self.pi_main_obj.remote_draw_steer != self.last_draw_steer:
+                    self.pi_main_obj.set_draw_deep(self.pi_main_obj.remote_draw_steer)
+                    self.last_draw_steer = self.pi_main_obj.remote_draw_steer
         # 状态灯
         # if self.server_data_obj.mqtt_send_get_obj.status_light != self.last_status_light:
         # 启动后mqtt连接上亮绿灯
@@ -1063,8 +1065,7 @@ class DataManager:
         while True:
             time.sleep(1)
             # 当状态不是遥控器控制,不在执行任务状态且不在抽水过程中收回抽水杆子
-            if not config.home_debug:
-                self.draw()
+            self.draw()
 
     # 处理电机控制
     def move_control(self):
