@@ -280,6 +280,8 @@ class DataManager:
                 if self.server_data_obj.mqtt_send_get_obj.b_draw:
                     if self.draw_start_time is None:
                         self.draw_start_time = time.time()
+                        # 触发一次停止
+                        self.pi_main_obj.stop()
                     else:
                         # 超时中断抽水
                         if time.time() - self.draw_start_time > config.draw_time:
@@ -289,7 +291,7 @@ class DataManager:
                             self.b_sampling = 2
                     # 放下杆子
                     self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
-                    if self.pi_main_obj.draw_steer_pwm==self.pi_main_obj.target_draw_steer_pwm:
+                    if self.pi_main_obj.draw_steer_pwm == self.pi_main_obj.target_draw_steer_pwm:
                         self.send_stc_data('A1Z')
                 else:
                     self.send_stc_data('A0Z')
@@ -1523,7 +1525,11 @@ class DataManager:
                 self.current_theta = ship_theta
             # 检查电量 如果连续20次检测电量平均值低于电量阈值就报警
             if config.energy_backhome:
-                energy_backhome_threshold = min(20, config.energy_backhome)
+                try:
+                    energy_backhome_threshold = 20 if config.energy_backhome < 20 else config.energy_backhome
+                except Exception as e_e:
+                    print({'e_e':e_e})
+                    energy_backhome_threshold = 30
                 if len(self.dump_energy_deque) > 0 and sum(self.dump_energy_deque) / len(
                         self.dump_energy_deque) < energy_backhome_threshold:
                     self.low_dump_energy_warnning = 1
