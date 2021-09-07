@@ -243,13 +243,17 @@ class DataManager:
         time.sleep(1)
         # 判断开关是否需要打开或者关闭
         if config.home_debug or not config.b_draw:
-            if self.draw_start_time is None:
-                self.draw_start_time = time.time()
+            if self.server_data_obj.mqtt_send_get_obj.b_draw:
+                if self.draw_start_time is None:
+                    self.draw_start_time = time.time()
+                else:
+                    if time.time() - self.draw_start_time > config.draw_time:
+                        self.draw_start_time = None
+                        self.b_draw_over_send_data = True
+                        self.b_sampling = 2
+                        self.server_data_obj.mqtt_send_get_obj.b_draw=0
             else:
-                if time.time() - self.draw_start_time > config.draw_time:
-                    self.draw_start_time = None
-                    self.b_draw_over_send_data = True
-                    self.b_sampling = 2
+                self.draw_start_time = None
         else:
             # 开启了遥控器
             if self.pi_main_obj.b_start_remote:
