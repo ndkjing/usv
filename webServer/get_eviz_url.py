@@ -53,29 +53,38 @@ def get_url(serial_str, protocol=2):
     if save_token_dict:
         token_global_dict.update(save_token_dict)
     url = None
-    if token_global_dict.get(serial_str) is None or token_global_dict.get(serial_str)[1] < time.time():
-        token_data = get_access_toke(
-            data={'appKey': '1c7ea7dcea734a239a528fa458568f48', 'appSecret': '7efe513b44b4f81fc5cb97a7ab5afe55'},
-            url='https://open.ys7.com/api/lapp/token/get?appKey=1c7ea7dcea734a239a528fa458568f48&appSecret=7efe513b44b4f81fc5cb97a7ab5afe55')
-        if int(token_data.json().get('code')) == 200:
-            access_token = token_data.json().get('data').get('accessToken')
-            expire_time = token_data.json().get('data').get('expireTime')
-            token_global_dict.update({serial_str: [access_token, float(expire_time)]})
-            save_data.set_data(token_global_dict,server_config.save_token_path)
+    update_token = False
+    while True:
+        if token_global_dict.get(serial_str) is None or token_global_dict.get(serial_str)[1] < time.time() or update_token:
+            token_data = get_access_toke(
+                data={'appKey': '1c7ea7dcea734a239a528fa458568f48', 'appSecret': '7efe513b44b4f81fc5cb97a7ab5afe55'},
+                url='https://open.ys7.com/api/lapp/token/get?appKey=1c7ea7dcea734a239a528fa458568f48&appSecret=7efe513b44b4f81fc5cb97a7ab5afe55')
+            if int(token_data.json().get('code')) == 200:
+                access_token = token_data.json().get('data').get('accessToken')
+                expire_time = token_data.json().get('data').get('expireTime')
+                token_global_dict.update({serial_str: [access_token, float(expire_time)]})
+                save_data.set_data(token_global_dict, server_config.save_token_path)
+                url_data = get_video_url(serial_str, access_token, protocol=protocol)
+                # 不为字符串则代表返回其他错误码
+                if int(url_data.json().get("code")) in [200, 201]:
+                    url = url_data.json().get("data").get("url")
+                    break
+                elif int(url_data.json().get("code")) == 10002:
+                    update_token = True
+                else:
+                    print({'get video_url error111': url_data.json()})
+        else:
+
+            access_token = token_global_dict.get(serial_str)[0]
             url_data = get_video_url(serial_str, access_token, protocol=protocol)
             # 不为字符串则代表返回其他错误码
             if int(url_data.json().get("code")) in [200, 201]:
                 url = url_data.json().get("data").get("url")
+                break
+            elif int(url_data.json().get("code")) == 10002:
+                update_token = True
             else:
-                print({'get video_url error': url_data.json()})
-    else:
-        access_token = token_global_dict.get(serial_str)[0]
-        url_data = get_video_url(serial_str, access_token, protocol=protocol)
-        # 不为字符串则代表返回其他错误码
-        if int(url_data.json().get("code")) in [200, 201]:
-            url = url_data.json().get("data").get("url")
-        else:
-            print({'get video_url error': url_data.json()})
+                print({'get video_url error111': url_data.json()})
     return url
 
 

@@ -1,6 +1,12 @@
 import cv2 as cv
 import numpy as np
 import time
+import os,sys
+sys.path.append(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__))
+        ))
 import get_eviz_url
 import upload_file
 
@@ -87,10 +93,13 @@ class DetectVideo:
             if b_person:
                 if self.last_save_time is None:
                     self.send_data(frame)
+                    self.last_save_time = time.time()
                 elif time.time() - self.last_save_time > self.save_interval:
                     self.send_data(frame)
             else:
-                if time.time() - self.last_save_time > self.max_save_interval:
+                if self.last_save_time is None:
+                    self.last_save_time = time.time()
+                elif time.time() - self.last_save_time > self.max_save_interval:
                     self.send_data(frame)
             if b_show:
                 cv.imshow("people detection", frame)
