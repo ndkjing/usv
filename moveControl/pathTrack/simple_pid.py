@@ -53,7 +53,7 @@ class SimplePid:
             error_sum = sum(self.adjust_p_list)
         else:
             self.adjust_p_list.append(theta_error)
-            error_sum = 0
+            error_sum = sum(self.adjust_p_list)
         control = config.kp * theta_error + config.ki * error_sum + \
                   config.kd * (theta_error - self.previousError)
         self.previousError = theta_error
@@ -107,7 +107,7 @@ class SimplePid:
     def pid_pwm_2(self, distance, theta_error):
         # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
         steer_control = self.update_steer_pid_1(theta_error)
-        steer_pwm = (1.0 / (1.0 + e ** (-0.02 * steer_control)) - 0.5) * 1000
+        steer_pwm = (1.0 / (1.0 + e ** (-0.05 * steer_control)) - 0.5) * 1000
         forward_pwm = (1.0 / (1.0 + e ** (-0.2 * distance)) - 0.5) * 1000
         # 缩放到指定最大值范围内
         max_control = config.max_pwm-config.stop_pwm

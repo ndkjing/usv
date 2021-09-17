@@ -116,17 +116,26 @@ def gps_gaode_to_gps(gps, gps_gaode, gaode):
                                      distance)
 
 
-def get_x_y_distance(lon_lat0, lon_lat1):
+def get_x_y_distance(lon_lat0, lon_lat1, debug=False):
     """
     计算两点之间的x和y轴距离
     :return:
     """
-    distance = distanceFromCoordinate(lon_lat0[0], lon_lat0[0], lon_lat1[1], lon_lat1[1])
-    theta = angleFromCoordinate(lon_lat0[0], lon_lat0[0], lon_lat1[1], lon_lat1[1])
-    # NED 坐标系下距离
-    theta = ((360 - theta) % 360 + 90) % 360
-    x = distance * math.sin(theta)
-    y = distance * math.cos(theta)
+    distance = distanceFromCoordinate(lon_lat0[0], lon_lat0[1], lon_lat1[0], lon_lat1[1])
+    theta = angleFromCoordinate(lon_lat0[0], lon_lat0[1], lon_lat1[0], lon_lat1[1])
+    rad = math.radians(theta)
+    x = distance * math.sin(rad)
+    y = distance * math.cos(rad)
+    if theta > 180:
+        x = abs(x)
+    else:
+        x = -abs(x)
+    if 0<theta<90 or 270<theta<360:
+        y = abs(y)
+    else:
+        y = -abs(y)
+    if debug:
+        print("theta:%f,rad:%f,x:%f,y:%f" % (theta, rad, x, y))
     return x, y
 
 
