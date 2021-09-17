@@ -197,7 +197,7 @@ class DataManager:
         self.drain_start_time = None  # 记录排水时间
         self.last_send_stc_log_data = None  # 记录上一次发送给单片机数据重复就不用记录日志
 
-    # 测试发送障碍物数据
+    # 测试发送障碍物数据 调试时使用
     def send_test_distance(self):
         direction = int(random.random() * 360)
         distance_info_data = {
@@ -1312,8 +1312,12 @@ class DataManager:
                                                                                   self.lng_lat[0],
                                                                                   self.lng_lat[1])
                         self.run_distance += speed_distance
+                        # 判断是使用GPS数据中速度还是使用自己计算速度
+                        if self.pi_main_obj.speed is not None:
+                            self.speed =self.pi_main_obj.speed
                         # 计算速度
-                        self.speed = round(speed_distance / (time.time() - last_read_time), 1)
+                        else:
+                            self.speed = round(speed_distance / (time.time() - last_read_time), 1)
                         # 替换上一次的值
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
                         # self.gps_log.info({'lng_lat': self.lng_lat})

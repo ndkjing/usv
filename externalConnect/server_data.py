@@ -172,6 +172,8 @@ class MqttSendGet:
         self.is_connected = 0
         # 是否接受到电脑端点击过任何按键
         self.b_receive_mqtt=False
+        # 记录日志时间
+        self.last_log_switch_time=None
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -253,13 +255,15 @@ class MqttSendGet:
                 # 舷灯 1 允许打开舷灯 没有该键表示不打开
                 if switch_data.get('side_light') is not None:
                     self.side_light = int(switch_data.get('side_light'))
-                self.logger.info({'topic': topic,
-                                  'b_sampling': switch_data.get('b_sampling'),
-                                  'b_draw': switch_data.get('b_draw'),
-                                  'headlight': switch_data.get('headlight'),
-                                  'audio_light': switch_data.get('audio_light'),
-                                  'side_light': switch_data.get('side_light'),
-                                  })
+                if self.last_log_switch_time is None or time.time()-self.last_log_switch_time>config.common_log_time:
+                    self.logger.info({'topic': topic,
+                                      'b_sampling': switch_data.get('b_sampling'),
+                                      'b_draw': switch_data.get('b_draw'),
+                                      'headlight': switch_data.get('headlight'),
+                                      'audio_light': switch_data.get('audio_light'),
+                                      'side_light': switch_data.get('side_light'),
+                                      })
+                    self.last_log_switch_time = time.time()
 
             # 处理初始点击确定湖数据
             elif topic == 'pool_click_%s' % config.ship_code:

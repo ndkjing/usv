@@ -131,6 +131,8 @@ class PiMain:
                                                  )
         self.dump_energy = None
         self.last_dump_energy = None  # 用于判断记录日志用
+        # gps中获取速度
+        self.speed = None
 
     # 获取串口对象
     @staticmethod
@@ -163,7 +165,7 @@ class PiMain:
 
     def get_gps_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx,
-                                      baud=config.pin_gps_baud)
+                                      baud=config.pin_gps_baud, time_out=1)
 
     def get_laser_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=19, tx_pin=13, baud=115200, time_out=0.01)
@@ -568,7 +570,7 @@ class PiMain:
     def get_distance_dict_millimeter(self, debug=False):
         # 角度限制
         count = 0
-        max_count = 40
+        max_count = 5
         average_angle_dict = {}
         average_distance_dict = {}
         while True:
@@ -577,7 +579,7 @@ class PiMain:
                 for obj_id in data_dict:
                     distance_row = data_dict[obj_id][0]
                     angle_row = data_dict[obj_id][1]
-                    # 将该对象次的平均值作为角度值
+                    # 将该对象的平均值作为角度值
                     if obj_id in average_angle_dict:
                         if len(average_angle_dict.get(obj_id)) >= max_count:
                             average_angle_dict.get(obj_id).pop(0)
@@ -591,6 +593,7 @@ class PiMain:
                         average_distance_dict.get(obj_id).append(distance_row)
                     else:
                         average_distance_dict.update({obj_id: [distance_row]})
+
                     angle_average = int(sum(average_angle_dict.get(obj_id)) / len(average_angle_dict.get(obj_id)))
                     distance_average = sum(average_distance_dict.get(obj_id)) / len(average_distance_dict.get(obj_id))
                     # 丢弃大于视场角范围的数据
@@ -601,7 +604,6 @@ class PiMain:
             # 没有检测到目标处理方式
             else:
                 for obj_id in self.distance_dict.copy():
-                    # print('average_distance_dict,average_angle_dict',average_distance_dict,average_angle_dict)
                     if obj_id in average_distance_dict and obj_id in average_angle_dict:
                         if len(average_distance_dict.get(obj_id)) >= max_count:
                             average_distance_dict.get(obj_id).pop(0)
@@ -883,8 +885,12 @@ class PiMain:
             while True:
                 gps_data_read = self.gps_obj.read_gps()
                 if gps_data_read:
-                    self.lng_lat = gps_data_read[0:2]
-                    self.lng_lat_error = gps_data_read[2]
+                    if gps_data_read[0] and gps_data_read[1]:
+                        self.lng_lat = gps_data_read[0:2]
+                    if gps_data_read[2]:
+                        self.lng_lat_error = gps_data_read[2]
+                    if gps_data_read[3]:
+                        self.speed = gps_data_read[3]
 
     # 读取lora遥控器数据
     def get_remote_control_data(self, debug=False):

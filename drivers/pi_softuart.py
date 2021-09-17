@@ -86,21 +86,24 @@ class PiSoftuart(object):
                 return None
 
     def read_compass(self, send_data='31', len_data=None, debug=False):
+        theta = None
         if len_data is None:
             len_data = 4
-            try:
-                self.write_data(send_data)
-                time.sleep(self._thread_ts)
-                count, data = self._pi.bb_serial_read(self._rx_pin)
-                if debug:
-                    print(time.time(), 'count', count, 'data', data)
-                if count > len_data:
-                    str_data = data.decode('utf-8')[2:-1]
-                    theta = float(str_data)
-                    return 360 - theta
-            except Exception as e:
-                print({'error read_compass': e})
-                return None
+        try:
+            self.write_data(send_data)
+        except Exception as write_data_e:
+            print({'error read_compass write_data_e': write_data_e})
+        time.sleep(self._thread_ts)
+        count, data = self._pi.bb_serial_read(self._rx_pin)
+        if debug:
+            print(time.time(), 'count', count, 'data', data)
+        try:
+            if count > len_data:
+                str_data = data.decode('utf-8')[2:-1]
+                theta = 360 - float(str_data)
+        except Exception as decode_e:
+            print({'error read_compass decode': decode_e})
+        return theta
 
     def read_weite_compass(self, send_data=None, len_data=None, debug=False):
         if len_data is None:
@@ -130,37 +133,76 @@ class PiSoftuart(object):
                 return None
 
     def read_gps(self, len_data=None, debug=False):
+        """
+        读取gps数据返回经纬度 误差  速度
+        @param len_data:数据长度
+        @param debug:True 答应获取到的数据
+        @return: [经度, 纬度, 误差（米）, 速度, 航向, 磁偏角]
+        """
+        # 测量频率等待时间
+        time.sleep(self._thread_ts)
+        lng = None
+        lat = None
+        lng_lat_error = None
+        speed = None
+        course = None
+        magnetic_declination = None
         if len_data is None:
             len_data = 4
-            try:
-                count, data = self._pi.bb_serial_read(self._rx_pin)
-                if debug:
-                    print(time.time(), 'count', count, 'data', data)
-                if count > len_data:
-                    str_data = data.decode('utf-8', errors='ignore')
-                    for i in str_data.split('$'):
-                        i = i.strip()
-                        if i.startswith('GPGGA') or i.startswith('$GPGGA') or i.startswith('GNGGA') or i.startswith(
-                                '$GNGGA'):
-                            gps_data = i
-                            data_list = gps_data.split(',')
-                            if len(data_list) < 8:
-                                continue
-                            if data_list[2] and data_list[4]:
-                                lng, lat = round(float(data_list[4][:3]) +
-                                                 float(data_list[4][3:]) /
-                                                 60, 6), round(float(data_list[2][:2]) +
-                                                               float(data_list[2][2:]) /
-                                                               60, 6)
-                                if lng < 1 or lat < 1:
-                                    pass
-                                else:
-                                    lng_lat_error = float(data_list[8])
-                                    return [lng, lat, lng_lat_error]
-                time.sleep(self._thread_ts * 10)
-            except Exception as e:
-                print({'error read_gps': e})
-                return None
+        try:
+            count, data = self._pi.bb_serial_read(self._rx_pin)
+        except Exception as read_error:
+            print({'error read_gps read_error': read_error})
+            return None
+        if debug:
+            print(time.time(), 'count', count, 'data', data)
+        if count > len_data:
+            str_data = data.decode('utf-8', errors='ignore')
+            data_list = str_data.split('$')
+            if debug:
+                print({'data_list': data_list})
+            for gps_data in data_list:
+                gps_data = gps_data.strip()
+                if gps_data.startswith('GPGGA') or gps_data.startswith('GNGGA'):
+                    data_list = gps_data.split(',')
+                    if len(data_list) < 8:
+                        continue
+                    if data_list[2] and data_list[4]:
+                        try:
+                            lng = round(float(data_list[4][:3]) + float(data_list[4][3:]) / 60, 6)
+                            lat = round(float(data_list[2][:2]) + float(data_list[2][2:]) / 60, 6)
+                            if lng < 1 or lat < 1:  # 太小可能是假数据直接跳过
+                                lng = None
+                                lat = None
+                        except Exception as convert_lng_lat_error:
+                            if debug:
+                                print({'error read_gps convert_lng_lat_error': convert_lng_lat_error})
+                        try:
+                            lng_lat_error = float(data_list[8])
+                        except Exception as convert_lng_lat_error:
+                            if debug:
+                                print({'error read_gps convert_lng_lat_error': convert_lng_lat_error})
+                if gps_data.startswith('GPRMC'):
+                    data_list = gps_data.split(',')
+                    if len(data_list) < 8:
+                        continue
+                    try:
+                        speed = round(float(data_list[7]) * 1.852 / 3.6, 2)  # 将速度单位节转换为 m/s
+                    except Exception as convert_speed_error:
+                        if debug:
+                            print({'error read_gps convert_speed_error': convert_speed_error})
+                    try:
+                        course = float(data_list[8])  # 航向
+                    except Exception as convert_course_error:
+                        if debug:
+                            print({'error read_gps convert_course_error': convert_course_error})
+                    try:
+                        magnetic_declination = float(data_list[10])  # 磁偏角
+                    except Exception as convert_magnetic_declination_error:
+                        if debug:
+                            print({
+                                      'error read_gps convert_magnetic_declination_error': convert_magnetic_declination_error})
+            return [lng, lat, lng_lat_error, speed, course, magnetic_declination]
 
     def read_laser(self, send_data=None):
         try:
@@ -370,32 +412,87 @@ class PiSoftuart(object):
         return self._thread_ts
 
     def read_millimeter_wave(self, len_data=None, debug=False):
+        """
+
+        @param len_data:
+        @param debug:
+        @return:None或者{索引:[距离，角度，速度]}
+        """
         if len_data is None:
             len_data = 4
-            try:
-                time.sleep(self._thread_ts)
-                count, data = self._pi.bb_serial_read(self._rx_pin)
-                if debug:
-                    print(time.time(), 'count', count, 'data', data)
-                if count > len_data:
-                    str_data = str(binascii.b2a_hex(data))[2:-1]
-                    split_str = 'aaaa'
-                    data_dict = {}
-                    for i in str_data.split(split_str):
-                        if i.startswith('0c07'):
+        time.sleep(self._thread_ts)
+        count, data = self._pi.bb_serial_read(self._rx_pin)
+        if debug:
+            print(time.time(), 'count', count, 'data', data)
+        data_dict = {}
+        if count > len_data:
+            str_data = str(binascii.b2a_hex(data))[2:-1]
+            split_str = 'aaaa'
+            data_list = str_data.split(split_str)
+            if debug:
+                print({'str_data:': str_data, 'data_list:': data_list})
+            for i in data_list:
+                # 正常数据长度
+                if len(i) % 12 == 0:
+                    # 目标检测数据
+                    if i.startswith('0c07'):
+                        try:
                             index = int(i[4:6], 16)
                             distance = 0.01 * (int(i[8:10], 16) * 256 + int(i[10:12], 16))
                             angle = 2 * int(i[12:14], 16) - 90
                             speed = 0.05 * (int(i[14:16], 16) * 256 + int(i[16:18], 16)) - 35
                             data_dict.update({index: [distance, angle, speed]})
-                            # print('distance:{},angle:{},speed:{}'.format(distance,angle,speed))
-                    return data_dict
-                else:
-                    return None
-            except Exception as e:
-                # print({'read_millimeter_wave':e})
-                time.sleep(self._thread_ts)
-                return None
+                            if debug:
+                                print('data',i)
+                                print('index:{}distance:{},angle:{},speed:{}'.format(index,distance, angle, speed))
+                        except Exception as read_millimeter_wave_e:
+                            if debug:
+                                print({'read_millimeter_wave nomal data': read_millimeter_wave_e})
+                    # 目标检测状态数据
+                    elif i.startswith('0b07'):
+                        try:
+                            target_id = int(i[7:8], 16)
+                            if debug:
+                                print({'target_id': target_id})
+                        except Exception as read_millimeter_id_e:
+                            if debug:
+                                print({'read_millimeter_wave read_millimeter_id_e nomal data': read_millimeter_id_e})
+                # 收到字符出错，多帧粘黏在一起了
+                elif (len(i) - 24) % 28 == 0:
+                    # 计算含有多少帧数据
+                    frame_count = int(1 + (len(i) - 24) / 28)
+                    for sub_i in range(frame_count):
+                        if sub_i == 0:
+                            data = i[0:24]
+                        else:
+                            data = i[sub_i * 28:sub_i * 28 + 24]
+                        # 目标检测数据
+                        if data.startswith('0c07'):
+                            try:
+                                index = int(data[4:6], 16)
+                                distance = 0.01 * (int(data[8:10], 16) * 256 + int(data[10:12], 16))
+                                angle = 2 * int(data[12:14], 16) - 90
+                                speed = 0.05 * (int(data[14:16], 16) * 256 + int(data[16:18], 16)) - 35
+                                data_dict.update({index: [distance, angle, speed]})
+                                if debug:
+                                    print('data',data)
+                                    print('##################拼接数据')
+                                    print('index:{}distance:{},angle:{},speed:{}'.format(index,distance, angle, speed))
+                            except Exception as read_millimeter_wave_e:
+                                if debug:
+                                    print({'read_millimeter_wave nomal data': read_millimeter_wave_e})
+                        # 目标检测状态数据
+                        elif data.startswith('0b07'):
+                            try:
+                                id = int(i[7:8], 16)
+                                if debug:
+                                    print('data', data)
+                                    print('##################拼接数据')
+                                    print({'target_id': id})
+                            except Exception as more_data_e:
+                                if debug:
+                                    print({'read_millimeter_wave more_data_e data': more_data_e})
+        return data_dict
 
     def send_stc_data(self, send_data):
         try:
@@ -439,7 +536,8 @@ class PiSoftuart(object):
                 if return_dict:
                     print('return_dict', return_dict)
             if len(self.dump_energy_queue) > 20:
-                return_dict.update({'dump_energy': [round(sum(self.dump_energy_queue) / len(self.dump_energy_queue), 1)]})
+                return_dict.update(
+                    {'dump_energy': [round(sum(self.dump_energy_queue) / len(self.dump_energy_queue), 1)]})
             if water_data_list is not None:
                 return_dict.update({'water': water_data_list})
             return return_dict

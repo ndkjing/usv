@@ -53,4 +53,24 @@ def dump_energy_cal(adc):
     return int(return_cap)
 
 
-print(dump_energy_cal(3517))
+from utils import log
+
+log_obj = log.LogHandler('test.log')
+
+
+def log_func(log_obj, msg, level=1):
+    """
+    定时记录log
+    @return:
+    """
+    log_obj(msg)
+
+
+# while True:
+#     # log_obj.info({'time': time.time()})
+#     log_func(log_obj.info,{'time': time.time()})
+#     time.sleep(1)
+a = {}
+if a:
+    print('a')
+

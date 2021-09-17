@@ -846,5 +846,8 @@ class WaterType(enum.Enum):
 0%-----3.7V       22.2      3318
 """
 
+common_log_time = 10
+
+
 if __name__ == '__main__':
     write_setting(True, True, True, True)
