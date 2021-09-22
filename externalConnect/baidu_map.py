@@ -673,6 +673,20 @@ class BaiduMap(object):
             json.dump(return_json_data, f)
         return return_json_data
 
+    @staticmethod
+    def cal_bank_distance(pool_cnts,current_pix,pix_2_meter):
+        """
+
+        @param pool_cnts: 湖泊像素轮廓
+        @param current_pix: 当前像素位置
+        @param pix_2_meter: 像素对应米
+        @return: 距离岸边实际距离单位米
+        """
+        in_cnt = cv2.pointPolygonTest(
+            pool_cnts, (current_pix[0], current_pix[1]), True)
+        bank_distance = in_cnt*pix_2_meter
+        return bank_distance
+
 
 if __name__ == '__main__':
     pass

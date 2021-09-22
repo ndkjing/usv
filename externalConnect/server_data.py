@@ -171,9 +171,11 @@ class MqttSendGet:
         self.fix_point = 0
         self.is_connected = 0
         # 是否接受到电脑端点击过任何按键
-        self.b_receive_mqtt=False
+        self.b_receive_mqtt = False
         # 记录日志时间
-        self.last_log_switch_time=None
+        self.last_log_switch_time = None
+        # 计算距离岸边距离
+        self.bank_distance = 0.0
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -255,7 +257,7 @@ class MqttSendGet:
                 # 舷灯 1 允许打开舷灯 没有该键表示不打开
                 if switch_data.get('side_light') is not None:
                     self.side_light = int(switch_data.get('side_light'))
-                if self.last_log_switch_time is None or time.time()-self.last_log_switch_time>config.common_log_time:
+                if self.last_log_switch_time is None or time.time() - self.last_log_switch_time > config.common_log_time:
                     self.logger.info({'topic': topic,
                                       'b_sampling': switch_data.get('b_sampling'),
                                       'b_draw': switch_data.get('b_draw'),
@@ -471,6 +473,26 @@ class MqttSendGet:
                 else:
                     info_type = int(refresh_data.get('info_type'))
                     self.refresh_info_type = info_type
+
+            # 距离岸边距离话题
+            elif topic == 'bank_distance_%s' % (config.ship_code):
+                # self.logger.info({'dock_position_': json.loads(msg.payload)})
+                bank_distance_data = json.loads(msg.payload)
+                if bank_distance_data.get("bank_distance") is None:
+                    self.logger.error('"refresh_"设置启动消息没有"bank_distance"字段')
+                    return
+                else:
+                    self.bank_distance = round(float(bank_distance_data.get('bank_distance')), 1)
+
+            # 船坞位置话题
+            elif topic == 'dock_position_%s' % (config.ship_code):
+                self.logger.info({'dock_position_ ': json.loads(msg.payload)})
+                dock_position_data = json.loads(msg.payload)
+                if dock_position_data.get("info_type") is None:
+                    self.logger.error('"dock_position_data"设置启动消息没有dock_lng_lat字段')
+                    return
+                else:
+                    info_type = int(dock_position_data.get('info_type'))
 
             # 处理重置
             elif topic == 'reset_pool_%s' % (config.ship_code):

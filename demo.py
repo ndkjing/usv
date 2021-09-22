@@ -70,7 +70,13 @@ def log_func(log_obj, msg, level=1):
 #     # log_obj.info({'time': time.time()})
 #     log_func(log_obj.info,{'time': time.time()})
 #     time.sleep(1)
-a = {}
-if a:
-    print('a')
+import numpy as np
+
+a = np.array([[1,0],[3,4]])
+b = np.array([])
+
+
+if isinstance(a,np.ndarray):
+    print(a.all())
+    print(a.any())
 

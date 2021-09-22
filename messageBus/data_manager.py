@@ -251,7 +251,7 @@ class DataManager:
                         self.draw_start_time = None
                         self.b_draw_over_send_data = True
                         self.b_sampling = 2
-                        self.server_data_obj.mqtt_send_get_obj.b_draw=0
+                        self.server_data_obj.mqtt_send_get_obj.b_draw = 0
             else:
                 self.draw_start_time = None
         else:
@@ -811,6 +811,11 @@ class DataManager:
                     return path_planning_point_gps, False
             # 避障绕行，根据障碍物计算下一个目标点
             elif config.obstacle_avoid_type == 2:
+                # 如果指定范围内有障碍物且船距离岸边距离小于避障距离就停止
+                if 1 in self.pi_main_obj.obstacle_list[
+                        int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
+                    if self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                        return next_point_lng_lat, True
                 angle = vfh.vfh_func(9, self.pi_main_obj.obstacle_list)
                 print('angle', angle)
                 if angle == -1:
@@ -1264,6 +1269,7 @@ class DataManager:
             #     # 执行抽水
             #     self.draw()
 
+    # 更新经纬度为高德经纬度
     def update_ship_gaode_lng_lat(self):
         # 更新经纬度为高德经纬度
         while True:
@@ -1314,7 +1320,7 @@ class DataManager:
                         self.run_distance += speed_distance
                         # 判断是使用GPS数据中速度还是使用自己计算速度
                         if self.pi_main_obj.speed is not None:
-                            self.speed =self.pi_main_obj.speed
+                            self.speed = self.pi_main_obj.speed
                         # 计算速度
                         else:
                             self.speed = round(speed_distance / (time.time() - last_read_time), 1)
@@ -1326,6 +1332,10 @@ class DataManager:
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
                         last_read_time = time.time()
             time.sleep(0.5)
+
+    # #定时发送经纬度给mqtt服务器判断当前点到岸边距离
+    # def send_mqtt_gaode_lng_lat(self):
+    #
 
     # 必须使用线程发送发送检测数据
     def send_mqtt_detect_data(self):
@@ -1536,7 +1546,7 @@ class DataManager:
                 try:
                     energy_backhome_threshold = 20 if config.energy_backhome < 20 else config.energy_backhome
                 except Exception as e_e:
-                    print({'e_e':e_e})
+                    print({'e_e': e_e})
                     energy_backhome_threshold = 30
                 if len(self.dump_energy_deque) > 0 and sum(self.dump_energy_deque) / len(
                         self.dump_energy_deque) < energy_backhome_threshold:
@@ -1556,7 +1566,9 @@ class DataManager:
             notice_info_data = {
                 "distance": str(round(self.distance_p, 2)),
                 # // 路径规划提示消息
-                "path_info": '当前目标点:%d 目标点总数: %d' % (int(self.path_info[0]), int(self.path_info[1])),
+                "path_info": '当前:%d 总共:%d 离岸:%f ' % (
+                    int(self.path_info[0]), int(self.path_info[1]),
+                    self.server_data_obj.mqtt_send_get_obj.bank_distance),
                 "progress": progress,
                 # 船执行手动控制信息
                 "control_info": self.control_info,

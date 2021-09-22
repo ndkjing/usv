@@ -124,6 +124,8 @@ class MqttSendGet:
         self.current_lng_lat = None
         # 船返航点经纬度 给服务器路径规划使用
         self.home_lng_lat = None
+        # 更新船当前到岸边距离 当收到新的经纬度后设置该值为True
+        self.update_safe_distance = False
 
         # 自动求取经纬度设置 行间距 列间距 离岸边安全距离
         self.row_gap = None
@@ -297,10 +299,13 @@ class MqttSendGet:
                 return
             else:
                 self.current_lng_lat = status_data.get('current_lng_lat')
+                self.update_safe_distance =True
             if status_data.get("home_lng_lat") is None:
                 pass
             else:
                 self.home_lng_lat = status_data.get('home_lng_lat')
+
+
         # 基础配置
         elif topic == 'base_setting_%s' % self.ship_code:
             self.logger.info({'base_setting ': json.loads(msg.payload)})

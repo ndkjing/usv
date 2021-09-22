@@ -65,6 +65,8 @@ class WebServer:
         # 记录路径规划地点
         self.plan_path = None
         self.current_map_type = baidu_map.MapType.gaode
+        # 记录上一次上传的经纬度
+        self.last_current_lng_lat = None
 
     def send(
             self,
@@ -334,7 +336,7 @@ class WebServer:
                             send_data = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data
                             send_data.update({'pool_name': config.pool_name})
                             self.send(method='mqtt',
-                                      topic='base_setting_%s' % (config.ship_code),
+                                      topic='base_setting_%s' % ship_code,
                                       ship_code=ship_code,
                                       data=send_data,
                                       qos=0)
@@ -501,6 +503,35 @@ class WebServer:
             qos=0)
         self.logger.info({'mqtt_send_path_planning_data': mqtt_send_path_planning_data})
 
+    def send_bank_distance(self):
+        while True:
+            for ship_code in server_config.ship_code_list:
+                time.sleep(0.1)
+                # 判断是否需要更新安全距离
+                if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_safe_distance:
+                    # 计算距离岸边距离
+                    if self.baidu_map_obj_dict.get(ship_code) and isinstance(
+                            self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
+                        current_pix = self.baidu_map_obj_dict.get(ship_code).gaode_lng_lat_to_pix(
+                            self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.current_lng_lat)
+                        bank_distance = self.baidu_map_obj_dict.get(ship_code).cal_bank_distance(
+                            self.baidu_map_obj_dict.get(ship_code).pool_cnts,
+                            current_pix,
+                            self.baidu_map_obj_dict.get(ship_code).pix_2_meter)
+                        print('bank_distance', bank_distance)
+                        send_data = {
+                            # 设备号
+                            "deviceId": "3c50f4c3-a9c1-4872-9f18-883af014380a",
+                            # 距离 浮点数单位米
+                            "bank_distance": bank_distance,
+                        }
+                        self.send(method='mqtt',
+                                  topic='bank_distance_%s' % ship_code,
+                                  ship_code=ship_code,
+                                  data=send_data,
+                                  qos=0)
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_safe_distance = False
+
 
 if __name__ == '__main__':
     while True:
@@ -508,8 +539,10 @@ if __name__ == '__main__':
             web_server_obj = WebServer()
             find_pool_thread = threading.Thread(target=web_server_obj.find_pool)
             get_plan_path_thread = threading.Thread(target=web_server_obj.get_plan_path)
+            send_bank_distance_thread = threading.Thread(target=web_server_obj.send_bank_distance)
             find_pool_thread.start()
             get_plan_path_thread.start()
+            send_bank_distance_thread.start()
             while True:
                 if not find_pool_thread.is_alive():
                     find_pool_thread = threading.Thread(target=web_server_obj.find_pool)
@@ -517,6 +550,9 @@ if __name__ == '__main__':
                 if not get_plan_path_thread.is_alive():
                     get_plan_path_thread = threading.Thread(target=web_server_obj.get_plan_path)
                     get_plan_path_thread.start()
+                if not send_bank_distance_thread.is_alive():
+                    send_bank_distance_thread = threading.Thread(target=web_server_obj.send_bank_distance)
+                    send_bank_distance_thread.start()
                 time.sleep(1)
         except Exception as e:
             print({'error': e})
