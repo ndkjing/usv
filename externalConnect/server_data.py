@@ -176,6 +176,7 @@ class MqttSendGet:
         self.last_log_switch_time = None
         # 计算距离岸边距离
         self.bank_distance = 0.0
+        self.dock_position_data = None  # 船坞信息
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -488,14 +489,17 @@ class MqttSendGet:
             elif topic == 'dock_position_%s' % (config.ship_code):
                 self.logger.info({'dock_position_ ': json.loads(msg.payload)})
                 dock_position_data = json.loads(msg.payload)
-                if dock_position_data.get("info_type") is None:
+                if dock_position_data.get("dock_lng_lat") is None :
                     self.logger.error('"dock_position_data"设置启动消息没有dock_lng_lat字段')
                     return
+                elif dock_position_data.get("dock_direction") is None:
+                    self.logger.error('"dock_position_data"设置启动消息没有dock_direction字段')
+                    return
                 else:
-                    info_type = int(dock_position_data.get('info_type'))
+                    self.dock_position_data = dock_position_data
 
             # 处理重置
-            elif topic == 'reset_pool_%s' % (config.ship_code):
+            elif topic == 'reset_pool_%s' % config.ship_code:
                 reset_pool_data = json.loads(msg.payload)
                 if reset_pool_data.get('reset_pool') is None:
                     self.logger.error('reset_pool_处理控制数据没有reset_pool')

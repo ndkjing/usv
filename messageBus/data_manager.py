@@ -49,6 +49,8 @@ class ShipStatus(enum.Enum):
     backhome_network 低电量返航状态
     at_home 在家
     tasking  执行检测/抽水任务中
+    back_dock 返回船坞
+    at_dock  在船坞中
     """
     idle = 1
     remote_control = 2
@@ -59,6 +61,8 @@ class ShipStatus(enum.Enum):
     backhome_low_energy = 7
     backhome_network = 8
     at_home = 9
+    back_dock = 10
+    at_dock = 11
 
 
 class LightStatus(enum.Enum):
@@ -153,6 +157,9 @@ class DataManager:
         # 记录平滑路径
         self.smooth_path_lng_lat = None
         self.smooth_path_lng_lat_index = []
+        # 记录返回船坞平滑路径
+        self.smooth_dock_path_lng_lat = None
+        self.smooth_dock_path_lng_lat_index = []
         # 船手动控制提示信息
         self.control_info = ''
         # 网络延时
@@ -196,6 +203,10 @@ class DataManager:
         self.is_need_drain = False  # 判断是否需要排水
         self.drain_start_time = None  # 记录排水时间
         self.last_send_stc_log_data = None  # 记录上一次发送给单片机数据重复就不用记录日志
+        self.dock_lng_lat = None  # 船坞经纬度
+        self.pre_dock_lng_lat = None  # 船舶预停泊经纬度
+        self.is_arriver_pre_dock = False  # 船已经到达预停泊经纬度
+        self.is_at_dock = False  # 船已经到达预停泊经纬度
 
     # 测试发送障碍物数据 调试时使用
     def send_test_distance(self):
@@ -449,6 +460,7 @@ class DataManager:
             (ShipStatus.idle, ShipStatus.computer_auto): 24,
             (ShipStatus.idle, ShipStatus.backhome_network): 26,
             (ShipStatus.idle, ShipStatus.backhome_low_energy): 27,
+            (ShipStatus.idle, ShipStatus.back_dock): 28,
             (ShipStatus.idle, ShipStatus.remote_control): 1,
             (ShipStatus.computer_control, ShipStatus.tasking): 2,
             (ShipStatus.computer_control, ShipStatus.remote_control): 3,
@@ -456,6 +468,7 @@ class DataManager:
             (ShipStatus.computer_control, ShipStatus.backhome_network): 5,
             (ShipStatus.computer_control, ShipStatus.backhome_low_energy): 6,
             (ShipStatus.computer_control, ShipStatus.idle): 25,
+            (ShipStatus.computer_control, ShipStatus.back_dock): 29,
             (ShipStatus.remote_control, ShipStatus.idle): 7,
             (ShipStatus.remote_control, ShipStatus.tasking): 8,
             (ShipStatus.tasking, ShipStatus.remote_control): 9,
@@ -474,6 +487,9 @@ class DataManager:
             (ShipStatus.backhome_network, ShipStatus.remote_control): 21,
             (ShipStatus.backhome_low_energy, ShipStatus.remote_control): 22,
             (ShipStatus.at_home, ShipStatus.idle): 23,
+            (ShipStatus.back_dock, ShipStatus.computer_control): 30,
+            (ShipStatus.back_dock, ShipStatus.remote_control): 31,
+            (ShipStatus.back_dock, ShipStatus.idle): 32,
         }
         status_tuple = (self.ship_status, target_status)
         self.logger.info({'status change': status_tuple})
@@ -563,6 +579,10 @@ class DataManager:
         # 返航到家到空闲
         elif status_change_index == 23:
             pass
+        elif status_change_index == 29:
+            self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
+        elif status_change_index in [30, 31, 32]:
+            self.server_data_obj.mqtt_send_get_obj.dock_position_data = None
         if b_clear_status:
             self.clear_all_status()
         self.ship_status = target_status
@@ -592,6 +612,7 @@ class DataManager:
     def smooth_path(self):
         """
         平滑路径
+
         :return:平滑路径线路
         """
         smooth_path_lng_lat = []
@@ -704,6 +725,113 @@ class DataManager:
         else:
             self.path_info = [index, len(self.smooth_path_lng_lat)]
         return self.search_list[index]
+
+    # 平滑路径
+    def smooth_dock_path(self, points_gps, smooth_ceil):
+        """
+        平滑路径
+        @param points_gps 需要平滑路径
+        @param smooth_ceil 间隔距离
+        :return:平滑路径线路
+        """
+        smooth_path_lng_lat = []
+        distance_matrix = []
+        for index, target_lng_lat in enumerate(points_gps):
+            if index == 0:
+                theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
+                                                              self.lng_lat[1],
+                                                              target_lng_lat[0],
+                                                              target_lng_lat[1])
+                distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+                                                                    self.lng_lat[1],
+                                                                    target_lng_lat[0],
+                                                                    target_lng_lat[1])
+                if distance < smooth_ceil:
+                    smooth_path_lng_lat.append(target_lng_lat)
+                else:
+                    for i in range(1, int((distance / smooth_ceil) + 1)):
+                        cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                  self.lng_lat[1],
+                                                                                  theta,
+                                                                                  smooth_ceil * i)
+                        smooth_path_lng_lat.append(cal_lng_lat)
+                    smooth_path_lng_lat.append(target_lng_lat)
+            else:
+                theta = lng_lat_calculate.angleFromCoordinate(
+                    points_gps[index - 1][0],
+                    points_gps[index - 1][1],
+                    target_lng_lat[0],
+                    target_lng_lat[1])
+                distance = lng_lat_calculate.distanceFromCoordinate(
+                    points_gps[index - 1][0],
+                    points_gps[index - 1][1],
+                    target_lng_lat[0],
+                    target_lng_lat[1])
+                if distance < smooth_ceil:
+                    smooth_path_lng_lat.append(target_lng_lat)
+                else:
+                    for i in range(1, int(distance / smooth_ceil + 1)):
+                        cal_lng_lat = lng_lat_calculate.one_point_diatance_to_end(
+                            points_gps[index - 1][0],
+                            points_gps[index - 1][1],
+                            theta,
+                            smooth_ceil * i)
+                        smooth_path_lng_lat.append(cal_lng_lat)
+                    smooth_path_lng_lat.append(target_lng_lat)
+        for smooth_lng_lat_i in smooth_path_lng_lat:
+            distance_list = []
+            for sampling_points_gps_i in self.server_data_obj.mqtt_send_get_obj.sampling_points_gps:
+                s_d = lng_lat_calculate.distanceFromCoordinate(sampling_points_gps_i[0],
+                                                               sampling_points_gps_i[1],
+                                                               smooth_lng_lat_i[0],
+                                                               smooth_lng_lat_i[1])
+                distance_list.append(s_d)
+            distance_matrix.append(distance_list)
+        a_d_m = np.asarray(distance_matrix)
+        for k in range(len(distance_matrix[0])):
+            temp_a = a_d_m[:, k]
+            temp_list = temp_a.tolist()
+            index_l = temp_list.index(min(temp_list))
+            self.smooth_path_lng_lat_index.append(index_l)
+        return smooth_path_lng_lat
+
+    # 根据当前点和路径计算下一个经纬度点
+    def calc_dock_lng_lat(self, points_gps, smooth_ceil):
+        """
+        根据当前点和路径计算下一个经纬度点
+        :return:
+        """
+        # 离散按指定间距求取轨迹点数量
+        if not self.smooth_dock_path_lng_lat:
+            self.smooth_dock_path_lng_lat = self.smooth_dock_path(points_gps, smooth_ceil)
+        # 搜索最临近的路点
+        distance_list = []
+        for target_lng_lat in self.smooth_dock_path_lng_lat:
+            distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+                                                                self.lng_lat[1],
+                                                                target_lng_lat[0],
+                                                                target_lng_lat[1])
+            distance_list.append(distance)
+        # 如果没有可以去路径
+        if len(distance_list) == 0:
+            return self.smooth_dock_path_lng_lat[-1]
+        index = distance_list.index(min(distance_list))
+        if index + 1 == len(self.smooth_dock_path_lng_lat):
+            return self.smooth_dock_path_lng_lat[-1]
+        lng_lat = self.smooth_dock_path_lng_lat[index]
+        index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+                                                                        self.lng_lat[1],
+                                                                        lng_lat[0],
+                                                                        lng_lat[1])
+        while smooth_ceil > index_point_distance and (index + 1) < len(
+                self.smooth_dock_path_lng_lat):
+            lng_lat = self.smooth_dock_path_lng_lat[index]
+            index_point_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+                                                                            self.lng_lat[1],
+                                                                            lng_lat[0],
+                                                                            lng_lat[1])
+            index += 1
+        return self.smooth_dock_path_lng_lat[index]
 
     # 构建障碍物地图
     def build_obstacle_map(self):
@@ -841,28 +969,33 @@ class DataManager:
             return path_planning_point_gps, False
 
     # 控制到达目标点
-    def points_arrive_control(self, target_lng_lat_gps, sample_lng_lat_gps, b_force_arrive=False, b_back_home=False):
+    def points_arrive_control(self, target_lng_lat_gps, sample_lng_lat_gps, b_force_arrive=False, b_back_home=False,
+                              arrive_distance=None):
         """
-        :param target_lng_lat_gps: 目标点真实经纬度
-        :param sample_lng_lat_gps: 下一个采样点真实经纬度
-        :param b_force_arrive: 是否约束一定要到达
-        :param b_back_home 是否是正在返航
+        @param target_lng_lat_gps: 目标点真实经纬度
+        @param sample_lng_lat_gps: 下一个采样点真实经纬度
+        @param b_force_arrive: 是否约束一定要到达
+        @param b_back_home: 是否是正在返航
+        @param arrive_distance: 指定到达范围
         :return:
+
         """
+        if arrive_distance is None:
+            arrive_distance = config.arrive_distance
         distance = lng_lat_calculate.distanceFromCoordinate(
             self.lng_lat[0],
             self.lng_lat[1],
             sample_lng_lat_gps[0],
             sample_lng_lat_gps[1])
         self.distance_p = distance
-        if distance < config.arrive_distance:
+        if distance < arrive_distance:
             return True
         # 超时不到则跳过 达到30米且60秒不到则跳过
         if distance < 30 and self.point_arrive_start_time is None:
             self.point_arrive_start_time = time.time()
         elif self.point_arrive_start_time and time.time() - self.point_arrive_start_time > 60:
             return True
-        while distance >= config.arrive_distance:
+        while distance >= arrive_distance:
             if distance < 30 and self.point_arrive_start_time is None:
                 self.point_arrive_start_time = time.time()
             elif self.point_arrive_start_time and time.time() - self.point_arrive_start_time > 60:
@@ -873,7 +1006,7 @@ class DataManager:
                 sample_lng_lat_gps[0],
                 sample_lng_lat_gps[1])
             self.distance_p = distance_sample
-            if distance_sample < config.arrive_distance:
+            if distance_sample < arrive_distance:
                 return True
             # 避障判断下一个点
             b_stop = False
@@ -940,8 +1073,84 @@ class DataManager:
             if not b_force_arrive:
                 return False
             if b_back_home:
-                if distance_sample < config.arrive_distance:
+                if distance_sample < arrive_distance:
                     return True
+
+    # 控制到达目标点
+    def back_dock_control(self, dock_lng_lat_gps, arrive_distance=0.3, b_force_arrive=False):
+        """
+        @param b_force_arrive:
+        @param dock_lng_lat_gps: 下一个采样点真实经纬度
+        @param arrive_distance: 指定到达范围
+        :return:
+        """
+        distance = lng_lat_calculate.distanceFromCoordinate(
+            self.lng_lat[0],
+            self.lng_lat[1],
+            dock_lng_lat_gps[0],
+            dock_lng_lat_gps[1])
+        self.distance_p = distance
+        if distance < arrive_distance:
+            return True
+        while distance >= arrive_distance:
+            distance = lng_lat_calculate.distanceFromCoordinate(
+                self.lng_lat[0],
+                self.lng_lat[1],
+                dock_lng_lat_gps[0],
+                dock_lng_lat_gps[1])
+            self.distance_p = distance
+            if distance < arrive_distance:
+                return True
+            # 当前点到目标点角度
+            point_theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
+                                                                self.lng_lat[1],
+                                                                dock_lng_lat_gps[0],
+                                                                dock_lng_lat_gps[1])
+            theta_error = point_theta - self.current_theta
+            if abs(theta_error) > 180:
+                if theta_error > 0:
+                    theta_error = theta_error - 360
+                else:
+                    theta_error = 360 + theta_error
+            self.theta_error = theta_error
+            left_pwm, right_pwm = self.path_track_obj.pid_back_dock(distance=distance,
+                                                                    theta_error=theta_error,
+                                                                    debug=True)
+            print('倒退误差', distance, 'pwm', left_pwm, right_pwm)
+            self.last_left_pwm = left_pwm
+            self.last_right_pwm = right_pwm
+            # 在家调试模式下预测目标经纬度
+            if config.home_debug:
+                time.sleep(0.3)
+                # 计算当前行驶里程
+                if self.last_lng_lat:
+                    speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
+                                                                              self.last_lng_lat[1],
+                                                                              self.lng_lat[0],
+                                                                              self.lng_lat[1])
+                    self.run_distance += speed_distance
+                left_delta_pwm = int(self.last_left_pwm + left_pwm) / 2 - config.stop_pwm
+                right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
+                steer_power = left_delta_pwm - right_delta_pwm
+                forward_power = left_delta_pwm + right_delta_pwm
+                delta_distance = forward_power * 0.002
+                delta_theta = steer_power * 0.08
+                self.last_lng_lat = copy.deepcopy(self.lng_lat)
+                if self.current_theta is not None:
+                    self.current_theta = (self.current_theta - delta_theta / 2) % 360
+                self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                           self.lng_lat[1],
+                                                                           self.current_theta,
+                                                                           delta_distance)
+            else:
+                # self.pi_main_obj.stop()
+                self.obstacle_info = '0'
+                self.pi_main_obj.set_pwm(left_pwm, right_pwm)
+            if self.ship_status != ShipStatus.back_dock:
+                return False
+            # 如果目标点改变并且不是强制到达 b_force_arrive
+            if not b_force_arrive:
+                return False
 
     # 处理状态切换
     def change_status(self):
@@ -974,6 +1183,9 @@ class DataManager:
                         time.sleep(0.5)
                     else:
                         self.change_status_info(target_status=ShipStatus.computer_auto)
+                # 切换到返航充电
+                if self.server_data_obj.mqtt_send_get_obj.dock_position_data:
+                    self.change_status_info(target_status=ShipStatus.back_dock)
 
             # 判断电脑手动状态切换到其他状态
             if self.ship_status == ShipStatus.computer_control:
@@ -998,6 +1210,22 @@ class DataManager:
                 # 切换到返航
                 elif return_ship_status is not None:
                     self.change_status_info(target_status=return_ship_status)
+                # 切换到返航充电
+                if self.server_data_obj.mqtt_send_get_obj.dock_position_data:
+                    self.change_status_info(target_status=ShipStatus.back_dock)
+
+            # 处于返航充电过程中可能被人为打断终止或者返回成功
+            if self.ship_status == ShipStatus.back_dock:
+                # 切换到遥控器控制模式
+                if not config.home_debug and self.pi_main_obj.b_start_remote:
+                    self.change_status_info(target_status=ShipStatus.remote_control)
+                # 切换到电脑手动模式
+                elif int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) in [-1, 0, 90, 180, 270, 10,
+                                                                                            190, 1180, 1270]:
+                    self.change_status_info(target_status=ShipStatus.computer_control)
+                # 已经到达切换到空闲模式
+                elif self.is_at_dock:
+                    self.change_status_info(target_status=ShipStatus.idle)
 
             # 判断电脑自动切换到其他状态情况
             if self.ship_status == ShipStatus.computer_auto:
@@ -1008,10 +1236,11 @@ class DataManager:
                 elif return_ship_status is not None:
                     self.change_status_info(target_status=return_ship_status)
                 # 取消自动模式
-                elif d == -1:
+                elif int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) == -1:
                     self.change_status_info(target_status=ShipStatus.computer_control, b_clear_status=True)
                 # 切换到手动
-                elif d in [0, 90, 180, 270, 10, 190, 1180, 1270]:
+                elif int(self.server_data_obj.mqtt_send_get_obj.control_move_direction) in [0, 90, 180, 270, 10, 190,
+                                                                                            1180, 1270]:
                     self.change_status_info(target_status=ShipStatus.computer_control)
                 # 到点
                 elif self.b_arrive_point:
@@ -1082,7 +1311,7 @@ class DataManager:
     def move_control(self):
         b_log_points = 1  # 防止寻点模式下等待用户点击开始前一直记录日志
         while True:
-            time.sleep(config.thread_sleep_time)
+            time.sleep(0.05)
             control_info_dict = {
                 ShipStatus.computer_control: '电脑手动',
                 ShipStatus.remote_control: '遥控器控制',
@@ -1092,6 +1321,7 @@ class DataManager:
                 ShipStatus.backhome_low_energy: '低电量返航',
                 ShipStatus.at_home: '在返航点',
                 ShipStatus.idle: '等待中',
+                ShipStatus.back_dock: '返回船坞中',
             }
             self.control_info = ''
             if self.ship_status in control_info_dict:
@@ -1258,6 +1488,51 @@ class DataManager:
                 else:
                     if not config.home_debug:
                         self.pi_main_obj.stop()
+            # 返回船坞充电
+            elif self.ship_status == ShipStatus.back_dock:
+                if self.server_data_obj.mqtt_send_get_obj.dock_position_data:
+                    # 计算船坞前预定义到达点
+                    if not self.pre_dock_lng_lat:
+                        dock_gaode_lng_lat = self.server_data_obj.mqtt_send_get_obj.dock_position_data.get(
+                            "dock_lng_lat")
+                        dock_direction = self.server_data_obj.mqtt_send_get_obj.dock_position_data.get("dock_direction")
+                        dock_direction = round(dock_direction, 1)
+                        self.dock_lng_lat = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
+                                                                               self.gaode_lng_lat,
+                                                                               dock_gaode_lng_lat)
+                        self.pre_dock_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.dock_lng_lat[0],
+                                                                                            self.dock_lng_lat[1],
+                                                                                            dock_direction, 30)
+                    pre_dock_distance = lng_lat_calculate.distanceFromCoordinate(
+                        self.gaode_lng_lat[0],
+                        self.gaode_lng_lat[1],
+                        self.pre_dock_lng_lat[0],
+                        self.pre_dock_lng_lat[1])
+                    if pre_dock_distance > 1.5 and not self.is_arriver_pre_dock:
+                        b_arrive_sample = self.points_arrive_control(self.pre_dock_lng_lat, self.pre_dock_lng_lat,
+                                                                     b_force_arrive=False)
+                        print('到达船坞预定义点', b_arrive_sample)
+                        if b_arrive_sample:
+                            self.is_arriver_pre_dock = True
+                    # 到达预到达点后调整姿态后退到达
+                    else:
+                        is_smooth_dock = 1
+                        dock_smooth_ceil = 0.4
+                        dock_arrive_distance = dock_smooth_ceil
+                        # 平滑路径 计算当前后退最优跟踪点
+                        if is_smooth_dock:
+                            points_gps = [self.dock_lng_lat]
+                            smooth_dock_point_lng_lat = self.calc_dock_lng_lat(points_gps, dock_arrive_distance)
+                            print('smooth dock', smooth_dock_point_lng_lat, len(self.smooth_dock_path_lng_lat))
+                            is_at_dock = self.back_dock_control(dock_lng_lat_gps=smooth_dock_point_lng_lat,
+                                                                arrive_distance=dock_arrive_distance)
+                        else:
+                            # 根据跟踪点和误差计算pid参数调节
+                            is_at_dock = self.back_dock_control(dock_lng_lat_gps=self.dock_lng_lat,
+                                                                arrive_distance=dock_arrive_distance)
+                        if is_at_dock:
+                            self.is_at_dock = True
+
             # 执行任务中
             # elif self.ship_status == ShipStatus.tasking:
             #     if not config.home_debug:
@@ -1332,10 +1607,6 @@ class DataManager:
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
                         last_read_time = time.time()
             time.sleep(0.5)
-
-    # #定时发送经纬度给mqtt服务器判断当前点到岸边距离
-    # def send_mqtt_gaode_lng_lat(self):
-    #
 
     # 必须使用线程发送发送检测数据
     def send_mqtt_detect_data(self):
@@ -1566,7 +1837,7 @@ class DataManager:
             notice_info_data = {
                 "distance": str(round(self.distance_p, 2)),
                 # // 路径规划提示消息
-                "path_info": '当前:%d 总共:%d 离岸:%f ' % (
+                "path_info": '当前:%d 总共:%d 离岸:%.1f ' % (
                     int(self.path_info[0]), int(self.path_info[1]),
                     self.server_data_obj.mqtt_send_get_obj.bank_distance),
                 "progress": progress,

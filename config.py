@@ -32,6 +32,7 @@ home_location_path = os.path.join(root_path, 'home_location.json')
 # 记录罗盘数据
 save_compass_data_dir = os.path.join(root_path, 'statics')
 
+
 # 记录gps数据
 
 class CurrentPlatform(enum.Enum):
@@ -77,12 +78,12 @@ col_gap = 50
 # 湖泊名称
 pool_name = "梁子湖"
 # 视频链接
-try:
-    video_url = get_eviz_url.get_url(ship_code_config.video_code, protocol=2)
-except Exception as e_video_url:
-    video_url = "url获取错误"
-    print({'e_video_url': e_video_url})
-
+# try:
+#     video_url = get_eviz_url.get_url(ship_code_config.video_code, protocol=2)
+# except Exception as e_video_url:
+#     video_url = "url获取错误"
+#     print({'e_video_url': e_video_url})
+video_url=None
 
 def update_base_setting():
     global speed_grade
@@ -107,18 +108,19 @@ def update_base_setting():
                         s_speed_grade = 1
                     speed_grade = s_speed_grade
                 except Exception as e:
-                    print({'error': e})
+                    speed_grade = 3
+                    print({'s_speed_grade error': e})
             if base_setting_data.get('arrive_range'):
                 try:
                     s_arrive_distance = float(base_setting_data.get('arrive_range'))
-                    if s_arrive_distance < 2:
-                        s_arrive_distance = 2.0
+                    if s_arrive_distance < 0.5:
+                        s_arrive_distance = 0.5
                     elif s_arrive_distance > 10:
                         s_arrive_distance = 10.0
                     arrive_distance = s_arrive_distance
                 except Exception as e:
+                    arrive_distance = 2.5
                     print({'error': e})
-
             if base_setting_data.get('keep_point'):
                 try:
                     s_keep_point = int(base_setting_data.get('keep_point'))
@@ -327,6 +329,7 @@ def update_height_setting():
                         s_motor_forward = 500
                     motor_forward = s_motor_forward
                 except Exception as e:
+                    motor_forward = 200
                     print({'error': e})
             if height_setting_data.get('motor_steer'):
                 try:
@@ -337,6 +340,7 @@ def update_height_setting():
                         s_motor_steer = 1000
                     motor_steer = s_motor_steer
                 except Exception as e:
+                    motor_steer = 200
                     print({'error': e})
             if height_setting_data.get('kp'):
                 try:
@@ -363,6 +367,7 @@ def update_height_setting():
                         s_full_speed_meter = 3
                     full_speed_meter = s_full_speed_meter
                 except Exception as e:
+                    full_speed_meter = 10
                     print({'error': e})
             if height_setting_data.get('check_status_interval'):
                 try:
@@ -373,6 +378,7 @@ def update_height_setting():
                         s_check_status_interval = 10
                     check_status_interval = s_check_status_interval
                 except Exception as e:
+                    check_status_interval = 10
                     print({'error': e})
             if height_setting_data.get('check_network_interval'):
                 try:
@@ -383,22 +389,25 @@ def update_height_setting():
                         s_check_network_interval = 100
                     check_network_interval = s_check_network_interval
                 except Exception as e:
+                    check_network_interval = 10
                     print({'error': e})
             if height_setting_data.get('max_pwm'):
                 try:
                     s_max_pwm = int(height_setting_data.get('max_pwm'))
-                    if s_max_pwm >= 2200:
-                        s_max_pwm = 2200
+                    if s_max_pwm >= 2000:
+                        s_max_pwm = 2000
                     max_pwm = s_max_pwm
                 except Exception as e:
+                    max_pwm = 1800
                     print({'error': e})
             if height_setting_data.get('min_pwm'):
                 try:
                     s_min_pwm = int(height_setting_data.get('min_pwm'))
-                    if s_min_pwm <= 800:
-                        s_min_pwm = 800
+                    if s_min_pwm <= 1000:
+                        s_min_pwm = 1000
                     min_pwm = s_min_pwm
                 except Exception as e:
+                    min_pwm = 1000
                     print({'error': e})
             if height_setting_data.get('stop_pwm'):
                 try:
@@ -407,17 +416,19 @@ def update_height_setting():
                         s_stop_pwm = int((min_pwm + max_pwm) / 2)
                     stop_pwm = s_stop_pwm
                 except Exception as e:
+                    stop_pwm = 1500
                     print({'error': e})
             if height_setting_data.get('left_motor_cw'):
                 try:
-
                     left_motor_cw = int(height_setting_data.get('left_motor_cw'))
                 except Exception as e:
+                    left_motor_cw = 0
                     print({'error': e})
             if height_setting_data.get('right_motor_cw'):
                 try:
                     right_motor_cw = int(height_setting_data.get('right_motor_cw'))
                 except Exception as e:
+                    right_motor_cw = 0
                     print({'error': e})
             if height_setting_data.get('draw_time'):
                 try:
@@ -426,6 +437,7 @@ def update_height_setting():
                         s_draw_time = 10
                     draw_time = s_draw_time
                 except Exception as e:
+                    draw_time = 10
                     print({'error': e})
             if height_setting_data.get('pid_interval'):
                 try:
@@ -434,6 +446,7 @@ def update_height_setting():
                         s_pid_interval = 0.1
                     pid_interval = s_pid_interval
                 except Exception as e:
+                    pid_interval = 0.1
                     print({'error': e})
             if height_setting_data.get('start_sleep_time'):
                 try:
@@ -442,6 +455,7 @@ def update_height_setting():
                         s_start_sleep_time = 3
                     start_sleep_time = s_start_sleep_time
                 except Exception as e:
+                    start_sleep_time = 6
                     print({'error': e})
             if height_setting_data.get('motor_init_time'):
                 try:
@@ -450,6 +464,7 @@ def update_height_setting():
                         s_motor_init_time = 3
                     motor_init_time = s_motor_init_time
                 except Exception as e:
+                    motor_init_time = 3
                     print({'error': e})
             if height_setting_data.get('network_backhome'):
                 try:
@@ -458,6 +473,7 @@ def update_height_setting():
                         s_network_backhome = 0
                     network_backhome = s_network_backhome
                 except Exception as e:
+                    network_backhome = 10
                     print({'error': e})
             if height_setting_data.get('energy_backhome'):
                 try:
@@ -466,9 +482,9 @@ def update_height_setting():
                         s_energy_backhome = 0
                     elif s_energy_backhome >= 100:
                         s_energy_backhome = 80
-
                     energy_backhome = s_energy_backhome
                 except Exception as e:
+                    energy_backhome = 30
                     print({'error': e})
             if height_setting_data.get('find_points_num'):
                 try:
@@ -489,6 +505,7 @@ def update_height_setting():
                         s_b_check_network = 0
                     b_check_network = s_b_check_network
                 except Exception as e:
+                    b_check_network = 0
                     print({'error': e})
             if height_setting_data.get('b_play_audio'):
                 try:
@@ -512,6 +529,7 @@ def update_height_setting():
                     if current_platform == CurrentPlatform.pi:
                         home_debug = 0
                 except Exception as e:
+                    home_debug = 0
                     print({'error': e})
             if height_setting_data.get('obstacle_avoid_type'):
                 try:
@@ -522,6 +540,7 @@ def update_height_setting():
                         s_obstacle_avoid_type = 0
                     obstacle_avoid_type = s_obstacle_avoid_type
                 except Exception as e:
+                    obstacle_avoid_type = 0
                     print({'error': e})
             if height_setting_data.get('path_plan_type'):
                 try:
@@ -532,6 +551,7 @@ def update_height_setting():
                         s_path_plan_type = 0
                     path_plan_type = s_path_plan_type
                 except Exception as e:
+                    path_plan_type = 0
                     print({'error': e})
             if height_setting_data.get('path_track_type'):
                 try:
@@ -542,6 +562,7 @@ def update_height_setting():
                         s_path_track_type = 0
                     path_track_type = s_path_track_type
                 except Exception as e:
+                    path_track_type = 0
                     print({'error': e})
             if height_setting_data.get('calibration_compass'):
                 try:
@@ -552,8 +573,8 @@ def update_height_setting():
                         s_calibration_compass = 0
                     calibration_compass = s_calibration_compass
                 except Exception as e:
+                    calibration_compass = 0
                     print({'error': e})
-
         except Exception as e:
             print({'error': e})
 
@@ -847,7 +868,6 @@ class WaterType(enum.Enum):
 """
 
 common_log_time = 10
-
 
 if __name__ == '__main__':
     write_setting(True, True, True, True)

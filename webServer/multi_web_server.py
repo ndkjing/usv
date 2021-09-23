@@ -518,7 +518,8 @@ class WebServer:
                             self.baidu_map_obj_dict.get(ship_code).pool_cnts,
                             current_pix,
                             self.baidu_map_obj_dict.get(ship_code).pix_2_meter)
-                        print('bank_distance', bank_distance)
+                        bank_distance = round(bank_distance,1)
+                        # print('bank_distance', bank_distance)
                         send_data = {
                             # 设备号
                             "deviceId": "3c50f4c3-a9c1-4872-9f18-883af014380a",

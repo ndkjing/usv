@@ -384,3 +384,567 @@
 2021-09-22 17:18:25,160 server_data.py[line:27] INFO http://wuhanligong.xxlun.com/union/admin/xxl/data/save
 2021-09-22 17:18:28,754 server_data.py[line:266] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
 2021-09-22 17:18:43,737 server_data.py[line:266] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:28:21,929 server_data.py[line:568] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:21,947 server_data.py[line:568] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:21,971 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 08:28:22,007 server_data.py[line:568] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,025 server_data.py[line:568] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,049 server_data.py[line:568] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,097 server_data.py[line:568] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,136 server_data.py[line:568] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,154 server_data.py[line:568] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,184 server_data.py[line:568] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,196 server_data.py[line:568] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,220 server_data.py[line:568] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,237 server_data.py[line:568] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,252 server_data.py[line:568] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,270 server_data.py[line:568] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,288 server_data.py[line:568] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,288 server_data.py[line:568] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,325 server_data.py[line:568] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,343 server_data.py[line:568] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:22,367 server_data.py[line:568] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:28:26,936 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:28:41,953 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:28:45,988 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 08:28:46,036 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 08:28:46,141 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '王家坝水库', 'video_url': None, 'info_type': 3}}
+2021-09-23 08:28:51,618 server_data.py[line:409] INFO {'base_setting ': {'info_type': 2, 'row': 50, 'col': 50, 'speed_grade': 'a', 'secure_distance': 5, 'arrive_range': 2.5, 'keep_point': 5}}
+2021-09-23 08:28:51,985 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:28:59,775 server_data.py[line:240] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'control_move_direction': 10, 'mode': 2}
+2021-09-23 08:29:02,003 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:29:05,690 server_data.py[line:240] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'control_move_direction': -1, 'mode': None}
+2021-09-23 08:29:10,769 server_data.py[line:409] INFO {'base_setting ': {'info_type': 2, 'row': 50, 'col': 50, 'speed_grade': '3', 'secure_distance': 5, 'arrive_range': 2.5, 'keep_point': 5}}
+2021-09-23 08:29:12,034 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:37:19,555 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,585 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,597 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 08:37:19,597 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,615 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,645 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,663 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,675 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,699 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,743 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,761 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,791 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,821 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,833 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,856 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,880 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,892 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,916 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,940 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:19,964 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:24,526 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:37:26,328 server_data.py[line:409] INFO {'base_setting ': {'info_type': 2, 'row': 50, 'col': 50, 'speed_grade': 'z', 'secure_distance': 5, 'arrive_range': 2.5, 'keep_point': 5}}
+2021-09-23 08:37:30,363 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 08:37:30,399 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 08:37:30,465 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 'z', 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '王家坝水库', 'video_url': None, 'info_type': 3}}
+2021-09-23 08:37:34,589 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:37:39,256 server_data.py[line:409] INFO {'base_setting ': {'info_type': 2, 'row': 50, 'col': 50, 'speed_grade': '3', 'secure_distance': 5, 'arrive_range': 2.5, 'keep_point': 5}}
+2021-09-23 08:37:52,890 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:52,897 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:52,915 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 08:37:52,927 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:52,945 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:52,969 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:52,987 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:52,993 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:53,017 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:53,035 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:53,053 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:53,084 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:53,105 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:53,123 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:53,135 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:53,164 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:53,194 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:53,224 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:53,254 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:53,272 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:37:54,781 server_data.py[line:287] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'lng_lat': [114.524208, 30.506061], 'zoom': 17.35}
+2021-09-23 08:37:56,080 server_data.py[line:395] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'mapId': '1435052231011184641'}
+2021-09-23 08:37:56,110 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': '3', 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': 'http://123.32132.321321.213', 'info_type': 3}}
+2021-09-23 08:37:57,883 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:39:16,489 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,507 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 08:39:16,525 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,543 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,555 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,572 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,590 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,602 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,638 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,656 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,678 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,690 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,720 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,750 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,762 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,792 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,822 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,834 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,852 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:16,870 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:39:20,939 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 08:39:20,957 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 08:39:21,184 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 08:39:21,493 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:39:26,381 server_data.py[line:287] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'lng_lat': [114.523909, 30.505913], 'zoom': 17.2}
+2021-09-23 08:39:27,556 server_data.py[line:395] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'mapId': '1435052231011184641'}
+2021-09-23 08:39:27,598 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 08:39:27,788 server_data.py[line:469] INFO {'refresh_setting ': {'mapId': '1435052231011184641', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-09-23 08:39:36,509 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:39:46,528 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:39:50,530 server_data.py[line:321] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'target_lng_lat': [[114.523835, 30.506254]], 'zoom': 18, 'meter_pix': 0.7276158043412304, 'back_home': 0, 'fix_point': None}
+2021-09-23 08:39:50,617 server_data.py[line:359] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'sampling_points': [[114.523835, 30.506254]], 'path_points': [[114.523834, 30.506255]]}
+2021-09-23 08:39:56,566 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:40:11,033 server_data.py[line:27] INFO http://wuhanligong.xxlun.com/union/admin/xxl/data/save
+2021-09-23 08:40:11,598 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:40:21,612 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:40:31,677 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 08:42:16,394 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,406 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,418 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 08:42:16,430 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,466 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,478 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,490 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,514 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,531 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,549 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,556 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,580 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,595 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,607 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,619 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,637 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,667 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,686 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,716 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:16,734 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 08:42:18,935 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 08:42:18,971 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 08:42:19,077 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 08:42:21,373 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:44:53,155 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,167 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 10:44:53,196 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,210 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,228 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,247 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,265 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,289 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,307 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,325 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,361 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,367 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,385 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,397 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,424 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,441 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,448 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,454 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,486 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:53,504 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:44:58,127 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:45:04,317 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 10:45:04,318 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 10:45:04,396 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 10:45:08,042 server_data.py[line:287] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'lng_lat': [114.523738, 30.505644], 'zoom': 16.89}
+2021-09-23 10:45:08,142 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:45:08,584 server_data.py[line:395] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'mapId': '1435052231011184641'}
+2021-09-23 10:45:08,590 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道书画路', 'video_url': None, 'info_type': 3}}
+2021-09-23 10:45:09,523 server_data.py[line:469] INFO {'refresh_setting ': {'mapId': '1435052231011184641', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-09-23 10:45:18,183 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:45:19,381 server_data.py[line:240] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'control_move_direction': -1, 'mode': None}
+2021-09-23 10:45:24,867 server_data.py[line:539] ERROR {'error': JSONDecodeError('Expecting property name enclosed in double quotes: line 1 column 68 (char 67)')}
+2021-09-23 10:45:28,203 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:45:38,221 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:45:48,264 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:45:58,308 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:45:59,523 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 10:48:38,888 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:38,900 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 10:48:38,940 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:38,959 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:38,983 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,001 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,053 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,065 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,089 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,113 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,125 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,149 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,161 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,221 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,259 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,271 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,301 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,328 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,346 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:39,358 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:48:43,871 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:48:44,246 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 10:48:44,282 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 10:48:44,381 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道书画路', 'video_url': None, 'info_type': 3}}
+2021-09-23 10:48:48,435 server_data.py[line:287] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'lng_lat': [114.523914, 30.505984], 'zoom': 17.3}
+2021-09-23 10:48:49,081 server_data.py[line:395] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'mapId': '1435052231011184641'}
+2021-09-23 10:48:49,123 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 10:48:50,186 server_data.py[line:469] INFO {'refresh_setting ': {'mapId': '1435052231011184641', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-09-23 10:48:55,760 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 10:48:58,897 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:49:08,950 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:49:23,941 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:49:33,998 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:49:44,032 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:49:54,086 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:50:04,113 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:53:16,807 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:16,813 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 10:53:16,831 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:16,845 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:16,882 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:16,906 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:16,924 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:16,942 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:16,967 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:16,991 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:17,024 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:17,042 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:17,054 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:17,084 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:17,095 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:17,114 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:17,120 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:17,132 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:17,198 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:17,216 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:53:21,498 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 10:53:21,528 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 10:53:21,748 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 10:53:21,827 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:53:27,454 server_data.py[line:287] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'lng_lat': [114.524139, 30.505857], 'zoom': 17.4}
+2021-09-23 10:53:28,073 server_data.py[line:395] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'mapId': '1435052231011184641'}
+2021-09-23 10:53:28,103 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 10:53:29,077 server_data.py[line:469] INFO {'refresh_setting ': {'mapId': '1435052231011184641', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-09-23 10:53:36,828 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:53:41,543 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 10:53:46,843 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:53:56,861 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:54:11,896 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:54:21,910 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:54:31,946 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:54:42,004 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:54:52,047 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:55:07,038 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:55:17,070 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:55:23,789 server_data.py[line:240] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'control_move_direction': -1, 'mode': None}
+2021-09-23 10:55:29,538 server_data.py[line:240] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'control_move_direction': -1, 'mode': None}
+2021-09-23 10:55:32,076 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:55:35,920 server_data.py[line:240] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'control_move_direction': -1, 'mode': None}
+2021-09-23 10:58:07,266 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,278 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 10:58:07,298 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,317 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,329 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,354 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,384 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,402 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,413 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,436 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,466 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,484 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,514 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,544 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,576 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,588 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,612 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,636 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,684 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:07,711 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 10:58:09,561 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 10:58:09,591 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 10:58:09,698 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 10:58:12,262 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:58:17,067 server_data.py[line:287] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'lng_lat': [114.524065, 30.505807], 'zoom': 17.35}
+2021-09-23 10:58:17,691 server_data.py[line:395] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'mapId': '1435052231011184641'}
+2021-09-23 10:58:17,727 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 10:58:18,550 server_data.py[line:469] INFO {'refresh_setting ': {'mapId': '1435052231011184641', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-09-23 10:58:22,282 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:58:23,121 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 10:58:32,313 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:58:42,344 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:58:52,371 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:58:52,851 server_data.py[line:240] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'control_move_direction': -1, 'mode': None}
+2021-09-23 10:58:58,939 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 10:59:02,395 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:59:11,460 server_data.py[line:240] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'control_move_direction': -1, 'mode': None}
+2021-09-23 10:59:12,425 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:59:26,263 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 10:59:27,459 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:59:37,501 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 10:59:47,550 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:00:02,594 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:00:12,621 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:00:22,655 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:00:37,675 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:00:47,704 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:00:57,733 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:01:07,762 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:01:17,816 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:01:32,681 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:32,699 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 11:01:32,719 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:32,731 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:32,779 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:32,815 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:32,839 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:32,869 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:32,887 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:32,904 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:32,922 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:32,965 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:32,985 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:32,997 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:33,033 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:33,051 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:33,105 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:33,117 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:33,153 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:33,171 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:01:36,733 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 11:01:36,775 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 11:01:37,038 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 11:01:37,689 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:01:40,724 server_data.py[line:287] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'lng_lat': [114.524091, 30.506052], 'zoom': 17.35}
+2021-09-23 11:01:41,294 server_data.py[line:395] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'mapId': '1435052231011184641'}
+2021-09-23 11:01:41,336 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 11:01:41,939 server_data.py[line:469] INFO {'refresh_setting ': {'mapId': '1435052231011184641', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-09-23 11:01:46,933 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 11:01:52,710 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:02:02,728 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:02:03,967 server_data.py[line:240] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'control_move_direction': -1, 'mode': None}
+2021-09-23 11:02:08,612 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 11:02:12,749 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:02:22,784 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:02:23,210 server_data.py[line:240] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'control_move_direction': -1, 'mode': None}
+2021-09-23 11:02:26,650 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 11:02:31,800 server_data.py[line:240] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'control_move_direction': -1, 'mode': None}
+2021-09-23 11:02:37,842 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:02:47,874 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:03:02,900 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:03:12,943 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:03:27,979 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:03:38,009 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:03:53,036 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:04:03,084 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:04:13,112 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:04:23,160 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:04:38,198 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:04:48,217 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:04:58,263 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:05:08,291 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:05:18,319 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:05:28,332 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:11:31,366 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,378 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 11:11:31,386 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,406 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,431 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,467 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,485 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,503 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,514 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,538 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,562 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,574 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,640 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,646 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,676 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,684 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,696 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,726 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,750 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:31,756 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:11:34,208 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 11:11:34,232 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 11:11:34,369 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': '3', 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '梁子湖', 'video_url': 3, 'info_type': 3}}
+2021-09-23 11:11:34,411 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 11:11:36,340 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:11:38,516 server_data.py[line:287] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'lng_lat': [114.523915, 30.506008], 'zoom': 17.2}
+2021-09-23 11:11:39,321 server_data.py[line:395] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'mapId': '1435052231011184641'}
+2021-09-23 11:11:39,363 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 11:11:39,574 server_data.py[line:469] INFO {'refresh_setting ': {'mapId': '1435052231011184641', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-09-23 11:11:43,587 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 11:11:46,363 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:11:56,399 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:12:06,450 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:12:16,480 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:12:26,497 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:32:57,020 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,032 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,052 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 11:32:57,079 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,115 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,121 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,166 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,178 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,196 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,202 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,220 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,237 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,267 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,285 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,321 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,339 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,351 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,390 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,402 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:32:57,414 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 11:33:02,037 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:33:05,506 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 11:33:05,535 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 11:33:05,873 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 11:33:09,224 server_data.py[line:287] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'lng_lat': [114.523924, 30.505846], 'zoom': 17.35}
+2021-09-23 11:33:09,813 server_data.py[line:395] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'mapId': '1435052231011184641'}
+2021-09-23 11:33:09,855 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 11:33:10,407 server_data.py[line:469] INFO {'refresh_setting ': {'mapId': '1435052231011184641', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-09-23 11:33:16,046 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 11:33:17,039 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:33:27,067 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:33:37,122 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:33:47,144 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:33:57,161 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:34:12,209 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:34:27,240 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 11:34:37,337 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:01:59,766 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:01:59,778 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 13:01:59,802 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:01:59,829 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:01:59,847 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:01:59,889 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:01:59,907 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:01:59,925 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:01:59,960 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:01:59,978 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:02:00,026 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:02:00,063 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:02:00,069 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:02:00,087 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:02:00,116 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:02:00,122 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:02:00,134 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:02:00,158 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:02:00,170 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:02:00,194 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:02:04,782 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:02:05,802 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 13:02:05,826 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 13:02:06,132 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 13:02:09,424 server_data.py[line:287] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'lng_lat': [114.523937, 30.505938], 'zoom': 17.35}
+2021-09-23 13:02:10,034 server_data.py[line:395] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'mapId': '1435052231011184641'}
+2021-09-23 13:02:10,046 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 13:02:11,069 server_data.py[line:469] INFO {'refresh_setting ': {'mapId': '1435052231011184641', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-09-23 13:02:16,586 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 13:02:19,765 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:02:29,790 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:02:39,832 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:02:49,858 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:02:59,871 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:20:37,403 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,415 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,439 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,445 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 13:20:37,466 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,491 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,522 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,552 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,582 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,612 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,653 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,664 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,670 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,689 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,695 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,721 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,733 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,745 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,763 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:37,787 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:20:41,125 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 13:20:41,161 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 13:20:41,266 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 13:20:42,414 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:20:45,589 server_data.py[line:287] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'lng_lat': [114.523956, 30.505987], 'zoom': 17.48}
+2021-09-23 13:20:46,129 server_data.py[line:395] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'mapId': '1435052231011184641'}
+2021-09-23 13:20:46,153 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 13:20:46,654 server_data.py[line:469] INFO {'refresh_setting ': {'mapId': '1435052231011184641', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-09-23 13:20:51,383 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 13:20:52,436 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:21:02,462 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:21:17,504 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:21:27,527 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:21:37,566 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:21:47,579 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:21:57,632 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:28:07,911 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:07,923 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 13:28:07,938 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:07,951 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:07,963 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:07,994 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,012 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,030 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,057 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,068 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,080 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,092 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,104 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,123 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,153 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,174 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,186 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,192 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,216 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:08,234 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:10,034 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 13:28:10,074 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 13:28:10,224 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 13:28:12,859 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:28:15,735 server_data.py[line:567] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,747 server_data.py[line:567] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,766 server_data.py[line:197] INFO Connected with result code:  0
+2021-09-23 13:28:15,767 server_data.py[line:567] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,797 server_data.py[line:567] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,833 server_data.py[line:567] INFO {'topic': 'start_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,840 server_data.py[line:567] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,858 server_data.py[line:567] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,882 server_data.py[line:567] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,900 server_data.py[line:567] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,906 server_data.py[line:567] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,923 server_data.py[line:567] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,929 server_data.py[line:567] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,937 server_data.py[line:567] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,955 server_data.py[line:567] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,967 server_data.py[line:567] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:15,991 server_data.py[line:567] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:16,015 server_data.py[line:567] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:16,027 server_data.py[line:567] INFO {'topic': 'dock_position_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:16,039 server_data.py[line:567] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA001', 'qos': 0}
+2021-09-23 13:28:17,316 server_data.py[line:469] INFO {'refresh_setting ': {'info_type': 1}}
+2021-09-23 13:28:17,346 server_data.py[line:409] INFO {'base_setting ': {'info_type': 1}}
+2021-09-23 13:28:17,421 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 13:28:20,748 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:28:21,156 server_data.py[line:287] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA001', 'lng_lat': [114.523992, 30.505989], 'zoom': 17.2}
+2021-09-23 13:28:21,793 server_data.py[line:395] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA001', 'mapId': '1435052231011184641'}
+2021-09-23 13:28:21,817 server_data.py[line:409] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
+2021-09-23 13:28:22,974 server_data.py[line:469] INFO {'refresh_setting ': {'mapId': '1435052231011184641', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-09-23 13:28:29,881 server_data.py[line:490] INFO {'dock_position_ ': {'dock_lng_lat': [114.523995, 30.506118], 'dock_direction': 108.0}}
+2021-09-23 13:28:35,796 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:28:45,836 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:28:55,855 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:29:05,891 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
+2021-09-23 13:29:15,903 server_data.py[line:267] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA001', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
