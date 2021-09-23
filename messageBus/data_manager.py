@@ -1502,7 +1502,7 @@ class DataManager:
                                                                                dock_gaode_lng_lat)
                         self.pre_dock_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.dock_lng_lat[0],
                                                                                             self.dock_lng_lat[1],
-                                                                                            dock_direction, 30)
+                                                                                            dock_direction, 3)
                     pre_dock_distance = lng_lat_calculate.distanceFromCoordinate(
                         self.gaode_lng_lat[0],
                         self.gaode_lng_lat[1],
