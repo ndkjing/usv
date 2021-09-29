@@ -3,7 +3,9 @@
 """
 from messageBus.data_define import DataDefine
 import config
+import os
 from messageBus import data_define
+from webServer import server_config
 from utils import log
 import copy
 
@@ -168,6 +170,27 @@ class MqttSendGet:
         pass
         # print('publish',mid)
 
+    # 检测是否需要删除地图
+    def delete_map_id(self, map_id: str):
+        """
+        :param map_id: 地图id
+        :return:
+        """
+        save_map_path = os.path.join(server_config.save_map_dir, 'map_%s.json' % self.ship_code)
+        with open(save_map_path, 'r') as f:
+            local_map_data = json.load(f)
+        has_map_id = False
+        map_id_index = None
+        for index, map_item in enumerate(local_map_data["mapList"]):
+            if map_id == map_item.get("id"):
+                has_map_id = True
+                map_id_index = index
+                break
+        if has_map_id:
+            local_map_data["mapList"].remove(map_id_index)
+        with open(save_map_path, 'w') as f:
+            json.dump(local_map_data, f)
+
     # 消息处理函数回调
     def on_message_callback(self, client, userdata, msg):
         topic = msg.topic
@@ -305,6 +328,14 @@ class MqttSendGet:
             else:
                 self.home_lng_lat = status_data.get('home_lng_lat')
 
+        # 删除当前存在id地图
+        elif topic == 'delete_map_id_%s' % self.ship_code:
+            delete_map_id_data = json.loads(msg.payload)
+            if delete_map_id_data.get("map_id") is None:
+                self.logger.error('delete_map_id_data设置启动消息没有map_id字段')
+                return
+            else:
+                self.delete_map_id(delete_map_id_data.get("map_id"))
 
         # 基础配置
         elif topic == 'base_setting_%s' % self.ship_code:

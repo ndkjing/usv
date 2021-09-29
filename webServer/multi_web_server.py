@@ -39,7 +39,7 @@ from utils.log import LogHandler
 from webServer.web_server_data import ServerData
 from webServer import server_data_define
 from webServer import server_config
-import get_eviz_url
+from webServer import get_eviz_url
 
 
 class WebServer:
@@ -503,6 +503,7 @@ class WebServer:
             qos=0)
         self.logger.info({'mqtt_send_path_planning_data': mqtt_send_path_planning_data})
 
+    # 发送离岸距离
     def send_bank_distance(self):
         while True:
             for ship_code in server_config.ship_code_list:
@@ -518,7 +519,7 @@ class WebServer:
                             self.baidu_map_obj_dict.get(ship_code).pool_cnts,
                             current_pix,
                             self.baidu_map_obj_dict.get(ship_code).pix_2_meter)
-                        bank_distance = round(bank_distance,1)
+                        bank_distance = round(bank_distance, 1)
                         # print('bank_distance', bank_distance)
                         send_data = {
                             # 设备号
@@ -532,6 +533,8 @@ class WebServer:
                                   data=send_data,
                                   qos=0)
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_safe_distance = False
+
+
 
 
 if __name__ == '__main__':

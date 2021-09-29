@@ -69,14 +69,20 @@ def log_func(log_obj, msg, level=1):
 # while True:
 #     # log_obj.info({'time': time.time()})
 #     log_func(log_obj.info,{'time': time.time()})
-#     time.sleep(1)
-import numpy as np
+# #     time.sleep(1)
+# import numpy as np
+#
+# a = np.array([[1,0],[3,4]])
+# b = np.array([])
+#
+#
+# if isinstance(a,np.ndarray):
+#     print(a.all())
+#     print(a.any())
 
-a = np.array([[1,0],[3,4]])
-b = np.array([])
-
-
-if isinstance(a,np.ndarray):
-    print(a.all())
-    print(a.any())
-
+a = {1:2,'a':'b'}
+print(a.pop(1))
+print(a)
+b = [2,3,4,5]
+print(b.pop(2))
+print(b)
