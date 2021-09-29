@@ -1077,7 +1077,7 @@ class DataManager:
                     return True
 
     # 控制到达目标点
-    def back_dock_control(self, dock_lng_lat_gps, arrive_distance=0.3, b_force_arrive=False):
+    def back_dock_control(self, dock_lng_lat_gps, arrive_distance, b_force_arrive=False):
         """
         @param b_force_arrive:
         @param dock_lng_lat_gps: 下一个采样点真实经纬度
