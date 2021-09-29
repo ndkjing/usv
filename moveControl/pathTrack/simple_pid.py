@@ -122,8 +122,8 @@ class SimplePid:
     def pid_back_dock(self, distance, theta_error, debug=False):
         # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
         steer_control = self.update_steer_pid_1(theta_error)
-        steer_pwm = (0.4 / (1 + e ** (-0.001 * steer_control)) - 0.2) * 1000
-        forward_pwm = (0.2 / (1.0 + e ** (-1 * distance)) - 0.1) * 1000
+        steer_pwm = (0.4 / (1 + e ** (-0.1 * steer_control)) - 0.2) * 1000
+        forward_pwm = (0.2 / (1.0 + e ** (-0.17 * distance)) - 0.1) * 1000
         # 缩放到指定最大值范围内
         # max_control = config.max_pwm - config.stop_pwm
         # if forward_pwm + abs(steer_pwm) > max_control:
@@ -133,8 +133,8 @@ class SimplePid:
         if debug:
             print("theta_error:%f,steer_control:%f,steer_pwm:%f,forward_pwm:%f" % (
             theta_error, steer_control, steer_pwm, forward_pwm))
-        left_pwm = config.stop_pwm - (int(forward_pwm) + int(steer_pwm))
-        right_pwm = config.stop_pwm - (int(forward_pwm) - int(steer_pwm))
+        left_pwm = config.stop_pwm - (int(forward_pwm) - int(steer_pwm))
+        right_pwm = config.stop_pwm - (int(forward_pwm) + int(steer_pwm))
         return left_pwm, right_pwm
 
     def pid_turn_pwm(self, angular_velocity_error):

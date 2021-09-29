@@ -583,6 +583,8 @@ class DataManager:
             self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
         elif status_change_index in [30, 31, 32]:
             self.server_data_obj.mqtt_send_get_obj.dock_position_data = None
+            self.is_arriver_pre_dock=False
+            self.is_at_dock=False
         if b_clear_status:
             self.clear_all_status()
         self.ship_status = target_status
@@ -1502,13 +1504,13 @@ class DataManager:
                                                                                dock_gaode_lng_lat)
                         self.pre_dock_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.dock_lng_lat[0],
                                                                                             self.dock_lng_lat[1],
-                                                                                            dock_direction, 3)
+                                                                                            dock_direction, 7)
                     pre_dock_distance = lng_lat_calculate.distanceFromCoordinate(
                         self.gaode_lng_lat[0],
                         self.gaode_lng_lat[1],
                         self.pre_dock_lng_lat[0],
                         self.pre_dock_lng_lat[1])
-                    if pre_dock_distance > 1.5 and not self.is_arriver_pre_dock:
+                    if pre_dock_distance > 2.5 and not self.is_arriver_pre_dock:
                         b_arrive_sample = self.points_arrive_control(self.pre_dock_lng_lat, self.pre_dock_lng_lat,
                                                                      b_force_arrive=False)
                         print('到达船坞预定义点', b_arrive_sample)
@@ -1516,7 +1518,7 @@ class DataManager:
                             self.is_arriver_pre_dock = True
                     # 到达预到达点后调整姿态后退到达
                     else:
-                        is_smooth_dock = 1
+                        is_smooth_dock = 0
                         dock_smooth_ceil = 0.4
                         dock_arrive_distance = dock_smooth_ceil
                         # 平滑路径 计算当前后退最优跟踪点
@@ -1532,6 +1534,8 @@ class DataManager:
                                                                 arrive_distance=dock_arrive_distance)
                         if is_at_dock:
                             self.is_at_dock = True
+                            if not config.home_debug:
+                                self.pi_main_obj.stop()
 
             # 执行任务中
             # elif self.ship_status == ShipStatus.tasking:
