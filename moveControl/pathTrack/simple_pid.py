@@ -1,4 +1,5 @@
 import copy
+import time
 import numpy as np
 from numpy import e
 from utils import log
@@ -124,15 +125,18 @@ class SimplePid:
         steer_control = self.update_steer_pid_1(theta_error)
         steer_pwm = (0.4 / (1 + e ** (-0.1 * steer_control)) - 0.2) * 1000
         forward_pwm = (0.2 / (1.0 + e ** (-0.17 * distance)) - 0.1) * 1000
+        if forward_pwm < 50:
+            forward_pwm += 50 - forward_pwm
         # 缩放到指定最大值范围内
         # max_control = config.max_pwm - config.stop_pwm
-        # if forward_pwm + abs(steer_pwm) > max_control:
-        #     temp_forward_pwm = forward_pwm
-        #     forward_pwm = max_control * (temp_forward_pwm) / (temp_forward_pwm + abs(steer_pwm))
-        #     steer_pwm = max_control * (steer_pwm / (temp_forward_pwm + abs(steer_pwm)))
+        max_control = 250
+        if forward_pwm + abs(steer_pwm) > max_control:
+            temp_forward_pwm = forward_pwm
+            forward_pwm = max_control * (temp_forward_pwm) / (temp_forward_pwm + abs(steer_pwm))
+            steer_pwm = max_control * (steer_pwm / (temp_forward_pwm + abs(steer_pwm)))
         if debug:
-            print("theta_error:%f,steer_control:%f,steer_pwm:%f,forward_pwm:%f" % (
-            theta_error, steer_control, steer_pwm, forward_pwm))
+            print(time.time(),"theta_error:%f,steer_control:%f,steer_pwm:%f,forward_pwm:%f" % (
+                theta_error, steer_control, steer_pwm, forward_pwm))
         left_pwm = config.stop_pwm - (int(forward_pwm) - int(steer_pwm))
         right_pwm = config.stop_pwm - (int(forward_pwm) + int(steer_pwm))
         return left_pwm, right_pwm
