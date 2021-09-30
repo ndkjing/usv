@@ -289,9 +289,9 @@ class BaiduMap(object):
         return lat, lng
 
     # 获取经纬度url
-    def get_image_url(self):
+    def get_image_url(self,lng_lat=None):
         """
-            调用地图API获取待查询地址专属url
+        调用地图API获取待查询地址专属url
         """
         if self.map_type == MapType.baidu:
             return 'http://api.map.baidu.com/staticimage/v2?ak={myAk}&center={position}&width={width}&height={height}&zoom={zoom}'.format(
@@ -343,8 +343,8 @@ class BaiduMap(object):
             return adcode
 
     # 按照经纬度url获取静态图
-    def draw_image(self, ):
-        png_url = self.get_image_url()
+    def draw_image(self, lng_lat=None):
+        png_url = self.get_image_url(lng_lat=lng_lat)
         self.logger.info({'png_url': png_url})
         response = requests.get(png_url)
         # 获取的文本实际上是图片的二进制文本
@@ -394,14 +394,39 @@ class BaiduMap(object):
             return None, (1001, 1001)
         pool_cnts = np.squeeze(pool_cnts)
         self.pool_cnts = pool_cnts
-        (pool_x, pool_y, pool_w, pool_h) = cv2.boundingRect(self.pool_cnts)
-        print((pool_x, pool_y, pool_w, pool_h))
-        print('湖泊宽长', pool_w * self.pix_2_meter, pool_h * self.pix_2_meter)
-        # 绘制色块的矩形区域
-        cv2.circle(
-            self.show_img, (self.center_cnt[0], self.center_cnt[1]), 5, [
-                0, 255, 0], -1)
+        """
+        # 1根据现在湖泊轮廓判断是否需要拼接湖泊轮廓图片
+        # 2不需要则到7，需要则到3
+        # 3计算需要下载图片中心点坐标
+        # 4下载图片
+        # 5拼接图片
+        # 6重新寻找湖，进入1
+        # 7 找湖结束
+        TODO 拼接地图
+        is_full_pool = self.is_full_pool()
+        print('is_full_pool', is_full_pool)
+        # 测试时使用绘图
+        if isinstance(is_full_pool, list):
+            # cnt = np.array([is_full_pool])
+            # self.show_img = cv2.drawContours(self.show_img, cnt, -1, (0, 255, 255), 1)
+            for i in is_full_pool:
+                cv2.circle(
+                    self.show_img, (i[0], i[1]), 5, [
+                        0, 100, 0], -1)
+        # 判断上下左右哪一部分需要拼接
+        up=True
+        if up:
+            self.draw_image()
+        """
+
         if b_show:
+            (pool_x, pool_y, pool_w, pool_h) = cv2.boundingRect(self.pool_cnts)
+            # print((pool_x, pool_y, pool_w, pool_h))
+            print('湖泊宽长', pool_w * self.pix_2_meter, pool_h * self.pix_2_meter)
+            # 绘制湖泊中心点
+            cv2.circle(
+                self.show_img, (self.center_cnt[0], self.center_cnt[1]), 5, [
+                    0, 100, 0], -1)
             cv2.namedWindow(
                 'result', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
             cv2.imshow('result', self.show_img)
@@ -410,6 +435,71 @@ class BaiduMap(object):
             # 关闭其他窗口
             cv2.destroyAllWindows()
         return self.pool_cnts, self.center_cnt
+
+    # 判断寻找湖泊是真实边界还是点击缩放等级太小导致地图分隔
+    def is_full_pool(self):
+        """
+        @return: True/False  True 是完整的湖   False 不是完成的湖需要拼接地图
+        """
+        # 判断轮廓上下左右边线是否存在长直线
+        if self.pool_cnts is None:
+            return True
+        if isinstance(self.pool_cnts, np.ndarray):
+            pool_cnts_list = self.pool_cnts.tolist()
+        else:
+            pool_cnts_list = self.pool_cnts
+
+        # 判断points内的点处在同一条直线上吗？
+        # points内至少有3个点。
+        def on_one_line(points):
+            """
+            点在一条直线内返回TRUE  不在一条直线返回False
+            @param points:
+            @return:
+            """
+            delta_x = points[1][0] - points[0][0]
+            delta_y = points[1][1] - points[0][1]
+
+            distance_square = delta_x ** 2 + delta_y ** 2
+            # 传入了相同的点 返回True
+            if distance_square == 0:
+                return True
+            sin_times_cos = delta_x * delta_y / distance_square
+            for j in range(2, len(points)):
+                dx = points[j][0] - points[0][0]
+                dy = points[j][1] - points[0][1]
+                # if math.fabs(dx * dy / (dx * dx + dy * dy) - sin_times_cos) > 10 ** -9:
+                #     return False
+                if delta_x == 0 or delta_y == 0:
+                    pass
+                else:
+                    return False
+            return True
+
+        # 将直线上多个点合并为按直线最少的点
+        if len(pool_cnts_list) <= 3:
+            return True
+        else:
+            return_points = []
+            test_points = []
+            test_points.append(pool_cnts_list[0])
+            test_points.append(pool_cnts_list[1])
+            continuous_point_len = 0
+            # test_points.append(points[2])
+            print('全部点数', len(pool_cnts_list))
+            for index_i in range(2, len(pool_cnts_list)):
+                test_points.append(pool_cnts_list[index_i])
+                if on_one_line(test_points):
+                    continuous_point_len += 1
+                    if pool_cnts_list[index_i][0] <= 2 or pool_cnts_list[index_i][0] >= 1021 or pool_cnts_list[index_i][
+                        1] <= 2 or pool_cnts_list[index_i][1] >= 1021:
+                        return_points.append(pool_cnts_list[index_i])
+                        print('pool_cnts_list', pool_cnts_list[index_i])
+                else:
+                    continuous_point_len = 0
+                test_points.pop(0)
+            if len(return_points) > 0:
+                return return_points
 
     @staticmethod
     def gps_to_gaode_lng_lat(lng_lat):
@@ -674,7 +764,7 @@ class BaiduMap(object):
         return return_json_data
 
     @staticmethod
-    def cal_bank_distance(pool_cnts,current_pix,pix_2_meter):
+    def cal_bank_distance(pool_cnts, current_pix, pix_2_meter):
         """
 
         @param pool_cnts: 湖泊像素轮廓
@@ -684,19 +774,18 @@ class BaiduMap(object):
         """
         in_cnt = cv2.pointPolygonTest(
             pool_cnts, (current_pix[0], current_pix[1]), True)
-        bank_distance = in_cnt*pix_2_meter
+        bank_distance = in_cnt * pix_2_meter
         return bank_distance
 
 
 if __name__ == '__main__':
-    pass
-    src_point = [114.4314, 30.523558]  # 喻家湖
+    src_point = [114.4314, 30.523558]  # 喻家湖  等级用15
     # src_point = [114.431400, 30.523558]
-    obj = BaiduMap(src_point, zoom=15,
+    obj = BaiduMap(src_point, zoom=17,
                    scale=1, map_type=MapType.gaode)
-    print(obj.get_pool_name())
-    print(obj.get_area_code(src_point))
-    # pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=False)
+    # print(obj.get_pool_name())
+    # print(obj.get_area_code(src_point))
+    pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=True)
     # scan_cnts = obj.scan_pool(meter_gap=50, safe_meter_distance=10, b_show=False)
     # return_gps, return_gps_list = obj.pix_to_gps(scan_cnts)
     # return_gps1, return_gps_list1 = obj.pix_to_gps([obj.center_cnt])
