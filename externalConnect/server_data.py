@@ -157,6 +157,11 @@ class MqttSendGet:
         # 类型
         self.height_setting_data_info = None
         self.height_setting_default_data = None
+        # 船坞设置
+        self.dock_setting_data = None
+        # 类型
+        self.dock_setting_data_info = None
+        self.dock_setting_default_data = None
         # 刷新后请求数据
         self.refresh_info_type = 0
         # 重置湖泊
@@ -464,8 +469,37 @@ class MqttSendGet:
                                 json.dump(self.height_setting_data, f)
                         config.update_height_setting()
 
+            # 船坞配置
+            elif topic == 'dock_setting_%s' % config.ship_code:
+                self.logger.info({'dock_setting_data': json.loads(msg.payload)})
+                dock_setting_data = json.loads(msg.payload)
+                if dock_setting_data.get("info_type") is None:
+                    self.logger.error('"dock_setting_data"设置启动消息没有"info_type"字段')
+                    return
+                else:
+                    info_type = int(dock_setting_data.get('info_type'))
+                    self.dock_setting_data_info = info_type
+                    if info_type == 1:
+                        with open(config.dock_setting_path, 'r') as f:
+                            self.height_setting_data = json.load(f)
+                    elif info_type == 2:
+                        with open(config.dock_setting_path, 'r') as f:
+                            self.dock_setting_data = json.load(f)
+                        with open(config.height_setting_path, 'w') as f:
+                            self.dock_setting_data.update(dock_setting_data)
+                            json.dump(self.dock_setting_data, f)
+                        config.update_dock_setting()
+                    # 恢复默认配置
+                    elif info_type == 4:
+                        with open(config.dock_setting_path, 'w') as f:
+                            with open(config.dock_setting_default_path, 'r') as df:
+                                self.dock_setting_default_data = json.load(df)
+                                self.dock_setting_data = copy.deepcopy(self.dock_setting_default_data)
+                                json.dump(self.dock_setting_data, f)
+                        config.update_dock_setting()
+
             # 刷新后请求数据消息
-            elif topic == 'refresh_%s' % (config.ship_code):
+            elif topic == 'refresh_%s' % config.ship_code:
                 self.logger.info({'refresh_setting ': json.loads(msg.payload)})
                 refresh_data = json.loads(msg.payload)
                 if refresh_data.get("info_type") is None:

@@ -18,9 +18,11 @@ local_map_data_path = os.path.join(maps_dir, 'local_map.json')
 # 保存行驶路径和时间数据
 run_distance_time_path = os.path.join(root_path, 'statics', 'run_distance_time_path.json')
 base_setting_path = os.path.join(root_path, 'statics', 'configs', 'base_setting.json')
+dock_setting_path = os.path.join(root_path, 'statics', 'configs', 'dock_setting.json')
 base_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'base_setting_default.json')
 height_setting_path = os.path.join(root_path, 'statics', 'configs', 'height_setting.json')
 height_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'height_setting_default.json')
+dock_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'dock_setting_default.json')
 # 保存湖号和路径数据
 save_plan_path = os.path.join(root_path, 'statics', 'configs', 'save_plan_path.json')
 # 保存声呐信息路径
@@ -83,7 +85,8 @@ pool_name = "梁子湖"
 # except Exception as e_video_url:
 #     video_url = "url获取错误"
 #     print({'e_video_url': e_video_url})
-video_url=None
+video_url = None
+
 
 def update_base_setting():
     global speed_grade
@@ -172,6 +175,69 @@ def update_base_setting():
                     video_url = s_video_url
                 except Exception as e:
                     print({'error': e})
+        except Exception as e:
+            print({'error': e})
+
+
+# 转向系数
+dock_steer_coefficient = 0.1
+# 直行系数
+dock_forward_coefficient = 0.17
+# pid参数
+dock_kp = 1
+dock_ki = 0.1
+dock_kd = 0.3
+
+
+def update_dock_setting():
+    global dock_steer_coefficient
+    global dock_forward_coefficient
+    global dock_kp
+    global dock_ki
+    global dock_kd
+    if os.path.exists(dock_setting_path):
+        try:
+            with open(dock_setting_path, 'r') as f:
+                dock_setting_data = json.load(f)
+            # 读取配置
+            if dock_setting_data.get('dock_steer_coefficient'):
+                try:
+                    s_dock_steer_coefficient = float(dock_setting_data.get('dock_steer_coefficient'))
+                    if s_dock_steer_coefficient <= 0:
+                        s_dock_steer_coefficient = 0
+                    dock_steer_coefficient = s_dock_steer_coefficient
+                except Exception as e:
+                    dock_steer_coefficient = 0.1
+                    print({'s_dock_steer_coefficient': e})
+            if dock_setting_data.get('dock_forward_coefficient'):
+                try:
+                    s_dock_forward_coefficient = float(dock_setting_data.get('dock_forward_coefficient'))
+                    if s_dock_forward_coefficient < 0:
+                        s_dock_forward_coefficient = 0
+                    dock_forward_coefficient = s_dock_forward_coefficient
+                except Exception as e:
+                    dock_forward_coefficient = 0.17
+                    print({'error  dock_forward_coefficient': e})
+            if dock_setting_data.get('dock_kp'):
+                try:
+                    dock_kp = float(dock_setting_data.get('dock_kp'))
+                except Exception as e:
+                    dock_kp = 1
+                    print({'error dock_kp': e})
+
+            if dock_setting_data.get('dock_ki'):
+                try:
+                    dock_ki = float(dock_setting_data.get('dock_ki'))
+                except Exception as e:
+                    dock_ki = 0.1
+                    print({'error dock_ki': e})
+
+            if dock_setting_data.get('dock_kd'):
+                try:
+                    dock_kd = float(dock_setting_data.get('dock_kd'))
+                except Exception as e:
+                    dock_kd = 0.3
+                    print({'error dock_kd': e})
         except Exception as e:
             print({'error': e})
 
@@ -585,7 +651,12 @@ def update_setting():
 
 
 # 保存配置到文件中
-def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_default=False):
+def write_setting(b_base=False,
+                  b_height=False,
+                  b_base_default=False,
+                  b_height_default=False,
+                  b_dock=False,
+                  b_dock_default=False):
     if b_base:
         with open(base_setting_path, 'w') as bf:
             json.dump({'speed_grade': speed_grade,
@@ -674,7 +745,24 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        'calibration_compass': calibration_compass
                        },
                       hdf)
-
+    if b_dock:
+        with open(dock_setting_path, 'w') as df:
+            json.dump({'dock_steer_coefficient': dock_steer_coefficient,
+                       'dock_forward_coefficient': dock_forward_coefficient,
+                       'dock_kp': dock_kp,
+                       'dock_ki': dock_ki,
+                       'dock_kd': dock_kd,
+                       },
+                      df)
+    if b_dock_default:
+        with open(dock_setting_default_path, 'w') as ddf:
+            json.dump({'dock_steer_coefficient': dock_steer_coefficient,
+                       'dock_forward_coefficient': dock_forward_coefficient,
+                       'dock_kp': dock_kp,
+                       'dock_ki': dock_ki,
+                       'dock_kd': dock_kd,
+                       },
+                      ddf)
 
 ########### 树莓派GPIO端口相关设置 均使用BCM编码端口
 """
@@ -870,4 +958,5 @@ class WaterType(enum.Enum):
 common_log_time = 10
 
 if __name__ == '__main__':
-    write_setting(True, True, True, True)
+    # write_setting(True, True, True, True)
+    write_setting(False, False, False,False,True, True)

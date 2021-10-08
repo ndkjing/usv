@@ -42,7 +42,7 @@ class SimplePid:
         self.errorSum = errorSum
         return control
 
-    def update_steer_pid_1(self, theta_error):
+    def update_steer_pid_1(self, theta_error, b_dock=False):
         self.adjust_p_list.append(theta_error)
         # 统计累计误差
         if len(self.adjust_p_list) == self.adjust_p_size:
@@ -55,8 +55,12 @@ class SimplePid:
         else:
             self.adjust_p_list.append(theta_error)
             error_sum = sum(self.adjust_p_list)
-        control = config.kp * theta_error + config.ki * error_sum + \
-                  config.kd * (theta_error - self.previousError)
+        if b_dock:
+            control = config.dock_kp * theta_error + config.dock_ki * error_sum + \
+                      config.dock_kd * (theta_error - self.previousError)
+        else:
+            control = config.kp * theta_error + config.ki * error_sum + \
+                      config.kd * (theta_error - self.previousError)
         self.previousError = theta_error
         return control
 
@@ -122,7 +126,7 @@ class SimplePid:
 
     def pid_back_dock(self, distance, theta_error, debug=False):
         # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
-        steer_control = self.update_steer_pid_1(theta_error)
+        steer_control = self.update_steer_pid_1(theta_error, b_dock=True)
         steer_pwm = (0.4 / (1 + e ** (-0.1 * steer_control)) - 0.2) * 1000
         forward_pwm = (0.2 / (1.0 + e ** (-0.17 * distance)) - 0.1) * 1000
         if forward_pwm < 50:
@@ -135,7 +139,7 @@ class SimplePid:
             forward_pwm = max_control * (temp_forward_pwm) / (temp_forward_pwm + abs(steer_pwm))
             steer_pwm = max_control * (steer_pwm / (temp_forward_pwm + abs(steer_pwm)))
         if debug:
-            print(time.time(),"theta_error:%f,steer_control:%f,steer_pwm:%f,forward_pwm:%f" % (
+            print(time.time(), "theta_error:%f,steer_control:%f,steer_pwm:%f,forward_pwm:%f" % (
                 theta_error, steer_control, steer_pwm, forward_pwm))
         left_pwm = config.stop_pwm - (int(forward_pwm) - int(steer_pwm))
         right_pwm = config.stop_pwm - (int(forward_pwm) + int(steer_pwm))
