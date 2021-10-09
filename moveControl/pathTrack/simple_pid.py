@@ -127,8 +127,10 @@ class SimplePid:
     def pid_back_dock(self, distance, theta_error, debug=False):
         # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
         steer_control = self.update_steer_pid_1(theta_error, b_dock=True)
-        steer_pwm = (0.4 / (1 + e ** (-0.1 * steer_control)) - 0.2) * 1000
-        forward_pwm = (0.2 / (1.0 + e ** (-0.17 * distance)) - 0.1) * 1000
+        steer_coefficient = -config.dock_steer_coefficient
+        forward_coefficient = -config.dock_forward_coefficient
+        steer_pwm = (0.4 / (1 + e ** (steer_coefficient * steer_control)) - 0.2) * 1000
+        forward_pwm = (0.2 / (1.0 + e ** (forward_coefficient * distance)) - 0.1) * 1000
         if forward_pwm < 50:
             forward_pwm += 50 - forward_pwm
         # 缩放到指定最大值范围内

@@ -184,7 +184,7 @@ dock_steer_coefficient = 0.1
 # 直行系数
 dock_forward_coefficient = 0.17
 # pid参数
-dock_kp = 1
+dock_kp = 1.1
 dock_ki = 0.1
 dock_kd = 0.3
 
@@ -959,4 +959,4 @@ common_log_time = 10
 
 if __name__ == '__main__':
     # write_setting(True, True, True, True)
-    write_setting(False, False, False,False,True, True)
+    write_setting(False, True, False,False,True, True)

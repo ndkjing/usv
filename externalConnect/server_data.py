@@ -481,14 +481,15 @@ class MqttSendGet:
                     self.dock_setting_data_info = info_type
                     if info_type == 1:
                         with open(config.dock_setting_path, 'r') as f:
-                            self.height_setting_data = json.load(f)
+                            self.dock_setting_data = json.load(f)
                     elif info_type == 2:
                         with open(config.dock_setting_path, 'r') as f:
                             self.dock_setting_data = json.load(f)
-                        with open(config.height_setting_path, 'w') as f:
+                        with open(config.dock_setting_path, 'w') as f:
                             self.dock_setting_data.update(dock_setting_data)
                             json.dump(self.dock_setting_data, f)
                         config.update_dock_setting()
+                        print('dock_kd', config.dock_kd)
                     # 恢复默认配置
                     elif info_type == 4:
                         with open(config.dock_setting_path, 'w') as f:
@@ -523,7 +524,7 @@ class MqttSendGet:
             elif topic == 'dock_position_%s' % (config.ship_code):
                 self.logger.info({'dock_position_ ': json.loads(msg.payload)})
                 dock_position_data = json.loads(msg.payload)
-                if dock_position_data.get("dock_lng_lat") is None :
+                if dock_position_data.get("dock_lng_lat") is None:
                     self.logger.error('"dock_position_data"设置启动消息没有dock_lng_lat字段')
                     return
                 elif dock_position_data.get("dock_direction") is None:

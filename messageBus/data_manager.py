@@ -583,8 +583,8 @@ class DataManager:
             self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
         elif status_change_index in [30, 31, 32]:
             self.server_data_obj.mqtt_send_get_obj.dock_position_data = None
-            self.is_arriver_pre_dock=False
-            self.is_at_dock=False
+            self.is_arriver_pre_dock = False
+            self.is_at_dock = False
         if b_clear_status:
             self.clear_all_status()
         self.ship_status = target_status
@@ -1789,6 +1789,23 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.height_setting_data = None
                     # 改为0位置状态，不再重复发送
                     self.server_data_obj.mqtt_send_get_obj.height_setting_data_info = 0
+
+            # 船坞设置数据
+            if self.server_data_obj.mqtt_send_get_obj.dock_setting_data_info in [1, 4]:
+                if self.server_data_obj.mqtt_send_get_obj.dock_setting_data is None:
+                    self.logger.error(
+                        {
+                            'height_setting_data is None': self.server_data_obj.mqtt_send_get_obj.height_setting_data})
+                else:
+                    self.server_data_obj.mqtt_send_get_obj.dock_setting_data.update({'info_type': 3})
+                    self.send(method='mqtt', topic='dock_setting_%s' % config.ship_code,
+                              data=self.server_data_obj.mqtt_send_get_obj.dock_setting_data,
+                              qos=0)
+                    self.logger.info(
+                        {'dock_setting': self.server_data_obj.mqtt_send_get_obj.dock_setting_data})
+                    self.server_data_obj.mqtt_send_get_obj.dock_setting_data = None
+                    # 改为0位置状态，不再重复发送
+                    self.server_data_obj.mqtt_send_get_obj.dock_setting_data_info = 0
             time.sleep(config.pi2mqtt_interval)
 
     # 状态检查函数，检查自身状态发送对应消息
