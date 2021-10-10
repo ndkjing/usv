@@ -53,6 +53,7 @@ if not config.home_debug:
 
 def main():
     config.update_setting()
+    config.update_dock_setting()
     if config.b_play_audio:
         audios_manager.play_audio(audio_index=audios_manager.AudioType.start)
     # 数据处理对象

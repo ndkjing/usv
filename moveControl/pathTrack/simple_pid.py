@@ -17,7 +17,7 @@ class SimplePid:
         self.left_distance = None
         self.right_distance = None
         # 调节p数组
-        self.adjust_p_size = 10
+        self.adjust_p_size = 5
         self.adjust_p_list = []
 
     def distance_p(self, distance, theta_error):
@@ -58,6 +58,7 @@ class SimplePid:
         if b_dock:
             control = config.dock_kp * theta_error + config.dock_ki * error_sum + \
                       config.dock_kd * (theta_error - self.previousError)
+            print('error_sum,config.dock_kp,config.dock_ki,config.dock_kd',error_sum,config.dock_kp,config.dock_ki,config.dock_kd)
         else:
             control = config.kp * theta_error + config.ki * error_sum + \
                       config.kd * (theta_error - self.previousError)
