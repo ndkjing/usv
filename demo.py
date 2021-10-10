@@ -79,10 +79,9 @@ def log_func(log_obj, msg, level=1):
 # if isinstance(a,np.ndarray):
 #     print(a.all())
 #     print(a.any())
-
-a = {1:2,'a':'b'}
-print(a.pop(1))
-print(a)
-b = [2,3,4,5]
-print(b.pop(2))
-print(b)
+from collections import deque
+q = deque(maxlen=5)
+for i in range(10):
+    q.append(i)
+    print(sum(q))
+    print(sum(q)/len(q))
