@@ -29,20 +29,20 @@ class SimplePid:
         pwm = int(pwm * (180 - abs(theta_error)) / 180)
         return pwm
 
-    def update_steer_pid(self, theta_error):
-        errorSum = self.errorSum + theta_error
-        control = config.kp * theta_error + config.ki * errorSum + \
-                  config.kd * (theta_error - self.previousError)
-        self.previousError = theta_error
-        max_error_sum = 1000
-        if errorSum > max_error_sum:
-            errorSum = max_error_sum
-        elif errorSum < -max_error_sum:
-            errorSum = -max_error_sum
-        self.errorSum = errorSum
-        return control
+    # def update_steer_pid(self, theta_error):
+    #     errorSum = self.errorSum + theta_error
+    #     control = config.kp * theta_error + config.ki * errorSum + \
+    #               config.kd * (theta_error - self.previousError)
+    #     self.previousError = theta_error
+    #     max_error_sum = 1000
+    #     if errorSum > max_error_sum:
+    #         errorSum = max_error_sum
+    #     elif errorSum < -max_error_sum:
+    #         errorSum = -max_error_sum
+    #     self.errorSum = errorSum
+    #     return control
 
-    def update_steer_pid_1(self, theta_error, b_dock=False):
+    def update_steer_pid(self, theta_error, b_dock=False):
         self.adjust_p_list.append(theta_error)
         # 统计累计误差
         if len(self.adjust_p_list) == self.adjust_p_size:
@@ -109,9 +109,15 @@ class SimplePid:
         right_pwm = 1500 + int(forward_pwm * scale_pwm) + int(steer_pwm * scale_pwm)
         return left_pwm, right_pwm
 
-    def pid_pwm_2(self, distance, theta_error):
+    def pid_pwm_forawrd(self, distance, theta_error):
+        """
+        前进时pid控制
+        @param distance:
+        @param theta_error:
+        @return:
+        """
         # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
-        steer_control = self.update_steer_pid_1(theta_error)
+        steer_control = self.update_steer_pid(theta_error)
         steer_pwm = (1.0 / (1.0 + e ** (-0.05 * steer_control)) - 0.5) * 1000
         forward_pwm = (1.0 / (1.0 + e ** (-0.2 * distance)) - 0.5) * 1000
         # 缩放到指定最大值范围内
@@ -126,7 +132,7 @@ class SimplePid:
 
     def pid_back_dock(self, distance, theta_error, debug=False):
         # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
-        steer_control = self.update_steer_pid_1(theta_error, b_dock=True)
+        steer_control = self.update_steer_pid(theta_error, b_dock=True)
         steer_coefficient = -config.dock_steer_coefficient
         forward_coefficient = -config.dock_forward_coefficient
         steer_pwm = (0.4 / (1 + e ** (steer_coefficient * steer_control)) - 0.2) * 1000
@@ -148,14 +154,14 @@ class SimplePid:
         return left_pwm, right_pwm
 
     def pid_turn_pwm(self, angular_velocity_error):
-        steer_control = self.update_steer_pid_1(angular_velocity_error)
+        steer_control = self.update_steer_pid(angular_velocity_error)
         steer_pwm = (1.0 / (1.0 + e ** (-0.02 * steer_control)) - 0.5) * 1000
         left_pwm = config.stop_pwm - int(steer_pwm)
         right_pwm = config.stop_pwm + int(steer_pwm)
         return left_pwm, right_pwm
 
     def pid_angle_pwm(self, angle_error):
-        steer_control = self.update_steer_pid_1(angle_error)
+        steer_control = self.update_steer_pid(angle_error)
         steer_pwm = (1.0 / (1.0 + e ** (-0.02 * steer_control)) - 0.5) * 1000
         left_pwm = config.stop_pwm - int(steer_pwm)
         right_pwm = config.stop_pwm + int(steer_pwm)

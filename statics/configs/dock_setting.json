@@ -1,1 +1,1 @@
-{"dock_steer_coefficient": 0.1, "dock_forward_coefficient": 0.17, "dock_kp": 1.1, "dock_ki": 0.1, "dock_kd": "0.1", "info_type": 2}
+{"dock_steer_coefficient": 0.1, "dock_forward_coefficient": 0.17, "dock_kp": 1.1, "dock_ki": "0", "dock_kd": "0.1", "info_type": 2}
