@@ -14,6 +14,7 @@ from storage import save_data
 from drivers import pi_softuart, com_data
 import config
 from moveControl.pathTrack import simple_pid
+from drivers import com_data
 
 logger = log.LogHandler('pi_log')
 
@@ -77,6 +78,9 @@ class PiMain:
         self.lng_lat = None
         # GPS 误差
         self.lng_lat_error = None
+        # rtk
+        self.lng_lat_rtk = None
+        self.speed_rtk = None
         # 罗盘角度   还没收到罗盘数据则为NOne  收到后正常为罗盘值 ** 当罗盘失效后为 -1
         self.theta = None
         self.last_theta = None
@@ -129,6 +133,11 @@ class PiMain:
                                                  baud=config.stc_baud,
                                                  timeout=config.stc2pi_timeout
                                                  )
+        if config.is_contain_rtk:
+            self.rtk_obj = self.get_com_obj(port=config.rtk_port,
+                                            baud=config.rtk_baud,
+                                            timeout=config.stc2pi_timeout
+                                            )
         self.dump_energy = None
         self.last_dump_energy = None  # 用于判断记录日志用
         # gps中获取速度
@@ -883,14 +892,29 @@ class PiMain:
     def get_gps_data(self):
         if config.current_platform == config.CurrentPlatform.pi:
             while True:
-                gps_data_read = self.gps_obj.read_gps()
-                if gps_data_read:
-                    if gps_data_read[0] and gps_data_read[1]:
-                        self.lng_lat = gps_data_read[0:2]
-                    if gps_data_read[2]:
-                        self.lng_lat_error = gps_data_read[2]
-                    if gps_data_read[3]:
-                        self.speed = gps_data_read[3]
+                if not config.is_contain_rtk:
+                    gps_data_read = self.gps_obj.read_gps()
+                    if gps_data_read:
+                        if gps_data_read[0] and gps_data_read[1]:
+                            self.lng_lat = gps_data_read[0:2]
+                        if gps_data_read[2]:
+                            self.lng_lat_error = gps_data_read[2]
+                        if gps_data_read[3]:
+                            self.speed = gps_data_read[3]
+
+    # 读取rtk gps数据
+    def get_rtk_data(self):
+        if config.current_platform == config.CurrentPlatform.pi:
+            while True:
+                if config.is_contain_rtk:
+                    gps_data_read = self.rtk_obj.read_gps()
+                    if gps_data_read:
+                        if gps_data_read[0] and gps_data_read[1]:
+                            self.lng_lat = gps_data_read[0:2]
+                        if gps_data_read[2]:
+                            self.lng_lat_error = gps_data_read[2]
+                        if gps_data_read[3]:
+                            self.speed = gps_data_read[3]
 
     # 读取lora遥控器数据
     def get_remote_control_data(self, debug=False):
@@ -953,9 +977,7 @@ class PiMain:
 
 if __name__ == '__main__':
     pi_main_obj = PiMain()
-    from drivers import com_data
-
-    if os.path.exists(config.stc_port):
+    if os.path.exists(config.b_com_stc):
         com_data_obj = com_data.ComData(
             config.stc_port,
             config.stc_baud,
@@ -973,6 +995,7 @@ if __name__ == '__main__':
                   't 控制抽水舵机和抽水\n'
                   'f  读取单片机数据\n'
                   'g  获取gps数据\n'
+                  'j  读取rtk数据'
                   'h  单次获取罗盘数据  h1 持续读取罗盘数据求角速度\n'
                   'H  读取维特罗盘数据  校准 s  开始  e 结束  a 设置自动回传  i 初始化 其他为读取\n'
                   'z 退出\n'
@@ -1065,6 +1088,9 @@ if __name__ == '__main__':
             elif key_input.startswith('g'):
                 gps_data = pi_main_obj.gps_obj.read_gps(debug=True)
                 print('gps_data', gps_data)
+            elif key_input.startswith('j'):
+                rtk_data = pi_main_obj.rtk_obj.read_gps(debug=True)
+                print('rtk_data', rtk_data)
             elif key_input.startswith('h'):
                 if len(key_input) == 1:
                     key_input = input('input:  C0  开始  C1 结束 其他为读取 >')
@@ -1135,6 +1161,6 @@ if __name__ == '__main__':
                 pi_main_obj.turn_angular_velocity(debug=True)
         except KeyboardInterrupt:
             break
-        # except Exception as e:
-        #     print({'error': e})
-        #     continue
+        except Exception as e:
+            print({'error': e})
+            continue

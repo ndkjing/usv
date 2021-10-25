@@ -104,7 +104,7 @@ class ComData:
 
     # 发数据
     def send_data(self, data, b_hex=False):
-        print('com send_data',data)
+        print('com send_data', data)
         if b_hex:
             self.uart.write(bytes.fromhex(data))
         else:
@@ -146,6 +146,48 @@ class ComData:
             except Exception as e:
                 print("异常报错：", e)
 
+    def read_gps(self, debug=False):
+        """
+        读取gps数据返回经纬度 误差  速度
+        @param debug:True 答应获取到的数据
+        @return: [经度, 纬度, 误差（米）, 速度, 航向, 磁偏角]
+        """
+        lng = None
+        lat = None
+        lng_lat_error = None
+        speed = None
+        course = None
+        magnetic_declination = None
+        time.sleep(0.1)
+        gps_data = self.readline()
+        str_data = bytes(gps_data).decode('ascii')
+        if str_data.startswith('$GNGGA'):
+            data_list1 = str_data.split(',')
+            lng, lat = float(data_list1[4][:3]) + float(data_list1[4][3:]) / 60, float(data_list1[2][:2]) + float(
+                data_list1[2][2:]) / 60
+        if str_data.startswith('GPRMC'):
+            data_list = str_data.split(',')
+            try:
+                speed = round(float(data_list[7]) * 1.852 / 3.6, 2)  # 将速度单位节转换为 m/s
+            except Exception as convert_speed_error:
+                if debug:
+                    print({'error read_gps convert_speed_error': convert_speed_error})
+            try:
+                course = float(data_list[8])  # 航向
+            except Exception as convert_course_error:
+                if debug:
+                    print({'error read_gps convert_course_error': convert_course_error})
+            try:
+                magnetic_declination = float(data_list[10])  # 磁偏角
+            except Exception as convert_magnetic_declination_error:
+                if debug:
+                    print({
+                        'error read_gps convert_magnetic_declination_error': convert_magnetic_declination_error})
+        if debug:
+            print('[lng, lat, lng_lat_error, speed, course, magnetic_declination]',
+                  [lng, lat, lng_lat_error, speed, course, magnetic_declination])
+        return [lng, lat, lng_lat_error, speed, course, magnetic_declination]
+
     def get_laser_data(self):
         data = self.read_size(30)
         # print(time.time(), type(data), data)
@@ -157,8 +199,10 @@ class ComData:
                 distance = int(i[6:12], 16) / 1000
                 return distance
 
+
 if __name__ == '__main__':
     import config
+
     b_ultrasonic = 0
     b_com_data = 0
     b_gps = 0
@@ -236,9 +280,9 @@ if __name__ == '__main__':
             time.sleep(0.2)
     elif b_laser:
         serial_obj_laser = ComData('com9',
-                             '115200',
-                             timeout=0.3,
-                             logger=logger)
+                                   '115200',
+                                   timeout=0.3,
+                                   logger=logger)
         while True:
             # 控制到位置1 2 3 4 5获取距离
             distance1 = serial_obj_laser.get_laser_data()
@@ -246,7 +290,7 @@ if __name__ == '__main__':
             distance3 = serial_obj_laser.get_laser_data()
             distance4 = serial_obj_laser.get_laser_data()
             distance5 = serial_obj_laser.get_laser_data()
-            print('距离矩阵',distance1,distance2,distance3,distance4,distance5)
+            print('距离矩阵', distance1, distance2, distance3, distance4, distance5)
     # str_data = data.decode('ascii')[:-3]
     # # print('str_data',str_data,type(str_data))
     # if len(str_data)<2:

@@ -259,9 +259,13 @@ ship_code = ship_code_config.ship_code
 # 串口位置和波特率
 # 单片机
 # stc_port = '/dev/ttyAMA0'
+b_stc_com=0
 stc_port = '/dev/ttyUSB0'
 stc_baud = 115200
-b_com_stc = os.path.exists(stc_port)
+if b_stc_com and os.path.exists(stc_port):
+    b_com_stc = 1
+else:
+    b_com_stc = 0
 # http 接口
 # 查询船是否注册  wuhanligong.xxlun.com/union
 http_binding = 'http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/%s' % (ship_code)
@@ -764,6 +768,7 @@ def write_setting(b_base=False,
                        },
                       ddf)
 
+
 ########### 树莓派GPIO端口相关设置 均使用BCM编码端口
 """
 # 水下摄像头云台水平和俯仰
@@ -930,6 +935,17 @@ else:
 min_deep_steer_pwm = 800  # 最下面
 max_deep_steer_pwm = 2400  # 最上面
 
+# 是否含有外置rtk  1
+is_contain_rtk = 1
+if os.path.exists('/dev/ttyUSB0'):
+    rtk_port = '/dev/ttyUSB0'
+elif os.path.exists('/dev/ttyUSB1'):
+    rtk_port = '/dev/ttyUSB'
+elif os.path.exists('/dev/ttyUSB2'):
+    rtk_port = '/dev/ttyUSB2'
+else:
+    is_contain_rtk = 0
+rtk_baud = 9600
 
 class WaterType(enum.Enum):
     wt = 0
@@ -959,4 +975,4 @@ common_log_time = 10
 
 if __name__ == '__main__':
     # write_setting(True, True, True, True)
-    write_setting(False, True, False,False,True, True)
+    write_setting(False, True, False, False, True, True)
