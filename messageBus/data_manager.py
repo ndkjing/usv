@@ -196,6 +196,8 @@ class DataManager:
         self.is_need_drain = False  # 判断是否需要排水
         self.drain_start_time = None  # 记录排水时间
         self.last_send_stc_log_data = None  # 记录上一次发送给单片机数据重复就不用记录日志
+        # 自动排水标志位
+        self.is_auto_drain = 0
 
     # 测试发送障碍物数据
     def send_test_distance(self):
@@ -240,7 +242,7 @@ class DataManager:
     def draw(self):
         """
         """
-        time.sleep(1)
+        # time.sleep(1)
         # 判断开关是否需要打开或者关闭
         if config.home_debug or not config.b_draw:
             if self.server_data_obj.mqtt_send_get_obj.b_draw:
@@ -251,13 +253,14 @@ class DataManager:
                         self.draw_start_time = None
                         self.b_draw_over_send_data = True
                         self.b_sampling = 2
-                        self.server_data_obj.mqtt_send_get_obj.b_draw=0
+                        self.server_data_obj.mqtt_send_get_obj.b_draw = 0
             else:
                 self.draw_start_time = None
         else:
             # 开启了遥控器
             if self.pi_main_obj.b_start_remote:
                 # 判断遥控器控制抽水
+                # 正在抽水时不能让排水发送A0Z
                 if self.pi_main_obj.remote_draw_status == 1:
                     if self.draw_start_time is None:
                         self.draw_start_time = time.time()
@@ -269,14 +272,17 @@ class DataManager:
                             self.b_draw_over_send_data = True
                     # 将时间置空
                     self.draw_start_time = None
-                    # 结束抽水
-                    self.send_stc_data('A0Z')
+                    # 正在排水时不能发送结束抽水
+                    if not self.pi_main_obj.remote_drain_status:
+                        self.send_stc_data('A0Z')
                 # 排水
                 if self.pi_main_obj.remote_drain_status:
                     self.send_stc_data('A2Z')
                     time.sleep(0.1)
                 else:
-                    self.send_stc_data('A0Z')
+                    # 正在抽水时不能发送停止
+                    if self.draw_start_time is None:
+                        self.send_stc_data('A0Z')
                     time.sleep(0.1)
             # 没有开启遥控器
             else:
@@ -293,28 +299,38 @@ class DataManager:
                             self.server_data_obj.mqtt_send_get_obj.b_draw = 0
                             self.is_need_drain = True
                             self.b_sampling = 2
-                    # 放下杆子
-                    self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
-                    if self.pi_main_obj.draw_steer_pwm == self.pi_main_obj.target_draw_steer_pwm:
+                    # 判断是否有杆子放下杆子
+                    if config.b_control_deep:
+                        self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
+                        if self.pi_main_obj.draw_steer_pwm == self.pi_main_obj.target_draw_steer_pwm:
+                            self.send_stc_data('A1Z')
+                    else:
                         self.send_stc_data('A1Z')
                 else:
-                    self.send_stc_data('A0Z')
+                    # 没有在排水才能发送停止
+                    if not self.is_auto_drain:
+                        self.send_stc_data('A0Z')
                     # 没有抽水的情况下杆子都要收回来
-                    self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
+                    if config.b_control_deep:
+                        self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
                     self.draw_start_time = None
 
                 # 判断没有排水则先排水再收杆子
                 if self.is_need_drain:
                     if self.drain_start_time is None:
                         self.drain_start_time = time.time()
+                        self.send_stc_data('A2Z')
+                        self.is_auto_drain = 1
                     else:
                         # 超时中断排水
                         if time.time() - self.drain_start_time > config.draw_time:
                             self.is_need_drain = False
+                            self.drain_start_time = None
                             self.send_stc_data('A0Z')
+                            self.is_auto_drain = 0
                             # 收回杆子
-                            self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
-                    self.send_stc_data('A2Z')
+                            if config.b_control_deep:
+                                self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
 
     # 控制继电器
     def control_relay(self):
@@ -1365,6 +1381,7 @@ class DataManager:
                     self.logger.info({"本地保存检测数据": mqtt_send_detect_data})
                     # 发送结束改为False
                     self.b_draw_over_send_data = False
+                self.b_draw_over_send_data = False
 
     # 必须使用线程发送mqtt状态数据
     def send_mqtt_status_data(self):
@@ -1532,7 +1549,7 @@ class DataManager:
                 try:
                     energy_backhome_threshold = 20 if config.energy_backhome < 20 else config.energy_backhome
                 except Exception as e_e:
-                    print({'e_e':e_e})
+                    print({'e_e': e_e})
                     energy_backhome_threshold = 30
                 if len(self.dump_energy_deque) > 0 and sum(self.dump_energy_deque) / len(
                         self.dump_energy_deque) < energy_backhome_threshold:

@@ -806,7 +806,7 @@ sonar_steer = 21  # 声呐舵机
 
 # 抽水
 b_draw = 1  # 是否有抽水泵
-b_control_deep = 1  # 是否可调深度
+b_control_deep = 0  # 是否可调深度
 draw_steer = 13  # 舵机接口
 
 # 排水
