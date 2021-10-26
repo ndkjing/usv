@@ -164,16 +164,21 @@ class ComData:
             gps_data = self.readline()
             print('readline gps_data',gps_data)
             str_data = bytes(gps_data).decode('ascii')
+            str_data = str_data.strip()
+            print('str data',str_data)
             if str_data.startswith('$GNGGA'):
                 data_list1 = str_data.split(',')
+                print('data list1',data_list1)
                 try:
                     lng, lat = float(data_list1[4][:3]) + float(data_list1[4][3:]) / 60, float(data_list1[2][:2]) + float(
                         data_list1[2][2:]) / 60
                 except Exception as convert_lng_lat_error:
                     if debug:
                         print({'error read_gps convert_lng_lat_error': convert_lng_lat_error})
-            if str_data.startswith('GPRMC'):
+            if str_data.startswith('$GNRMC'):
                 data_list = str_data.split(',')
+                print('data list',data_list)
+
                 try:
                     speed = round(float(data_list[7]) * 1.852 / 3.6, 2)  # 将速度单位节转换为 m/s
                 except Exception as convert_speed_error:
