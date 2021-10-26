@@ -104,7 +104,7 @@ class ComData:
 
     # 发数据
     def send_data(self, data, b_hex=False):
-        print('com send_data',data)
+        print('com send_data', data)
         if b_hex:
             self.uart.write(bytes.fromhex(data))
         else:
@@ -146,6 +146,57 @@ class ComData:
             except Exception as e:
                 print("异常报错：", e)
 
+    def read_gps(self, debug=False):
+        """
+        读取gps数据返回经纬度 误差  速度
+        @param debug:True 答应获取到的数据
+        @return: [经度, 纬度, 误差（米）, 速度, 航向, 磁偏角]
+        """
+        lng = None
+        lat = None
+        lng_lat_error = None
+        speed = None
+        course = None
+        magnetic_declination = None
+        time.sleep(1)
+        try:
+            print('debug',debug)
+            gps_data = self.readline()
+            print('readline gps_data',gps_data)
+            str_data = bytes(gps_data).decode('ascii')
+            if str_data.startswith('$GNGGA'):
+                data_list1 = str_data.split(',')
+                try:
+                    lng, lat = float(data_list1[4][:3]) + float(data_list1[4][3:]) / 60, float(data_list1[2][:2]) + float(
+                        data_list1[2][2:]) / 60
+                except Exception as convert_lng_lat_error:
+                    if debug:
+                        print({'error read_gps convert_lng_lat_error': convert_lng_lat_error})
+            if str_data.startswith('GPRMC'):
+                data_list = str_data.split(',')
+                try:
+                    speed = round(float(data_list[7]) * 1.852 / 3.6, 2)  # 将速度单位节转换为 m/s
+                except Exception as convert_speed_error:
+                    if debug:
+                        print({'error read_gps convert_speed_error': convert_speed_error})
+                try:
+                    course = float(data_list[8])  # 航向
+                except Exception as convert_course_error:
+                    if debug:
+                        print({'error read_gps convert_course_error': convert_course_error})
+                try:
+                    magnetic_declination = float(data_list[10])  # 磁偏角
+                except Exception as convert_magnetic_declination_error:
+                    if debug:
+                        print({
+                            'error read_gps convert_magnetic_declination_error': convert_magnetic_declination_error})
+            if debug:
+                print('[lng, lat, lng_lat_error, speed, course, magnetic_declination]',
+                      [lng, lat, lng_lat_error, speed, course, magnetic_declination])
+        except Exception as e1:
+            print('读取GPS 错误',e1)
+        return [lng, lat, lng_lat_error, speed, course, magnetic_declination]
+
     def get_laser_data(self):
         data = self.read_size(30)
         # print(time.time(), type(data), data)
@@ -157,109 +208,92 @@ class ComData:
                 distance = int(i[6:12], 16) / 1000
                 return distance
 
+
 if __name__ == '__main__':
     import config
+
     b_ultrasonic = 0
     b_com_data = 0
     b_gps = 0
     b_laser = 0
-    check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  5 laser >')
-    if int(check_type) == 1:
-        b_compass = 1
-    elif int(check_type) == 2:
-        b_ultrasonic = 1
-    elif int(check_type) == 3:
-        b_com_data = 1
-    elif int(check_type) == 4:
-        b_gps = 1
-    elif int(check_type) == 5:
-        b_laser = 1
-    elif b_com_data:
-        serial_obj = ComData(config.stc_port,
-                             config.stc_baud,
-                             timeout=0.7,
-                             logger=logger)
-        while True:
-            print(serial_obj.readline())
-            print(serial_obj.readline())
-            print(serial_obj.readline())
-            print(serial_obj.readline())
-            key_input = input('input:')
-            try:
-                i = int(key_input)
-                if i == 1:
-                    serial_obj.send_data('A1Z')
-                else:
-                    serial_obj.send_data('A0Z')
-            except Exception as e:
-                print({'error': e})
-    elif b_ultrasonic:
-        serial_obj = ComData('com3',
-                             '9600',
-                             timeout=0.7,
-                             logger=logger)
-        while True:
-            data = serial_obj.read_size(4)
-            # print(time.time(),type(data),data)
-            str_data = str(binascii.b2a_hex(data))[2:-1]
-            # print(str_data)
-            print(int(str_data[2:-2], 16) / 1000)
-    elif b_gps:
-        serial_obj1 = ComData('com4',
-                              115200,
-                              timeout=1,
-                              logger=logger)
-        serial_obj2 = ComData('com7',
-                              9600,
-                              timeout=1,
-                              logger=logger)
-        while True:
-            data1 = serial_obj1.readline()
-            str_data1 = bytes(data1).decode('ascii')
-            if str_data1.startswith('$GNGGA'):
-                data_list1 = str_data1.split(',')
-                print(data_list1)
-                lng1, lat1 = float(data_list1[4][:3]) + float(data_list1[4][3:]) / 60, float(data_list1[2][:2]) + float(
-                    data_list1[2][2:]) / 60
-                print('经纬度1', lng1, lat1)
-                print('误差1', data_list1[8])
-            time.sleep(0.2)
-            data2 = serial_obj2.readline()
-            str_data2 = bytes(data2).decode('ascii')
-            if str_data2.startswith('$GNGGA') or str_data2.startswith('$GPGGA'):
-                data_list2 = str_data2.split(',')
-                print(data_list2)
-                lng2, lat2 = float(data_list2[4][:3]) + float(data_list2[4][3:]) / 60, float(data_list2[2][:2]) + float(
-                    data_list2[2][2:]) / 60
-                print('经纬度2', lng2, lat2)
-                print('误差2', data_list2[8])
-            time.sleep(0.2)
-    elif b_laser:
-        serial_obj_laser = ComData('com9',
-                             '115200',
-                             timeout=0.3,
-                             logger=logger)
-        while True:
-            # 控制到位置1 2 3 4 5获取距离
-            distance1 = serial_obj_laser.get_laser_data()
-            distance2 = serial_obj_laser.get_laser_data()
-            distance3 = serial_obj_laser.get_laser_data()
-            distance4 = serial_obj_laser.get_laser_data()
-            distance5 = serial_obj_laser.get_laser_data()
-            print('距离矩阵',distance1,distance2,distance3,distance4,distance5)
-    # str_data = data.decode('ascii')[:-3]
-    # # print('str_data',str_data,type(str_data))
-    # if len(str_data)<2:
-    #     continue
-    # # str_data = str_data.encode('utf8')
-    # # print(str_data.split('.'))
-    # float_data = float(str_data)
-    # print(time.time(),'float_data', float_data,type(float_data))
-    # time.sleep(0.1)
-    # t1 = Thread(target=get_com_data)
-    # t2 = Thread(target=send_com_data)
-    # t1.start()
-    # t2.start()
-    # t1.join()
-    # t2.join()
-    # print(str(obj.Read_Line())[2:-5])
+    while True:
+        try:
+            check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  5 laser >')
+            if int(check_type) == 1:
+                b_compass = 1
+            elif int(check_type) == 2:
+                b_ultrasonic = 1
+            elif int(check_type) == 3:
+                b_com_data = 1
+            elif int(check_type) == 4:
+                b_gps = 1
+            elif int(check_type) == 5:
+                b_laser = 1
+            if b_com_data:
+                serial_obj = ComData(config.stc_port,
+                                     config.stc_baud,
+                                     timeout=0.7,
+                                     logger=logger)
+                while True:
+                    print(serial_obj.readline())
+                    print(serial_obj.readline())
+                    print(serial_obj.readline())
+                    print(serial_obj.readline())
+                    key_input = input('input:')
+                    try:
+                        i = int(key_input)
+                        if i == 1:
+                            serial_obj.send_data('A1Z')
+                        else:
+                            serial_obj.send_data('A0Z')
+                    except Exception as e:
+                        print({'error': e})
+            elif b_ultrasonic:
+                serial_obj = ComData('com3',
+                                     '9600',
+                                     timeout=0.7,
+                                     logger=logger)
+                while True:
+                    data = serial_obj.read_size(4)
+                    # print(time.time(),type(data),data)
+                    str_data = str(binascii.b2a_hex(data))[2:-1]
+                    # print(str_data)
+                    print(int(str_data[2:-2], 16) / 1000)
+            elif b_gps:
+                serial_obj1 = ComData('/dev/ttyUSB0',
+                                      9600,
+                                      timeout=1,
+                                      logger=logger)
+                gps_data = serial_obj1.read_gps(True)
+                print('gps_data',gps_data)
+            elif b_laser:
+                serial_obj_laser = ComData('com9',
+                                           '115200',
+                                           timeout=0.3,
+                                           logger=logger)
+                while True:
+                    # 控制到位置1 2 3 4 5获取距离
+                    distance1 = serial_obj_laser.get_laser_data()
+                    distance2 = serial_obj_laser.get_laser_data()
+                    distance3 = serial_obj_laser.get_laser_data()
+                    distance4 = serial_obj_laser.get_laser_data()
+                    distance5 = serial_obj_laser.get_laser_data()
+                    print('距离矩阵', distance1, distance2, distance3, distance4, distance5)
+        except Exception as e:
+            print('e',e)
+        # str_data = data.decode('ascii')[:-3]
+        # # print('str_data',str_data,type(str_data))
+        # if len(str_data)<2:
+        #     continue
+        # # str_data = str_data.encode('utf8')
+        # # print(str_data.split('.'))
+        # float_data = float(str_data)
+        # print(time.time(),'float_data', float_data,type(float_data))
+        # time.sleep(0.1)
+        # t1 = Thread(target=get_com_data)
+        # t2 = Thread(target=send_com_data)
+        # t1.start()
+        # t2.start()
+        # t1.join()
+        # t2.join()
+        # print(str(obj.Read_Line())[2:-5])

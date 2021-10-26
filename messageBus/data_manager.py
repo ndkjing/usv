@@ -1029,7 +1029,7 @@ class DataManager:
                 else:
                     theta_error = 360 + theta_error
             self.theta_error = theta_error
-            left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
+            left_pwm, right_pwm = self.path_track_obj.pid_pwm_forawrd(distance=all_distance,
                                                                 theta_error=theta_error)
             self.last_left_pwm = left_pwm
             self.last_right_pwm = right_pwm
