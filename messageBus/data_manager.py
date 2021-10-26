@@ -1654,6 +1654,7 @@ class DataManager:
                     self.logger.info({"本地保存检测数据": mqtt_send_detect_data})
                     # 发送结束改为False
                     self.b_draw_over_send_data = False
+                self.b_draw_over_send_data = False
 
     # 必须使用线程发送mqtt状态数据
     def send_mqtt_status_data(self):
