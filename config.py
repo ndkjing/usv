@@ -940,7 +940,7 @@ is_contain_rtk = 1
 if os.path.exists('/dev/ttyUSB0'):
     rtk_port = '/dev/ttyUSB0'
 elif os.path.exists('/dev/ttyUSB1'):
-    rtk_port = '/dev/ttyUSB'
+    rtk_port = '/dev/ttyUSB1'
 elif os.path.exists('/dev/ttyUSB2'):
     rtk_port = '/dev/ttyUSB2'
 else:

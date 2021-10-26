@@ -128,16 +128,17 @@ class PiMain:
         # 记录上一次收到有效lora遥控器数据时间
         self.lora_control_receive_time = None
         # 串口数据收发对象
+        print('config.b_com_stc',config.b_com_stc)
         if config.b_com_stc:
             self.com_data_obj = self.get_com_obj(port=config.stc_port,
                                                  baud=config.stc_baud,
                                                  timeout=config.stc2pi_timeout
                                                  )
         if config.is_contain_rtk:
-            self.rtk_obj = self.get_com_obj(port=config.rtk_port,
-                                            baud=config.rtk_baud,
-                                            timeout=config.stc2pi_timeout
-                                            )
+            self.rtk_obj = com_data.ComData(config.rtk_port,
+                                                   config.rtk_baud,
+                                                   timeout=1,
+                                                   logger=logger)
         self.dump_energy = None
         self.last_dump_energy = None  # 用于判断记录日志用
         # gps中获取速度
@@ -977,12 +978,12 @@ class PiMain:
 
 if __name__ == '__main__':
     pi_main_obj = PiMain()
-    if os.path.exists(config.b_com_stc):
-        com_data_obj = com_data.ComData(
-            config.stc_port,
-            config.stc_baud,
-            timeout=config.stc2pi_timeout,
-            logger=logger)
+    # if os.path.exists(config.b_com_stc):
+    #     com_data_obj = com_data.ComData(
+    #         config.stc_port,
+    #         config.stc_baud,
+    #         timeout=config.stc2pi_timeout,
+    #         logger=logger)
     loop_change_pwm_thread = threading.Thread(target=pi_main_obj.loop_change_pwm)
     loop_change_pwm_thread.start()
 
@@ -995,7 +996,7 @@ if __name__ == '__main__':
                   't 控制抽水舵机和抽水\n'
                   'f  读取单片机数据\n'
                   'g  获取gps数据\n'
-                  'j  读取rtk数据'
+                  'j  读取rtk数据\n'
                   'h  单次获取罗盘数据  h1 持续读取罗盘数据求角速度\n'
                   'H  读取维特罗盘数据  校准 s  开始  e 结束  a 设置自动回传  i 初始化 其他为读取\n'
                   'z 退出\n'
@@ -1089,8 +1090,10 @@ if __name__ == '__main__':
                 gps_data = pi_main_obj.gps_obj.read_gps(debug=True)
                 print('gps_data', gps_data)
             elif key_input.startswith('j'):
-                rtk_data = pi_main_obj.rtk_obj.read_gps(debug=True)
-                print('rtk_data', rtk_data)
+                gps_data = pi_main_obj.rtk_obj.read_gps(True)
+                print('gps_data', gps_data)
+                # rtk_data = .read_gps(debug=True)
+                # print('rtk_data', rtk_data)
             elif key_input.startswith('h'):
                 if len(key_input) == 1:
                     key_input = input('input:  C0  开始  C1 结束 其他为读取 >')
