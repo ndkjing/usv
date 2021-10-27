@@ -160,20 +160,28 @@ class ComData:
         magnetic_declination = None
         time.sleep(1)
         try:
-            print('debug',debug)
+            print('debug', debug)
             gps_data = self.readline()
-            print('readline gps_data',gps_data)
+            print('readline gps_data', gps_data)
             str_data = bytes(gps_data).decode('ascii')
             if str_data.startswith('$GNGGA'):
                 data_list1 = str_data.split(',')
                 try:
-                    lng, lat = float(data_list1[4][:3]) + float(data_list1[4][3:]) / 60, float(data_list1[2][:2]) + float(
+                    lng, lat = float(data_list1[4][:3]) + float(data_list1[4][3:]) / 60, float(
+                        data_list1[2][:2]) + float(
                         data_list1[2][2:]) / 60
                 except Exception as convert_lng_lat_error:
                     if debug:
                         print({'error read_gps convert_lng_lat_error': convert_lng_lat_error})
-            if str_data.startswith('GPRMC'):
+            if str_data.startswith('$GPRMC') or str_data.startswith('$GNRMC'):
                 data_list = str_data.split(',')
+                try:
+                    lng, lat = round(float(data_list[5][:3]) + float(data_list[5][3:]) / 60,6), round(
+                        float(data_list[3][:2]) + float(
+                            data_list[3][2:]) / 60,6)
+                except Exception as convert_lng_lat_error:
+                    if debug:
+                        print({'error read_gps convert_lng_lat_error': convert_lng_lat_error})
                 try:
                     speed = round(float(data_list[7]) * 1.852 / 3.6, 2)  # 将速度单位节转换为 m/s
                 except Exception as convert_speed_error:
@@ -194,7 +202,7 @@ class ComData:
                 print('[lng, lat, lng_lat_error, speed, course, magnetic_declination]',
                       [lng, lat, lng_lat_error, speed, course, magnetic_declination])
         except Exception as e1:
-            print('读取GPS 错误',e1)
+            print('读取GPS 错误', e1)
         return [lng, lat, lng_lat_error, speed, course, magnetic_declination]
 
     def get_laser_data(self):
@@ -265,7 +273,7 @@ if __name__ == '__main__':
                                       timeout=1,
                                       logger=logger)
                 gps_data = serial_obj1.read_gps(True)
-                print('gps_data',gps_data)
+                print('gps_data', gps_data)
             elif b_laser:
                 serial_obj_laser = ComData('com9',
                                            '115200',
@@ -280,7 +288,7 @@ if __name__ == '__main__':
                     distance5 = serial_obj_laser.get_laser_data()
                     print('距离矩阵', distance1, distance2, distance3, distance4, distance5)
         except Exception as e:
-            print('e',e)
+            print('e', e)
         # str_data = data.decode('ascii')[:-3]
         # # print('str_data',str_data,type(str_data))
         # if len(str_data)<2:
