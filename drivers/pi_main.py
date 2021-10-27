@@ -886,7 +886,7 @@ class PiMain:
                 if gps_data_read:
                     self.lng_lat = gps_data_read[0:2]
                     self.lng_lat_error = gps_data_read[2]
-
+                    self.speed = gps_data_read[3]
     # 读取lora遥控器数据
     def get_remote_control_data(self, debug=False):
         """
