@@ -132,6 +132,7 @@ class PiSoftuart(object):
                 print({'error read_compass': e})
                 return None
 
+
     def read_gps(self, len_data=None, debug=False):
         """
         读取gps数据返回经纬度 误差  速度
