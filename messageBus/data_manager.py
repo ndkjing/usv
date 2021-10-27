@@ -1329,7 +1329,13 @@ class DataManager:
                                                                                   self.lng_lat[1])
                         self.run_distance += speed_distance
                         # 计算速度
-                        self.speed = round(speed_distance / (time.time() - last_read_time), 1)
+                        # 判断是使用GPS数据中速度还是使用自己计算速度
+                        if self.pi_main_obj.speed is not None:
+                            self.speed = self.pi_main_obj.speed
+                        # 计算速度
+                        else:
+                            self.speed = round(speed_distance / (time.time() - last_read_time), 1)
+                        # self.speed = round(speed_distance / (time.time() - last_read_time), 1)
                         # 替换上一次的值
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
                         # self.gps_log.info({'lng_lat': self.lng_lat})

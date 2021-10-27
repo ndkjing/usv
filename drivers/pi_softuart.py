@@ -134,6 +134,7 @@ class PiSoftuart(object):
             len_data = 4
             try:
                 count, data = self._pi.bb_serial_read(self._rx_pin)
+                lng, lat = None,None
                 if debug:
                     print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
@@ -156,7 +157,24 @@ class PiSoftuart(object):
                                     pass
                                 else:
                                     lng_lat_error = float(data_list[8])
-                                    return [lng, lat, lng_lat_error]
+                                    return [lng, lat, lng_lat_error,None]
+                        if i.startswith('GPRMC') or i.startswith('$GPRMC') or i.startswith('GNRMC') or i.startswith(
+                                '$GNRMC'):
+                            gps_data = i
+                            data_list = gps_data.split(',')
+                            if len(data_list) < 8:
+                                continue
+                            if data_list[2] and data_list[4]:
+                                lng, lat = round(float(data_list[4][:3]) +
+                                                 float(data_list[4][3:]) /
+                                                 60, 6), round(float(data_list[2][:2]) +
+                                                               float(data_list[2][2:]) /
+                                                               60, 6)
+                                if lng < 1 or lat < 1:
+                                    pass
+                                else:
+                                    lng_lat_error = float(data_list[8])
+                                    return [lng, lat, lng_lat_error,None]
                 time.sleep(self._thread_ts * 10)
             except Exception as e:
                 print({'error read_gps': e})

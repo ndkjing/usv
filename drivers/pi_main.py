@@ -131,6 +131,7 @@ class PiMain:
                                                  )
         self.dump_energy = None
         self.last_dump_energy = None  # 用于判断记录日志用
+        self.speed=None
 
     # 获取串口对象
     @staticmethod
