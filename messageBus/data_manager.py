@@ -1504,7 +1504,7 @@ class DataManager:
                                                                                dock_gaode_lng_lat)
                         self.pre_dock_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.dock_lng_lat[0],
                                                                                             self.dock_lng_lat[1],
-                                                                                            dock_direction, 9)
+                                                                                            dock_direction, 3.5)
                     pre_dock_distance = lng_lat_calculate.distanceFromCoordinate(
                         self.gaode_lng_lat[0],
                         self.gaode_lng_lat[1],
@@ -1603,6 +1603,7 @@ class DataManager:
                         # 计算速度
                         else:
                             self.speed = round(speed_distance / (time.time() - last_read_time), 1)
+                        print('data manager speed',self.speed)
                         # 替换上一次的值
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
                         # self.gps_log.info({'lng_lat': self.lng_lat})

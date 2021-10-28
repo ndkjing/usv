@@ -945,7 +945,7 @@ elif os.path.exists('/dev/ttyUSB2'):
     rtk_port = '/dev/ttyUSB2'
 else:
     is_contain_rtk = 0
-rtk_baud = 9600
+rtk_baud = 38400
 
 class WaterType(enum.Enum):
     wt = 0

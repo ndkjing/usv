@@ -902,6 +902,9 @@ class PiMain:
                             self.lng_lat_error = gps_data_read[2]
                         if gps_data_read[3]:
                             self.speed = gps_data_read[3]
+                else:
+                    print('读取数据为rtk 数据')
+                    time.sleep(5)
 
     # 读取rtk gps数据
     def get_rtk_data(self):
@@ -914,8 +917,11 @@ class PiMain:
                             self.lng_lat = gps_data_read[0:2]
                         if gps_data_read[2]:
                             self.lng_lat_error = gps_data_read[2]
+                        else:
+                            self.lng_lat_error = 0.99
                         if gps_data_read[3]:
                             self.speed = gps_data_read[3]
+                            print('self.speed',self.speed)
 
     # 读取lora遥控器数据
     def get_remote_control_data(self, debug=False):
