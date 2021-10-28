@@ -882,11 +882,14 @@ class PiMain:
     def get_gps_data(self):
         if config.current_platform == config.CurrentPlatform.pi:
             while True:
-                gps_data_read = self.gps_obj.read_gps()
+                gps_data_read = self.gps_obj.read_gps(debug=False)
                 if gps_data_read:
-                    self.lng_lat = gps_data_read[0:2]
-                    self.lng_lat_error = gps_data_read[2]
-                    self.speed = gps_data_read[3]
+                    if gps_data_read[0] is not None and gps_data_read[1] is not None:
+                        self.lng_lat = gps_data_read[0:2]
+                    if gps_data_read[2] is not None:
+                        self.lng_lat_error = gps_data_read[2]
+                    if gps_data_read[3] is not None:
+                        self.speed = gps_data_read[3]
     # 读取lora遥控器数据
     def get_remote_control_data(self, debug=False):
         """

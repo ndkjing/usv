@@ -47,8 +47,8 @@ sys.path.append(
         'utils'))
 logger = log.LogHandler('main_log')
 
-if not config.home_debug:
-    time.sleep(config.start_sleep_time)
+# if not config.home_debug:
+#     time.sleep(config.start_sleep_time)
 
 
 def main():

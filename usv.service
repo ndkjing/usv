@@ -1,0 +1,14 @@
+[Unit]
+Description=usv Client
+Wants=network-online.target
+After = network-online.target
+[Service]
+User=pi
+WorkingDirectory=/home/pi/usv/
+LimitNOFILE=4096
+PIDFile=/var/run/usv/client.pid
+ExecStart=/usr/bin/python3.7 /home/pi/usv/main.py
+Restart=on-failure
+StartLimitInterval=600
+[Install]
+WantedBy=multi-user.target
