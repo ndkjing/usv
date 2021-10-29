@@ -355,6 +355,11 @@ class PiMain:
         #     self.draw_steer_pwm = deep_pwm
 
     def loop_change_draw_steer(self, b_slow=True):
+        """
+        持续修改舵机深度跟随舵机目标角度变化
+        @param b_slow:
+        @return:
+        """
         delta_change = 10
         while 1:
             if not config.b_control_deep:

@@ -32,6 +32,7 @@ home_location_path = os.path.join(root_path, 'home_location.json')
 # 记录罗盘数据
 save_compass_data_dir = os.path.join(root_path, 'statics')
 
+
 # 记录gps数据
 
 class CurrentPlatform(enum.Enum):
@@ -831,6 +832,9 @@ class WaterType(enum.Enum):
     NH3_NH4 = 5
 
 
+draw_deep = 0.5  # 抽水深度
+draw_capacity = 1500  # 抽水容量
+draw_speed = 4000  # 抽水速度 毫升/分钟
 """
 电量与电压对应关系  各个阶段之内用线性函数计算
 电量     电压      6S电池     ADC采集数值
