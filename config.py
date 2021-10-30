@@ -42,6 +42,15 @@ class CurrentPlatform(enum.Enum):
     others = 4
 
 
+# 船类型
+class ShipType(enum.Enum):
+    single_draw = 1
+    multi_draw = 2
+    water_detect = 3
+    dock = 4
+    adcp = 5
+current_ship_type = ShipType.single_draw
+
 sysstr = platform.system()
 if sysstr == "Windows":
     print("Call Windows tasks")
@@ -78,11 +87,12 @@ col_gap = 50
 # 湖泊名称
 pool_name = "梁子湖"
 # 视频链接
-try:
-    video_url = get_eviz_url.get_url(ship_code_config.video_code, protocol=2)
-except Exception as e_video_url:
-    video_url = "url获取错误"
-    print({'e_video_url': e_video_url})
+# try:
+#     video_url = get_eviz_url.get_url(ship_code_config.video_code, protocol=2)
+# except Exception as e_video_url:
+#     video_url = "url获取错误"
+#     print({'e_video_url': e_video_url})
+video_url=''
 
 
 def update_base_setting():
@@ -192,12 +202,13 @@ ship_code = ship_code_config.ship_code
 # 串口位置和波特率
 # 单片机
 # stc_port = '/dev/ttyAMA0'
+b_use_stc = 0
 stc_port = '/dev/ttyUSB0'
 stc_baud = 115200
-b_com_stc = os.path.exists(stc_port)
+b_com_stc = 1 if os.path.exists(stc_port) and b_use_stc else 0
 # http 接口
 # 查询船是否注册  wuhanligong.xxlun.com/union
-http_binding = 'http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/%s' % (ship_code)
+http_binding = 'http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/%s' % ship_code
 # 注册新的湖泊ID
 http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
 # http_save = 'http://192.168.8.13:8009/union/admin/xxl/map/save'
@@ -438,7 +449,7 @@ def update_height_setting():
                     print({'error': e})
             if height_setting_data.get('start_sleep_time'):
                 try:
-                    s_start_sleep_time = int(height_setting_data.get('start_sleep_time'))
+                    s_start_sleep_time = float(height_setting_data.get('start_sleep_time'))
                     if s_start_sleep_time < 0:
                         s_start_sleep_time = 3
                     start_sleep_time = s_start_sleep_time
@@ -807,11 +818,11 @@ sonar_steer = 21  # 声呐舵机
 
 # 抽水
 b_draw = 1  # 是否有抽水泵
-b_control_deep = 0  # 是否可调深度
+b_control_deep = 1  # 是否可调深度
 draw_steer = 13  # 舵机接口
 
 # 排水
-b_drain = 1  # 是否有排水泵
+b_drain = 0  # 是否有排水泵
 
 # 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
 if home_debug:
@@ -835,6 +846,7 @@ class WaterType(enum.Enum):
 draw_deep = 0.5  # 抽水深度
 draw_capacity = 1500  # 抽水容量
 draw_speed = 4000  # 抽水速度 毫升/分钟
+number_of_bottles = 1  # 总共包含抽水瓶数
 """
 电量与电压对应关系  各个阶段之内用线性函数计算
 电量     电压      6S电池     ADC采集数值

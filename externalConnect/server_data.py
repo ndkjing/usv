@@ -432,6 +432,7 @@ class MqttSendGet:
             elif topic == 'height_setting_%s' % (config.ship_code):
                 self.logger.info({'height_setting_data': json.loads(msg.payload)})
                 height_setting_data = json.loads(msg.payload)
+                # print('height_setting_data',height_setting_data)
                 if height_setting_data.get("info_type") is None:
                     self.logger.error('"height_setting_data"设置启动消息没有"info_type"字段')
                     return
@@ -442,6 +443,7 @@ class MqttSendGet:
                         with open(config.height_setting_path, 'r') as f:
                             self.height_setting_data = json.load(f)
                     elif info_type == 2:
+                        # 深度暂时用
                         with open(config.height_setting_path, 'r') as f:
                             self.height_setting_data = json.load(f)
                         with open(config.height_setting_path, 'w') as f:

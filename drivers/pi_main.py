@@ -26,9 +26,9 @@ class PiMain:
             self.logger_obj = logger
         self.water_data_dict = {}
         # 遥控器控制外设标志位
-        self.remote_draw_status = 0  # 遥控器控制抽水状态 0 未抽水 1抽水
-        self.remote_drain_status = 0  # 遥控器控制排水状态 0 未排水 1排水
-        self.remote_draw_steer = config.max_deep_steer_pwm  #
+        self.remote_draw_status = 0
+        self.remote_draw_status_0_1 = 0  # 遥控器控制抽水状态控制0和1 水泵 0 未抽水 1抽水
+        self.remote_draw_status_2_3 = 0  # 遥控器控制抽水状态控制2和3 0 未排水 1排水
         self.remote_side_light_status = 2  # 遥控器控制舷灯状态 0 关闭 1 打开  2不管
         self.remote_head_light_status = 2  # 遥控器控制大灯状态 0 关闭 1 打开   2 不管
         # 树莓派pwm波控制对象
@@ -98,10 +98,12 @@ class PiMain:
         self.pi.set_mode(config.draw_left_gpio_pin, pigpio.OUTPUT)
         self.pi.set_mode(config.draw_right_gpio_pin, pigpio.OUTPUT)
         """
-        # 抽水泵舵机
-        self.draw_steer_pwm = config.max_deep_steer_pwm
+        # 当前抽水泵舵机
+        self.draw_steer_pwm = config.max_deep_steer_pwm - 100
         # 目标舵机位置
         self.target_draw_steer_pwm = config.max_deep_steer_pwm
+        # 遥控器希望舵机位置 0 未按下 1 已经按下
+        self.remote_target_draw_steer = 0
         # 云台舵机角度
         self.pan_angle_pwm = 1500
         self.tilt_angle_pwm = 1500
@@ -131,7 +133,7 @@ class PiMain:
                                                  )
         self.dump_energy = None
         self.last_dump_energy = None  # 用于判断记录日志用
-        self.speed=None
+        self.speed = None
 
     # 获取串口对象
     @staticmethod
@@ -336,23 +338,6 @@ class PiMain:
         :return:
         """
         self.target_draw_steer_pwm = deep_pwm
-        # 如果没有可调节深度舵机跳过调节
-        # if not config.b_control_deep:
-        #     return
-        # if b_slow:
-        #     delta_change = 10
-        #     while self.draw_steer_pwm != deep_pwm:
-        #         add_or_sub = 1 if deep_pwm - self.draw_steer_pwm > 0 else -1
-        #         self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
-        #         self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
-        #         time.sleep(0.06)
-        #         # if self.draw_steer_pwm < 1500:
-        #         #     time.sleep(0.07)
-        #         # else:
-        #         #     time.sleep(0.01)
-        # else:
-        #     self.pi.set_servo_pulsewidth(config.draw_steer, deep_pwm)
-        #     self.draw_steer_pwm = deep_pwm
 
     def loop_change_draw_steer(self, b_slow=True):
         """
@@ -895,6 +880,7 @@ class PiMain:
                         self.lng_lat_error = gps_data_read[2]
                     if gps_data_read[3] is not None:
                         self.speed = gps_data_read[3]
+
     # 读取lora遥控器数据
     def get_remote_control_data(self, debug=False):
         """
@@ -917,23 +903,28 @@ class PiMain:
                 if self.b_start_remote:
                     # 判断开始抽水  结束抽水
                     if int(self.remote_control_data[5]) == 10:
-                        self.remote_draw_status = 1
+                        self.remote_draw_status_0_1 = 1  # 第一个水壶抽水
                     elif int(self.remote_control_data[5]) == 1:
-                        self.remote_draw_status = 0
+                        self.remote_draw_status_0_1 = 2  # 第二个水壶抽水
                     elif int(self.remote_control_data[5]) == 0:
-                        self.remote_draw_status = 0
+                        self.remote_draw_status_0_1 = 0  # 1号抽水杆没有工作
                     # 判断开始排水  结束排水
                     if int(self.remote_control_data[7]) == 10:
-                        self.remote_drain_status = 1
+                        self.remote_draw_status_2_3 = 3  # 第三个水壶抽水
                     elif int(self.remote_control_data[7]) == 1:
-                        self.remote_drain_status = 0
+                        self.remote_draw_status_2_3 = 4  # 第四个水壶抽水
                     elif int(self.remote_control_data[7]) == 0:
-                        self.remote_drain_status = 0
-                    # 判断收起舵机  展开舵机
-                    if int(self.remote_control_data[10]) == 1:
-                        self.remote_draw_steer = config.min_deep_steer_pwm
+                        self.remote_draw_status_2_3 = 0  # 2号抽水杆没有工作
+                    # 当有一个需要抽水时就抽水
+                    if self.remote_draw_status_0_1 or self.remote_draw_status_2_3:
+                        self.remote_draw_status = 1
                     else:
-                        self.remote_draw_steer = config.max_deep_steer_pwm
+                        self.remote_draw_status = 0
+                        # 判断收起舵机  展开舵机
+                    if int(self.remote_control_data[10]) == 1:
+                        self.remote_target_draw_steer = 1
+                    else:
+                        self.remote_target_draw_steer = 0
                     # 判断打开舷灯  关闭舷灯
                     if int(self.remote_control_data[6]) == 10:
                         self.remote_side_light_status = 1

@@ -47,6 +47,7 @@ sys.path.append(
         'utils'))
 logger = log.LogHandler('main_log')
 
+
 # if not config.home_debug:
 #     time.sleep(config.start_sleep_time)
 
@@ -106,7 +107,7 @@ def main():
         pi_func_flag.append(True)
         pi_func_flag.append(True)
         pi_func_flag.append(True)
-        pi_func_flag.append(True if os.path.exists(config.stc_port) else False)
+        pi_func_flag.append(True if config.b_com_stc else False)
         pi_func_flag.append(True if config.b_laser else False)
         pi_func_flag.append(True if config.b_millimeter_wave else False)
         pi_func_flag.append(True if config.b_laser or config.b_millimeter_wave else False)
