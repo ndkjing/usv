@@ -28,7 +28,6 @@ class PiMain:
         # 遥控器控制外设标志位
         self.remote_draw_status = 0  # 遥控器控制抽水状态 0 未抽水 1抽水
         self.remote_drain_status = 0  # 遥控器控制排水状态 0 未排水 1排水
-        self.remote_draw_steer = config.max_deep_steer_pwm  #
         self.remote_side_light_status = 2  # 遥控器控制舷灯状态 0 关闭 1 打开  2不管
         self.remote_head_light_status = 2  # 遥控器控制大灯状态 0 关闭 1 打开   2 不管
         # 树莓派pwm波控制对象
@@ -99,7 +98,7 @@ class PiMain:
         self.pi.set_mode(config.draw_right_gpio_pin, pigpio.OUTPUT)
         """
         # 抽水泵舵机
-        self.draw_steer_pwm = config.max_deep_steer_pwm
+        self.draw_steer_pwm = config.max_deep_steer_pwm-100
         # 目标舵机位置
         self.target_draw_steer_pwm = config.max_deep_steer_pwm
         # 云台舵机角度
@@ -926,9 +925,9 @@ class PiMain:
                         self.remote_drain_status = 0
                     # 判断收起舵机  展开舵机
                     if int(self.remote_control_data[10]) == 1:
-                        self.remote_draw_steer = config.min_deep_steer_pwm
+                        self.target_draw_steer_pwm = config.min_deep_steer_pwm
                     else:
-                        self.remote_draw_steer = config.max_deep_steer_pwm
+                        self.target_draw_steer_pwm = config.max_deep_steer_pwm
                     # 判断打开舷灯  关闭舷灯
                     if int(self.remote_control_data[6]) == 10:
                         self.remote_side_light_status = 1
