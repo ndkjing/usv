@@ -271,7 +271,7 @@ def get_current_water_data(area_id=None):
             data_dict = run_crawl_water_data(area_id=area_id)
     else:
         data_dict = run_crawl_water_data(area_id=area_id)
-    print('data_dict', data_dict)
+    # print('data_dict', data_dict)
     if isinstance(data_dict, dict):
         water_data_dict.update({config.WaterType.wt: {'min_data': min(data_dict[config.WaterType.wt]),
                                                       'max_data': max(data_dict[config.WaterType.wt]),

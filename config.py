@@ -77,11 +77,12 @@ col_gap = 50
 # 湖泊名称
 pool_name = "梁子湖"
 # 视频链接
-try:
-    video_url = get_eviz_url.get_url(ship_code_config.video_code, protocol=2)
-except Exception as e_video_url:
-    video_url = "url获取错误"
-    print({'e_video_url': e_video_url})
+video_url=''
+# try:
+#     video_url = get_eviz_url.get_url(ship_code_config.video_code, protocol=2)
+# except Exception as e_video_url:
+#     video_url=''
+#     print({'e_video_url': "url获取错误"})
 
 
 def update_base_setting():
@@ -182,8 +183,6 @@ stc2pi_timeout = 1
 pi2com_timeout = 0.05
 # 给服务器发送时间间隔
 pi2mqtt_interval = 1
-# 上传给单片机心跳时间间隔 单位秒
-# com_heart_time = 1 * 60
 # 线程等待时间
 thread_sleep_time = 0.5
 # 船编号
