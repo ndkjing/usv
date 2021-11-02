@@ -242,99 +242,6 @@ class DataManager:
         elif os.path.exists(config.stc_port):
             self.pi_main_obj.com_data_obj.send_data(data)
 
-    # 抽水
-    def draw(self):
-        """
-        抽水控制函数
-        """
-        if config.draw_time >= 200:
-            temp_draw_time = int(60 * config.draw_time / config.draw_speed)  # 暂时使用抽水时间位置设置为抽水容量
-        else:
-            temp_draw_time = int(60 * config.draw_capacity / config.draw_speed)  # 根据默认配置修改抽水时间
-        # print('###############################config.draw_time  temp_draw_time', config.draw_time, temp_draw_time)
-        # 调试模式 判断开关是否需要打开或者关闭
-        if config.home_debug or not config.b_draw:
-            if self.server_data_obj.mqtt_send_get_obj.b_draw:
-                if self.draw_start_time is None:
-                    self.draw_start_time = time.time()
-                else:
-                    if time.time() - self.draw_start_time > temp_draw_time:
-                        self.draw_start_time = None
-                        self.b_draw_over_send_data = True
-                        self.b_sampling = 2
-                        self.server_data_obj.mqtt_send_get_obj.b_draw = 0
-            else:
-                self.draw_start_time = None
-        else:
-            # 开启了遥控器
-            if self.pi_main_obj.b_start_remote:
-                # 判断遥控器控制抽水
-                # 正在抽水时不能让排水发送A0Z
-                if self.pi_main_obj.remote_draw_status == 1:
-                    if not self.remote_draw_overtime:  # 判断没有超过抽水时间
-                        if self.draw_start_time is None:
-                            self.draw_start_time = time.time()
-                        if self.pi_main_obj.remote_draw_status_0_1 == 1:
-                            self.send_stc_data('A1Z')
-                        elif self.pi_main_obj.remote_draw_status_0_1 == 2:
-                            self.send_stc_data('A3Z')
-                        elif self.pi_main_obj.remote_draw_status_2_3 == 3:
-                            self.send_stc_data('A4Z')
-                        elif self.pi_main_obj.remote_draw_status_2_3 == 4:
-                            self.send_stc_data('A5Z')
-
-                        # 超过抽水时间停止抽水等待拨到0后再次拨到1才抽水
-                        if time.time() - self.draw_start_time > config.draw_time:
-                            self.send_stc_data('A0Z')
-                            self.b_draw_over_send_data = True  # 抽水超时发送数据
-                        # 设置标志位为超时才停止抽水
-                        self.remote_draw_overtime = 1
-                    else:
-                        pass
-                else:
-                    if self.draw_start_time is not None:
-                        self.draw_start_time = None  # 将时间置空
-                    if self.remote_draw_overtime:  # 当拨杆拨到0 后重新将抽水超时置空
-                        self.remote_draw_overtime = 0
-                    self.send_stc_data('A0Z')
-            # 没有开启遥控器
-            else:
-                # 判断是否抽水  点击抽水情况
-                if self.server_data_obj.mqtt_send_get_obj.b_draw:
-                    if self.draw_start_time is None:
-                        self.draw_start_time = time.time()
-                        # 触发一次停止
-                        self.pi_main_obj.stop()
-                    else:
-                        # 超时中断抽水
-                        if time.time() - self.draw_start_time > config.draw_time:
-                            self.server_data_obj.mqtt_send_get_obj.b_draw = 0
-                            self.current_draw_bottle += 1
-                            self.b_sampling = 2
-                            self.b_draw_over_send_data = True  # 抽水超时发送数据
-                    # 判断是否有杆子放下杆子
-                    if config.b_control_deep:
-                        # 计算目标深度的pwm值
-                        target_pwm = self.deep2pwm(config.draw_deep)
-                        self.pi_main_obj.set_draw_deep(target_pwm)
-                        if self.pi_main_obj.draw_steer_pwm == self.pi_main_obj.target_draw_steer_pwm:  # 判断到达目标深度
-                            # TODO测试时候暂时发送1
-                            if self.current_draw_bottle == 1:
-                                self.send_stc_data('A1Z')
-                            elif self.current_draw_bottle == 2:
-                                self.send_stc_data('A1Z')
-                            elif self.current_draw_bottle == 3:
-                                self.send_stc_data('A1Z')
-                            elif self.current_draw_bottle == 4:
-                                self.send_stc_data('A1Z')
-                    else:
-                        self.send_stc_data('A1Z')
-                else:
-                    self.send_stc_data('A0Z')
-                    # 没有抽水的情况下杆子都要收回来
-                    if config.b_control_deep:
-                        self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
-                    self.draw_start_time = None
 
     # 深度转化为pwm值
     def deep2pwm(self, draw_deep):
@@ -1112,7 +1019,7 @@ class DataManager:
         while True:
             time.sleep(0.1)
             # 当状态不是遥控器控制,不在执行任务状态且不在抽水过程中收回抽水杆子
-            self.draw()
+            # self.draw()
 
     # 处理电机控制
     def move_control(self):
@@ -1394,7 +1301,7 @@ class DataManager:
                 draw_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
                 self.send(method='mqtt', topic='draw_data_%s' % config.ship_code, data=draw_data,
                           qos=0)
-                # TODO 等待后端接口
+                # 等待后端接口
                 # if len(self.data_define_obj.pool_code) > 0:
                 #     draw_data.update({'mapId': self.data_define_obj.pool_code})
                 #     try:
