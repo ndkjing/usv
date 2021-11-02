@@ -172,7 +172,8 @@ class MqttSendGet:
         self.is_connected = 0
         # 是否接受到电脑端点击过任何按键
         self.b_receive_mqtt = False
-
+        # 计算距离岸边距离
+        self.bank_distance = 20.0
     # 连接MQTT服务器
     def mqtt_connect(self):
         if not self.is_connected:
@@ -492,7 +493,7 @@ class MqttSendGet:
                                   })
 
             # 处理关机和重启
-            elif topic == 'poweroff_restart_%s' % (config.ship_code):
+            elif topic == 'poweroff_restart_%s' % config.ship_code:
                 poweroff_restart_data = json.loads(msg.payload)
                 if poweroff_restart_data.get('poweroff_restart') is None:
                     self.logger.error('poweroff_restart_处理控制数据没有lng_lat')
@@ -505,6 +506,16 @@ class MqttSendGet:
                     poweroff_restart.restart()
                 elif poweroff_restart_type == 1:
                     poweroff_restart.poweroff()
+
+            # 距离岸边距离话题
+            elif topic == 'bank_distance_%s' % config.ship_code:
+                # self.logger.info({'dock_position_': json.loads(msg.payload)})
+                bank_distance_data = json.loads(msg.payload)
+                if bank_distance_data.get("bank_distance") is None:
+                    self.logger.error('"refresh_"设置启动消息没有"bank_distance"字段')
+                    return
+                else:
+                    self.bank_distance = round(float(bank_distance_data.get('bank_distance')), 1)
 
         except Exception as e:
             self.logger.error({'error': e})

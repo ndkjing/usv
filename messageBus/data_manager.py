@@ -203,44 +203,12 @@ class DataManager:
         # 获取存储的任务  经纬度，采样深度，采样量
         self.plan_dict = []
 
-    # 测试发送障碍物数据
-    def send_test_distance(self):
-        direction = int(random.random() * 360)
-        distance_info_data = {
-            # 设备号
-            "deviceId": "3c50f4c3-a9c1-4872-9f18-883af014380a",
-            # 船头角度  以北为0度 ，逆时针方向为正
-            "direction": direction,
-            # 距离信息 内部为列表，列中中元素为字典，distance为距离单位米  angle为角度单位度，以船头角度为0度 左正右负
-            "distance_info": [{"distance": 4.5, "angle": 20},
-                              {"distance": 7.5, "angle": -20},
-                              {"distance": 6, "angle": 0}],
-        }
-
-        self.send(method='mqtt',
-                  topic='distance_info_%s' % config.ship_code,
-                  data=distance_info_data,
-                  qos=0)
-
+    # 连接mqtt服务器
     def connect_mqtt_server(self):
         while True:
             if not self.server_data_obj.mqtt_send_get_obj.is_connected:
                 self.server_data_obj.mqtt_send_get_obj.mqtt_connect()
             time.sleep(5)
-
-    def send_stc_data(self, data):
-        """
-        发送给单片机数据
-        :param data:
-        :return:
-        """
-        if self.last_send_stc_log_data is not None and self.last_send_stc_log_data != data:
-            self.com_data_send_logger.info(data)
-            self.last_send_stc_log_data = data
-        if config.b_pin_stc:
-            self.pi_main_obj.stc_obj.send_stc_data(data)
-        elif os.path.exists(config.stc_port):
-            self.pi_main_obj.com_data_obj.send_data(data)
 
     # 抽水
     def draw(self):
@@ -842,7 +810,7 @@ class DataManager:
         # 搜索最临近的路点
         distance_list = []
         start_index = self.smooth_path_lng_lat_index[index_]
-        print('self.smooth_path_lng_lat, index_,', self.smooth_path_lng_lat_index, index_)
+        # print('self.smooth_path_lng_lat, index_,', self.smooth_path_lng_lat_index, index_)
         if index_ == 0:
             self.search_list = copy.deepcopy(self.smooth_path_lng_lat[:start_index])
         else:
@@ -880,30 +848,6 @@ class DataManager:
             self.path_info = [index, len(self.smooth_path_lng_lat)]
         return self.search_list[index]
 
-    # 构建障碍物地图
-    def build_obstacle_map(self):
-        """
-        根据超声波距离构建障碍物地图
-        :return: 障碍物位置举证
-        """
-        method = 1
-        if method == 0:
-            map_size = int(20 / 0.5)
-            obstacle_map = np.zeros((map_size, map_size))
-            # 判断前方距离是否有障碍物，根据障碍物改变目标点
-            for k, v in self.pi_main_obj.distance_dict.items():
-                v = min(v, 20)
-                row = int(map_size - math.ceil(math.cos(math.radians(k)) * v / 0.5))
-                col = int((map_size / 2) - 1 - math.ceil(math.sin(math.radians(k)) * v / 0.5))
-                for row_index in range(row):
-                    obstacle_map[row_index, col] = 1
-        else:
-            obstacle_map = [0] * len(self.pi_main_obj.distance_dict.items())
-            for k, v in self.pi_main_obj.distance_dict.items():
-                if v < 5:
-                    obstacle_map[10 + int(k / 0.9)] = 1
-        return obstacle_map
-
     # 往东南西北运动控制
     def nesw_control(self, nest):
         if nest == Nwse.north:
@@ -936,7 +880,8 @@ class DataManager:
             elif config.obstacle_avoid_type == 1:
                 if 1 in self.pi_main_obj.obstacle_list[
                         int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                    return next_point_lng_lat, True
+                    if self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                        return next_point_lng_lat, True
                 else:
                     return path_planning_point_gps, False
             # 避障绕行，根据障碍物计算下一个目标点
@@ -1518,11 +1463,8 @@ class DataManager:
         while True:
             # 循环等待一定时间
             time.sleep(1)
-            if config.home_debug:
-                self.send_test_distance()
-            if config.home_debug:
-                if config.b_play_audio:
-                    audios_manager.play_audio(5, b_backend=False)
+            if config.home_debug and config.b_play_audio:
+                audios_manager.play_audio(5, b_backend=False)
             if self.last_lng_lat:
                 ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
                                                                    self.last_lng_lat[1],
@@ -1563,7 +1505,9 @@ class DataManager:
             notice_info_data = {
                 "distance": str(round(self.distance_p, 2)),
                 # // 路径规划提示消息
-                "path_info": '当前目标点:%d 目标点总数: %d' % (int(self.path_info[0]), int(self.path_info[1])),
+                "path_info": '当前:%d 总共:%d 离岸:%.1f ' % (
+                    int(self.path_info[0]), int(self.path_info[1]),
+                    self.server_data_obj.mqtt_send_get_obj.bank_distance),
                 "progress": progress,
                 # 船执行手动控制信息
                 "control_info": self.control_info,
@@ -1634,25 +1578,43 @@ class DataManager:
     def send_distacne(self):
         while True:
             time.sleep(1)
-            if not self.server_data_obj.mqtt_send_get_obj.is_connected:
-                continue
-            distance_info_data = {}
-            if len(self.pi_main_obj.distance_dict) > 0:
-                distance_info_data.update({'deviceId': config.ship_code})
-                distance_info_data.update({'distance_info': []})
-                for k in self.pi_main_obj.distance_dict.copy():
-                    distance_info_data['distance_info'].append(
-                        {'distance': self.pi_main_obj.distance_dict[k][0],
-                         'angle': self.pi_main_obj.distance_dict[k][1]})
-                if self.current_theta:
-                    distance_info_data.update({'direction': round(self.current_theta)})
-                else:
-                    distance_info_data.update({'direction': 0})
-                # print('distance_data',distance_info_data)
+            if config.home_debug:
+                direction = int(random.random() * 360)
+                distance_info_data = {
+                    # 设备号
+                    "deviceId": "3c50f4c3-a9c1-4872-9f18-883af014380a",
+                    # 船头角度  以北为0度 ，逆时针方向为正
+                    "direction": direction,
+                    # 距离信息 内部为列表，列中中元素为字典，distance为距离单位米  angle为角度单位度，以船头角度为0度 左正右负
+                    "distance_info": [{"distance": 4.5, "angle": 20},
+                                      {"distance": 7.5, "angle": -20},
+                                      {"distance": 6, "angle": 0}],
+                }
+
                 self.send(method='mqtt',
                           topic='distance_info_%s' % config.ship_code,
                           data=distance_info_data,
                           qos=0)
+            else:
+                if not self.server_data_obj.mqtt_send_get_obj.is_connected:
+                    continue
+                distance_info_data = {}
+                if len(self.pi_main_obj.distance_dict) > 0:
+                    distance_info_data.update({'deviceId': config.ship_code})
+                    distance_info_data.update({'distance_info': []})
+                    for k in self.pi_main_obj.distance_dict.copy():
+                        distance_info_data['distance_info'].append(
+                            {'distance': self.pi_main_obj.distance_dict[k][0],
+                             'angle': self.pi_main_obj.distance_dict[k][1]})
+                    if self.current_theta:
+                        distance_info_data.update({'direction': round(self.current_theta)})
+                    else:
+                        distance_info_data.update({'direction': 0})
+                    # print('distance_data',distance_info_data)
+                    self.send(method='mqtt',
+                              topic='distance_info_%s' % config.ship_code,
+                              data=distance_info_data,
+                            qos=0)
 
     # 检查开关相关信息
     def check_switch(self):
@@ -1749,3 +1711,18 @@ class DataManager:
                 return save_data_map
         elif method == 'mqtt':
             self.server_data_obj.send_server_mqtt_data(data=data, topic=topic, qos=qos)
+
+    # 发送给单片机数据
+    def send_stc_data(self, data):
+        """
+        发送给单片机数据
+        :param data:
+        :return:
+        """
+        if self.last_send_stc_log_data is not None and self.last_send_stc_log_data != data:
+            self.com_data_send_logger.info(data)
+            self.last_send_stc_log_data = data
+        if config.b_pin_stc:
+            self.pi_main_obj.stc_obj.send_stc_data(data)
+        elif config.b_com_stc:
+            self.pi_main_obj.com_data_obj.send_data(data)
