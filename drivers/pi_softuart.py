@@ -477,7 +477,7 @@ class PiSoftuart(object):
                                 data_dict.update({index: [distance, angle, speed]})
                                 if debug:
                                     print('data',data)
-                                    print('##################拼接数据')
+                                    print('##################拼接毫米波数据')
                                     print('index:{}distance:{},angle:{},speed:{}'.format(index,distance, angle, speed))
                             except Exception as read_millimeter_wave_e:
                                 if debug:
@@ -488,7 +488,7 @@ class PiSoftuart(object):
                                 id = int(i[7:8], 16)
                                 if debug:
                                     print('data', data)
-                                    print('##################拼接数据')
+                                    print('##################拼接毫米波数据')
                                     print({'target_id': id})
                             except Exception as more_data_e:
                                 if debug:
