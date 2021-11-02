@@ -133,6 +133,8 @@ class SimplePid:
             forward_pwm = max_control * (temp_forward_pwm) / (temp_forward_pwm + abs(steer_pwm))
             steer_pwm = max_control * (steer_pwm / (temp_forward_pwm + abs(steer_pwm)))
         if debug:
+            print(time.time(), "dock_steer_coefficient:%f,dock_forward_coefficient:%f,dock_kp:%f,dock_ki:%f,dock_kd:%f" % (
+                config.dock_steer_coefficient, config.dock_forward_coefficient, config.dock_kp, config.dock_ki,config.dock_kd))
             print(time.time(), "theta_error:%f,steer_control:%f,steer_pwm:%f,forward_pwm:%f" % (
                 theta_error, steer_control, steer_pwm, forward_pwm))
         left_pwm = config.stop_pwm - (int(forward_pwm) - int(steer_pwm))
