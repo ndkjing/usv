@@ -116,6 +116,7 @@ class PiMain:
         self.right_sidelight_output = 0
         # 遥控器控制数据
         self.remote_control_data = []
+        self.last_remote_control_data = []
         # 求角速度     逆时针方向角速度为正值
         self.theta_list = []  # (时间，角度)
         self.angular_velocity = None
@@ -209,12 +210,31 @@ class PiMain:
     def check_remote_pwm(self, b_lora_remote_control=True):
         """
         遥控器输入
+        :@param b_lora_remote_control 为 True表示为lora遥控器,false 为通用2.4g遥控器
         :return:
         """
         if b_lora_remote_control:
             if self.remote_control_data:
+                # 记录上一次接收到的遥控器控制数据 校验两次之差大于20 就只改变20
+                # if self.last_remote_control_data:
+                    # 校验数据
+                    # if abs(self.remote_control_data[2] - self.last_remote_control_data[2]) > 20:
+                    #     add_or_sub_2 = 1 if self.remote_control_data[2] - self.last_remote_control_data[2] > 0 else -1
+                    #     self.remote_control_data[2] = self.last_remote_control_data[2] + 20 * add_or_sub_2
+                    # if abs(self.remote_control_data[3] - self.last_remote_control_data[3]) > 20:
+                    #     add_or_sub_3 = 1 if self.remote_control_data[2] - self.last_remote_control_data[2] > 0 else -1
+                    #     self.remote_control_data[3] = self.last_remote_control_data[3] + 20 * add_or_sub_3
+                if self.remote_control_data[2] < 1:
+                    self.remote_control_data[2]=1
+                elif self.remote_control_data[2] > 99:
+                    self.remote_control_data[2] = 99
+                if self.remote_control_data[3] < 1:
+                    self.remote_control_data[3] = 1
+                elif self.remote_control_data[3] > 99:
+                    self.remote_control_data[3] = 99
                 remote_forward_pwm = int((99 - self.remote_control_data[2]) * 10 + 1000)
                 remote_steer_pwm = int(self.remote_control_data[3] * 10 + 1000)
+                # self.last_remote_control_data = copy.deepcopy(self.remote_control_data)
             else:
                 remote_forward_pwm = 1500
                 remote_steer_pwm = 1500
@@ -399,11 +419,11 @@ class PiMain:
     # 初始化电机
     def init_motor(self):
         self.set_pwm(config.stop_pwm, config.stop_pwm)
-        time.sleep(2)
-        self.set_pwm(config.stop_pwm + 200, config.stop_pwm + 200)
-        time.sleep(3)
-        self.set_pwm(config.stop_pwm - 200, config.stop_pwm - 200)
-        time.sleep(2)
+        time.sleep(1)
+        self.set_pwm(config.stop_pwm + 100, config.stop_pwm + 100)
+        time.sleep(1)
+        self.set_pwm(config.stop_pwm - 100, config.stop_pwm - 100)
+        time.sleep(1)
         self.set_pwm(config.stop_pwm, config.stop_pwm)
         time.sleep(config.motor_init_time)
 
@@ -1106,8 +1126,6 @@ if __name__ == '__main__':
                 print('millimeter_wave', millimeter_wave_data)
             elif key_input.startswith('n'):
                 pi_main_obj.get_distance_dict_millimeter(debug=True)
-            elif key_input.startswith('m'):
-                pi_main_obj.init_motor()
             elif key_input[0] in ['A', 'B', 'C', 'D', 'E']:
                 print('len(key_input)', len(key_input))
                 if len(key_input) == 2 and key_input[1] in ['0', '1', '2', '3', '4']:

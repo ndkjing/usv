@@ -39,6 +39,7 @@ class PiSoftuart(object):
         self.last_send = None
         self.last_lora_data = None  # 数据一次没有收完等待下次数据用于拼接
         self.dump_energy_queue = deque(maxlen=25)
+        self.last_stc_print_time = time.time()  # 记录上一次打印接受转化数据报错信息时间用于超时打印
 
     def flushInput(self):
         pigpio.exceptions = False  # fatal exceptions off (so that closing an unopened gpio doesn't error)
@@ -134,8 +135,8 @@ class PiSoftuart(object):
             len_data = 4
             try:
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                lng, lat = None,None
-                lng_lat_error, speed, course, magnetic_declination = None,None,None,None
+                lng, lat = None, None
+                lng_lat_error, speed, course, magnetic_declination = None, None, None, None
                 if debug:
                     print(time.time(), 'count', count, 'data', data)
                 # if count > len_data:
@@ -407,7 +408,6 @@ class PiSoftuart(object):
                             if self.last_lora_data is not None:
                                 concate_lora_data = self.last_lora_data + temp_data
                                 if concate_lora_data[0] == 'A' and concate_lora_data[-1] == 'Z':
-                                    print("################condate data")
                                     return_list = PiSoftuart.split_lora_data(concate_lora_data)
                 return return_list
             except Exception as e:
@@ -505,10 +505,13 @@ class PiSoftuart(object):
                 if return_dict:
                     print('return_dict', return_dict)
             if len(self.dump_energy_queue) > 20:
-                return_dict.update({'dump_energy': [round(sum(self.dump_energy_queue) / len(self.dump_energy_queue), 1)]})
+                return_dict.update(
+                    {'dump_energy': [round(sum(self.dump_energy_queue) / len(self.dump_energy_queue), 1)]})
             if water_data_list is not None:
                 return_dict.update({'water': water_data_list})
             return return_dict
         except Exception as e:
-            print({'error read_stc_data': e})
+            if time.time() - self.last_stc_print_time > 15:
+                print({'error read_stc_data': e})
+                self.last_stc_print_time = time.time()
             return {}
