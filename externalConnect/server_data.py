@@ -200,7 +200,6 @@ class MqttSendGet:
         try:
             # 回调更新控制数据
             topic = msg.topic
-
             self.last_command_time = time.time()
             # 处理控制数据
             if topic == 'control_data_%s' % config.ship_code:

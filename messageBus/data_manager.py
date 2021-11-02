@@ -286,6 +286,7 @@ class DataManager:
                         # 超过抽水时间停止抽水等待拨到0后再次拨到1才抽水
                         if time.time() - self.draw_start_time > config.draw_time:
                             self.send_stc_data('A0Z')
+                            self.b_sampling = 2
                             self.b_draw_over_send_data = True  # 抽水超时发送数据
                         # 设置标志位为超时才停止抽水
                         self.remote_draw_overtime = 1
@@ -318,7 +319,6 @@ class DataManager:
                         target_pwm = self.deep2pwm(config.draw_deep)
                         self.pi_main_obj.set_draw_deep(target_pwm)
                         if self.pi_main_obj.draw_steer_pwm == self.pi_main_obj.target_draw_steer_pwm:  # 判断到达目标深度
-                            # TODO测试时候暂时发送1
                             if self.current_draw_bottle == 1:
                                 self.send_stc_data('A1Z')
                             elif self.current_draw_bottle == 2:
@@ -462,6 +462,34 @@ class DataManager:
             time.sleep(0.1)
             if not config.home_debug and self.pi_main_obj:
                 self.control_relay()
+
+    # 抽水排水控制
+    def control_draw_thread(self):
+        while True:
+            time.sleep(0.1)
+            # 当状态不是遥控器控制,不在执行任务状态且不在抽水过程中收回抽水杆子
+            self.draw()
+
+    # 检查是否需要返航
+    def check_backhome(self):
+        """
+        返回返航状态或者None
+        :return:返回None为不需要返航，返回低电量返航或者断网返航
+        """
+        return_ship_status = None
+        if config.network_backhome and self.server_data_obj.mqtt_send_get_obj.is_connected:
+            if int(config.network_backhome) > 600:
+                network_backhome_time = int(config.network_backhome)
+            else:
+                network_backhome_time = 600
+            # 使用过电脑端按键操作过才能进行断网返航
+            if self.server_data_obj.mqtt_send_get_obj.b_receive_mqtt:
+                if time.time() - self.server_data_obj.mqtt_send_get_obj.last_command_time > network_backhome_time:
+                    return_ship_status = ShipStatus.backhome_network
+        if self.low_dump_energy_warnning:
+            # 记录是因为按了低电量判断为返航
+            return_ship_status = ShipStatus.backhome_low_energy
+        return return_ship_status
 
     def clear_all_status(self):
         self.logger.info('清除自动状态数据')
@@ -736,27 +764,6 @@ class DataManager:
                 if not config.home_debug and self.pi_main_obj.b_start_remote:
                     self.change_status_info(target_status=ShipStatus.remote_control)
 
-    # 检查是否需要返航
-    def check_backhome(self):
-        """
-        返回返航状态或者None
-        :return:返回None为不需要返航，返回低电量返航或者断网返航
-        """
-        return_ship_status = None
-        if config.network_backhome and self.server_data_obj.mqtt_send_get_obj.is_connected:
-            if int(config.network_backhome) > 600:
-                network_backhome_time = int(config.network_backhome)
-            else:
-                network_backhome_time = 600
-            # 使用过电脑端按键操作过才能进行断网返航
-            if self.server_data_obj.mqtt_send_get_obj.b_receive_mqtt:
-                if time.time() - self.server_data_obj.mqtt_send_get_obj.last_command_time > network_backhome_time:
-                    return_ship_status = ShipStatus.backhome_network
-        if self.low_dump_energy_warnning:
-            # 记录是因为按了低电量判断为返航
-            return_ship_status = ShipStatus.backhome_low_energy
-        return return_ship_status
-
     # 平滑路径
     def smooth_path(self):
         """
@@ -897,51 +904,6 @@ class DataManager:
                 if v < 5:
                     obstacle_map[10 + int(k / 0.9)] = 1
         return obstacle_map
-
-    # 发送数据
-    def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):
-        """
-        :param url:
-        :param http_type:
-        :param qos:
-        :param topic:
-        :param data: 发送数据
-        :param method 获取数据方式　http mqtt com
-        """
-        assert method in ['http', 'mqtt', 'com'], 'method error not in http mqtt com'
-        if method == 'http':
-            return_data = self.server_data_obj.send_server_http_data(http_type, data, url)
-            self.logger.info({'请求 url': url, 'status_code': return_data.status_code})
-            # 如果是POST返回的数据，添加数据到地图数据保存文件中
-            if http_type == 'POST' and r'map/save' in url:
-                content_data = json.loads(return_data.content)
-                self.logger.info({'map/save content_data success': content_data["success"]})
-                if not content_data["success"]:
-                    self.logger.error('POST请求发送地图数据失败')
-                # POST 返回湖泊ID
-                pool_id = content_data['data']['id']
-                return pool_id
-            # http发送检测数据给服务器
-            elif http_type == 'POST' and r'data/save' in url:
-                content_data = json.loads(return_data.content)
-                self.logger.debug({'data/save content_data success': content_data["success"]})
-                if not content_data["success"]:
-                    self.logger.error('POST发送检测请求失败')
-            elif http_type == 'GET' and r'device/binding' in url:
-                content_data = json.loads(return_data.content)
-                if not content_data["success"]:
-                    self.logger.error('GET请求失败')
-                save_data_binding = content_data["data"]
-                return save_data_binding
-            else:
-                # 如果是GET请求，返回所有数据的列表
-                content_data = json.loads(return_data.content)
-                if not content_data["success"]:
-                    self.logger.error('GET请求失败')
-                save_data_map = content_data["data"]["mapList"]
-                return save_data_map
-        elif method == 'mqtt':
-            self.server_data_obj.send_server_mqtt_data(data=data, topic=topic, qos=qos)
 
     # 往东南西北运动控制
     def nesw_control(self, nest):
@@ -1106,13 +1068,6 @@ class DataManager:
             if b_back_home:
                 if distance_sample < config.arrive_distance:
                     return True
-
-    # 抽水排水控制
-    def control_draw_thread(self):
-        while True:
-            time.sleep(0.1)
-            # 当状态不是遥控器控制,不在执行任务状态且不在抽水过程中收回抽水杆子
-            self.draw()
 
     # 处理电机控制
     def move_control(self):
@@ -1294,20 +1249,15 @@ class DataManager:
                 else:
                     if not config.home_debug:
                         self.pi_main_obj.stop()
-            # 执行任务中
-            # elif self.ship_status == ShipStatus.tasking:
-            #     if not config.home_debug:
-            #         self.pi_main_obj.stop()
-            #     # 不是使能遥控导致进入任务模式就需要放下抽水管
-            #     if not config.home_debug and not self.pi_main_obj.b_start_remote:
-            #         # 放下抽水杆子
-            #         self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
-            #     # 执行抽水
-            #     self.draw()
 
+    # 更新经纬度为高德经纬度
     def update_ship_gaode_lng_lat(self):
-        # 更新经纬度为高德经纬度
+        """
+        将真实经纬度转换为高德经纬度用于在地图上显示
+        @return:
+        """
         while True:
+            time.sleep(1)
             if config.home_debug:
                 if self.lng_lat is None:
                     self.lng_lat = config.ship_gaode_lng_lat
@@ -1331,10 +1281,13 @@ class DataManager:
             # 调试模式下自身经纬度和高德经纬度一致
             elif self.lng_lat is not None and not self.use_true_gps:
                 self.gaode_lng_lat = self.lng_lat
-            time.sleep(config.pi2mqtt_interval)
 
     # 更新经纬度
     def update_lng_lat(self):
+        """
+        将读取到的经纬度更新为自身经纬度并计算里程
+        @return:
+        """
         last_read_time = None
         while True:
             if not config.home_debug and \
@@ -1394,20 +1347,44 @@ class DataManager:
                 draw_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
                 self.send(method='mqtt', topic='draw_data_%s' % config.ship_code, data=draw_data,
                           qos=0)
+
                 # 等待后端接口
-                # if len(self.data_define_obj.pool_code) > 0:
-                #     draw_data.update({'mapId': self.data_define_obj.pool_code})
-                #     try:
-                #         self.send(method='http', data=draw_data,
-                #                   url=config.http_draw_save,
-                #                   http_type='POST')
-                #     except Exception as e:
-                #         self.data_save_logger.info({"发送检测数据error": e})
-                #     self.data_save_logger.info({"发送检测数据": draw_data})
+                if len(self.data_define_obj.pool_code) > 0:
+                    draw_data.update({'mapId': self.data_define_obj.pool_code})
+                    try:
+                        self.send(method='http', data=draw_data,
+                                  url=config.http_draw_save,
+                                  http_type='POST')
+                    except Exception as e:
+                        self.data_save_logger.info({"发送检测数据error": e})
+                    self.data_save_logger.info({"发送检测数据": draw_data})
                 # 发送结束改为False
                 self.b_draw_over_send_data = False
+            elif config.home_debug:
+                if self.server_data_obj.mqtt_send_get_obj.pool_code:
+                    self.data_define_obj.pool_code = self.server_data_obj.mqtt_send_get_obj.pool_code
+                draw_data = {}
+                draw_data.update({'deviceId': config.ship_code})
+                draw_data.update({'mapId': self.data_define_obj.pool_code})
+                draw_data.update({"capacity": str(config.draw_capacity)})
+                draw_data.update({"deep": config.draw_deep})
+                draw_data.update({"bottleNum": self.current_draw_bottle})
+                # 添加经纬度
+                draw_data.update({'jwd': json.dumps(self.lng_lat)})
+                draw_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
+                self.send(method='mqtt', topic='draw_data_%s' % config.ship_code, data=draw_data,
+                          qos=0)
+                try:
+                    print('####################send sample data')
+                    self.send(method='http', data=draw_data,
+                              url=config.http_draw_save,
+                              http_type='POST')
+                except Exception as e:
+                    self.data_save_logger.info({"发送抽水数据error": e})
+                self.data_save_logger.info({"############################发送抽水数据": draw_data})
+                time.sleep(5)
 
-    # 必须使用线程发送mqtt状态数据
+    # 必须使用线程发送mqtt基本状态数据
     def send_mqtt_status_data(self):
         last_runtime = None
         last_run_distance = None
@@ -1537,7 +1514,7 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.height_setting_data_info = 0
             time.sleep(config.pi2mqtt_interval)
 
-    # 状态检查函数，检查自身状态发送对应消息
+    # 状态检查函数，检查自身状态发送对应提示消息
     def check_status(self):
         while True:
             # 循环等待一定时间
@@ -1646,13 +1623,13 @@ class DataManager:
                 continue
             if config.b_check_network:
                 ping = check_network.get_ping_delay()
-                if not check_network.get_ping_delay():
+                if ping:
+                    self.ping = ping
+                else:
                     if config.b_play_audio:
                         audios_manager.play_audio(2, b_backend=False)
                     self.logger.error('当前无网络信号')
                     self.server_data_obj.mqtt_send_get_obj.is_connected = 0
-                else:
-                    self.ping = ping
 
     # 发送障碍物信息线程
     def send_distacne(self):
@@ -1685,7 +1662,7 @@ class DataManager:
         :return:
         """
         while True:
-            time.sleep(1)
+            time.sleep(0.5)
             switch_data = {
                 # 检测 1 检测 没有该键表示不检测
                 "b_sampling": self.server_data_obj.mqtt_send_get_obj.b_draw,
@@ -1722,3 +1699,54 @@ class DataManager:
                 data_valid.get_current_water_data(area_id=self.area_id)
                 self.b_check_get_water_data = 1
             time.sleep(3)
+
+    # 发送数据
+    def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):
+        """
+        :param url:
+        :param http_type:
+        :param qos:
+        :param topic:
+        :param data: 发送数据
+        :param method 获取数据方式　http mqtt com
+        """
+        assert method in ['http', 'mqtt', 'com'], 'method error not in http mqtt com'
+        if method == 'http':
+            return_data = self.server_data_obj.send_server_http_data(http_type, data, url)
+            self.logger.info({'请求 url': url, 'status_code': return_data.status_code})
+            # 如果是POST返回的数据，添加数据到地图数据保存文件中
+            if http_type == 'POST' and r'map/save' in url:
+                content_data = json.loads(return_data.content)
+                self.logger.info({'map/save content_data success': content_data["success"]})
+                if not content_data["success"]:
+                    self.logger.error('POST请求发送地图数据失败')
+                # POST 返回湖泊ID
+                pool_id = content_data['data']['id']
+                return pool_id
+            # http发送检测数据给服务器
+            elif http_type == 'POST' and r'data/save' in url:
+                content_data = json.loads(return_data.content)
+                self.logger.debug({'data/save content_data success': content_data["success"]})
+                if not content_data["success"]:
+                    self.logger.error('POST发送检测请求失败')
+            # http发送采样数据给服务器
+            elif http_type == 'POST' and r'data/sampling' in url:
+                content_data = json.loads(return_data.content)
+                self.logger.debug({'data/save content_data success': content_data["success"]})
+                if not content_data["success"]:
+                    self.logger.error('POST发送采样请求失败')
+            elif http_type == 'GET' and r'device/binding' in url:
+                content_data = json.loads(return_data.content)
+                if not content_data["success"]:
+                    self.logger.error('GET请求失败')
+                save_data_binding = content_data["data"]
+                return save_data_binding
+            else:
+                # 如果是GET请求，返回所有数据的列表
+                content_data = json.loads(return_data.content)
+                if not content_data["success"]:
+                    self.logger.error('GET请求失败')
+                save_data_map = content_data["data"]["mapList"]
+                return save_data_map
+        elif method == 'mqtt':
+            self.server_data_obj.send_server_mqtt_data(data=data, topic=topic, qos=qos)

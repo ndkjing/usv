@@ -216,8 +216,8 @@ http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
 http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
 # http_data_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
 # 发送抽水瓶号数据
-http_draw_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/draw/save'
-# http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
+# http_draw_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/sampling/save'
+http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/sampling/save'
 # 获取存储的任务数据
 http_plan_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/plan/save'
 # http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
@@ -275,7 +275,7 @@ if current_platform == CurrentPlatform.pi:
     home_debug = 0
 else:
     home_debug = 1
-# 添加避障方式设置0 不避障 1 避障停止  2 自动避障绕行 3 自动避障绕行和手动模式下避障停止
+# 添加避障方式设置0 不避障 1 避障停止  2 自动避障绕行  3 自动避障绕行和手动模式下避障停止
 obstacle_avoid_type = 0
 control_obstacle_distance = 2.5  # 手动模式避障距离 单位m
 # 路径规划方式  0 不平滑路径 1 平滑路径

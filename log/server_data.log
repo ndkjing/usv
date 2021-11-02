@@ -85,3 +85,167 @@
 2021-11-01 11:01:10,281 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
 2021-11-01 11:01:10,281 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
 2021-11-01 11:01:10,282 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,383 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,395 server_data.py[line:192] INFO Connected with result code:  0
+2021-11-02 10:22:48,413 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,425 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,461 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,479 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,491 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,503 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,527 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,556 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,574 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,592 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,628 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,634 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,664 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,676 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,688 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:22:48,712 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,701 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,713 server_data.py[line:192] INFO Connected with result code:  0
+2021-11-02 10:23:27,725 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,749 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,773 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,785 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,803 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,815 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,827 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,851 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,869 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,881 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,893 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,905 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,923 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,935 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,971 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:27,994 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:23:29,639 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:24:27,008 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:24:34,535 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:24:41,861 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:28:01,599 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,617 server_data.py[line:192] INFO Connected with result code:  0
+2021-11-02 10:28:01,659 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,671 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,695 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,719 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,737 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,757 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,769 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,804 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,816 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,834 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,852 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,870 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,882 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,906 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,924 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:01,960 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:03,547 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:28:10,950 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:28:18,268 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:28:49,798 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:49,804 server_data.py[line:192] INFO Connected with result code:  0
+2021-11-02 10:28:49,810 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:49,834 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:49,846 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:49,864 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:49,876 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:49,894 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:49,906 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:49,918 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:49,936 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:49,960 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:49,972 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:49,995 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:50,001 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:50,025 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:50,031 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:50,049 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:28:51,740 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:31:48,522 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,522 server_data.py[line:192] INFO Connected with result code:  0
+2021-11-02 10:31:48,541 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,553 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,577 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,589 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,607 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,636 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,660 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,678 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,702 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,720 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,738 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,774 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,792 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,798 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,816 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:48,828 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:31:50,462 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:32:33,763 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:37:38,384 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,390 server_data.py[line:192] INFO Connected with result code:  0
+2021-11-02 10:37:38,408 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,420 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,438 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,469 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,481 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,493 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,517 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,529 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,541 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,559 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,577 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,594 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,624 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,636 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,660 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:38,678 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:37:40,327 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:38:41,009 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,020 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,020 server_data.py[line:192] INFO Connected with result code:  0
+2021-11-02 10:38:41,026 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,044 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,056 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,068 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,092 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,098 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,116 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,122 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,134 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,152 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,194 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,233 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,233 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,233 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:41,233 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:38:42,953 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:39:04,733 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,745 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,757 server_data.py[line:192] INFO Connected with result code:  0
+2021-11-02 10:39:04,763 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,787 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,806 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,818 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,824 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,836 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,869 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,888 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,908 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,925 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,943 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,973 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:04,991 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:05,015 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:05,039 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
+2021-11-02 10:39:06,685 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:39:32,382 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:39:44,569 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:39:54,038 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:40:01,835 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:40:10,421 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:40:18,229 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
+2021-11-02 10:40:26,936 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save

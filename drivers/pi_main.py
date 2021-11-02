@@ -167,7 +167,8 @@ class PiMain:
 
     def get_gps_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx,
-                                      baud=config.pin_gps_baud)
+                                      baud=config.pin_gps_baud,
+                                      time_out=0.2)
 
     def get_laser_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=19, tx_pin=13, baud=115200, time_out=0.01)

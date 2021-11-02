@@ -134,6 +134,7 @@ class PiSoftuart(object):
         if len_data is None:
             len_data = 4
             try:
+                time.sleep(self._thread_ts)
                 count, data = self._pi.bb_serial_read(self._rx_pin)
                 lng, lat = None, None
                 lng_lat_error, speed, course, magnetic_declination = None, None, None, None
@@ -207,6 +208,21 @@ class PiSoftuart(object):
                             data_list = gps_data.split(',')
                             if len(data_list) < 8:
                                 continue
+                            if data_list[2] and data_list[4]:
+                                try:
+                                    lng = round(float(data_list[5][:3]) + float(data_list[5][3:]) / 60, 6)
+                                    lat = round(float(data_list[3][:2]) + float(data_list[3][2:]) / 60, 6)
+                                    if lng < 1 or lat < 1:  # 太小可能是假数据直接跳过
+                                        lng = None
+                                        lat = None
+                                except Exception as convert_lng_lat_error:
+                                    if debug:
+                                        print({'error read_gps convert_lng_lat_error': convert_lng_lat_error})
+                                try:
+                                    lng_lat_error = float(data_list[8])
+                                except Exception as convert_lng_lat_error:
+                                    if debug:
+                                        print({'error read_gps convert_lng_lat_error': convert_lng_lat_error})
                             try:
                                 speed = round(float(data_list[7]) * 1.852 / 3.6, 2)  # 将速度单位节转换为 m/s
                             except Exception as convert_speed_error:
@@ -224,7 +240,7 @@ class PiSoftuart(object):
                                     print({
                                         'error read_gps convert_magnetic_declination_error': convert_magnetic_declination_error})
                     return [lng, lat, lng_lat_error, speed, course, magnetic_declination]
-                time.sleep(self._thread_ts * 10)
+
             except Exception as e:
                 print({'error read_gps': e})
                 return None
