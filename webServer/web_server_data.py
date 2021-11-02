@@ -384,4 +384,4 @@ if __name__ == '__main__':
                   (config.ship_code),
             data=data_define.init_detect_data,
             qos=1)
-        time.sleep(config.pi2mqtt_interval)
+        time.sleep(1)

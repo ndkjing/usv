@@ -640,7 +640,6 @@ class DataManager:
     # 处理状态切换
     def change_status(self):
         while True:
-            # 删除任务模式，将抽水单独控制
             time.sleep(0.1)
             d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
             self.direction = d
@@ -1073,7 +1072,7 @@ class DataManager:
     def move_control(self):
         b_log_points = 1  # 防止寻点模式下等待用户点击开始前一直记录日志
         while True:
-            time.sleep(config.thread_sleep_time)
+            time.sleep(0.1)
             control_info_dict = {
                 ShipStatus.computer_control: '电脑手动',
                 ShipStatus.remote_control: '遥控器控制',
@@ -1483,6 +1482,7 @@ class DataManager:
     # 配置更新
     def update_config(self):
         while True:
+            time.sleep(1)
             # 客户端获取基础设置数据
             if self.server_data_obj.mqtt_send_get_obj.base_setting_data_info in [1, 4]:
                 if self.server_data_obj.mqtt_send_get_obj.base_setting_data is None:
@@ -1512,13 +1512,12 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.height_setting_data = None
                     # 改为0位置状态，不再重复发送
                     self.server_data_obj.mqtt_send_get_obj.height_setting_data_info = 0
-            time.sleep(config.pi2mqtt_interval)
 
     # 状态检查函数，检查自身状态发送对应提示消息
     def check_status(self):
         while True:
             # 循环等待一定时间
-            time.sleep(config.check_status_interval)
+            time.sleep(1)
             if config.home_debug:
                 self.send_test_distance()
             if config.home_debug:
