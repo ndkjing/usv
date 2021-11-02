@@ -191,7 +191,7 @@ class DataManager:
         self.b_check_get_water_data = 0
         # 是否已经初始化电机
         self.is_init_motor = 0
-        self.area_id = None  # 区域编号
+        self.area_id = None
         # 检测完成收回杆子标志
         self.is_need_drain = False  # 判断是否需要排水
         self.drain_start_time = None  # 记录排水时间
@@ -1394,7 +1394,7 @@ class DataManager:
                 draw_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
                 self.send(method='mqtt', topic='draw_data_%s' % config.ship_code, data=draw_data,
                           qos=0)
-                # TODO 等待后端接口
+                # 等待后端接口
                 # if len(self.data_define_obj.pool_code) > 0:
                 #     draw_data.update({'mapId': self.data_define_obj.pool_code})
                 #     try:

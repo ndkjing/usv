@@ -436,32 +436,87 @@ class PiSoftuart(object):
         return self._thread_ts
 
     def read_millimeter_wave(self, len_data=None, debug=False):
+        """
+
+        @param len_data:
+        @param debug:
+        @return:None或者{索引:[距离，角度，速度]}
+        """
         if len_data is None:
             len_data = 4
-            try:
-                time.sleep(self._thread_ts)
-                count, data = self._pi.bb_serial_read(self._rx_pin)
-                if debug:
-                    print(time.time(), 'count', count, 'data', data)
-                if count > len_data:
-                    str_data = str(binascii.b2a_hex(data))[2:-1]
-                    split_str = 'aaaa'
-                    data_dict = {}
-                    for i in str_data.split(split_str):
-                        if i.startswith('0c07'):
+        time.sleep(self._thread_ts)
+        count, data = self._pi.bb_serial_read(self._rx_pin)
+        if debug:
+            print(time.time(), 'count', count, 'data', data)
+        data_dict = {}
+        if count > len_data:
+            str_data = str(binascii.b2a_hex(data))[2:-1]
+            split_str = 'aaaa'
+            data_list = str_data.split(split_str)
+            if debug:
+                print({'str_data:': str_data, 'data_list:': data_list})
+            for i in data_list:
+                # 正常数据长度
+                if len(i) % 12 == 0:
+                    # 目标检测数据
+                    if i.startswith('0c07'):
+                        try:
                             index = int(i[4:6], 16)
                             distance = 0.01 * (int(i[8:10], 16) * 256 + int(i[10:12], 16))
                             angle = 2 * int(i[12:14], 16) - 90
                             speed = 0.05 * (int(i[14:16], 16) * 256 + int(i[16:18], 16)) - 35
                             data_dict.update({index: [distance, angle, speed]})
-                            # print('distance:{},angle:{},speed:{}'.format(distance,angle,speed))
-                    return data_dict
-                else:
-                    return None
-            except Exception as e:
-                # print({'read_millimeter_wave':e})
-                time.sleep(self._thread_ts)
-                return None
+                            if debug:
+                                print('data', i)
+                                print('index:{}distance:{},angle:{},speed:{}'.format(index, distance, angle, speed))
+                        except Exception as read_millimeter_wave_e:
+                            if debug:
+                                print({'read_millimeter_wave nomal data': read_millimeter_wave_e})
+                    # 目标检测状态数据
+                    elif i.startswith('0b07'):
+                        try:
+                            target_id = int(i[7:8], 16)
+                            if debug:
+                                print({'target_id': target_id})
+                        except Exception as read_millimeter_id_e:
+                            if debug:
+                                print({'read_millimeter_wave read_millimeter_id_e nomal data': read_millimeter_id_e})
+                # 收到字符出错，多帧粘黏在一起了
+                elif (len(i) - 24) % 28 == 0:
+                    # 计算含有多少帧数据
+                    frame_count = int(1 + (len(i) - 24) / 28)
+                    for sub_i in range(frame_count):
+                        if sub_i == 0:
+                            data = i[0:24]
+                        else:
+                            data = i[sub_i * 28:sub_i * 28 + 24]
+                        # 目标检测数据
+                        if data.startswith('0c07'):
+                            try:
+                                index = int(data[4:6], 16)
+                                distance = 0.01 * (int(data[8:10], 16) * 256 + int(data[10:12], 16))
+                                angle = 2 * int(data[12:14], 16) - 90
+                                speed = 0.05 * (int(data[14:16], 16) * 256 + int(data[16:18], 16)) - 35
+                                data_dict.update({index: [distance, angle, speed]})
+                                if debug:
+                                    print('data', data)
+                                    print('##################拼接毫米波数据')
+                                    print('index:{}distance:{},angle:{},speed:{}'.format(index, distance, angle, speed))
+                            except Exception as read_millimeter_wave_e:
+                                if debug:
+                                    print({'read_millimeter_wave nomal data': read_millimeter_wave_e})
+                        # 目标检测状态数据
+                        elif data.startswith('0b07'):
+                            try:
+                                id = int(i[7:8], 16)
+                                if debug:
+                                    print('data', data)
+                                    print('##################拼接毫米波数据')
+                                    print({'target_id': id})
+                            except Exception as more_data_e:
+                                if debug:
+                                    print({'read_millimeter_wave more_data_e data': more_data_e})
+        return data_dict
 
     def send_stc_data(self, send_data):
         try:
