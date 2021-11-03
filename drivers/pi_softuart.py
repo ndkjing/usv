@@ -186,7 +186,7 @@ class PiSoftuart(object):
                                     if debug:
                                         print({'error read_gps convert_lng_lat_error': convert_lng_lat_error})
                             try:
-                                speed = round(float(data_list[7]) * 1.852 / 3.6, 2)  # 将速度单位节转换为 m/s
+                                speed = round(float(data_list[7]) * 1.852 / 3.6, 1)  # 将速度单位节转换为 m/s
                             except Exception as convert_speed_error:
                                 if debug:
                                     print({'error read_gps convert_speed_error': convert_speed_error})
@@ -293,19 +293,71 @@ class PiSoftuart(object):
         item_data = data[1:-1]
         item_data_list = item_data.split(',')
         if len(item_data_list) >= 13:
-            left_row = int(item_data_list[1])
-            left_col = int(item_data_list[0])
-            right_row = int(item_data_list[3])
-            right_col = int(item_data_list[2])
-            fine_tuning = int(item_data_list[4])
-            button_10 = int(item_data_list[9])
-            button_11 = int(item_data_list[10])
-            button_12 = int(item_data_list[11])
-            button_13 = int(float(item_data_list[12]))
-            lever_6 = int(float(item_data_list[5]))
-            lever_7 = int(item_data_list[6])
-            lever_8 = int(item_data_list[7])
-            lever_9 = int(item_data_list[8])
+            try:
+                left_row = int(item_data_list[1])
+            except Exception as e1:
+                left_row = 50
+            try:
+                left_col = int(item_data_list[0])
+            except Exception as e0:
+                left_col = 50
+            try:
+                right_row = int(item_data_list[3])
+            except Exception as e3:
+                right_row = 50
+            try:
+                right_col = int(item_data_list[2])
+            except Exception as e2:
+                right_col = 50
+            try:
+                fine_tuning = int(item_data_list[4])
+            except Exception as e4:
+                fine_tuning = 50
+            try:
+                button_10 = int(item_data_list[9])
+            except Exception as e9:
+                button_10 = 0
+            try:
+                button_11 = int(item_data_list[10])
+            except Exception as e10:
+                button_11 = 0
+            try:
+                button_12 = int(item_data_list[11])
+            except Exception as e11:
+                button_12 = 0
+            try:
+                button_13 = int(float(item_data_list[12]))
+            except Exception as e12:
+                button_13 = 0
+            try:
+                lever_6 = int(float(item_data_list[5]))
+            except Exception as e5:
+                lever_6 = 0
+            try:
+                lever_7 = int(item_data_list[6])
+            except Exception as e6:
+                lever_7 = 0
+            try:
+                lever_8 = int(item_data_list[7])
+            except Exception as e7:
+                lever_8 = 50
+            try:
+                lever_9 = int(item_data_list[8])
+            except Exception as e8:
+                lever_9 = 50
+            try:
+                remote_dumpenergy = float(item_data_list[13])
+            except Exception as e13:
+                remote_dumpenergy = 0
+            try:
+                draw_deep = float(item_data_list[14])
+            except Exception as e14:
+                draw_deep = 0
+            try:
+                draw_capacity = int(item_data_list[15])
+            except Exception as e15:
+                draw_capacity = 0
+
             return_list = [left_col,
                            left_row,
                            right_col,
@@ -319,25 +371,29 @@ class PiSoftuart(object):
                            button_11,
                            button_12,
                            button_13,
+                           remote_dumpenergy,
+                           draw_deep,
+                           draw_capacity
                            ]
             return return_list
         else:
             return []
 
-    def read_remote_control(self, len_data=None, debug=False):
+    def read_remote_control(self, len_data=None, debug=False, send_data='s11'):
         """
         读取自己做的lora遥控器数据
         :param len_data:限制接受数据最短长度
         :param debug:是否是调试  调试则print打印输出数据
+        @param send_data: 需要发送数据
         :return:
         """
         if len_data is None:
             try:
                 time.sleep(self._thread_ts)
                 return_list = None
-                # 发送数据让遥控器接受变为绿灯
-                s = 'S9'
-                str_16 = str(binascii.b2a_hex(s.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
+                # 发送数据给遥控器
+                print('##########################send data', send_data)
+                str_16 = str(binascii.b2a_hex(send_data.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
                 # str_16 = '41305a'
                 if self.last_send is None:
                     self.write_data(str_16, baud=self.baud, debug=debug)
@@ -371,7 +427,7 @@ class PiSoftuart(object):
                             if self.last_lora_data is not None:
                                 concate_lora_data = self.last_lora_data + temp_data
                                 if concate_lora_data[0] == 'A' and concate_lora_data[-1] == 'Z':
-                                    return_list = PiSoftuart.split_lora_data(concate_lora_data)
+                                    return_list = PiSoftuart.split_lora_data(concate_lora_data[1:-1])
                 elif count > 0:
                     str_data = str(data, encoding="utf8")
                     data_list = str_data.split('\r\n')
@@ -381,12 +437,12 @@ class PiSoftuart(object):
                             continue
                         if temp_data[0] == 'A' and temp_data[-1] != 'Z':
                             self.last_lora_data = temp_data
-                            # 开头不存在，结尾存在，看是否存在遗留数据可以拼接
+                        # 开头不存在，结尾存在，看是否存在遗留数据可以拼接
                         elif temp_data[0] != 'A' and temp_data[-1] == 'Z':
                             if self.last_lora_data is not None:
                                 concate_lora_data = self.last_lora_data + temp_data
                                 if concate_lora_data[0] == 'A' and concate_lora_data[-1] == 'Z':
-                                    return_list = PiSoftuart.split_lora_data(concate_lora_data)
+                                    return_list = PiSoftuart.split_lora_data(concate_lora_data[1:-1])
                 return return_list
             except Exception as e:
                 time.sleep(self._thread_ts)

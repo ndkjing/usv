@@ -135,6 +135,14 @@ class PiMain:
         self.dump_energy = None
         self.last_dump_energy = None  # 用于判断记录日志用
         self.speed = None
+        self.ship_status_code = 1  # 船状态 1等待 2 遥控 3 基站  4自动   5 采样 6 返航
+        self.bottle_status_code = [1, 1, 1, 1]  # 瓶子状态1 -- 100 比例
+        self.current_remote_dump_energy = 0  # 剩余电量
+        self.pre_remote_dump_energy = 0
+        self.current_remote_draw_deep = 0  # 抽水深度
+        self.pre_remote_draw_deep = 0
+        self.current_draw_capacity = 0  # 抽水量
+        self.pre_draw_capacity = 0
 
     # 获取串口对象
     @staticmethod
@@ -218,15 +226,15 @@ class PiMain:
             if self.remote_control_data:
                 # 记录上一次接收到的遥控器控制数据 校验两次之差大于20 就只改变20
                 # if self.last_remote_control_data:
-                    # 校验数据
-                    # if abs(self.remote_control_data[2] - self.last_remote_control_data[2]) > 20:
-                    #     add_or_sub_2 = 1 if self.remote_control_data[2] - self.last_remote_control_data[2] > 0 else -1
-                    #     self.remote_control_data[2] = self.last_remote_control_data[2] + 20 * add_or_sub_2
-                    # if abs(self.remote_control_data[3] - self.last_remote_control_data[3]) > 20:
-                    #     add_or_sub_3 = 1 if self.remote_control_data[2] - self.last_remote_control_data[2] > 0 else -1
-                    #     self.remote_control_data[3] = self.last_remote_control_data[3] + 20 * add_or_sub_3
+                # 校验数据
+                # if abs(self.remote_control_data[2] - self.last_remote_control_data[2]) > 20:
+                #     add_or_sub_2 = 1 if self.remote_control_data[2] - self.last_remote_control_data[2] > 0 else -1
+                #     self.remote_control_data[2] = self.last_remote_control_data[2] + 20 * add_or_sub_2
+                # if abs(self.remote_control_data[3] - self.last_remote_control_data[3]) > 20:
+                #     add_or_sub_3 = 1 if self.remote_control_data[2] - self.last_remote_control_data[2] > 0 else -1
+                #     self.remote_control_data[3] = self.last_remote_control_data[3] + 20 * add_or_sub_3
                 if self.remote_control_data[2] < 1:
-                    self.remote_control_data[2]=1
+                    self.remote_control_data[2] = 1
                 elif self.remote_control_data[2] > 99:
                     self.remote_control_data[2] = 99
                 if self.remote_control_data[3] < 1:
@@ -752,6 +760,7 @@ class PiMain:
                 self.water_data_dict.update({'wt': wt_data})
             time.sleep(0.5)
 
+    # 读取测深声呐数据
     def get_sonar_data(self):
         """
         获取声呐检测深度数据
@@ -903,14 +912,35 @@ class PiMain:
                         self.speed = gps_data_read[3]
 
     # 读取lora遥控器数据
-    def get_remote_control_data(self, debug=False):
+    def get_remote_control_data(self, debug=True):
         """
         读取lora遥控器数据
         :param debug:打印数据
         :return:
         """
         while True:
-            return_remote_data = self.remote_control_obj.read_remote_control(debug=debug)
+            time.sleep(0.01)
+            send_lng_lat = [0, 0]
+            if self.lng_lat:
+                send_lng_lat = self.lng_lat
+            send_dump_energy = 0
+            if self.dump_energy:
+                send_dump_energy = self.dump_energy
+            send_speed = 0.1
+            if self.speed:
+                send_speed = self.speed
+            send_remote_data = 'G%f,%f,%.1f,%.1f,%d,%d,%d,%d,%dZ\r\n' % (
+                send_lng_lat[0],
+                send_lng_lat[1],
+                send_dump_energy,
+                send_speed,
+                self.ship_status_code,
+                self.bottle_status_code[0],
+                self.bottle_status_code[1],
+                self.bottle_status_code[2],
+                self.bottle_status_code[3],
+            )
+            return_remote_data = self.remote_control_obj.read_remote_control(debug=debug, send_data=send_remote_data)
             if return_remote_data and len(return_remote_data) >= 13:
                 if debug:
                     print("######################", time.time(), 'return_remote_data', return_remote_data)
@@ -960,10 +990,30 @@ class PiMain:
                         self.remote_head_light_status = 0
                     else:
                         self.remote_head_light_status = 2
+                    # 遥控器电量
+                    if 0 < self.remote_control_data[-3] < 100:
+                        self.current_remote_dump_energy = self.remote_control_data[-3]
+                        self.pre_remote_dump_energy = self.current_remote_dump_energy
+                    else:
+                        if 0 < self.pre_remote_dump_energy < 100:
+                            self.current_remote_dump_energy = self.pre_remote_dump_energy
+                    # 遥控器控制抽水深度
+                    if 0 < self.remote_control_data[-2] <= 0.5:
+                        self.current_remote_draw_deep = self.remote_control_data[-2]
+                        self.pre_remote_draw_deep = self.current_remote_draw_deep
+                    else:
+                        if 0 < self.pre_remote_draw_deep <= 0.5:
+                            self.current_remote_draw_deep = self.pre_remote_draw_deep
+                    # 遥控器控制抽水量
+                    if 0 < self.remote_control_data[-1] <= 5000:
+                        self.current_draw_capacity = self.remote_control_data[-1]
+                        self.pre_draw_capacity = self.current_draw_capacity
+                    else:
+                        if 0 < self.pre_draw_capacity <= 5000:
+                            self.current_draw_capacity = self.pre_draw_capacity
             else:
                 if self.lora_control_receive_time and time.time() - self.lora_control_receive_time > 20:
                     self.b_start_remote = 0
-            time.sleep(0.01)
 
 
 if __name__ == '__main__':

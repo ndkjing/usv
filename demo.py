@@ -1,3 +1,2 @@
-a =31.11
-if a:
-    print(a)
+a = 'abcd'
+print(a[1:])

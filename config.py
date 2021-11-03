@@ -34,7 +34,6 @@ save_compass_data_dir = os.path.join(root_path, 'statics')
 
 
 # 记录gps数据
-
 class CurrentPlatform(enum.Enum):
     windows = 1
     linux = 2
@@ -49,6 +48,8 @@ class ShipType(enum.Enum):
     water_detect = 3
     dock = 4
     adcp = 5
+
+
 current_ship_type = ShipType.single_draw
 
 sysstr = platform.system()
@@ -92,7 +93,7 @@ pool_name = "梁子湖"
 # except Exception as e_video_url:
 #     video_url = "url获取错误"
 #     print({'e_video_url': e_video_url})
-video_url=''
+video_url = ''
 
 
 def update_base_setting():
@@ -666,6 +667,7 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        },
                       hdf)
 
+
 ########### 树莓派GPIO端口相关设置 均使用BCM编码端口
 # 水下摄像头云台水平和俯仰
 # 激光雷达
@@ -691,7 +693,7 @@ pin_gps_rx = 24
 b_lora_remote_control = 1
 lora_tx = 25
 lora_rx = 8
-lora_baud = 9600
+lora_baud = 115200
 # 单片机串口
 b_pin_stc = 1
 stc_tx = 3
@@ -720,7 +722,7 @@ sonar_steer = 21  # 声呐舵机
 
 # 抽水
 b_draw = 1  # 是否有抽水泵
-b_control_deep = 1  # 是否可调深度
+b_control_deep = 0  # 是否可调深度
 draw_steer = 13  # 舵机接口
 
 # 排水
@@ -746,23 +748,11 @@ class WaterType(enum.Enum):
 
 
 draw_deep = 0.5  # 抽水深度
-draw_capacity = 1500  # 抽水容量
+draw_capacity = 1000  # 需要抽水容量
+max_draw_capacity = 2000  # 单个瓶子最大抽水容量
 draw_speed = 4000  # 抽水速度 毫升/分钟
 number_of_bottles = 1  # 总共包含抽水瓶数
-"""
-电量与电压对应关系  各个阶段之内用线性函数计算
-电量     电压      6S电池     ADC采集数值
-100%----4.20V     25.2      3900  
-90%-----4.06V     24.36     3755       
-80%-----3.98V     23.88     3662       
-70%-----3.92V     23.52     3561 
-60%-----3.87V     23.22     3536
-50%-----3.82V     22.92     3535
-40%-----3.79V▲    22.74     3520
-30%-----3.77V     22.62     3432
-20%-----3.74V     22.44     3461
-0%-----3.7V       22.2      3318
-"""
+
 
 if __name__ == '__main__':
     write_setting(True, True, True, True)
