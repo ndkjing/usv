@@ -221,12 +221,14 @@ class DataManager:
                     self.draw_start_time = time.time()
                 else:
                     if time.time() - self.draw_start_time > 5:
-                        self.draw_start_time = None
                         self.b_draw_over_send_data = True
                         self.b_sampling = 2
                         self.server_data_obj.mqtt_send_get_obj.b_draw = 0
             else:
-                self.draw_start_time = None
+                if self.draw_start_time is not None:
+                    self.bottle_draw_time_list[self.current_draw_bottle] += 5
+                    self.current_draw_bottle += 1
+                    self.draw_start_time = None
         else:
             # 开启了遥控器
             if self.pi_main_obj.b_start_remote:
@@ -289,7 +291,6 @@ class DataManager:
                         # 超时中断抽水
                         if time.time() - self.draw_start_time > temp_draw_time:
                             self.server_data_obj.mqtt_send_get_obj.b_draw = 0
-                            self.current_draw_bottle += 1
                             self.b_sampling = 2
                             self.b_draw_over_send_data = True  # 抽水超时发送数据
                     # 判断是否有杆子放下杆子
@@ -301,13 +302,20 @@ class DataManager:
                             if self.current_draw_bottle == 0:
                                 self.send_stc_data('A1Z')
                             elif self.current_draw_bottle == 1:
-                                self.send_stc_data('A1Z')
+                                self.send_stc_data('A3Z')
                             elif self.current_draw_bottle == 2:
-                                self.send_stc_data('A1Z')
+                                self.send_stc_data('A4Z')
                             elif self.current_draw_bottle == 3:
-                                self.send_stc_data('A1Z')
+                                self.send_stc_data('A5Z')
                     else:
-                        self.send_stc_data('A1Z')
+                        if self.current_draw_bottle == 0:
+                            self.send_stc_data('A1Z')
+                        elif self.current_draw_bottle == 1:
+                            self.send_stc_data('A3Z')
+                        elif self.current_draw_bottle == 2:
+                            self.send_stc_data('A4Z')
+                        elif self.current_draw_bottle == 3:
+                            self.send_stc_data('A5Z')
                 else:
                     self.send_stc_data('A0Z')
                     # 没有抽水的情况下杆子都要收回来
@@ -315,16 +323,17 @@ class DataManager:
                         self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
                     if self.draw_start_time is not None:
                         self.bottle_draw_time_list[self.current_draw_bottle] += int(time.time() - self.draw_start_time)
+                        self.current_draw_bottle += 1
                         self.draw_start_time = None
-        # 更新抽水完成度信息
-        full_draw_time = int(60 * config.max_draw_capacity / config.draw_speed)
-        for index, value in enumerate(self.bottle_draw_time_list):
-            p = int(100 * round(value / full_draw_time, 2))
-            if 100 <= p:
-                p = 100
-            elif p <= 1:
-                p = 1
-            self.pi_main_obj.bottle_status_code[index] = p
+            # 更新抽水完成度信息
+            full_draw_time = int(60 * config.max_draw_capacity / config.draw_speed)
+            for index, value in enumerate(self.bottle_draw_time_list):
+                p = int(100 * round(value / full_draw_time, 2))
+                if 100 <= p:
+                    p = 100
+                elif p <= 1:
+                    p = 1
+                self.pi_main_obj.bottle_status_code[index] = p
 
     # 深度转化为pwm值
     def deep2pwm(self, draw_deep):
@@ -1055,18 +1064,19 @@ class DataManager:
             if self.ship_status in control_info_dict:
                 self.control_info += control_info_dict[self.ship_status]
             # 修改发给遥控状态
-            if self.ship_status == ShipStatus.idle:
-                self.pi_main_obj.ship_status_code = 1
-            elif self.ship_status == ShipStatus.remote_control:
-                self.pi_main_obj.ship_status_code = 2
-            elif self.ship_status == ShipStatus.computer_control:
-                self.pi_main_obj.ship_status_code = 3
-            elif self.ship_status == ShipStatus.computer_auto:
-                self.pi_main_obj.ship_status_code = 4
-            elif self.ship_status == ShipStatus.tasking:
-                self.pi_main_obj.ship_status_code = 5
-            elif self.ship_status == [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
-                self.pi_main_obj.ship_status_code = 6
+            if not config.home_debug:
+                if self.ship_status == ShipStatus.idle:
+                    self.pi_main_obj.ship_status_code = 1
+                elif self.ship_status == ShipStatus.remote_control:
+                    self.pi_main_obj.ship_status_code = 2
+                elif self.ship_status == ShipStatus.computer_control:
+                    self.pi_main_obj.ship_status_code = 3
+                elif self.ship_status == ShipStatus.computer_auto:
+                    self.pi_main_obj.ship_status_code = 4
+                elif self.ship_status == ShipStatus.tasking:
+                    self.pi_main_obj.ship_status_code = 5
+                elif self.ship_status == [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
+                    self.pi_main_obj.ship_status_code = 6
             # 电脑手动
             if self.ship_status == ShipStatus.computer_control or self.ship_status == ShipStatus.tasking:
                 # 手动模式避障距离
@@ -1340,7 +1350,9 @@ class DataManager:
                     self.data_save_logger.info({"发送检测数据": draw_data})
                 # 发送结束改为False
                 self.b_draw_over_send_data = False
-            elif config.home_debug:
+            """
+            # 调试时发送数据
+                        elif config.home_debug:
                 if self.server_data_obj.mqtt_send_get_obj.pool_code:
                     self.data_define_obj.pool_code = self.server_data_obj.mqtt_send_get_obj.pool_code
                 draw_data = {}
@@ -1363,6 +1375,7 @@ class DataManager:
                     self.data_save_logger.info({"发送抽水数据error": e})
                 self.data_save_logger.info({"############################发送抽水数据": draw_data})
                 time.sleep(5)
+            """
 
     # 必须使用线程发送mqtt基本状态数据
     def send_mqtt_status_data(self):
@@ -1538,6 +1551,9 @@ class DataManager:
                 progress = 0
             else:
                 progress = int((float(self.path_info[0]) / float(self.path_info[1])) * 100)
+            temp_list = []
+            temp_list.append(self.theta_error)
+            temp_list.extend(self.bottle_draw_time_list)
             notice_info_data = {
                 "distance": str(round(self.distance_p, 2)),
                 # // 路径规划提示消息
@@ -1546,7 +1562,7 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.bank_distance),
                 "progress": progress,
                 # 船执行手动控制信息
-                "control_info": self.control_info,
+                "control_info": self.control_info+ '瓶: '+str(self.current_draw_bottle)+'  水量  '+str(config.draw_time),
                 # 水泵开关状态消息
                 "draw_info": self.server_data_obj.mqtt_send_get_obj.b_draw,
                 # 声光报警器
@@ -1556,17 +1572,18 @@ class DataManager:
                 # 舷灯
                 "side_light_info": self.server_data_obj.mqtt_send_get_obj.side_light,
                 # 自动巡航下角度偏差
-                "theta_error": round(self.theta_error, 2),
+                "theta_error": ' '.join([str(i) for i in temp_list]),
             }
             notice_info_data.update({"mapId": self.data_define_obj.pool_code})
             # 遥控器是否启用
             if config.current_platform == config.CurrentPlatform.pi:
                 notice_info_data.update({"b_start_remote": self.pi_main_obj.b_start_remote})
             # 罗盘提示消息
-            if len(self.compass_notice_info) > 3:
-                notice_info_data.update({"compass_notice_info": self.compass_notice_info})
-            if not config.home_debug and self.pi_main_obj.compass_notice_info:
-                notice_info_data.update({"compass_notice_info": self.pi_main_obj.compass_notice_info})
+            # if len(self.compass_notice_info) > 3:
+            #     notice_info_data.update({"compass_notice_info": self.compass_notice_info})
+            # if not config.home_debug and self.pi_main_obj.compass_notice_info:
+            #     notice_info_data.update({"compass_notice_info": self.pi_main_obj.compass_notice_info})
+            notice_info_data.update({"compass_notice_info ": '瓶: '+str(self.current_draw_bottle)+'  水量  '+str(config.draw_time)})
             # 使用电量告警是提示消息
             if self.low_dump_energy_warnning:
                 notice_info_data.update({"low_dump_energy_warnning": self.low_dump_energy_warnning})

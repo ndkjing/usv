@@ -211,8 +211,8 @@ http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
 http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
 # http_data_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
 # 发送抽水瓶号数据
-# http_draw_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/sampling/save'
-http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/sampling/save'
+http_draw_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/sampling/save'
+# http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/sampling/save'
 # 获取存储的任务数据
 http_plan_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/plan/save'
 # http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'

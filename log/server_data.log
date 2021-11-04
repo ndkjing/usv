@@ -1,281 +1,328 @@
-2021-11-01 10:42:19,007 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,019 server_data.py[line:192] INFO Connected with result code:  0
-2021-11-01 10:42:19,238 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,255 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,273 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,303 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,333 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,352 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,358 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,377 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,389 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,395 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,427 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,439 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,451 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,475 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,481 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:19,493 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:42:23,976 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:58:41,882 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:41,894 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:41,894 server_data.py[line:192] INFO Connected with result code:  0
-2021-11-01 10:58:41,902 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:41,922 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:41,941 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:41,953 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:41,959 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:41,965 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:41,977 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:41,995 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:42,044 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:42,055 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:42,079 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:42,103 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:42,121 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:42,140 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:42,146 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 10:58:46,875 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:58:51,865 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:58:56,888 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:59:01,875 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:59:04,279 server_data.py[line:464] INFO {'refresh_setting ': {'info_type': 1}}
-2021-11-01 10:59:04,315 server_data.py[line:402] INFO {'base_setting ': {'info_type': 1}}
-2021-11-01 10:59:04,835 server_data.py[line:402] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市武昌区东湖风景区街道东湖东湖生态旅游风景区听涛景区', 'video_url': None, 'info_type': 3}}
-2021-11-01 10:59:06,903 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:59:11,908 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:59:16,931 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:59:21,927 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:59:26,997 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:59:31,974 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:59:36,970 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:59:41,988 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:59:46,991 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:59:52,008 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 10:59:57,038 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:00:02,039 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:00:07,052 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:00:12,065 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:00:17,089 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:00:22,101 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:00:27,096 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:00:32,114 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:00:37,121 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:00:42,184 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:00:47,164 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:00:52,180 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:00:57,203 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:01:02,215 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:01:07,271 server_data.py[line:261] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'b_sampling': 0, 'b_draw': 0, 'headlight': 0, 'audio_light': 0, 'side_light': 1}
-2021-11-01 11:01:10,192 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,198 server_data.py[line:192] INFO Connected with result code:  0
-2021-11-01 11:01:10,222 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,240 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,264 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,279 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,279 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,280 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,280 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,280 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,280 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,280 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,281 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,281 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,281 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,281 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,281 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-01 11:01:10,282 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,383 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,395 server_data.py[line:192] INFO Connected with result code:  0
-2021-11-02 10:22:48,413 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,425 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,461 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,479 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,491 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,503 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,527 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,556 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,574 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,592 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,628 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,634 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,664 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,676 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,688 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:22:48,712 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,701 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,713 server_data.py[line:192] INFO Connected with result code:  0
-2021-11-02 10:23:27,725 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,749 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,773 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,785 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,803 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,815 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,827 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,851 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,869 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,881 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,893 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,905 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,923 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,935 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,971 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:27,994 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:23:29,639 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:24:27,008 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:24:34,535 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:24:41,861 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:28:01,599 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,617 server_data.py[line:192] INFO Connected with result code:  0
-2021-11-02 10:28:01,659 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,671 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,695 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,719 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,737 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,757 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,769 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,804 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,816 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,834 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,852 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,870 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,882 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,906 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,924 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:01,960 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:03,547 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:28:10,950 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:28:18,268 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:28:49,798 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:49,804 server_data.py[line:192] INFO Connected with result code:  0
-2021-11-02 10:28:49,810 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:49,834 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:49,846 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:49,864 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:49,876 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:49,894 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:49,906 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:49,918 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:49,936 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:49,960 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:49,972 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:49,995 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:50,001 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:50,025 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:50,031 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:50,049 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:28:51,740 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:31:48,522 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,522 server_data.py[line:192] INFO Connected with result code:  0
-2021-11-02 10:31:48,541 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,553 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,577 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,589 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,607 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,636 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,660 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,678 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,702 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,720 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,738 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,774 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,792 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,798 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,816 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:48,828 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:31:50,462 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:32:33,763 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:37:38,384 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,390 server_data.py[line:192] INFO Connected with result code:  0
-2021-11-02 10:37:38,408 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,420 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,438 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,469 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,481 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,493 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,517 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,529 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,541 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,559 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,577 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,594 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,624 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,636 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,660 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:38,678 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:37:40,327 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:38:41,009 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,020 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,020 server_data.py[line:192] INFO Connected with result code:  0
-2021-11-02 10:38:41,026 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,044 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,056 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,068 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,092 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,098 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,116 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,122 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,134 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,152 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,194 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,233 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,233 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,233 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:41,233 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:38:42,953 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:39:04,733 server_data.py[line:539] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,745 server_data.py[line:539] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,757 server_data.py[line:192] INFO Connected with result code:  0
-2021-11-02 10:39:04,763 server_data.py[line:539] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,787 server_data.py[line:539] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,806 server_data.py[line:539] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,818 server_data.py[line:539] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,824 server_data.py[line:539] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,836 server_data.py[line:539] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,869 server_data.py[line:539] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,888 server_data.py[line:539] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,908 server_data.py[line:539] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,925 server_data.py[line:539] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,943 server_data.py[line:539] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,973 server_data.py[line:539] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:04,991 server_data.py[line:539] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:05,015 server_data.py[line:539] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:05,039 server_data.py[line:539] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 10:39:06,685 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:39:32,382 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:39:44,569 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:39:54,038 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:40:01,835 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:40:10,421 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:40:18,229 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 10:40:26,936 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 17:26:15,897 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:15,909 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:15,921 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:15,927 server_data.py[line:193] INFO Connected with result code:  0
-2021-11-02 17:26:15,938 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:15,963 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:15,975 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:15,975 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:15,982 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:15,994 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:16,024 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:16,036 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:16,048 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:16,066 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:16,084 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:16,108 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:16,131 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:16,155 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:16,173 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCAHSD0DA000', 'qos': 0}
-2021-11-02 17:26:17,843 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 17:26:43,963 server_data.py[line:464] INFO {'refresh_setting ': {'info_type': 1}}
-2021-11-02 17:26:43,981 server_data.py[line:402] INFO {'base_setting ': {'info_type': 1}}
-2021-11-02 17:26:44,174 server_data.py[line:402] INFO {'base_setting ': {'speed_grade': 5, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市洪山区东湖风景区街道东湖东湖生态旅游风景区', 'video_url': None, 'info_type': 3}}
-2021-11-02 17:26:46,115 server_data.py[line:27] INFO http://192.168.199.186:8009/union/admin/xxl/data/sampling/save
-2021-11-02 17:26:48,958 server_data.py[line:280] INFO {'topic': 'pool_click_XXLJC4LCGSCAHSD0DA000', 'lng_lat': [114.523923, 30.505777], 'zoom': 17.21}
-2021-11-02 17:26:49,617 server_data.py[line:388] INFO {'topic': 'pool_info_XXLJC4LCGSCAHSD0DA000', 'mapId': '1433665418824626178'}
-2021-11-02 17:26:49,647 server_data.py[line:402] INFO {'base_setting ': {'speed_grade': 5, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道书画路', 'video_url': None, 'info_type': 3}}
-2021-11-02 17:26:51,710 server_data.py[line:464] INFO {'refresh_setting ': {'mapId': '1433665418824626178', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
-2021-11-02 17:26:55,285 server_data.py[line:314] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCAHSD0DA000', 'target_lng_lat': [[114.523748, 30.506334]], 'zoom': 17, 'meter_pix': 0.8896117761483092, 'back_home': 0, 'fix_point': None}
-2021-11-02 17:26:55,420 server_data.py[line:352] INFO {'topic': 'path_planning_XXLJC4LCGSCAHSD0DA000', 'sampling_points': [[114.523748, 30.506334]], 'path_points': [[114.52374, 30.506341]]}
+2021-11-04 10:40:59,965 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:40:59,977 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 10:41:00,205 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,211 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,223 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,265 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,283 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,307 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,319 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,355 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,373 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,385 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,397 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,403 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,421 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,451 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,463 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,481 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:00,499 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:01,912 server_data.py[line:27] INFO http://wuhanligong.xxlun.com/union/admin/xxl/data/sampling/save
+2021-11-04 10:41:40,817 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:40,847 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:40,853 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 10:41:40,859 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:40,871 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:40,894 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:40,918 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:40,948 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:40,954 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:40,990 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:41,026 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:41,038 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:41,056 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:41,103 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:41,115 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:41,127 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:41,139 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:41,145 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:41,163 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:41:42,769 server_data.py[line:27] INFO http://wuhanligong.xxlun.com/union/admin/xxl/data/sampling/save
+2021-11-04 10:41:50,046 server_data.py[line:27] INFO http://wuhanligong.xxlun.com/union/admin/xxl/data/sampling/save
+2021-11-04 10:43:57,209 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,221 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,227 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 10:43:57,239 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,257 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,275 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,298 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,316 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,355 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,373 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,385 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,403 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,415 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,457 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,487 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,511 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,529 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,547 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:57,559 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 10:43:59,150 server_data.py[line:27] INFO http://wuhanligong.xxlun.com/union/admin/xxl/data/sampling/save
+2021-11-04 12:57:59,228 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,240 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,264 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,270 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 12:57:59,288 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,312 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,324 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,360 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,384 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,396 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,408 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,432 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,450 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,468 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,486 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,504 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,522 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,540 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:57:59,552 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:58:01,183 server_data.py[line:27] INFO http://wuhanligong.xxlun.com/union/admin/xxl/data/sampling/save
+2021-11-04 12:59:10,233 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,250 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,262 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 12:59:10,268 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,304 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,322 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,340 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,358 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,382 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,400 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,418 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,436 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,460 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,472 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,490 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,508 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,526 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,538 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:10,562 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 12:59:18,210 server_data.py[line:464] INFO {'refresh_setting ': {'info_type': 1}}
+2021-11-04 12:59:18,228 server_data.py[line:402] INFO {'base_setting ': {'info_type': 1}}
+2021-11-04 12:59:18,487 server_data.py[line:402] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '西北湖', 'video_url': None, 'info_type': 3}}
+2021-11-04 12:59:24,165 server_data.py[line:433] INFO {'height_setting_data': {'info_type': 1}}
+2021-11-04 12:59:24,295 server_data.py[line:433] INFO {'height_setting_data': {'motor_forward': 200, 'motor_steer': 200, 'kp': 2, 'ki': 0.3, 'kd': 1, 'full_speed_meter': 6, 'check_status_interval': 1, 'max_pwm': 1800, 'min_pwm': 1200, 'left_motor_cw': 1, 'right_motor_cw': 0, 'draw_time': '1', 'pid_interval': 0.2, 'start_sleep_time': 6, 'motor_init_time': 1, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 1, 'energy_backhome': 1, 'find_points_num': 5, 'b_tsp': 0, 'b_check_network': 1, 'b_play_audio': 0, 'home_debug': 1, 'obstacle_avoid_type': 0, 'path_plan_type': 1, 'path_track_type': 1, 'calibration_compass': 0, 'info_type': 3}}
+2021-11-04 12:59:37,728 server_data.py[line:433] INFO {'height_setting_data': {'motor_forward': 200, 'motor_steer': 200, 'kp': 2, 'ki': 0.3, 'kd': 1, 'full_speed_meter': 6, 'check_status_interval': 1, 'max_pwm': 1800, 'min_pwm': 1200, 'left_motor_cw': 1, 'right_motor_cw': 0, 'draw_time': '500', 'pid_interval': 0.2, 'start_sleep_time': 6, 'motor_init_time': 1, 'check_network_interval': 10, 'stop_pwm': 1500, 'network_backhome': 1, 'energy_backhome': 1, 'find_points_num': 5, 'b_tsp': 0, 'b_check_network': 1, 'b_play_audio': 0, 'home_debug': 1, 'obstacle_avoid_type': 0, 'path_plan_type': 1, 'path_track_type': 1, 'calibration_compass': 0, 'info_type': 2}}
+2021-11-04 13:01:34,294 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,306 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,318 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 13:01:34,342 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,361 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,379 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,400 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,430 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,448 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,479 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,509 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,527 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,545 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,562 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,580 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,604 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,616 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,634 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:34,652 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:01:40,993 server_data.py[line:464] INFO {'refresh_setting ': {'info_type': 1}}
+2021-11-04 13:01:41,029 server_data.py[line:402] INFO {'base_setting ': {'info_type': 1}}
+2021-11-04 13:01:41,258 server_data.py[line:402] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '西北湖', 'video_url': None, 'info_type': 3}}
+2021-11-04 13:01:41,337 server_data.py[line:402] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': '10', 'col': '10', 'pool_name': '梁子湖', 'video_url': 3, 'info_type': 3}}
+2021-11-04 13:01:59,726 server_data.py[line:235] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'control_move_direction': -1, 'mode': None}
+2021-11-04 13:02:19,769 server_data.py[line:235] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'control_move_direction': -1, 'mode': None}
+2021-11-04 13:02:20,746 server_data.py[line:235] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'control_move_direction': 0, 'mode': 1}
+2021-11-04 13:02:27,370 server_data.py[line:235] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'control_move_direction': 270, 'mode': 1}
+2021-11-04 13:02:27,734 server_data.py[line:235] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'control_move_direction': 180, 'mode': 1}
+2021-11-04 13:02:28,197 server_data.py[line:235] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'control_move_direction': 90, 'mode': 1}
+2021-11-04 13:02:29,683 server_data.py[line:235] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'control_move_direction': -1, 'mode': None}
+2021-11-04 13:03:11,932 server_data.py[line:464] INFO {'refresh_setting ': {'info_type': 1}}
+2021-11-04 13:03:11,968 server_data.py[line:402] INFO {'base_setting ': {'info_type': 1}}
+2021-11-04 13:03:12,447 server_data.py[line:402] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '西北湖', 'video_url': None, 'info_type': 3}}
+2021-11-04 13:03:47,686 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,698 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 13:03:47,722 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,740 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,764 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,776 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,788 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,812 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,824 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,854 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,860 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,878 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,896 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,908 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,926 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,938 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,956 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,968 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:03:47,986 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,250 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,267 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,285 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 13:11:19,303 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,321 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,339 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,363 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,387 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,405 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,429 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,447 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,465 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,471 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,495 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,513 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,549 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,573 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,591 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:19,611 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:11:24,306 server_data.py[line:235] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'control_move_direction': -1, 'mode': None}
+2021-11-04 13:12:04,915 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:04,933 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 13:12:04,968 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:04,990 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:04,990 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:04,991 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:04,991 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:04,992 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:04,992 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:04,993 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:05,000 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:05,018 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:05,024 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:05,031 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:05,049 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:05,067 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:05,085 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:05,103 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:12:05,152 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:41,933 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:41,945 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:41,963 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 13:14:41,975 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:41,993 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,023 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,056 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,080 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,092 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,098 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,122 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,140 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,158 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,176 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,200 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,224 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,236 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,260 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:42,278 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:14:50,745 server_data.py[line:464] INFO {'refresh_setting ': {'info_type': 1}}
+2021-11-04 13:14:50,786 server_data.py[line:402] INFO {'base_setting ': {'info_type': 1}}
+2021-11-04 13:14:50,982 server_data.py[line:402] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '西北湖', 'video_url': None, 'info_type': 3}}
+2021-11-04 13:14:51,030 server_data.py[line:402] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': '10', 'col': '10', 'pool_name': '梁子湖', 'video_url': 3, 'info_type': 3}}
+2021-11-04 13:20:17,283 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,295 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 13:20:17,319 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,353 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,353 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,354 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,354 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,354 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,355 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,355 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,355 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,355 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,356 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,356 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,356 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,356 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,356 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,357 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:17,357 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:20:32,414 server_data.py[line:464] INFO {'refresh_setting ': {'info_type': 1}}
+2021-11-04 13:20:32,451 server_data.py[line:402] INFO {'base_setting ': {'info_type': 1}}
+2021-11-04 13:20:32,498 server_data.py[line:402] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '西北湖', 'video_url': None, 'info_type': 3}}
+2021-11-04 13:21:01,451 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,463 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 13:21:01,481 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,493 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,511 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,529 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,547 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,559 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,583 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,595 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,613 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,631 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,648 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,666 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,684 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,696 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,714 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,738 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:01,744 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:21:06,557 server_data.py[line:464] INFO {'refresh_setting ': {'info_type': 1}}
+2021-11-04 13:21:06,569 server_data.py[line:402] INFO {'base_setting ': {'info_type': 1}}
+2021-11-04 13:21:07,072 server_data.py[line:402] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '西北湖', 'video_url': None, 'info_type': 3}}
+2021-11-04 13:21:10,146 server_data.py[line:280] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'lng_lat': [114.52398, 30.505752], 'zoom': 17.5}
+2021-11-04 13:21:10,807 server_data.py[line:388] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'mapId': '1434770242236428290'}
+2021-11-04 13:21:10,837 server_data.py[line:402] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 5, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道书画路', 'video_url': None, 'info_type': 3}}
+2021-11-04 13:21:11,639 server_data.py[line:464] INFO {'refresh_setting ': {'mapId': '1434770242236428290', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2021-11-04 13:24:06,142 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,160 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,166 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 13:24:06,184 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,208 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,220 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,244 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,250 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,268 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,292 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,322 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,340 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,364 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,382 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,394 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,418 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,436 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,454 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:06,471 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:10,432 server_data.py[line:235] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'control_move_direction': -1, 'mode': None}
+2021-11-04 13:24:56,535 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,553 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,564 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,576 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 13:24:56,588 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,606 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,624 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,654 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,684 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,708 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,726 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,738 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,750 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,780 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,792 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,835 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,853 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,875 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:24:56,891 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:02,388 server_data.py[line:235] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'control_move_direction': -1, 'mode': None}
+2021-11-04 13:25:47,453 server_data.py[line:549] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,465 server_data.py[line:193] INFO Connected with result code:  0
+2021-11-04 13:25:47,483 server_data.py[line:549] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,502 server_data.py[line:549] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,514 server_data.py[line:549] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,538 server_data.py[line:549] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,550 server_data.py[line:549] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,568 server_data.py[line:549] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,592 server_data.py[line:549] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,621 server_data.py[line:549] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,639 server_data.py[line:549] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,657 server_data.py[line:549] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,675 server_data.py[line:549] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,687 server_data.py[line:549] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,717 server_data.py[line:549] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,735 server_data.py[line:549] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,747 server_data.py[line:549] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,759 server_data.py[line:549] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:47,777 server_data.py[line:549] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-11-04 13:25:50,972 server_data.py[line:235] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'control_move_direction': -1, 'mode': None}

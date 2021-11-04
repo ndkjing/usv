@@ -923,10 +923,10 @@ class PiMain:
                         self.speed = gps_data_read[3]
 
     # 读取lora遥控器数据
-    def get_remote_control_data(self, debug=True):
+    def get_remote_control_data(self, debug=False):
         """
         读取lora遥控器数据
-        :param debug:打印数据
+        :param debug:打印调试数据
         :return:
         """
         while True:
@@ -982,7 +982,7 @@ class PiMain:
                         self.remote_draw_status = 1
                     else:
                         self.remote_draw_status = 0
-                        # 判断收起舵机  展开舵机
+                    # 判断收起舵机  展开舵机
                     if int(self.remote_control_data[10]) == 1:
                         self.remote_target_draw_steer = 1
                     else:
@@ -1009,19 +1009,26 @@ class PiMain:
                         if 0 < self.pre_remote_dump_energy < 100:
                             self.current_remote_dump_energy = self.pre_remote_dump_energy
                     # 遥控器控制抽水深度
-                    if 0 < self.remote_control_data[-2] <= 0.5:
+                    if 0 <= self.remote_control_data[-2] <= 0.5:
                         self.current_remote_draw_deep = self.remote_control_data[-2]
                         self.pre_remote_draw_deep = self.current_remote_draw_deep
                     else:
-                        if 0 < self.pre_remote_draw_deep <= 0.5:
+                        if 0 <= self.pre_remote_draw_deep <= 0.5:
                             self.current_remote_draw_deep = self.pre_remote_draw_deep
                     # 遥控器控制抽水量
-                    if 0 < self.remote_control_data[-1] <= 5000:
+                    if 0 <= self.remote_control_data[-1] <= 5000:
                         self.current_draw_capacity = self.remote_control_data[-1]
                         self.pre_draw_capacity = self.current_draw_capacity
                     else:
-                        if 0 < self.pre_draw_capacity <= 5000:
+                        if 0 <= self.pre_draw_capacity <= 5000:
                             self.current_draw_capacity = self.pre_draw_capacity
+                    print('self.remote_draw_status,self.remote_draw_status_0_1,self.remote_draw_status_2_3,self.current_remote_draw_deep,self.current_draw_capacity',
+                          self.remote_draw_status,
+                          self.remote_draw_status_0_1,
+                          self.remote_draw_status_2_3,
+                          self.current_remote_draw_deep,
+                          self.current_draw_capacity
+                          )
             else:
                 if self.lora_control_receive_time and time.time() - self.lora_control_receive_time > 20:
                     self.b_start_remote = 0
@@ -1190,7 +1197,7 @@ if __name__ == '__main__':
                 pi_main_obj.get_distance_dict_millimeter(debug=True)
             elif key_input[0] in ['A', 'B', 'C', 'D', 'E']:
                 print('len(key_input)', len(key_input))
-                if len(key_input) == 2 and key_input[1] in ['0', '1', '2', '3', '4']:
+                if len(key_input) == 2 and key_input[1] in ['0', '1', '2', '3', '4', '5','6']:
                     send_data = key_input + 'Z'
                     print('send_data', send_data)
                     if config.b_com_stc:
