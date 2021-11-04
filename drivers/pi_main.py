@@ -117,6 +117,8 @@ class PiMain:
         # 遥控器控制数据
         self.remote_control_data = []
         self.last_remote_control_data = []
+        self.pre_remote_row = 0  # 记录上一次的横向摇杆值
+        self.pre_remote_col = 0  # 计算上一次的纵向摇杆值
         # 求角速度     逆时针方向角速度为正值
         self.theta_list = []  # (时间，角度)
         self.angular_velocity = None
@@ -171,7 +173,7 @@ class PiMain:
         :return:
         """
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
-                                      baud=config.lora_baud, time_out=0.16)
+                                      baud=config.lora_baud, time_out=0.19)
 
     def get_gps_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx,
@@ -233,6 +235,13 @@ class PiMain:
                 # if abs(self.remote_control_data[3] - self.last_remote_control_data[3]) > 20:
                 #     add_or_sub_3 = 1 if self.remote_control_data[2] - self.last_remote_control_data[2] > 0 else -1
                 #     self.remote_control_data[3] = self.last_remote_control_data[3] + 20 * add_or_sub_3
+                # 处理跳变
+                if self.remote_control_data[2] in [1, 10]:
+                    if self.pre_remote_row == 50:
+                        self.remote_control_data[2] = 50
+                if self.remote_control_data[3] in [1, 10]:
+                    if self.pre_remote_col == 50:
+                        self.remote_control_data[3] = 50
                 if self.remote_control_data[2] < 1:
                     self.remote_control_data[2] = 1
                 elif self.remote_control_data[2] > 99:
@@ -241,6 +250,8 @@ class PiMain:
                     self.remote_control_data[3] = 1
                 elif self.remote_control_data[3] > 99:
                     self.remote_control_data[3] = 99
+                self.pre_remote_row = self.remote_control_data[2]
+                self.pre_remote_col = self.remote_control_data[3]
                 remote_forward_pwm = int((99 - self.remote_control_data[2]) * 10 + 1000)
                 remote_steer_pwm = int(self.remote_control_data[3] * 10 + 1000)
                 # self.last_remote_control_data = copy.deepcopy(self.remote_control_data)

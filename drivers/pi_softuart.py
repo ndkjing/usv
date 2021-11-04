@@ -304,11 +304,11 @@ class PiSoftuart(object):
             try:
                 right_row = int(item_data_list[3])
             except Exception as e3:
-                right_row = 50
+                right_row = 49
             try:
                 right_col = int(item_data_list[2])
             except Exception as e2:
-                right_col = 50
+                right_col = 49
             try:
                 fine_tuning = int(item_data_list[4])
             except Exception as e4:
@@ -382,8 +382,8 @@ class PiSoftuart(object):
     def read_remote_control(self, len_data=None, debug=False, send_data='s11'):
         """
         读取自己做的lora遥控器数据
-        :param len_data:限制接受数据最短长度
-        :param debug:是否是调试  调试则print打印输出数据
+        @param len_data:限制接受数据最短长度
+        @param debug:是否是调试  调试则print打印输出数据
         @param send_data: 需要发送数据
         :return:
         """
@@ -392,14 +392,13 @@ class PiSoftuart(object):
                 time.sleep(self._thread_ts)
                 return_list = None
                 # 发送数据给遥控器
-                print('##########################send data', send_data)
                 str_16 = str(binascii.b2a_hex(send_data.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
                 # str_16 = '41305a'
                 if self.last_send is None:
                     self.write_data(str_16, baud=self.baud, debug=debug)
                     self.last_send = time.time()
                 else:
-                    if time.time() - self.last_send > 0.5:
+                    if time.time() - self.last_send > 0.3:
                         self.write_data(str_16, baud=self.baud, debug=debug)
                         self.last_send = time.time()
                 count, data = self._pi.bb_serial_read(self._rx_pin)
@@ -445,13 +444,14 @@ class PiSoftuart(object):
                                     return_list = PiSoftuart.split_lora_data(concate_lora_data[1:-1])
                 return return_list
             except Exception as e:
-                time.sleep(self._thread_ts)
+                # time.sleep(self._thread_ts)
                 print({'error read_remote_control': e})
                 return None
 
     def write_data(self, msg, baud=None, debug=False):
         if debug:
-            print('send data', msg)
+            pass
+            # print('send data', msg)
         self._pi.wave_clear()
         if baud:
             self._pi.wave_add_serial(self._tx_pin, baud, bytes.fromhex(msg))
