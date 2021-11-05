@@ -75,7 +75,7 @@ col_gap = 50
 # 湖泊名称
 pool_name = "梁子湖"
 # 视频链接
-video_url = ''
+video_url = 'https://rtmp01open.ys7.com:9188/v3/openlive/C99929528_1_1.flv?expire=1667195738&id=376731287508074496&t=a7d469cafcd50d9d897174ad7732c1a2c88f335bcb376ebd804d99b7a49396cd&ev=100'
 
 
 # try:
