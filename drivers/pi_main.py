@@ -408,11 +408,11 @@ class PiMain:
     # 初始化电机
     def init_motor(self):
         self.set_pwm(config.stop_pwm, config.stop_pwm)
-        time.sleep(2)
-        self.set_pwm(config.stop_pwm + 200, config.stop_pwm + 200)
-        time.sleep(3)
-        self.set_pwm(config.stop_pwm - 200, config.stop_pwm - 200)
-        time.sleep(2)
+        time.sleep(1)
+        self.set_pwm(config.stop_pwm + 100, config.stop_pwm + 100)
+        time.sleep(1)
+        self.set_pwm(config.stop_pwm - 100, config.stop_pwm - 100)
+        time.sleep(1)
         self.set_pwm(config.stop_pwm, config.stop_pwm)
         time.sleep(config.motor_init_time)
 
@@ -447,7 +447,7 @@ class PiMain:
         一直修改输出pwm波到目标pwm波
         :return:
         """
-        sleep_time = 0.008
+        sleep_time = 0.006
         change_pwm_ceil = 5
         while True:
             if abs(self.left_pwm - self.target_left_pwm) != 0 or abs(self.right_pwm != self.target_right_pwm) != 0:
@@ -464,12 +464,12 @@ class PiMain:
                 self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
                 self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
                 if self.b_start_remote:
-                    time.sleep(sleep_time / 4)
+                    time.sleep(sleep_time / 3)
                 else:
                     time.sleep(sleep_time)
             else:
                 if self.b_start_remote:
-                    time.sleep(sleep_time / 4)
+                    time.sleep(sleep_time / 3)
                 else:
                     time.sleep(sleep_time)
 

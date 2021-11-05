@@ -804,7 +804,7 @@ class DataManager:
         # 搜索最临近的路点
         distance_list = []
         start_index = self.smooth_path_lng_lat_index[index_]
-        print('self.smooth_path_lng_lat, index_,', self.smooth_path_lng_lat_index, index_)
+        # print('self.smooth_path_lng_lat, index_,', self.smooth_path_lng_lat_index, index_)
         if index_ == 0:
             self.search_list = copy.deepcopy(self.smooth_path_lng_lat[:start_index])
         else:
@@ -926,6 +926,11 @@ class DataManager:
             elif config.obstacle_avoid_type == 2:
                 angle = vfh.vfh_func(9, self.pi_main_obj.obstacle_list)
                 print('angle', angle)
+                # 判断是否需要避障岸边停止  避障范围内有障碍物且船离岸边不超过十米
+                if 1 in self.pi_main_obj.obstacle_list[
+                        int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
+                    if self.server_data_obj.mqtt_send_get_obj.bank_distance<10:
+                        return next_point_lng_lat, True
                 if angle == -1:
                     abs_angle = (self.pi_main_obj.theta + 180) % 360
                     next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
@@ -1231,16 +1236,6 @@ class DataManager:
                 else:
                     if not config.home_debug:
                         self.pi_main_obj.stop()
-            # 执行任务中
-            # elif self.ship_status == ShipStatus.tasking:
-            #     if not config.home_debug:
-            #         self.pi_main_obj.stop()
-            #     # 不是使能遥控导致进入任务模式就需要放下抽水管
-            #     if not config.home_debug and not self.pi_main_obj.b_start_remote:
-            #         # 放下抽水杆子
-            #         self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
-            #     # 执行抽水
-            #     self.draw()
 
     def update_ship_gaode_lng_lat(self):
         # 更新经纬度为高德经纬度
@@ -1448,6 +1443,7 @@ class DataManager:
     # 配置更新
     def update_config(self):
         while True:
+            time.sleep(1)
             # 客户端获取基础设置数据
             if self.server_data_obj.mqtt_send_get_obj.base_setting_data_info in [1, 4]:
                 if self.server_data_obj.mqtt_send_get_obj.base_setting_data is None:
@@ -1477,18 +1473,12 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.height_setting_data = None
                     # 改为0位置状态，不再重复发送
                     self.server_data_obj.mqtt_send_get_obj.height_setting_data_info = 0
-            time.sleep(config.pi2mqtt_interval)
 
     # 状态检查函数，检查自身状态发送对应消息
     def check_status(self):
         while True:
             # 循环等待一定时间
-            time.sleep(config.check_status_interval)
-            if config.home_debug:
-                self.send_test_distance()
-            if config.home_debug:
-                if config.b_play_audio:
-                    audios_manager.play_audio(5, b_backend=False)
+            time.sleep(1)
             if self.last_lng_lat:
                 ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
                                                                    self.last_lng_lat[1],
@@ -1529,7 +1519,9 @@ class DataManager:
             notice_info_data = {
                 "distance": str(round(self.distance_p, 2)),
                 # // 路径规划提示消息
-                "path_info": '当前目标点:%d 目标点总数: %d' % (int(self.path_info[0]), int(self.path_info[1])),
+                "path_info": '当前:%d 总共:%d 离岸:%.1f ' % (
+                    int(self.path_info[0]), int(self.path_info[1]),
+                    self.server_data_obj.mqtt_send_get_obj.bank_distance),
                 "progress": progress,
                 # 船执行手动控制信息
                 "control_info": self.control_info,
@@ -1583,7 +1575,7 @@ class DataManager:
     def check_ping_delay(self):
         # 检查网络
         while True:
-            time.sleep(config.check_network_interval)
+            time.sleep(5)
             if not self.server_data_obj.mqtt_send_get_obj.is_connected:
                 continue
             if config.b_check_network:
@@ -1600,6 +1592,9 @@ class DataManager:
     def send_distacne(self):
         while True:
             time.sleep(1)
+            if not self.server_data_obj.mqtt_send_get_obj.is_connected:
+                continue
+            # 调试情况下
             if config.home_debug:
                 direction = int(random.random() * 360)
                 distance_info_data = {
@@ -1615,24 +1610,24 @@ class DataManager:
                           topic='distance_info_%s' % config.ship_code,
                           data=distance_info_data,
                           qos=0)
-            if not self.server_data_obj.mqtt_send_get_obj.is_connected:
-                continue
-            distance_info_data = {}
-            if len(self.pi_main_obj.distance_dict) > 0:
-                distance_info_data.update({'deviceId': config.ship_code})
-                distance_info_data.update({'distance_info': []})
-                for k in self.pi_main_obj.distance_dict.copy():
-                    distance_info_data['distance_info'].append(
-                        {'distance': self.pi_main_obj.distance_dict[k][0],
-                         'angle': self.pi_main_obj.distance_dict[k][1]})
-                if self.current_theta:
-                    distance_info_data.update({'direction': round(self.current_theta)})
-                else:
-                    distance_info_data.update({'direction': 0})
-                self.send(method='mqtt',
-                          topic='distance_info_%s' % config.ship_code,
-                          data=distance_info_data,
-                          qos=0)
+            # 真实情况
+            else:
+                distance_info_data = {}
+                if len(self.pi_main_obj.distance_dict) > 0:
+                    distance_info_data.update({'deviceId': config.ship_code})
+                    distance_info_data.update({'distance_info': []})
+                    for k in self.pi_main_obj.distance_dict.copy():
+                        distance_info_data['distance_info'].append(
+                            {'distance': self.pi_main_obj.distance_dict[k][0],
+                             'angle': self.pi_main_obj.distance_dict[k][1]})
+                    if self.current_theta:
+                        distance_info_data.update({'direction': round(self.current_theta)})
+                    else:
+                        distance_info_data.update({'direction': 0})
+                    self.send(method='mqtt',
+                              topic='distance_info_%s' % config.ship_code,
+                              data=distance_info_data,
+                              qos=0)
 
     # 检查开关相关信息
     def check_switch(self):
@@ -1641,7 +1636,7 @@ class DataManager:
         :return:
         """
         while True:
-            time.sleep(0.2)
+            time.sleep(0.1)
             switch_data = {
                 # 检测 1 检测 没有该键表示不检测
                 "b_sampling": self.server_data_obj.mqtt_send_get_obj.b_draw,

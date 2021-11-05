@@ -437,10 +437,10 @@ class BaiduMap(object):
         distance = lng_lat_calculate.distanceFromCoordinate(
             self.lng_lat[0], self.lng_lat[1], gaode_lng_lat[0], gaode_lng_lat[1])
         # theta = 360 - theta
-        print('theta', theta)
+        # print('theta', theta)
         theta1 = lng_lat_calculate.angleFromCoordinate(
             gaode_lng_lat[0], gaode_lng_lat[1], self.lng_lat[0], self.lng_lat[1])
-        print('theta1', theta1)
+        # print('theta1', theta1)
         if 0 <= theta < 90:
             delta_x_distance = math.sin(math.radians(theta)) * distance
             delta_y_distance = math.cos(math.radians(theta)) * distance
@@ -466,7 +466,7 @@ class BaiduMap(object):
                    int(self.height * self.scale / 2 + delta_y_pix)]
         else:
             t4_theta = 360 - theta
-            print('t4_theta', t4_theta)
+            # print('t4_theta', t4_theta)
             delta_x_distance = math.sin(math.radians(t4_theta)) * distance
             delta_y_distance = math.cos(math.radians(t4_theta)) * distance
             delta_x_pix = delta_x_distance / (self.pix_2_meter)
@@ -673,6 +673,18 @@ class BaiduMap(object):
             json.dump(return_json_data, f)
         return return_json_data
 
+    @staticmethod
+    def cal_bank_distance(pool_cnts, current_pix, pix_2_meter):
+        """
+        @param pool_cnts: 湖泊像素轮廓
+        @param current_pix: 当前像素位置
+        @param pix_2_meter: 像素对应米
+        @return: 距离岸边实际距离单位米
+        """
+        in_cnt = cv2.pointPolygonTest(
+            pool_cnts, (current_pix[0], current_pix[1]), True)
+        bank_distance = in_cnt * pix_2_meter
+        return bank_distance
 
 if __name__ == '__main__':
     pass
