@@ -78,13 +78,6 @@ pool_name = "梁子湖"
 video_url = 'https://rtmp01open.ys7.com:9188/v3/openlive/C99929528_1_1.flv?expire=1667195738&id=376731287508074496&t=a7d469cafcd50d9d897174ad7732c1a2c88f335bcb376ebd804d99b7a49396cd&ev=100'
 
 
-# try:
-#     video_url = get_eviz_url.get_url(ship_code_config.video_code, protocol=2)
-# except Exception as e_video_url:
-#     video_url=''
-#     print({'e_video_url': "url获取错误"})
-
-
 def update_base_setting():
     global speed_grade
     global arrive_distance
@@ -175,24 +168,15 @@ def update_base_setting():
             print({'error': e})
 
 
-# 罗盘等待时间间隔
-compass_timeout = 0.1
 # 单片机发送给树莓派等待时间
 stc2pi_timeout = 1
-# 给单片机发送等待时间
-pi2com_timeout = 0.05
-# 给服务器发送时间间隔
-pi2mqtt_interval = 1
-# 线程等待时间
-thread_sleep_time = 0.5
 # 船编号
 ship_code = ship_code_config.ship_code
 # 串口位置和波特率
-# 单片机
-# stc_port = '/dev/ttyAMA0'
-stc_port = '/dev/ttyUSB0'
+b_use_com_stc = 0   # 是否使用单片机硬件转接串口
+stc_port = '/dev/ttyUSB0'# '/dev/ttyAMA0'
 stc_baud = 115200
-b_com_stc = os.path.exists(stc_port)
+b_com_stc = os.path.exists(stc_port) and b_use_com_stc  # 判断是否存在以及是否使用
 # http 接口
 # 查询船是否注册  wuhanligong.xxlun.com/union
 http_binding = 'http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/%s' % (ship_code)

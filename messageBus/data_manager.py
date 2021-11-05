@@ -5,7 +5,6 @@ import time
 import json
 import copy
 import os
-import math
 import enum
 import numpy as np
 import random
@@ -215,7 +214,7 @@ class DataManager:
             self.last_send_stc_log_data = data
         if config.b_pin_stc:
             self.pi_main_obj.stc_obj.send_stc_data(data)
-        elif os.path.exists(config.stc_port):
+        elif config.b_com_stc:
             self.pi_main_obj.com_data_obj.send_data(data)
 
     # 抽水
@@ -1060,7 +1059,7 @@ class DataManager:
     def move_control(self):
         b_log_points = 1  # 防止寻点模式下等待用户点击开始前一直记录日志
         while True:
-            time.sleep(config.thread_sleep_time)
+            time.sleep(0.1)
             control_info_dict = {
                 ShipStatus.computer_control: '电脑手动',
                 ShipStatus.remote_control: '遥控器控制',
@@ -1240,6 +1239,7 @@ class DataManager:
     def update_ship_gaode_lng_lat(self):
         # 更新经纬度为高德经纬度
         while True:
+            time.sleep(1)
             if config.home_debug:
                 if self.lng_lat is None:
                     self.lng_lat = config.ship_gaode_lng_lat
@@ -1263,7 +1263,7 @@ class DataManager:
             # 调试模式下自身经纬度和高德经纬度一致
             elif self.lng_lat is not None and not self.use_true_gps:
                 self.gaode_lng_lat = self.lng_lat
-            time.sleep(config.pi2mqtt_interval)
+
 
     # 更新经纬度
     def update_lng_lat(self):
@@ -1553,7 +1553,7 @@ class DataManager:
                 topic='notice_info_%s' % config.ship_code,
                 data=notice_info_data,
                 qos=0)
-            if time.time() % 10 < config.check_status_interval:
+            if time.time() % 10 < 1:
                 self.logger.info({'notice_info_': notice_info_data})
 
             # 保存数据与发送刷新后提示消息

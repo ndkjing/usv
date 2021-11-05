@@ -114,7 +114,7 @@ class WebServer:
     def find_pool(self):
         while True:
             # 循环等待一定时间
-            time.sleep(config.check_status_interval)
+            time.sleep(1)
             # 若是用户没有点击点
             if self.server_data_obj.mqtt_send_get_obj.pool_click_lng_lat is None or self.server_data_obj.mqtt_send_get_obj.pool_click_zoom is None:
                 # self.logger.info('没有点击湖，等待用户执行操作')

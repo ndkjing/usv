@@ -98,7 +98,7 @@ class PiMain:
         self.pi.set_mode(config.draw_right_gpio_pin, pigpio.OUTPUT)
         """
         # 抽水泵舵机
-        self.draw_steer_pwm = config.max_deep_steer_pwm-100
+        self.draw_steer_pwm = config.max_deep_steer_pwm - 100
         # 目标舵机位置
         self.target_draw_steer_pwm = config.max_deep_steer_pwm
         # 云台舵机角度
@@ -130,7 +130,7 @@ class PiMain:
                                                  )
         self.dump_energy = None
         self.last_dump_energy = None  # 用于判断记录日志用
-        self.speed=None
+        self.speed = None
 
     # 获取串口对象
     @staticmethod
@@ -889,6 +889,7 @@ class PiMain:
                         self.lng_lat_error = gps_data_read[2]
                     if gps_data_read[3] is not None:
                         self.speed = gps_data_read[3]
+
     # 读取lora遥控器数据
     def get_remote_control_data(self, debug=False):
         """
@@ -952,7 +953,7 @@ if __name__ == '__main__':
     pi_main_obj = PiMain()
     from drivers import com_data
 
-    if os.path.exists(config.stc_port):
+    if config.b_com_stc:
         com_data_obj = com_data.ComData(
             config.stc_port,
             config.stc_baud,
