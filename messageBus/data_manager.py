@@ -267,24 +267,39 @@ class DataManager:
             else:
                 # 判断是否抽水  点击抽水情况
                 if self.server_data_obj.mqtt_send_get_obj.b_draw:
-                    if self.draw_start_time is None:
-                        self.draw_start_time = time.time()
-                        # 触发一次停止
-                        self.pi_main_obj.stop()
-                    else:
-                        # 超时中断抽水
-                        if time.time() - self.draw_start_time > config.draw_time:
-                            self.b_draw_over_send_data = True
-                            self.server_data_obj.mqtt_send_get_obj.b_draw = 0
-                            self.is_need_drain = True
-                            self.b_sampling = 2
                     # 判断是否有杆子放下杆子
                     if config.b_control_deep:
                         self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
                         if self.pi_main_obj.draw_steer_pwm == self.pi_main_obj.target_draw_steer_pwm:
                             self.send_stc_data('A1Z')
+                            # 如果有抽水杆需要先放到下面再计算开始时间
+                            if self.draw_start_time is None:
+                                self.draw_start_time = time.time()
+                                # 触发一次停止
+                                self.pi_main_obj.stop()
+                            else:
+                                # 超时中断抽水
+                                if time.time() - self.draw_start_time > config.draw_time:
+                                    self.b_draw_over_send_data = True
+                                    self.server_data_obj.mqtt_send_get_obj.b_draw = 0
+                                    self.is_need_drain = True
+                                    self.b_sampling = 2
+                                    self.send_stc_data('A0Z')
                     else:
                         self.send_stc_data('A1Z')
+                        # 如果有抽水杆需要先放到下面再计算开始时间
+                        if self.draw_start_time is None:
+                            self.draw_start_time = time.time()
+                            # 触发一次停止
+                            self.pi_main_obj.stop()
+                        else:
+                            # 超时中断抽水
+                            if time.time() - self.draw_start_time > config.draw_time:
+                                self.b_draw_over_send_data = True
+                                self.server_data_obj.mqtt_send_get_obj.b_draw = 0
+                                self.is_need_drain = True
+                                self.b_sampling = 2
+                                self.send_stc_data('A0Z')
                 else:
                     # 没有在排水才能发送停止
                     if not self.is_auto_drain:
@@ -303,13 +318,13 @@ class DataManager:
                     else:
                         # 超时中断排水
                         if time.time() - self.drain_start_time > config.draw_time:
-                            self.is_need_drain = False
-                            self.drain_start_time = None
                             self.send_stc_data('A0Z')
                             self.is_auto_drain = 0
                             # 收回杆子
                             if config.b_control_deep:
                                 self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
+                            self.is_need_drain = False
+                            self.drain_start_time = None
 
     # 控制继电器
     def control_relay(self):
