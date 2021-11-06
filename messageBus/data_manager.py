@@ -1303,10 +1303,8 @@ class DataManager:
                         # 计算速度
                         else:
                             self.speed = round(speed_distance / (time.time() - last_read_time), 1)
-                        # self.speed = round(speed_distance / (time.time() - last_read_time), 1)
                         # 替换上一次的值
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
-                        # self.gps_log.info({'lng_lat': self.lng_lat})
                         last_read_time = time.time()
                     else:
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
