@@ -478,7 +478,7 @@ class DataManager:
             (ShipStatus.computer_control, ShipStatus.computer_auto): 4,
             (ShipStatus.computer_control, ShipStatus.backhome_network): 5,
             (ShipStatus.computer_control, ShipStatus.backhome_low_energy): 6,
-            (ShipStatus.computer_control, ShipStatus.idle): 25,
+            (ShipStatus.computer_control, ShipStatus.idle): 30,
             (ShipStatus.remote_control, ShipStatus.idle): 7,
             (ShipStatus.remote_control, ShipStatus.tasking): 8,
             (ShipStatus.tasking, ShipStatus.remote_control): 9,
@@ -497,6 +497,8 @@ class DataManager:
             (ShipStatus.backhome_network, ShipStatus.remote_control): 21,
             (ShipStatus.backhome_low_energy, ShipStatus.remote_control): 22,
             (ShipStatus.at_home, ShipStatus.idle): 23,
+            (ShipStatus.at_home, ShipStatus.remote_control): 28,
+            (ShipStatus.at_home, ShipStatus.computer_control): 29,
         }
         status_tuple = (self.ship_status, target_status)
         self.logger.info({'status change': status_tuple})
@@ -1278,7 +1280,6 @@ class DataManager:
             # 调试模式下自身经纬度和高德经纬度一致
             elif self.lng_lat is not None and not self.use_true_gps:
                 self.gaode_lng_lat = self.lng_lat
-
 
     # 更新经纬度
     def update_lng_lat(self):
