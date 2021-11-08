@@ -287,7 +287,6 @@ class DataManager:
                                     self.send_stc_data('A0Z')
                     else:
                         self.send_stc_data('A1Z')
-                        # 如果有抽水杆需要先放到下面再计算开始时间
                         if self.draw_start_time is None:
                             self.draw_start_time = time.time()
                             # 触发一次停止
@@ -305,8 +304,10 @@ class DataManager:
                     if not self.is_auto_drain:
                         self.send_stc_data('A0Z')
                     # 没有抽水的情况下杆子都要收回来
-                    if config.b_control_deep:
-                        self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
+                    # else:
+                    #     if config.b_control_deep:
+                    #         print('##############################set max1')
+                    #         self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
                     self.draw_start_time = None
 
                 # 判断没有排水则先排水再收杆子
@@ -322,6 +323,7 @@ class DataManager:
                             self.is_auto_drain = 0
                             # 收回杆子
                             if config.b_control_deep:
+                                print('##############################set max2')
                                 self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
                             self.is_need_drain = False
                             self.drain_start_time = None
@@ -1652,7 +1654,7 @@ class DataManager:
         :return:
         """
         while True:
-            time.sleep(0.1)
+            time.sleep(1)
             switch_data = {
                 # 检测 1 检测 没有该键表示不检测
                 "b_sampling": self.server_data_obj.mqtt_send_get_obj.b_draw,

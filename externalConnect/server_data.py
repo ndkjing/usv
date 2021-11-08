@@ -245,6 +245,7 @@ class MqttSendGet:
                     self.b_sampling = int(switch_data.get('b_sampling'))
                 if switch_data.get('b_draw') is not None:
                     self.b_draw = int(switch_data.get('b_draw'))
+                    print("###################b_draw",self.b_draw)
                 # 前大灯 1 打开前大灯 没有该键表示不打开
                 if switch_data.get('headlight') is not None:
                     self.headlight = int(switch_data.get('headlight'))

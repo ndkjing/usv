@@ -354,7 +354,7 @@ class PiMain:
         #     self.draw_steer_pwm = deep_pwm
 
     def loop_change_draw_steer(self, b_slow=True):
-        delta_change = 10
+        delta_change = 5
         while 1:
             if not config.b_control_deep:
                 time.sleep(1)
@@ -363,7 +363,7 @@ class PiMain:
                 add_or_sub = 1 if self.target_draw_steer_pwm - self.draw_steer_pwm > 0 else -1
                 self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
                 self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
-                time.sleep(0.06)
+                time.sleep(0.02)
             else:
                 time.sleep(0.1)
 

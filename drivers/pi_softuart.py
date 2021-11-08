@@ -524,7 +524,7 @@ class PiSoftuart(object):
             return None
             # time.sleep(self._thread_ts)
         except Exception as e:
-            print({'error send_stc_data': e})
+            # print({'error send_stc_data': e})
             return None
 
     def read_stc_data(self, debug=False):
@@ -564,5 +564,5 @@ class PiSoftuart(object):
                 return_dict.update({'water': water_data_list})
             return return_dict
         except Exception as e:
-            print({'error read_stc_data': e})
+            # print({'error read_stc_data': e})
             return {}
