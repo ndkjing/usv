@@ -133,8 +133,6 @@ class DataManager:
         # 船高德经纬度
         self.gaode_lng_lat = None
         self.lng_lat_error = None
-        # 罗盘角度
-        self.theta = None
         # 船头角度
         self.current_theta = None
         # 偏差角度
@@ -694,7 +692,6 @@ class DataManager:
 
             # 判断任务模式切换到其他状态情况
             if self.ship_status == ShipStatus.tasking:
-                print('self.b_sampling', self.b_sampling, self.b_draw_over_send_data)
                 # 切换到电脑自动模式  切换到电脑手动模式
                 if self.b_sampling == 2 or self.server_data_obj.mqtt_send_get_obj.b_draw == 0:
                     if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) > 0 and \
@@ -1016,7 +1013,16 @@ class DataManager:
                                                                 self.lng_lat[1],
                                                                 target_lng_lat_gps[0],
                                                                 target_lng_lat_gps[1])
-            theta_error = point_theta - self.current_theta
+            if config.home_debug:
+                if self.current_theta is not None:
+                    theta_error = point_theta - self.current_theta
+                else:
+                    theta_error = 0
+            else:
+                if self.pi_main_obj.theta is not None:
+                    theta_error = point_theta - self.pi_main_obj.theta
+                else:
+                    theta_error = 0
             if abs(theta_error) > 180:
                 if theta_error > 0:
                     theta_error = theta_error - 360
@@ -1043,9 +1049,19 @@ class DataManager:
                 forward_power = left_delta_pwm + right_delta_pwm
                 delta_distance = forward_power * 0.002
                 delta_theta = steer_power * 0.08
-                self.last_lng_lat = copy.deepcopy(self.lng_lat)
+                if self.last_lng_lat:
+                    ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
+                                                                       self.last_lng_lat[1],
+                                                                       self.lng_lat[0],
+                                                                       self.lng_lat[1])
+                else:
+                    ship_theta = 0
+                print(time.time(),'ship_theta',ship_theta)
+                # 船头角度
+                self.current_theta = ship_theta
                 if self.current_theta is not None:
                     self.current_theta = (self.current_theta - delta_theta / 2) % 360
+                self.last_lng_lat = copy.deepcopy(self.lng_lat)
                 self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                            self.lng_lat[1],
                                                                            self.current_theta,
@@ -1427,8 +1443,10 @@ class DataManager:
             status_data.update({"totle_distance": round(save_distance, 1)})
             status_data.update({"totle_time": round(save_time)})
             # 更新船头方向
-            if self.current_theta:
-                status_data.update({"direction": round(self.current_theta)})
+            if config.home_debug and self.current_theta is not None:
+                status_data.update({"direction": round(self.current_theta,1)})
+            elif not config.home_debug and self.pi_main_obj.theta:
+                status_data.update({"direction": round(self.pi_main_obj.theta,1)})
             # 更新经纬度误差
             if self.lng_lat_error is not None:
                 status_data.update({"lng_lat_error": self.lng_lat_error})
@@ -1495,21 +1513,7 @@ class DataManager:
         while True:
             # 循环等待一定时间
             time.sleep(1)
-            if self.last_lng_lat:
-                ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
-                                                                   self.last_lng_lat[1],
-                                                                   self.lng_lat[0],
-                                                                   self.lng_lat[1])
-            else:
-                ship_theta = 0
-            # 船头角度
-            if config.use_shape_theta_type == 1:
-                if config.b_pin_compass:
-                    self.current_theta = self.pi_main_obj.theta
-                else:
-                    self.current_theta = self.theta
-            else:
-                self.current_theta = ship_theta
+
             # 检查电量 如果连续20次检测电量平均值低于电量阈值就报警
             if config.energy_backhome:
                 try:

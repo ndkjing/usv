@@ -698,12 +698,6 @@ draw_steer = 13  # 舵机接口
 # 排水
 b_drain = 1  # 是否有排水泵
 
-# 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
-if home_debug:
-    use_shape_theta_type = 3
-else:
-    use_shape_theta_type = 1
-
 min_deep_steer_pwm = 800  # 最下面
 max_deep_steer_pwm = 2400  # 最上面
 
