@@ -306,7 +306,6 @@ class DataManager:
                     # 没有抽水的情况下杆子都要收回来
                     # else:
                     #     if config.b_control_deep:
-                    #         print('##############################set max1')
                     #         self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
                     self.draw_start_time = None
 
@@ -323,7 +322,6 @@ class DataManager:
                             self.is_auto_drain = 0
                             # 收回杆子
                             if config.b_control_deep:
-                                print('##############################set max2')
                                 self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
                             self.is_need_drain = False
                             self.drain_start_time = None

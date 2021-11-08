@@ -2,7 +2,7 @@
 存放船编号
 """
 import os
-ship_code = 'XXLJC4LCGSCAHSD0DA000'
+ship_code = 'XXLJC4LCGSCSD1DA002'
 video_code = 'C99929528'
 ship_code_video_dict = {
     ship_code: video_code,
