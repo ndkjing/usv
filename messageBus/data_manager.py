@@ -198,7 +198,8 @@ class DataManager:
         self.last_send_stc_log_data = None  # 记录上一次发送给单片机数据重复就不用记录日志
         self.is_auto_drain = 0  # 自动排水标志位
         self.remote_draw_overtime = 0  # 遥控器控制抽水超时停止标志位
-        self.plan_dict = []  # 获取存储的任务  经纬度，采样深度，采样量数据样式[[lng,lat],deep,capacity]
+        self.plan_list = []  # 获取存储的任务  经纬度，采样深度，采样量数据样式[[lng,lat],bottle_id,deep,capacity]
+        self.arrive_index = None  # 当前到达预存储任务点索引
         self.bottle_draw_time_list = [0, 0, 0, 0]  # 记录每一个瓶子抽水时间
         self.current_draw_bottle = 0  # 当前抽水瓶号 默认为0 当增加到大于配置的最大瓶号则认为全部抽水结束
 
@@ -277,6 +278,9 @@ class DataManager:
             # 没有开启遥控器
             else:
                 # 前端发送抽水深度和抽水时间
+                if self.plan_list:  # 是否是使用预先存储任务
+                    if self.arrive_index:
+                        config.draw_time = self.plan_list[self.arrive_index][3]
                 if config.draw_time >= 200:
                     temp_draw_time = int(60 * config.draw_time / config.draw_speed)  # 暂时使用抽水时间位置设置为抽水容量
                 else:
@@ -296,9 +300,15 @@ class DataManager:
                     # 判断是否有杆子放下杆子
                     if config.b_control_deep:
                         # 计算目标深度的pwm值
+                        if self.plan_list:  # 是否是使用预先存储任务
+                            if self.arrive_index:
+                                config.draw_deep = self.plan_list[self.arrive_index][2]
                         target_pwm = self.deep2pwm(config.draw_deep)
                         self.pi_main_obj.set_draw_deep(target_pwm)
                         if self.pi_main_obj.draw_steer_pwm == self.pi_main_obj.target_draw_steer_pwm:  # 判断到达目标深度
+                            if self.plan_list:  # 是否是使用预先存储任务
+                                if self.arrive_index:
+                                    self.current_draw_bottle = self.plan_list[self.arrive_index][1]
                             if self.current_draw_bottle == 0:
                                 self.send_stc_data('A1Z')
                             elif self.current_draw_bottle == 1:
@@ -1560,7 +1570,8 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.bank_distance),
                 "progress": progress,
                 # 船执行手动控制信息
-                "control_info": self.control_info+ '瓶: '+str(self.current_draw_bottle)+'  水量  '+str(config.draw_time),
+                "control_info": self.control_info + '瓶: ' + str(self.current_draw_bottle) + '  水量  ' + str(
+                    config.draw_time),
                 # 水泵开关状态消息
                 "draw_info": self.server_data_obj.mqtt_send_get_obj.b_draw,
                 # 声光报警器
@@ -1581,7 +1592,8 @@ class DataManager:
             #     notice_info_data.update({"compass_notice_info": self.compass_notice_info})
             # if not config.home_debug and self.pi_main_obj.compass_notice_info:
             #     notice_info_data.update({"compass_notice_info": self.pi_main_obj.compass_notice_info})
-            notice_info_data.update({"compass_notice_info ": '瓶: '+str(self.current_draw_bottle)+'  水量  '+str(config.draw_time)})
+            notice_info_data.update(
+                {"compass_notice_info ": '瓶: ' + str(self.current_draw_bottle) + '  水量  ' + str(config.draw_time)})
             # 使用电量告警是提示消息
             if self.low_dump_energy_warnning:
                 notice_info_data.update({"low_dump_energy_warnning": self.low_dump_energy_warnning})
