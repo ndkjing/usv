@@ -174,6 +174,11 @@ class MqttSendGet:
         self.b_receive_mqtt = False
         # 计算距离岸边距离
         self.bank_distance = 20.0
+        self.task_list = []  # 获取存储的任务  经纬度，采样深度，采样量数据样式([lng,lat],[bottle_id,deep,capacity],[bottle_id,deep,capacity])
+        self.draw_bottle_id = None  # 前端设置抽水瓶号id
+        self.draw_deep = None  # 前端设置抽水深度
+        self.draw_capacity = None  # 前端设置抽水容量
+
     # 连接MQTT服务器
     def mqtt_connect(self):
         if not self.is_connected:
@@ -517,6 +522,61 @@ class MqttSendGet:
                 else:
                     self.bank_distance = round(float(bank_distance_data.get('bank_distance')), 1)
 
+            # 抽水任务话题数据
+            elif topic == 'task_list_%s' % config.ship_code:
+                task_list_data = json.loads(msg.payload)
+                if task_list_data.get("task") is None:
+                    self.logger.error('"task_list_data"设置启动消息没有"task"字段')
+                    return
+                self.logger.info({'topic': topic,
+                                  '任务点数': len(task_list_data.get("task")),
+                                  })
+
+                # 解析任务数据并排序
+                try:
+                    for item in task_list_data.get("task"):
+                        temp_list = []
+                        lng_lat_str = item.get("jwd")
+                        lng_lat = [float(i) for i in lng_lat_str.split(',')]
+                        temp_list.append(tuple(lng_lat))
+                        for bottle in item.get("container"):
+                            bottle_id = int(bottle.get("id")) - 1
+                            bottle_deep = float(bottle.get("deep"))
+                            bottle_amount = float(bottle.get("amount"))
+                            temp_list.append((bottle_id, bottle_deep, bottle_amount))
+                        self.task_list.append(tuple(temp_list))
+                except Exception as e:
+                    print('task_list_data error', e)
+                # print('########## self.task_list', self.task_list)
+
+            # 采样瓶设置数据话题
+            elif topic == 'bottle_setting_%s' % config.ship_code:
+                bottle_setting_data = json.loads(msg.payload)
+                if bottle_setting_data.get("info_type") is None:
+                    self.logger.error('"bottle_setting_data"设置启动消息没有"info_type"字段')
+                    return
+                if int(bottle_setting_data.get("info_type")) == 1:
+                    if bottle_setting_data.get("bottle_id"):
+                        self.draw_bottle_id = int(bottle_setting_data.get("bottle_id"))
+                    else:
+                        self.draw_bottle_id =None
+                    if bottle_setting_data.get("bottle_id"):
+                        self.draw_deep = float(bottle_setting_data.get("deep"))
+                    else:
+                        self.draw_deep = None
+                    if bottle_setting_data.get("bottle_id"):
+                        self.draw_capacity = int(bottle_setting_data.get("amount"))
+                    else:
+                        self.draw_capacity = None
+                    if self.draw_bottle_id and self.draw_deep and self.draw_capacity:
+                        self.publish_topic(topic == 'bottle_setting_%s' % config.ship_code,
+                                           data={
+                                               "info_type": 2,
+                                               "bottle_id": self.draw_bottle_id,
+                                               "deep": self.draw_deep,
+                                               "amount": self.draw_capacity,
+                                           },
+                                           )
         except Exception as e:
             self.logger.error({'error': e})
 

@@ -247,6 +247,8 @@ class DataDefine:
             ('set_home_%s' % config.ship_code, 0),
             ('poweroff_restart_%s' % config.ship_code, 0),
             ('bank_distance_%s' % config.ship_code, 0),
+            ('task_list_%s' % config.ship_code, 0),
+            ('bottle_setting_%s' % config.ship_code, 0),
             ('path_planning_confirm_%s' % config.ship_code, 0))
 
         self.pool_code = ''
