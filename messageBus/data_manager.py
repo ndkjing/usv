@@ -217,8 +217,8 @@ class DataManager:
         @param b_draw: 点击立即抽水
         @param b_plan_draw: 存储计划抽水
         @param bottle_id: 抽水瓶号
-        @param draw_deep: 抽水时间
-        @param draw_capacity: 抽水深度
+        @param draw_deep: 抽水深度
+        @param draw_time: 抽水时间
         @return:
         """
         if config.home_debug:
@@ -229,12 +229,8 @@ class DataManager:
                     if time.time() - self.draw_start_time > 5:
                         self.b_draw_over_send_data = True
                         self.b_sampling = 2
+                        self.draw_start_time = None
                         return True
-            else:
-                if self.draw_start_time is not None:
-                    self.bottle_draw_time_list[self.current_draw_bottle] += 5
-                    self.current_draw_bottle += 1
-                    self.draw_start_time = None
         else:
             # 判断是否抽水  点击抽水情况
             if b_draw or b_plan_draw:
@@ -304,7 +300,6 @@ class DataManager:
                 temp_draw_bottle_id = self.sort_task_list[self.current_arriver_index][index + 1][0]
                 temp_draw_deep = self.sort_task_list[self.current_arriver_index][index + 1][1]
                 temp_draw_time = self.sort_task_list[self.current_arriver_index][index + 1][2]
-                print('temp_draw_bottle_id,temp_draw_deep,temp_draw_time,',temp_draw_bottle_id,temp_draw_deep,temp_draw_time,)
                 if temp_draw_time and temp_draw_time >= 200:
                     temp_draw_time = int(60 * config.draw_time / config.draw_speed)  # 暂时使用抽水时间位置设置为抽水容量
                 else:
@@ -383,7 +378,6 @@ class DataManager:
                     is_finish_draw = self.draw_sub(False, True, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
                     if is_finish_draw:
                         self.sort_task_done_list[self.current_arriver_index][index] = 1
-
             # 更新抽水完成度信息
             full_draw_time = int(60 * config.max_draw_capacity / config.draw_speed)
             for index, value in enumerate(self.bottle_draw_time_list):
@@ -565,6 +559,9 @@ class DataManager:
         self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
         self.server_data_obj.mqtt_send_get_obj.keep_point = 0
         self.point_arrive_start_time = None  # 清楚记录长期不到时间
+        self.sort_task_list = []  # 获取存储的任务  经纬度，采样深度，采样量数据样式[[lng,lat],[bottle_id,deep,capacity],[bottle_id,deep,capacity]]
+        self.sort_task_done_list = []  # 总共有多少个点抽水完成存储0/1  单个长度等于任务点数量[[0,0],[0,0,0,0]
+        self.current_arriver_index = None  # 当前到达预存储任务点索引
 
     # 当模式改变是改变保存的状态消息
     def change_status_info(self, target_status, b_clear_status=False):
@@ -818,8 +815,11 @@ class DataManager:
                 if self.current_arriver_index is not None:
                     # print('self.sort_task_done_list[self.current_arriver_index].count(0)',self.sort_task_done_list[self.current_arriver_index].count(0))
                     if self.sort_task_done_list[self.current_arriver_index].count(0) == 0:
-                        self.last_ship_status = ShipStatus.idle
-                        self.change_status_info(self.last_ship_status)
+                        b_clear_status = False
+                        if self.current_arriver_index == len(self.sort_task_done_list) - 1:
+                            self.last_ship_status = ShipStatus.idle
+                            b_clear_status = True
+                        self.change_status_info(self.last_ship_status, b_clear_status=b_clear_status)
                 else:
                     # 切换到电脑自动模式  切换到电脑手动模式
                     if self.b_sampling == 2 or self.server_data_obj.mqtt_send_get_obj.b_draw == 0:
