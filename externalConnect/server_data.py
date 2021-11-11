@@ -171,9 +171,10 @@ class MqttSendGet:
         self.fix_point = 0
         self.is_connected = 0
         # 是否接受到电脑端点击过任何按键
-        self.b_receive_mqtt=False
+        self.b_receive_mqtt = False
         # 计算距离岸边距离
         self.bank_distance = 20.0
+
     # 连接MQTT服务器
     def mqtt_connect(self):
         if not self.is_connected:
