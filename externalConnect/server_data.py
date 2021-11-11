@@ -203,382 +203,388 @@ class MqttSendGet:
 
     # 消息处理函数回调
     def on_message_callback(self, client, userdata, msg):
-        try:
-            # 回调更新控制数据
-            topic = msg.topic
-            self.last_command_time = time.time()
-            # 处理控制数据
-            if topic == 'control_data_%s' % config.ship_code:
-                self.b_receive_mqtt = True
-                control_data = json.loads(msg.payload)
-                if control_data.get('move_direction') is None:
-                    self.logger.error('control_data_处理控制数据没有move_direction')
-                    return
-                # 判断当前是否是寻点模式如果是则
-                if self.row_gap:
-                    if not self.use_col_gap:
-                        self.use_col_gap = True
-                    # 已经为True表示已经传递过一次规划路径又传递了一次，此时取消寻点标记
-                    else:
-                        self.use_col_gap = False
-                        self.row_gap = 0
-                self.last_control_move_direction = self.control_move_direction
-                self.control_move_direction = int(control_data.get('move_direction'))
-                nwse_dict = {
-                    0: 10,
-                    90: 190,
-                    180: 1180,
-                    270: 1270,
-                }
-                if control_data.get('mode'):
-                    if int(control_data.get('mode')) == 1:
-                        pass
-                    elif int(control_data.get('mode')) == 2:
-                        self.control_move_direction = nwse_dict[self.control_move_direction]
-                self.logger.info({'topic': topic,
-                                  'control_move_direction': self.control_move_direction,
-                                  'mode': control_data.get('mode')
-                                  })
-
-            # 处理开关信息
-            if topic == 'switch_%s' % config.ship_code:
-                self.b_receive_mqtt = True
-                switch_data = json.loads(msg.payload)
-                # 改变了暂时没用
-                if switch_data.get('b_sampling') is not None:
-                    self.b_sampling = int(switch_data.get('b_sampling'))
-                if switch_data.get('b_draw') is not None:
-                    self.b_draw = int(switch_data.get('b_draw'))
-                # 前大灯 1 打开前大灯 没有该键表示不打开
-                if switch_data.get('headlight') is not None:
-                    self.headlight = int(switch_data.get('headlight'))
-                # 声光报警器 1 打开声光报警器 没有该键表示不打开
-                if switch_data.get('audio_light') is not None:
-                    self.audio_light = int(switch_data.get('audio_light'))
-                # 舷灯 1 允许打开舷灯 没有该键表示不打开
-                if switch_data.get('side_light') is not None:
-                    self.side_light = int(switch_data.get('side_light'))
-                # self.logger.info({'topic': topic,
-                #                   'b_sampling': switch_data.get('b_sampling'),
-                #                   'b_draw': switch_data.get('b_draw'),
-                #                   'headlight': switch_data.get('headlight'),
-                #                   'audio_light': switch_data.get('audio_light'),
-                #                   'side_light': switch_data.get('side_light'),
-                #                   })
-
-            # 处理初始点击确定湖数据
-            elif topic == 'pool_click_%s' % config.ship_code:
-                self.b_receive_mqtt = True
-                pool_click_data = json.loads(msg.payload)
-                if pool_click_data.get('lng_lat') is None:
-                    self.logger.error('pool_click  用户点击经纬度数据没有经纬度字段')
-                    return
-                if pool_click_data.get('zoom') is None:
-                    self.logger.error('pool_click 用户点击经纬度数据没有zoom字段')
-                    return
-                lng_lat = pool_click_data.get('lng_lat')
-                self.pool_click_lng_lat = lng_lat
-                zoom = int(round(float(pool_click_data.get('zoom')), 0))
-                self.pool_click_zoom = zoom
-                self.logger.info({'topic': topic,
-                                  'lng_lat': pool_click_data.get('lng_lat'),
-                                  'zoom': pool_click_data.get('zoom')
-                                  })
-
-            # 用户点击经纬度和图层 保存到指定路径
-            elif topic == 'user_lng_lat_%s' % config.ship_code:
-                user_lng_lat_data = json.loads(msg.payload)
-                if user_lng_lat_data.get('lng_lat') is None:
-                    self.logger.error('user_lng_lat_用户点击经纬度数据没有经纬度字段')
-                    return
-                if user_lng_lat_data.get('zoom') is None:
-                    self.logger.error('user_lng_lat_用户点击经纬度数据没有zoom字段')
-                    return
-                if user_lng_lat_data.get('meter_pix') is None:
-                    self.logger.error('user_lng_lat_用户点击经纬度数据没有meter_pix字段')
-                if user_lng_lat_data.get('config') is None:
-                    self.logger.error('user_lng_lat_用户点击经纬度数据没有config字段')
-
-                # 添加新的点
-                lng_lat = user_lng_lat_data.get('lng_lat')
-                self.target_lng_lat = lng_lat
-                self.target_lng_lat_status = [0] * len(lng_lat)
-                zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
-                self.zoom.append(zoom)
-                self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
-                if user_lng_lat_data.get('config').get('back_home') is not None:
-                    self.back_home = user_lng_lat_data.get('config').get('back_home')
-
-                self.fix_point = user_lng_lat_data.get('config').get('fixpoint')
-
-                self.logger.info({'topic': topic,
-                                  'target_lng_lat': self.target_lng_lat,
-                                  'zoom': zoom,
-                                  'meter_pix': user_lng_lat_data.get('meter_pix'),
-                                  'back_home': self.back_home,
-                                  'fix_point': self.fix_point,
-                                  })
-
-            # 用户设置自动求取检测点经纬度
-            elif topic == 'auto_lng_lat_%s' % (config.ship_code):
-                auto_lng_lat_data = json.loads(msg.payload)
-                if auto_lng_lat_data.get('config') is None:
-                    self.logger.error('auto_lng_lat_用户设置自动求取检测点经纬度没有config字段')
-                    return
-                if auto_lng_lat_data.get('config').get('row_gap') is None:
-                    self.logger.error('auto_lng_lat_用户设置自动求取检测点经纬度config字段没有row_gap')
-                    return
-                self.row_gap = 1
-                self.logger.info({'topic': topic,
-                                  'row_gap': self.row_gap})
-
-            # 返回路径规划点
-            elif topic == 'path_planning_%s' % (config.ship_code):
-                path_planning_data = json.loads(msg.payload)
-                if path_planning_data.get('path_points') is None:
-                    self.logger.error('path_planning_用户确认轨迹 没有path_points字段')
-                    return
-                # 判断当前是否是寻点模式如果是则
-                if self.row_gap:
-                    if not self.use_col_gap:
-                        self.use_col_gap = True
-                    # 已经为True表示已经传递过一次规划路径又传递了一次，此时取消寻点标记
-                    else:
-                        self.use_col_gap = False
-                        self.row_gap = 0
-                # 从路径规划话题中提取
-                self.sampling_points = path_planning_data.get('sampling_points')
-                # 存储目标点到达状态
-                self.sampling_points_status = [0] * len(self.sampling_points)
-                self.path_planning_points = path_planning_data.get('path_points')
-                self.keep_point = 1
-                self.logger.info({'topic': topic,
-                                  'sampling_points': path_planning_data.get('sampling_points'),
-                                  'path_points': path_planning_data.get('path_points'),
-                                  })
-
-            # 用户确认轨迹
-            elif topic == 'path_planning_confirm_%s' % (config.ship_code):
-                path_planning_confirm_data = json.loads(msg.payload)
-                if not path_planning_confirm_data.get('path_id'):
-                    self.logger.error('path_planning_confirm_用户确认轨迹 没有path_id字段')
-                    return
-                if not path_planning_confirm_data.get('confirm'):
-                    self.logger.error('path_planning_confirm_用户确认轨迹 没有confirm字段')
-                    return
-                self.path_id = path_planning_confirm_data.get('path_id')
-                self.path_id_confirm = path_planning_confirm_data.get('confirm')
-
-                self.logger.info({'topic': topic,
-                                  'path_id': path_planning_confirm_data.get('path_id'),
-                                  'path_id_confirm': path_planning_confirm_data.get('confirm'),
-                                  })
-
-            # 启动设备
-            elif topic == 'start_%s' % config.ship_code:
-                start_data = json.loads(msg.payload)
-                if not start_data.get('search_pattern'):
-                    self.logger.error('start_设置启动消息没有search_pattern字段')
-                    return
-                self.b_start = int(start_data.get('search_pattern'))
-                self.logger.info({'topic': topic, 'b_start': start_data.get('search_pattern')})
-
-            # 湖泊id
-            elif topic == 'pool_info_%s' % config.ship_code:
-                pool_info_data = json.loads(msg.payload)
-                if not pool_info_data.get('mapId'):
-                    self.logger.error('pool_info_data设置启动消息没有mapId字段')
-                    return
-                self.pool_code = str(pool_info_data.get('mapId'))
-                self.logger.info({'topic': topic, 'mapId': pool_info_data.get('mapId')})
-
-            # 服务器从状态数据中获取 当前经纬度
-            elif topic == 'status_data_%s' % config.ship_code:
-                status_data = json.loads(msg.payload)
-                if not status_data.get("current_lng_lat"):
-                    # self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
-                    return
-                self.current_lng_lat = status_data.get('current_lng_lat')
-                # self.logger.info({'topic': topic,
-                #                   'current_lng_lat': status_data.get('current_lng_lat')})
-
-            # 基础配置
-            elif topic == 'base_setting_%s' % config.ship_code:
-                self.logger.info({'base_setting ': json.loads(msg.payload)})
-                if len(msg.payload) < 5:
-                    return
-                base_setting_data = json.loads(msg.payload)
-                if base_setting_data.get("info_type") is None:
-                    self.logger.error('"base_setting_data"设置启动消息没有"info_type"字段')
-                    return
+        # try:
+        # 回调更新控制数据
+        topic = msg.topic
+        self.last_command_time = time.time()
+        # 处理控制数据
+        if topic == 'control_data_%s' % config.ship_code:
+            self.b_receive_mqtt = True
+            control_data = json.loads(msg.payload)
+            if control_data.get('move_direction') is None:
+                self.logger.error('control_data_处理控制数据没有move_direction')
+                return
+            # 判断当前是否是寻点模式如果是则
+            if self.row_gap:
+                if not self.use_col_gap:
+                    self.use_col_gap = True
+                # 已经为True表示已经传递过一次规划路径又传递了一次，此时取消寻点标记
                 else:
-                    info_type = int(base_setting_data.get('info_type'))
-                    self.base_setting_data_info = info_type
-                    if info_type == 1:
-                        with open(config.base_setting_path, 'r') as f:
-                            self.base_setting_data = json.load(f)
-                    elif info_type == 2:
-                        with open(config.base_setting_path, 'r') as f:
-                            self.base_setting_data = json.load(f)
-                        with open(config.base_setting_path, 'w') as f:
-                            self.base_setting_data.update(base_setting_data)
+                    self.use_col_gap = False
+                    self.row_gap = 0
+            self.last_control_move_direction = self.control_move_direction
+            self.control_move_direction = int(control_data.get('move_direction'))
+            nwse_dict = {
+                0: 10,
+                90: 190,
+                180: 1180,
+                270: 1270,
+            }
+            if control_data.get('mode'):
+                if int(control_data.get('mode')) == 1:
+                    pass
+                elif int(control_data.get('mode')) == 2:
+                    self.control_move_direction = nwse_dict[self.control_move_direction]
+            self.logger.info({'topic': topic,
+                              'control_move_direction': self.control_move_direction,
+                              'mode': control_data.get('mode')
+                              })
+
+        # 处理开关信息
+        if topic == 'switch_%s' % config.ship_code:
+            self.b_receive_mqtt = True
+            switch_data = json.loads(msg.payload)
+            # 改变了暂时没用
+            if switch_data.get('b_sampling') is not None:
+                self.b_sampling = int(switch_data.get('b_sampling'))
+            if switch_data.get('b_draw') is not None:
+                self.b_draw = int(switch_data.get('b_draw'))
+            # 前大灯 1 打开前大灯 没有该键表示不打开
+            if switch_data.get('headlight') is not None:
+                self.headlight = int(switch_data.get('headlight'))
+            # 声光报警器 1 打开声光报警器 没有该键表示不打开
+            if switch_data.get('audio_light') is not None:
+                self.audio_light = int(switch_data.get('audio_light'))
+            # 舷灯 1 允许打开舷灯 没有该键表示不打开
+            if switch_data.get('side_light') is not None:
+                self.side_light = int(switch_data.get('side_light'))
+            # self.logger.info({'topic': topic,
+            #                   'b_sampling': switch_data.get('b_sampling'),
+            #                   'b_draw': switch_data.get('b_draw'),
+            #                   'headlight': switch_data.get('headlight'),
+            #                   'audio_light': switch_data.get('audio_light'),
+            #                   'side_light': switch_data.get('side_light'),
+            #                   })
+
+        # 处理初始点击确定湖数据
+        elif topic == 'pool_click_%s' % config.ship_code:
+            self.b_receive_mqtt = True
+            pool_click_data = json.loads(msg.payload)
+            if pool_click_data.get('lng_lat') is None:
+                self.logger.error('pool_click  用户点击经纬度数据没有经纬度字段')
+                return
+            if pool_click_data.get('zoom') is None:
+                self.logger.error('pool_click 用户点击经纬度数据没有zoom字段')
+                return
+            lng_lat = pool_click_data.get('lng_lat')
+            self.pool_click_lng_lat = lng_lat
+            zoom = int(round(float(pool_click_data.get('zoom')), 0))
+            self.pool_click_zoom = zoom
+            self.logger.info({'topic': topic,
+                              'lng_lat': pool_click_data.get('lng_lat'),
+                              'zoom': pool_click_data.get('zoom')
+                              })
+
+        # 用户点击经纬度和图层 保存到指定路径
+        elif topic == 'user_lng_lat_%s' % config.ship_code:
+            user_lng_lat_data = json.loads(msg.payload)
+            if user_lng_lat_data.get('lng_lat') is None:
+                self.logger.error('user_lng_lat_用户点击经纬度数据没有经纬度字段')
+                return
+            if user_lng_lat_data.get('zoom') is None:
+                self.logger.error('user_lng_lat_用户点击经纬度数据没有zoom字段')
+                return
+            if user_lng_lat_data.get('meter_pix') is None:
+                self.logger.error('user_lng_lat_用户点击经纬度数据没有meter_pix字段')
+            if user_lng_lat_data.get('config') is None:
+                self.logger.error('user_lng_lat_用户点击经纬度数据没有config字段')
+
+            # 添加新的点
+            lng_lat = user_lng_lat_data.get('lng_lat')
+            self.target_lng_lat = lng_lat
+            self.target_lng_lat_status = [0] * len(lng_lat)
+            zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
+            self.zoom.append(zoom)
+            self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
+            if user_lng_lat_data.get('config').get('back_home') is not None:
+                self.back_home = user_lng_lat_data.get('config').get('back_home')
+
+            self.fix_point = user_lng_lat_data.get('config').get('fixpoint')
+
+            self.logger.info({'topic': topic,
+                              'target_lng_lat': self.target_lng_lat,
+                              'zoom': zoom,
+                              'meter_pix': user_lng_lat_data.get('meter_pix'),
+                              'back_home': self.back_home,
+                              'fix_point': self.fix_point,
+                              })
+
+        # 用户设置自动求取检测点经纬度
+        elif topic == 'auto_lng_lat_%s' % (config.ship_code):
+            auto_lng_lat_data = json.loads(msg.payload)
+            if auto_lng_lat_data.get('config') is None:
+                self.logger.error('auto_lng_lat_用户设置自动求取检测点经纬度没有config字段')
+                return
+            if auto_lng_lat_data.get('config').get('row_gap') is None:
+                self.logger.error('auto_lng_lat_用户设置自动求取检测点经纬度config字段没有row_gap')
+                return
+            self.row_gap = 1
+            self.logger.info({'topic': topic,
+                              'row_gap': self.row_gap})
+
+        # 返回路径规划点
+        elif topic == 'path_planning_%s' % (config.ship_code):
+            path_planning_data = json.loads(msg.payload)
+            if path_planning_data.get('path_points') is None:
+                self.logger.error('path_planning_用户确认轨迹 没有path_points字段')
+                return
+            # 判断当前是否是寻点模式如果是则
+            if self.row_gap:
+                if not self.use_col_gap:
+                    self.use_col_gap = True
+                # 已经为True表示已经传递过一次规划路径又传递了一次，此时取消寻点标记
+                else:
+                    self.use_col_gap = False
+                    self.row_gap = 0
+            # 从路径规划话题中提取
+            self.sampling_points = path_planning_data.get('sampling_points')
+            # 存储目标点到达状态
+            self.sampling_points_status = [0] * len(self.sampling_points)
+            self.path_planning_points = path_planning_data.get('path_points')
+            self.keep_point = 1
+            self.logger.info({'topic': topic,
+                              'sampling_points': path_planning_data.get('sampling_points'),
+                              'path_points': path_planning_data.get('path_points'),
+                              })
+
+        # 用户确认轨迹
+        elif topic == 'path_planning_confirm_%s' % (config.ship_code):
+            path_planning_confirm_data = json.loads(msg.payload)
+            if not path_planning_confirm_data.get('path_id'):
+                self.logger.error('path_planning_confirm_用户确认轨迹 没有path_id字段')
+                return
+            if not path_planning_confirm_data.get('confirm'):
+                self.logger.error('path_planning_confirm_用户确认轨迹 没有confirm字段')
+                return
+            self.path_id = path_planning_confirm_data.get('path_id')
+            self.path_id_confirm = path_planning_confirm_data.get('confirm')
+
+            self.logger.info({'topic': topic,
+                              'path_id': path_planning_confirm_data.get('path_id'),
+                              'path_id_confirm': path_planning_confirm_data.get('confirm'),
+                              })
+
+        # 启动设备
+        elif topic == 'start_%s' % config.ship_code:
+            start_data = json.loads(msg.payload)
+            if not start_data.get('search_pattern'):
+                self.logger.error('start_设置启动消息没有search_pattern字段')
+                return
+            self.b_start = int(start_data.get('search_pattern'))
+            self.logger.info({'topic': topic, 'b_start': start_data.get('search_pattern')})
+
+        # 湖泊id
+        elif topic == 'pool_info_%s' % config.ship_code:
+            pool_info_data = json.loads(msg.payload)
+            if not pool_info_data.get('mapId'):
+                self.logger.error('pool_info_data设置启动消息没有mapId字段')
+                return
+            self.pool_code = str(pool_info_data.get('mapId'))
+            self.logger.info({'topic': topic, 'mapId': pool_info_data.get('mapId')})
+
+        # 服务器从状态数据中获取 当前经纬度
+        elif topic == 'status_data_%s' % config.ship_code:
+            status_data = json.loads(msg.payload)
+            if not status_data.get("current_lng_lat"):
+                # self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
+                return
+            self.current_lng_lat = status_data.get('current_lng_lat')
+            # self.logger.info({'topic': topic,
+            #                   'current_lng_lat': status_data.get('current_lng_lat')})
+
+        # 基础配置
+        elif topic == 'base_setting_%s' % config.ship_code:
+            self.logger.info({'base_setting ': json.loads(msg.payload)})
+            if len(msg.payload) < 5:
+                return
+            base_setting_data = json.loads(msg.payload)
+            if base_setting_data.get("info_type") is None:
+                self.logger.error('"base_setting_data"设置启动消息没有"info_type"字段')
+                return
+            else:
+                info_type = int(base_setting_data.get('info_type'))
+                self.base_setting_data_info = info_type
+                if info_type == 1:
+                    with open(config.base_setting_path, 'r') as f:
+                        self.base_setting_data = json.load(f)
+                elif info_type == 2:
+                    with open(config.base_setting_path, 'r') as f:
+                        self.base_setting_data = json.load(f)
+                    with open(config.base_setting_path, 'w') as f:
+                        self.base_setting_data.update(base_setting_data)
+                        json.dump(self.base_setting_data, f)
+                    config.update_base_setting()
+                # 恢复默认配置
+                elif info_type == 4:
+                    with open(config.base_setting_path, 'w') as f:
+                        with open(config.base_setting_default_path, 'r') as df:
+                            self.base_setting_default_data = json.load(df)
+                            self.base_setting_data = copy.deepcopy(self.base_setting_default_data)
                             json.dump(self.base_setting_data, f)
-                        config.update_base_setting()
-                    # 恢复默认配置
-                    elif info_type == 4:
-                        with open(config.base_setting_path, 'w') as f:
-                            with open(config.base_setting_default_path, 'r') as df:
-                                self.base_setting_default_data = json.load(df)
-                                self.base_setting_data = copy.deepcopy(self.base_setting_default_data)
-                                json.dump(self.base_setting_data, f)
-                        config.update_base_setting()
+                    config.update_base_setting()
 
-            # 高级配置
-            elif topic == 'height_setting_%s' % (config.ship_code):
-                self.logger.info({'height_setting_data': json.loads(msg.payload)})
-                height_setting_data = json.loads(msg.payload)
-                # print('height_setting_data',height_setting_data)
-                if height_setting_data.get("info_type") is None:
-                    self.logger.error('"height_setting_data"设置启动消息没有"info_type"字段')
-                    return
-                else:
-                    info_type = int(height_setting_data.get('info_type'))
-                    self.height_setting_data_info = info_type
-                    if info_type == 1:
-                        with open(config.height_setting_path, 'r') as f:
-                            self.height_setting_data = json.load(f)
-                    elif info_type == 2:
-                        # 深度暂时用
-                        with open(config.height_setting_path, 'r') as f:
-                            self.height_setting_data = json.load(f)
-                        with open(config.height_setting_path, 'w') as f:
-                            self.height_setting_data.update(height_setting_data)
+        # 高级配置
+        elif topic == 'height_setting_%s' % (config.ship_code):
+            self.logger.info({'height_setting_data': json.loads(msg.payload)})
+            height_setting_data = json.loads(msg.payload)
+            # print('height_setting_data',height_setting_data)
+            if height_setting_data.get("info_type") is None:
+                self.logger.error('"height_setting_data"设置启动消息没有"info_type"字段')
+                return
+            else:
+                info_type = int(height_setting_data.get('info_type'))
+                self.height_setting_data_info = info_type
+                if info_type == 1:
+                    with open(config.height_setting_path, 'r') as f:
+                        self.height_setting_data = json.load(f)
+                elif info_type == 2:
+                    # 深度暂时用
+                    with open(config.height_setting_path, 'r') as f:
+                        self.height_setting_data = json.load(f)
+                    with open(config.height_setting_path, 'w') as f:
+                        self.height_setting_data.update(height_setting_data)
+                        json.dump(self.height_setting_data, f)
+                    config.update_height_setting()
+                # 恢复默认配置
+                elif info_type == 4:
+                    with open(config.height_setting_path, 'w') as f:
+                        with open(config.height_setting_default_path, 'r') as df:
+                            self.height_setting_default_data = json.load(df)
+                            self.height_setting_data = copy.deepcopy(self.height_setting_default_data)
                             json.dump(self.height_setting_data, f)
-                        config.update_height_setting()
-                    # 恢复默认配置
-                    elif info_type == 4:
-                        with open(config.height_setting_path, 'w') as f:
-                            with open(config.height_setting_default_path, 'r') as df:
-                                self.height_setting_default_data = json.load(df)
-                                self.height_setting_data = copy.deepcopy(self.height_setting_default_data)
-                                json.dump(self.height_setting_data, f)
-                        config.update_height_setting()
+                    config.update_height_setting()
 
-            # 刷新后请求数据消息
-            elif topic == 'refresh_%s' % (config.ship_code):
-                self.logger.info({'refresh_setting ': json.loads(msg.payload)})
-                refresh_data = json.loads(msg.payload)
-                if refresh_data.get("info_type") is None:
-                    self.logger.error('"refresh_"设置启动消息没有"info_type"字段')
-                    return
+        # 刷新后请求数据消息
+        elif topic == 'refresh_%s' % (config.ship_code):
+            self.logger.info({'refresh_setting ': json.loads(msg.payload)})
+            refresh_data = json.loads(msg.payload)
+            if refresh_data.get("info_type") is None:
+                self.logger.error('"refresh_"设置启动消息没有"info_type"字段')
+                return
+            else:
+                info_type = int(refresh_data.get('info_type'))
+                self.refresh_info_type = info_type
+
+        # 处理重置
+        elif topic == 'reset_pool_%s' % (config.ship_code):
+            reset_pool_data = json.loads(msg.payload)
+            if reset_pool_data.get('reset_pool') is None:
+                self.logger.error('reset_pool_处理控制数据没有reset_pool')
+                return
+            self.reset_pool_click = int(reset_pool_data.get('reset_pool'))
+            self.logger.info({'topic': topic,
+                              'reset_pool': reset_pool_data.get('reset_pool'),
+                              })
+
+        # 处理设置返航点
+        elif topic == 'set_home_%s' % (config.ship_code):
+            set_home_data = json.loads(msg.payload)
+            if set_home_data.get('lng_lat') is None:
+                self.logger.error('set_home_处理控制数据没有lng_lat')
+                return
+            self.set_home_gaode_lng_lat = set_home_data.get('lng_lat')[0]
+            self.logger.info({'topic': topic,
+                              'lng_lat': set_home_data.get('lng_lat'),
+                              })
+
+        # 处理关机和重启
+        elif topic == 'poweroff_restart_%s' % config.ship_code:
+            poweroff_restart_data = json.loads(msg.payload)
+            if poweroff_restart_data.get('poweroff_restart') is None:
+                self.logger.error('poweroff_restart_处理控制数据没有lng_lat')
+                return
+            poweroff_restart_type = int(poweroff_restart_data.get('poweroff_restart'))
+            self.logger.info({'topic': topic,
+                              'poweroff_restart': poweroff_restart_data.get('poweroff_restart'),
+                              })
+            if poweroff_restart_type == 2:
+                poweroff_restart.restart()
+            elif poweroff_restart_type == 1:
+                poweroff_restart.poweroff()
+
+        # 距离岸边距离话题
+        elif topic == 'bank_distance_%s' % config.ship_code:
+            # self.logger.info({'dock_position_': json.loads(msg.payload)})
+            bank_distance_data = json.loads(msg.payload)
+            if bank_distance_data.get("bank_distance") is None:
+                self.logger.error('"refresh_"设置启动消息没有"bank_distance"字段')
+                return
+            else:
+                self.bank_distance = round(float(bank_distance_data.get('bank_distance')), 1)
+
+        # 抽水任务话题数据
+        elif topic == 'task_list_%s' % config.ship_code:
+            task_list_data = json.loads(msg.payload)
+            if task_list_data.get("task") is None:
+                self.logger.error('"task_list_data"设置启动消息没有"task"字段')
+                return
+            self.logger.info({'topic': topic,
+                              '任务点数': len(task_list_data.get("task")),
+                              })
+
+            # 解析任务数据并排序
+            try:
+                for item in task_list_data.get("task"):
+                    temp_list = []
+                    lng_lat_str = item.get("jwd")
+                    lng_lat = [float(i) for i in lng_lat_str.split(',')]
+                    temp_list.append(tuple(lng_lat))
+                    for bottle in item.get("container"):
+                        bottle_id = int(bottle.get("id"))
+                        bottle_deep = float(bottle.get("deep"))
+                        bottle_amount = float(bottle.get("amount"))
+                        temp_list.append((bottle_id, bottle_deep, bottle_amount))
+                    self.task_list.append(tuple(temp_list))
+            except Exception as e:
+                print('task_list_data error', e)
+            # print('########## self.task_list', self.task_list)
+
+        # 采样瓶设置数据话题
+        elif topic == 'bottle_setting_%s' % config.ship_code:
+            bottle_setting_data = json.loads(msg.payload)
+            if bottle_setting_data.get("info_type") is None:
+                self.logger.error('"bottle_setting_data"设置启动消息没有"info_type"字段')
+                return
+            if int(bottle_setting_data.get("info_type")) == 1:
+                if bottle_setting_data.get("bottle_id"):
+                    self.draw_bottle_id = int(bottle_setting_data.get("bottle_id"))
                 else:
-                    info_type = int(refresh_data.get('info_type'))
-                    self.refresh_info_type = info_type
-
-            # 处理重置
-            elif topic == 'reset_pool_%s' % (config.ship_code):
-                reset_pool_data = json.loads(msg.payload)
-                if reset_pool_data.get('reset_pool') is None:
-                    self.logger.error('reset_pool_处理控制数据没有reset_pool')
-                    return
-                self.reset_pool_click = int(reset_pool_data.get('reset_pool'))
-                self.logger.info({'topic': topic,
-                                  'reset_pool': reset_pool_data.get('reset_pool'),
-                                  })
-
-            # 处理设置返航点
-            elif topic == 'set_home_%s' % (config.ship_code):
-                set_home_data = json.loads(msg.payload)
-                if set_home_data.get('lng_lat') is None:
-                    self.logger.error('set_home_处理控制数据没有lng_lat')
-                    return
-                self.set_home_gaode_lng_lat = set_home_data.get('lng_lat')[0]
-                self.logger.info({'topic': topic,
-                                  'lng_lat': set_home_data.get('lng_lat'),
-                                  })
-
-            # 处理关机和重启
-            elif topic == 'poweroff_restart_%s' % config.ship_code:
-                poweroff_restart_data = json.loads(msg.payload)
-                if poweroff_restart_data.get('poweroff_restart') is None:
-                    self.logger.error('poweroff_restart_处理控制数据没有lng_lat')
-                    return
-                poweroff_restart_type = int(poweroff_restart_data.get('poweroff_restart'))
-                self.logger.info({'topic': topic,
-                                  'poweroff_restart': poweroff_restart_data.get('poweroff_restart'),
-                                  })
-                if poweroff_restart_type == 2:
-                    poweroff_restart.restart()
-                elif poweroff_restart_type == 1:
-                    poweroff_restart.poweroff()
-
-            # 距离岸边距离话题
-            elif topic == 'bank_distance_%s' % config.ship_code:
-                # self.logger.info({'dock_position_': json.loads(msg.payload)})
-                bank_distance_data = json.loads(msg.payload)
-                if bank_distance_data.get("bank_distance") is None:
-                    self.logger.error('"refresh_"设置启动消息没有"bank_distance"字段')
-                    return
+                    self.draw_bottle_id = None
+                if bottle_setting_data.get("deep"):
+                    self.draw_deep = float(bottle_setting_data.get("deep"))
                 else:
-                    self.bank_distance = round(float(bank_distance_data.get('bank_distance')), 1)
-
-            # 抽水任务话题数据
-            elif topic == 'task_list_%s' % config.ship_code:
-                task_list_data = json.loads(msg.payload)
-                if task_list_data.get("task") is None:
-                    self.logger.error('"task_list_data"设置启动消息没有"task"字段')
-                    return
-                self.logger.info({'topic': topic,
-                                  '任务点数': len(task_list_data.get("task")),
-                                  })
-
-                # 解析任务数据并排序
-                try:
-                    for item in task_list_data.get("task"):
-                        temp_list = []
-                        lng_lat_str = item.get("jwd")
-                        lng_lat = [float(i) for i in lng_lat_str.split(',')]
-                        temp_list.append(tuple(lng_lat))
-                        for bottle in item.get("container"):
-                            bottle_id = int(bottle.get("id")) - 1
-                            bottle_deep = float(bottle.get("deep"))
-                            bottle_amount = float(bottle.get("amount"))
-                            temp_list.append((bottle_id, bottle_deep, bottle_amount))
-                        self.task_list.append(tuple(temp_list))
-                except Exception as e:
-                    print('task_list_data error', e)
-                # print('########## self.task_list', self.task_list)
-
-            # 采样瓶设置数据话题
-            elif topic == 'bottle_setting_%s' % config.ship_code:
-                bottle_setting_data = json.loads(msg.payload)
-                if bottle_setting_data.get("info_type") is None:
-                    self.logger.error('"bottle_setting_data"设置启动消息没有"info_type"字段')
-                    return
-                if int(bottle_setting_data.get("info_type")) == 1:
-                    if bottle_setting_data.get("bottle_id"):
-                        self.draw_bottle_id = int(bottle_setting_data.get("bottle_id"))
-                    else:
-                        self.draw_bottle_id =None
-                    if bottle_setting_data.get("bottle_id"):
-                        self.draw_deep = float(bottle_setting_data.get("deep"))
-                    else:
-                        self.draw_deep = None
-                    if bottle_setting_data.get("bottle_id"):
-                        self.draw_capacity = int(bottle_setting_data.get("amount"))
-                    else:
-                        self.draw_capacity = None
-                    if self.draw_bottle_id and self.draw_deep and self.draw_capacity:
-                        self.publish_topic(topic == 'bottle_setting_%s' % config.ship_code,
-                                           data={
-                                               "info_type": 2,
-                                               "bottle_id": self.draw_bottle_id,
-                                               "deep": self.draw_deep,
-                                               "amount": self.draw_capacity,
-                                           },
-                                           )
-        except Exception as e:
-            self.logger.error({'error': e})
+                    self.draw_deep = None
+                if bottle_setting_data.get("amount"):
+                    self.draw_capacity = int(bottle_setting_data.get("amount"))
+                else:
+                    self.draw_capacity = None
+                if self.draw_bottle_id and self.draw_deep and self.draw_capacity:
+                    self.publish_topic(topic='bottle_setting_%s' % config.ship_code,
+                                       data={
+                                           "info_type": 2,
+                                           "bottle_id": self.draw_bottle_id,
+                                           "deep": self.draw_deep,
+                                           "amount": self.draw_capacity,
+                                       },
+                                       )
+                self.logger.info({
+                    "info_type": 2,
+                    "bottle_id": self.draw_bottle_id,
+                    "deep": self.draw_deep,
+                    "amount": self.draw_capacity,
+                })
+        # except Exception as e:
+        #     self.logger.error({'error': e})
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):

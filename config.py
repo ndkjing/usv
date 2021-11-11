@@ -205,14 +205,17 @@ b_com_stc = 1 if os.path.exists(stc_port) and b_use_stc else 0
 # 查询船是否注册  wuhanligong.xxlun.com/union
 http_binding = 'http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/%s' % ship_code
 # 注册新的湖泊ID
-http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
-# http_save = 'http://192.168.8.13:8009/union/admin/xxl/map/save'
+# http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
+http_save = 'http://192.168.199.186:8009/union/admin/xxl/map/save'
+# 更新湖泊轮廓
+# http_update_map = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
+http_update_map = 'http://192.168.199.186:8009/union/admin/xxl/map/upData'
 # 发送检测数据
 http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
 # http_data_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
 # 发送抽水瓶号数据
-# http_draw_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/sampling/save'
-http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/sampling/save'
+http_draw_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/sampling/save'
+# http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/sampling/save'
 # 获取存储的任务数据
 # http_plan_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/plan/save'
 http_plan_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
@@ -727,12 +730,6 @@ draw_steer = 13  # 舵机接口
 
 # 排水
 b_drain = 0  # 是否有排水泵
-
-# 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
-if home_debug:
-    use_shape_theta_type = 3
-else:
-    use_shape_theta_type = 1
 
 min_deep_steer_pwm = 800  # 最下面
 max_deep_steer_pwm = 2400  # 最上面

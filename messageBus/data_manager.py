@@ -226,6 +226,7 @@ class DataManager:
                 if self.draw_start_time is None:
                     self.draw_start_time = time.time()
                 else:
+                    print(time.time() - self.draw_start_time)
                     if time.time() - self.draw_start_time > 5:
                         self.b_draw_over_send_data = True
                         self.b_sampling = 2
@@ -234,6 +235,10 @@ class DataManager:
         else:
             # 判断是否抽水  点击抽水情况
             if b_draw or b_plan_draw:
+                if config.b_control_deep:
+                    self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
+                    if self.pi_main_obj.draw_steer_pwm != self.pi_main_obj.target_draw_steer_pwm:
+                        return
                 if self.draw_start_time is None:
                     self.draw_start_time = time.time()
                     # 触发一次停止
@@ -294,8 +299,9 @@ class DataManager:
                 temp_draw_time = self.server_data_obj.mqtt_send_get_obj.draw_capacity
                 self.draw_sub(True, False, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
             # 预先存储任务深度和水量
-            if self.current_arriver_index is not None and self.sort_task_done_list[self.current_arriver_index].count(
-                    0) > 0:  # 是否是使用预先存储任务
+            if self.current_arriver_index is not None and self.sort_task_done_list and self.sort_task_done_list[
+                self.current_arriver_index].count(
+                0) > 0:  # 是否是使用预先存储任务
                 index = self.sort_task_done_list[self.current_arriver_index].index(0)
                 temp_draw_bottle_id = self.sort_task_list[self.current_arriver_index][index + 1][0]
                 temp_draw_deep = self.sort_task_list[self.current_arriver_index][index + 1][1]
@@ -364,9 +370,9 @@ class DataManager:
                     temp_draw_time = self.server_data_obj.mqtt_send_get_obj.draw_capacity
                     self.draw_sub(True, False, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
                 # 预先存储任务深度和水量
-                if self.current_arriver_index and self.sort_task_done_list[self.current_arriver_index].count(
-                        0) > 0:  # 是否是使用预先存储任务
-                    print('self.sort_task_done_list', self.current_arriver_index, self.sort_task_done_list)
+                if self.current_arriver_index is not None and self.sort_task_done_list[
+                    self.current_arriver_index].count(
+                    0) > 0:  # 是否是使用预先存储任务
                     index = self.sort_task_done_list[self.current_arriver_index].index(0)
                     temp_draw_bottle_id = self.sort_task_list[self.current_arriver_index][index + 1][0]
                     temp_draw_deep = self.sort_task_list[self.current_arriver_index][index + 1][1]
@@ -378,6 +384,7 @@ class DataManager:
                     is_finish_draw = self.draw_sub(False, True, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
                     if is_finish_draw:
                         self.sort_task_done_list[self.current_arriver_index][index] = 1
+                        print('self.sort_task_done_list', self.current_arriver_index, self.sort_task_done_list)
             # 更新抽水完成度信息
             full_draw_time = int(60 * config.max_draw_capacity / config.draw_speed)
             for index, value in enumerate(self.bottle_draw_time_list):
@@ -1093,7 +1100,16 @@ class DataManager:
                                                                 self.lng_lat[1],
                                                                 target_lng_lat_gps[0],
                                                                 target_lng_lat_gps[1])
-            theta_error = point_theta - self.current_theta
+            if config.home_debug:
+                if self.current_theta is not None:
+                    theta_error = point_theta - self.current_theta
+                else:
+                    theta_error = 0
+            else:
+                if self.pi_main_obj.theta is not None:
+                    theta_error = point_theta - self.pi_main_obj.theta
+                else:
+                    theta_error = 0
             if abs(theta_error) > 180:
                 if theta_error > 0:
                     theta_error = theta_error - 360
@@ -1120,9 +1136,19 @@ class DataManager:
                 forward_power = left_delta_pwm + right_delta_pwm
                 delta_distance = forward_power * 0.002
                 delta_theta = steer_power * 0.08
-                self.last_lng_lat = copy.deepcopy(self.lng_lat)
+                if self.last_lng_lat:
+                    ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
+                                                                       self.last_lng_lat[1],
+                                                                       self.lng_lat[0],
+                                                                       self.lng_lat[1])
+                else:
+                    ship_theta = 0
+                # print(time.time(), 'ship_theta', ship_theta)
+                # 船头角度
+                self.current_theta = ship_theta
                 if self.current_theta is not None:
                     self.current_theta = (self.current_theta - delta_theta / 2) % 360
+                self.last_lng_lat = copy.deepcopy(self.lng_lat)
                 self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                            self.lng_lat[1],
                                                                            self.current_theta,
@@ -1324,13 +1350,14 @@ class DataManager:
                         b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
                                                                      b_force_arrive=True)
                     if b_arrive_sample:
-                        # 更新目标点提示消息
-                        self.current_arriver_index = index
+                        if len(self.sort_task_list) > 0:  # 如果是预先存储任务则更新抽水索引
+                            self.current_arriver_index = index
                         print('b_arrive_sample', b_arrive_sample, self.current_arriver_index)
                         self.b_arrive_point = 1  # 到点了用于通知抽水
                         self.point_arrive_start_time = None
                         self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] = 1
-                        self.path_info = [index + 1, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
+                        self.path_info = [index + 1,
+                                          len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]  # 更新目标点提示消息
                         time.sleep(1)
                     if self.ship_status != ShipStatus.computer_auto:
                         break
@@ -1428,6 +1455,7 @@ class DataManager:
             if not self.server_data_obj.mqtt_send_get_obj.is_connected:
                 continue
             if self.b_draw_over_send_data:
+                print('self.b_draw_over_send_data', self.b_draw_over_send_data)
                 if self.server_data_obj.mqtt_send_get_obj.pool_code:
                     self.data_define_obj.pool_code = self.server_data_obj.mqtt_send_get_obj.pool_code
                 draw_data = {}
@@ -1441,7 +1469,6 @@ class DataManager:
                 draw_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
                 self.send(method='mqtt', topic='draw_data_%s' % config.ship_code, data=draw_data,
                           qos=0)
-
                 # 等待后端接口
                 if len(self.data_define_obj.pool_code) > 0:
                     draw_data.update({'mapId': self.data_define_obj.pool_code})
@@ -1548,8 +1575,10 @@ class DataManager:
             status_data.update({"totle_distance": round(save_distance, 1)})
             status_data.update({"totle_time": round(save_time)})
             # 更新船头方向
-            if self.current_theta:
-                status_data.update({"direction": round(self.current_theta)})
+            if config.home_debug and self.current_theta is not None:
+                status_data.update({"direction": round(self.current_theta, 1)})
+            elif not config.home_debug and self.pi_main_obj.theta:
+                status_data.update({"direction": round(self.pi_main_obj.theta, 1)})
             # 更新经纬度误差
             if self.lng_lat_error is not None:
                 status_data.update({"lng_lat_error": self.lng_lat_error})
@@ -1616,23 +1645,6 @@ class DataManager:
         while True:
             # 循环等待一定时间
             time.sleep(1)
-            if config.home_debug and config.b_play_audio:
-                audios_manager.play_audio(5, b_backend=False)
-            if self.last_lng_lat:
-                ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
-                                                                   self.last_lng_lat[1],
-                                                                   self.lng_lat[0],
-                                                                   self.lng_lat[1])
-            else:
-                ship_theta = 0
-            # 船头角度
-            if config.use_shape_theta_type == 1:
-                if config.b_pin_compass:
-                    self.current_theta = self.pi_main_obj.theta
-                else:
-                    self.current_theta = self.theta
-            else:
-                self.current_theta = ship_theta
             # 检查电量 如果连续20次检测电量平均值低于电量阈值就报警
             if config.energy_backhome:
                 try:

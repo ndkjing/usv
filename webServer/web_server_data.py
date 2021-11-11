@@ -101,10 +101,13 @@ class MqttSendGet:
         # self.mqtt_client.on_subscribe = self.on_message_come
         self.mqtt_client.on_message = self.on_message_callback
         self.mqtt_connect()
-
         # 湖泊初始点击点信息
         self.pool_click_lng_lat = None
         self.pool_click_zoom = None
+        # 更新湖泊初始点击点信息
+        self.update_pool_click_lng_lat = None
+        self.update_pool_click_zoom = None
+        self.update_map_id = None
         # 接收到点击的经纬度目标地点和点击是地图层次，二维矩阵
         self.target_lng_lat = []
         self.zoom = []
@@ -170,7 +173,7 @@ class MqttSendGet:
     def on_message_callback(self, client, userdata, msg):
         topic = msg.topic
         # 处理初始点击确定湖数据
-        if topic == 'pool_click_%s' % (self.ship_code):
+        if topic == 'pool_click_%s' % self.ship_code:
             pool_click_data = json.loads(msg.payload)
             if pool_click_data.get('lng_lat') is None:
                 self.logger.error('pool_click  用户点击经纬度数据没有经纬度字段')
@@ -182,14 +185,41 @@ class MqttSendGet:
             self.pool_click_lng_lat = lng_lat
             zoom = int(round(float(pool_click_data.get('zoom')), 0))
             self.pool_click_zoom = zoom
+            # 清空更新湖泊
+            self.update_pool_click_lng_lat = None
+            self.update_pool_click_zoom = None
+
             self.b_pool_click = 1
             self.logger.info({'topic': topic,
                               'lng_lat': pool_click_data.get('lng_lat'),
                               'zoom': pool_click_data.get('zoom')
                               })
-
+        # 处理初始点击确定湖数据
+        if topic == 'update_pool_click_%s' % self.ship_code:
+            update_pool_click_data = json.loads(msg.payload)
+            if update_pool_click_data.get('lng_lat') is None:
+                self.logger.error('update_pool_click_data  用户点击经纬度数据没有经纬度字段')
+                return
+            if update_pool_click_data.get('zoom') is None:
+                self.logger.error('update_pool_click_data 用户点击经纬度数据没有zoom字段')
+                return
+            lng_lat = update_pool_click_data.get('lng_lat')
+            self.update_pool_click_lng_lat = lng_lat
+            zoom = int(round(float(update_pool_click_data.get('zoom')), 0))
+            self.update_pool_click_zoom = zoom
+            # 清空选择湖泊
+            self.pool_click_lng_lat=None
+            self.pool_click_zoom=None
+            if update_pool_click_data.get('mapId'):
+                self.update_map_id = update_pool_click_data.get('mapId')
+            self.b_pool_click = 1
+            self.logger.info({'topic': topic,
+                              'self.update_pool_click_lng_lat': self.update_pool_click_lng_lat,
+                              'self.update_pool_click_zoom': self.update_pool_click_zoom,
+                              'self.update_map_id': self.update_map_id
+                              })
         # 用户点击经纬度和图层 保存到指定路径
-        elif topic == 'user_lng_lat_%s' % (self.ship_code):
+        elif topic == 'user_lng_lat_%s' % self.ship_code:
             user_lng_lat_data = json.loads(msg.payload)
             if user_lng_lat_data.get('lng_lat') is None:
                 self.logger.error('user_lng_lat_用户点击经纬度数据没有经纬度字段')
