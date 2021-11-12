@@ -246,34 +246,15 @@ class DataManager:
             # 判断是否抽水  点击抽水情况
             if b_draw or b_plan_draw:
                 if config.b_control_deep:
-                    self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
+                    # 计算目标深度的pwm值
+                    target_pwm = self.deep2pwm(draw_deep)
+                    self.pi_main_obj.set_draw_deep(target_pwm)
                     if self.pi_main_obj.draw_steer_pwm != self.pi_main_obj.target_draw_steer_pwm:
-                        return
+                        return False
                 if self.draw_start_time is None:
                     self.draw_start_time = time.time()
                     # 触发一次停止
                     self.pi_main_obj.stop()
-                else:
-                    # 超时中断抽水
-                    if time.time() - self.draw_start_time > draw_time:
-                        self.server_data_obj.mqtt_send_get_obj.b_draw = 0
-                        self.b_sampling = 2
-                        self.b_draw_over_send_data = True  # 抽水超时发送数据
-                        return True
-                # 判断是否有杆子放下杆子
-                if config.b_control_deep:
-                    # 计算目标深度的pwm值
-                    target_pwm = self.deep2pwm(draw_deep)
-                    self.pi_main_obj.set_draw_deep(target_pwm)
-                    if self.pi_main_obj.draw_steer_pwm == self.pi_main_obj.target_draw_steer_pwm:  # 判断到达目标深度
-                        if bottle_id == 1:
-                            self.send_stc_data('A1Z')
-                        elif bottle_id == 2:
-                            self.send_stc_data('A3Z')
-                        elif bottle_id == 3:
-                            self.send_stc_data('A4Z')
-                        elif bottle_id == 4:
-                            self.send_stc_data('A5Z')
                 else:
                     if bottle_id == 1:
                         self.send_stc_data('A1Z')
@@ -283,13 +264,24 @@ class DataManager:
                         self.send_stc_data('A4Z')
                     elif bottle_id == 4:
                         self.send_stc_data('A5Z')
+                    print("本次抽水总时间: %f 当前抽水时间: %f 最大抽水时间: %f" % (
+                        draw_time, time.time() - self.draw_start_time, config.max_draw_time))
+                    # 测试限制水满
+                    if self.bottle_draw_time_list[bottle_id - 1] > config.max_draw_time:
+                        print('该瓶抽水已满不能再抽', self.bottle_draw_time_list[bottle_id - 1])
+                    # 超时中断抽水
+                    if time.time() - self.draw_start_time > draw_time:
+                        self.server_data_obj.mqtt_send_get_obj.b_draw = 0
+                        self.b_sampling = 2
+                        self.b_draw_over_send_data = True  # 抽水超时发送数据
+                        self.bottle_draw_time_list[bottle_id - 1] += draw_time
+                        return True
             else:
                 self.send_stc_data('A0Z')
                 # 没有抽水的情况下杆子都要收回来
                 if config.b_control_deep:
                     self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
                 if self.draw_start_time is not None:
-                    self.bottle_draw_time_list[self.current_draw_bottle] += int(time.time() - self.draw_start_time)
                     self.draw_start_time = None
 
     # 判断怎么样抽水
@@ -375,15 +367,20 @@ class DataManager:
             # 没有开启遥控器
             else:
                 # 前端发送抽水深度和抽水时间
-                if self.server_data_obj.mqtt_send_get_obj.draw_bottle_id and \
-                        self.server_data_obj.mqtt_send_get_obj.draw_deep and \
-                        self.server_data_obj.mqtt_send_get_obj.draw_capacity:
-                    temp_draw_bottle_id = self.server_data_obj.mqtt_send_get_obj.draw_bottle_id
-                    temp_draw_deep = self.server_data_obj.mqtt_send_get_obj.draw_deep
-                    temp_draw_time = self.server_data_obj.mqtt_send_get_obj.draw_capacity
-                    self.draw_sub(True, False, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
+                if self.server_data_obj.mqtt_send_get_obj.b_draw:
+                    if self.server_data_obj.mqtt_send_get_obj.draw_bottle_id and \
+                            self.server_data_obj.mqtt_send_get_obj.draw_deep and \
+                            self.server_data_obj.mqtt_send_get_obj.draw_capacity:
+                        temp_draw_bottle_id = self.server_data_obj.mqtt_send_get_obj.draw_bottle_id
+                        temp_draw_deep = self.server_data_obj.mqtt_send_get_obj.draw_deep
+                        temp_draw_time = int(
+                            60 * self.server_data_obj.mqtt_send_get_obj.draw_capacity / config.draw_speed)
+                        self.current_draw_bottle = temp_draw_bottle_id
+                        self.current_draw_deep = temp_draw_deep
+                        self.current_draw_capacity = self.server_data_obj.mqtt_send_get_obj.draw_capacity
+                        self.draw_sub(True, False, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
                 # 预先存储任务深度和水量
-                if self.current_arriver_index is not None and self.sort_task_done_list[
+                elif self.current_arriver_index is not None and self.sort_task_done_list[
                     self.current_arriver_index].count(
                     0) > 0:  # 是否是使用预先存储任务
                     index = self.sort_task_done_list[self.current_arriver_index].index(0)
@@ -398,16 +395,8 @@ class DataManager:
                     if is_finish_draw:
                         self.sort_task_done_list[self.current_arriver_index][index] = 1
                         print('self.sort_task_done_list', self.current_arriver_index, self.sort_task_done_list)
-            # 更新抽水完成度信息
-            full_draw_time = int(60 * config.max_draw_capacity / config.draw_speed)
-            for index, value in enumerate(self.bottle_draw_time_list):
-                p = int(100 * round(value / full_draw_time, 2))
-                if 100 <= p:
-                    p = 100
-                elif p <= 1:
-                    p = 1
-                self.pi_main_obj.bottle_status_code[index] = p
-
+                else:
+                    self.draw_sub(False, False, 0, 0, 0)
     # 深度转化为pwm值
     def deep2pwm(self, draw_deep):
         """
