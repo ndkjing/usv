@@ -248,7 +248,11 @@ class MqttSendGet:
             if switch_data.get('b_sampling') is not None:
                 self.b_sampling = int(switch_data.get('b_sampling'))
             if switch_data.get('b_draw') is not None:
-                self.b_draw = int(switch_data.get('b_draw'))
+                # 采样船需要设置瓶号 深度和水量才能开始抽水
+                if self.draw_bottle_id and self.draw_deep and self.draw_capacity:
+                    self.b_draw = int(switch_data.get('b_draw'))
+                else:
+                    self.b_draw = 0
             # 前大灯 1 打开前大灯 没有该键表示不打开
             if switch_data.get('headlight') is not None:
                 self.headlight = int(switch_data.get('headlight'))

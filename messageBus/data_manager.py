@@ -200,9 +200,12 @@ class DataManager:
         self.remote_draw_overtime = 0  # 遥控器控制抽水超时停止标志位
         self.bottle_draw_time_list = [0, 0, 0, 0]  # 记录每一个瓶子抽水时间
         self.current_draw_bottle = 0  # 当前抽水瓶号 默认为0 当增加到大于配置的最大瓶号则认为全部抽水结束
+        self.current_draw_deep = 0  # 当前抽水深度
+        self.current_draw_capacity = 0  # 当前抽水容量
         self.sort_task_list = []  # 获取存储的任务  经纬度，采样深度，采样量数据样式[[lng,lat],[bottle_id,deep,capacity],[bottle_id,deep,capacity]]
         self.sort_task_done_list = []  # 总共有多少个点抽水完成存储0/1  单个长度等于任务点数量[[0,0],[0,0,0,0]
         self.current_arriver_index = None  # 当前到达预存储任务点索引
+        self.draw_points_list = []  # 记录抽水点数据[[lng,lat,bottle_id,deep,amount],]
 
     # 连接mqtt服务器
     def connect_mqtt_server(self):
@@ -226,9 +229,10 @@ class DataManager:
                 if self.draw_start_time is None:
                     self.draw_start_time = time.time()
                 else:
-                    print(time.time() - self.draw_start_time)
+                    print("调试抽水时间",time.time() - self.draw_start_time)
                     if time.time() - self.draw_start_time > 5:
                         self.b_draw_over_send_data = True
+                        self.server_data_obj.mqtt_send_get_obj.b_draw = 0
                         self.b_sampling = 2
                         self.draw_start_time = None
                         return True
@@ -280,7 +284,6 @@ class DataManager:
                     self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
                 if self.draw_start_time is not None:
                     self.bottle_draw_time_list[self.current_draw_bottle] += int(time.time() - self.draw_start_time)
-                    self.current_draw_bottle += 1
                     self.draw_start_time = None
 
     # 判断怎么样抽水
@@ -291,13 +294,17 @@ class DataManager:
         # 调试模式 判断开关是否需要打开或者关闭
         if config.home_debug or not config.b_draw:
             # 前端发送抽水深度和抽水时间
-            if self.server_data_obj.mqtt_send_get_obj.draw_bottle_id and \
-                    self.server_data_obj.mqtt_send_get_obj.draw_deep and \
-                    self.server_data_obj.mqtt_send_get_obj.draw_capacity:
-                temp_draw_bottle_id = self.server_data_obj.mqtt_send_get_obj.draw_bottle_id
-                temp_draw_deep = self.server_data_obj.mqtt_send_get_obj.draw_deep
-                temp_draw_time = self.server_data_obj.mqtt_send_get_obj.draw_capacity
-                self.draw_sub(True, False, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
+            if self.server_data_obj.mqtt_send_get_obj.b_draw:
+                if self.server_data_obj.mqtt_send_get_obj.draw_bottle_id and \
+                        self.server_data_obj.mqtt_send_get_obj.draw_deep and \
+                        self.server_data_obj.mqtt_send_get_obj.draw_capacity:
+                    temp_draw_bottle_id = self.server_data_obj.mqtt_send_get_obj.draw_bottle_id
+                    temp_draw_deep = self.server_data_obj.mqtt_send_get_obj.draw_deep
+                    temp_draw_time = int(60*self.server_data_obj.mqtt_send_get_obj.draw_capacity/config.draw_speed)
+                    self.current_draw_bottle = temp_draw_bottle_id
+                    self.current_draw_deep = temp_draw_deep
+                    self.current_draw_capacity = self.server_data_obj.mqtt_send_get_obj.draw_capacity
+                    self.draw_sub(True, False, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
             # 预先存储任务深度和水量
             if self.current_arriver_index is not None and self.sort_task_done_list and self.sort_task_done_list[
                 self.current_arriver_index].count(
@@ -324,16 +331,16 @@ class DataManager:
                         if self.draw_start_time is None:
                             self.draw_start_time = time.time()
                         if self.pi_main_obj.remote_draw_status_0_1 == 1:
-                            self.current_draw_bottle = 0
+                            self.current_draw_bottle = 1
                             self.send_stc_data('A1Z')
                         elif self.pi_main_obj.remote_draw_status_0_1 == 2:
-                            self.current_draw_bottle = 1
+                            self.current_draw_bottle = 2
                             self.send_stc_data('A3Z')
                         elif self.pi_main_obj.remote_draw_status_2_3 == 3:
-                            self.current_draw_bottle = 2
+                            self.current_draw_bottle = 3
                             self.send_stc_data('A4Z')
                         elif self.pi_main_obj.remote_draw_status_2_3 == 4:
-                            self.current_draw_bottle = 3
+                            self.current_draw_bottle = 4
                             self.send_stc_data('A5Z')
                         # 遥控器设置抽水深度和抽水时间
                         if self.pi_main_obj.current_draw_capacity:
@@ -1461,14 +1468,20 @@ class DataManager:
                 draw_data = {}
                 draw_data.update({'deviceId': config.ship_code})
                 draw_data.update({'mapId': self.data_define_obj.pool_code})
-                draw_data.update({"capacity": config.draw_capacity})
-                draw_data.update({"deep": config.draw_deep})
+                draw_data.update({"capacity": self.current_draw_capacity})
+                draw_data.update({"deep": self.current_draw_deep})
                 draw_data.update({"bottle_num": self.current_draw_bottle})
                 # 添加经纬度
                 draw_data.update({'jwd': json.dumps(self.lng_lat)})
                 draw_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
                 self.send(method='mqtt', topic='draw_data_%s' % config.ship_code, data=draw_data,
                           qos=0)
+                # 添加到抽水列表中
+                if self.gaode_lng_lat:
+                    self.draw_points_list.append(
+                        [self.gaode_lng_lat[0], self.gaode_lng_lat[1], self.current_draw_bottle,self.current_draw_deep, self.current_draw_capacity])
+                else:
+                    self.draw_points_list.append([1, 1, self.current_draw_bottle,self.current_draw_deep, self.current_draw_capacity])
                 # 等待后端接口
                 if len(self.data_define_obj.pool_code) > 0:
                     draw_data.update({'mapId': self.data_define_obj.pool_code})
@@ -1477,8 +1490,8 @@ class DataManager:
                                   url=config.http_draw_save,
                                   http_type='POST')
                     except Exception as e:
-                        self.data_save_logger.info({"发送检测数据error": e})
-                    self.data_save_logger.info({"发送检测数据": draw_data})
+                        self.data_save_logger.info({"发送采样数据error": e})
+                    self.data_save_logger.info({"发送采样数据": draw_data})
                 # 发送结束改为False
                 self.b_draw_over_send_data = False
             """
@@ -1605,6 +1618,8 @@ class DataManager:
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
                       qos=0)
+            if time.time() % 10 < 1:
+                self.logger.info({'status_data_': mqtt_send_status_data})
 
     # 配置更新
     def update_config(self):
@@ -1719,6 +1734,7 @@ class DataManager:
                     "mapId": self.data_define_obj.pool_code,
                     'sampling_points': self.server_data_obj.mqtt_send_get_obj.sampling_points,
                     'path_points': self.server_data_obj.mqtt_send_get_obj.path_planning_points,
+                    "draw_points": self.draw_points_list
                 }
                 save_data.set_data(save_plan_path_data, config.save_plan_path)
                 if self.server_data_obj.mqtt_send_get_obj.refresh_info_type == 1:
