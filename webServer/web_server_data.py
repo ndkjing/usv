@@ -154,6 +154,9 @@ class MqttSendGet:
         # 重置选择湖泊
         self.reset_pool_click = 0
 
+        # 更新船当前到岸边距离 当收到新的经纬度后设置该值为True
+        self.update_safe_distance = False
+
     # 连接MQTT服务器
     def mqtt_connect(self):
         self.mqtt_client.connect(self.mqtt_host, self.mqtt_port, 60)
@@ -327,6 +330,7 @@ class MqttSendGet:
                 return
             else:
                 self.current_lng_lat = status_data.get('current_lng_lat')
+                self.update_safe_distance = True
             if status_data.get("home_lng_lat") is None:
                 pass
             else:
