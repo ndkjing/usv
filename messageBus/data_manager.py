@@ -1358,7 +1358,7 @@ class DataManager:
                     pop_value = mqtt_send_detect_data[k_all].pop(old_key)
                     mqtt_send_detect_data[k_all].update({new_key: pop_value})
 
-            if self.b_draw_over_send_data:
+            if self.b_draw_over_send_data and config.b_draw:
                 # 添加经纬度
                 mqtt_send_detect_data.update({'jwd': json.dumps(self.lng_lat)})
                 mqtt_send_detect_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
