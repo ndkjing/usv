@@ -233,7 +233,8 @@ http_delete_task = 'http://wuhanligong.xxlun.com/union/admin/xxl/task/delTask'
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884
 # 调试的时候使用初始经纬度
-ship_gaode_lng_lat = [114.524096, 30.506853]
+# ship_gaode_lng_lat = [114.524096, 30.506853]
+ship_gaode_lng_lat = None
 # 电机前进分量
 motor_forward = 200
 # 电机转弯分量
