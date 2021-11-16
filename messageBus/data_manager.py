@@ -202,10 +202,13 @@ class DataManager:
         self.current_draw_bottle = 0  # 当前抽水瓶号 默认为0 当增加到大于配置的最大瓶号则认为全部抽水结束
         self.current_draw_deep = 0  # 当前抽水深度
         self.current_draw_capacity = 0  # 当前抽水容量
+        self.task_list = []  # 获取存储的任务  经纬度，采样深度，采样量数据样式([lng,lat],[bottle_id,deep,capacity],[bottle_id,deep,capacity])
         self.sort_task_list = []  # 获取存储的任务  经纬度，采样深度，采样量数据样式[[lng,lat],[bottle_id,deep,capacity],[bottle_id,deep,capacity]]
         self.sort_task_done_list = []  # 总共有多少个点抽水完成存储0/1  单个长度等于任务点数量[[0,0],[0,0,0,0]
         self.current_arriver_index = None  # 当前到达预存储任务点索引
         self.draw_points_list = []  # 记录抽水点数据[[lng,lat,bottle_id,deep,amount],]
+        self.has_task = 0  # 当前是否有任务在执行
+        self.arrive_all_task = 0  # 是否完成所有任务
 
     # 连接mqtt服务器
     def connect_mqtt_server(self):
@@ -230,7 +233,7 @@ class DataManager:
                     self.draw_start_time = time.time()
                 else:
                     print("本次抽水总时间: %f 当前抽水时间: %f 最大抽水时间: %f" % (
-                    draw_time, time.time() - self.draw_start_time, config.max_draw_time))
+                        draw_time, time.time() - self.draw_start_time, config.max_draw_time))
                     # 测试限制水满
                     if self.bottle_draw_time_list[bottle_id - 1] > config.max_draw_time:
                         print('该瓶抽水已满不能再抽', self.bottle_draw_time_list[bottle_id - 1])
@@ -242,6 +245,9 @@ class DataManager:
                         self.bottle_draw_time_list[bottle_id - 1] += draw_time
                         time.sleep(0.1)
                         return True
+            else:
+                if self.draw_start_time is not None:
+                    self.draw_start_time = None
         else:
             # 判断是否抽水  点击抽水情况
             if b_draw or b_plan_draw:
@@ -298,6 +304,8 @@ class DataManager:
                         self.server_data_obj.mqtt_send_get_obj.draw_capacity:
                     temp_draw_bottle_id = self.server_data_obj.mqtt_send_get_obj.draw_bottle_id
                     temp_draw_deep = self.server_data_obj.mqtt_send_get_obj.draw_deep
+                    if self.server_data_obj.mqtt_send_get_obj.draw_capacity > config.max_draw_capacity:
+                        self.server_data_obj.mqtt_send_get_obj.draw_capacity = config.max_draw_capacity
                     temp_draw_time = int(60 * self.server_data_obj.mqtt_send_get_obj.draw_capacity / config.draw_speed)
                     self.current_draw_bottle = temp_draw_bottle_id
                     self.current_draw_deep = temp_draw_deep
@@ -397,6 +405,7 @@ class DataManager:
                         print('self.sort_task_done_list', self.current_arriver_index, self.sort_task_done_list)
                 else:
                     self.draw_sub(False, False, 0, 0, 0)
+
     # 深度转化为pwm值
     def deep2pwm(self, draw_deep):
         """
@@ -701,50 +710,10 @@ class DataManager:
             self.clear_all_status()
         self.ship_status = target_status
 
-    # 预先存储任务   计算距离并排序
-    def check_task(self):
-        distance_list = []
-        if len(self.server_data_obj.mqtt_send_get_obj.task_list) > 0 and self.gaode_lng_lat:
-            for i1 in self.server_data_obj.mqtt_send_get_obj.task_list:
-                distance = lng_lat_calculate.distanceFromCoordinate(self.gaode_lng_lat[0],
-                                                                    self.gaode_lng_lat[1],
-                                                                    i1[0][0],
-                                                                    i1[0][1])
-                distance_list.append(distance)
-            d = dict(zip(self.server_data_obj.mqtt_send_get_obj.task_list, distance_list))
-            self.sort_task_list = sorted(self.server_data_obj.mqtt_send_get_obj.task_list, key=lambda x: d[x])
-            for i in self.sort_task_list:
-                self.sort_task_done_list.append([0] * len(i[1:]))
-            lng_lat_list = []
-            for i2 in self.sort_task_list:
-                lng_lat_list.append([i2[0][0], i2[0][1]])
-            # 发送需要去经纬度数据
-            user_lng_lat_data = {
-                "deviceId": config.ship_code,
-                # 先经度 后纬度
-                "lng_lat": lng_lat_list,
-                # 地图分辨率，单位：米/像素 2.0576093061946388
-                "meter_pix": 2.0576093061946388,
-                # 点击地图的图层
-                "zoom": 14,
-                # 配置
-                "config":
-                    {
-                        "back_home": 0,
-                        "fix_point": 0,
-                    }
-            }
-            self.send(method='mqtt',
-                      topic='user_lng_lat_%s' % config.ship_code,
-                      data=user_lng_lat_data,
-                      qos=0)
-            self.server_data_obj.mqtt_send_get_obj.task_list = []
-
     # 处理状态切换
     def change_status(self):
         while True:
             time.sleep(0.1)
-            self.check_task()  # 检查是否需要发送预先存储任务
             d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
             self.direction = d
             # 判断是否需要返航
@@ -1025,7 +994,7 @@ class DataManager:
             elif config.obstacle_avoid_type == 1:
                 if 1 in self.pi_main_obj.obstacle_list[
                         int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                    if self.server_data_obj.mqtt_send_get_obj.bank_distance and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                    if self.server_data_obj.mqtt_send_get_obj.bank_distance > 0 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
                         return next_point_lng_lat, True
                 else:
                     return path_planning_point_gps, False
@@ -1283,6 +1252,7 @@ class DataManager:
                         time.sleep(0.5)
                         self.logger.info('等待点击开始寻点')
                         continue
+
                 # 计算总里程 和其他需要在巡航开始前计算数据
                 if self.totle_distance == 0:
                     for index, gaode_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points):
@@ -1354,6 +1324,9 @@ class DataManager:
                     if b_arrive_sample:
                         if len(self.sort_task_list) > 0:  # 如果是预先存储任务则更新抽水索引
                             self.current_arriver_index = index
+                            if self.current_arriver_index == len(
+                                    self.server_data_obj.mqtt_send_get_obj.sampling_points_gps) - 1:
+                                self.arrive_all_task = 1
                         print('b_arrive_sample', b_arrive_sample, self.current_arriver_index)
                         self.b_arrive_point = 1  # 到点了用于通知抽水
                         self.point_arrive_start_time = None
@@ -1446,7 +1419,7 @@ class DataManager:
                         last_read_time = time.time()
             time.sleep(0.5)
 
-    # 必须使用线程发送发送检测数据
+    # 必须使用线程发送发送任务数据
     def send_mqtt_detect_data(self):
         """
         水质检测船上传水质数据，采样船上传采样数据
@@ -1491,32 +1464,6 @@ class DataManager:
                     self.data_save_logger.info({"发送采样数据": draw_data})
                 # 发送结束改为False
                 self.b_draw_over_send_data = False
-            """
-            # 调试时发送数据
-                        elif config.home_debug:
-                if self.server_data_obj.mqtt_send_get_obj.pool_code:
-                    self.data_define_obj.pool_code = self.server_data_obj.mqtt_send_get_obj.pool_code
-                draw_data = {}
-                draw_data.update({'deviceId': config.ship_code})
-                draw_data.update({'mapId': self.data_define_obj.pool_code})
-                draw_data.update({"capacity": str(config.draw_capacity)})
-                draw_data.update({"deep": config.draw_deep})
-                draw_data.update({"bottleNum": self.current_draw_bottle})
-                # 添加经纬度
-                draw_data.update({'jwd': json.dumps(self.lng_lat)})
-                draw_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})
-                self.send(method='mqtt', topic='draw_data_%s' % config.ship_code, data=draw_data,
-                          qos=0)
-                try:
-                    print('####################send sample data')
-                    self.send(method='http', data=draw_data,
-                              url=config.http_draw_save,
-                              http_type='POST')
-                except Exception as e:
-                    self.data_save_logger.info({"发送抽水数据error": e})
-                self.data_save_logger.info({"############################发送抽水数据": draw_data})
-                time.sleep(5)
-            """
 
     # 必须使用线程发送mqtt基本状态数据
     def send_mqtt_status_data(self):
@@ -1561,29 +1508,30 @@ class DataManager:
                 last_runtime = 0
             if last_run_distance is None:
                 last_run_distance = 0
-            if os.path.exists(config.run_distance_time_path):
-                try:
-                    with open(config.run_distance_time_path, 'r') as f:
-                        run_distance_time_data = json.load(f)
-                        save_distance = run_distance_time_data.get('save_distance')
-                        save_time = run_distance_time_data.get('save_time')
-                except Exception as e:
+            if time.time() % 10 < 1:
+                if os.path.exists(config.run_distance_time_path):
+                    try:
+                        with open(config.run_distance_time_path, 'r') as f:
+                            run_distance_time_data = json.load(f)
+                            save_distance = run_distance_time_data.get('save_distance')
+                            save_time = run_distance_time_data.get('save_time')
+                    except Exception as e:
+                        save_distance = 0
+                        save_time = 0
+                        self.logger.error({'读取run_distance_time_path': e})
+                else:
                     save_distance = 0
                     save_time = 0
-                    self.logger.error({'读取run_distance_time_path': e})
-            else:
-                save_distance = 0
-                save_time = 0
-            with open(config.run_distance_time_path, 'w') as f:
-                save_distance = save_distance + round(self.run_distance, 1) - last_run_distance
-                # print('############################读取保存距离save_distance',save_distance)
-                save_time = save_time + round(time.time() - self.start_time) - last_runtime
-                json.dump({'save_distance': save_distance,
-                           'save_time': save_time}, f)
-            last_runtime = round(time.time() - self.start_time)
-            last_run_distance = round(self.run_distance, 1)
-            status_data.update({"totle_distance": round(save_distance, 1)})
-            status_data.update({"totle_time": round(save_time)})
+                with open(config.run_distance_time_path, 'w') as f:
+                    save_distance = save_distance + round(self.run_distance, 1) - last_run_distance
+                    # print('############################读取保存距离save_distance',save_distance)
+                    save_time = save_time + round(time.time() - self.start_time) - last_runtime
+                    json.dump({'save_distance': save_distance,
+                               'save_time': save_time}, f)
+                last_runtime = round(time.time() - self.start_time)
+                last_run_distance = round(self.run_distance, 1)
+                status_data.update({"totle_distance": round(save_distance, 1)})
+                status_data.update({"totle_time": round(save_time)})
             # 更新船头方向
             if config.home_debug and self.current_theta is not None:
                 status_data.update({"direction": round(self.current_theta, 1)})
@@ -1617,6 +1565,123 @@ class DataManager:
                       qos=0)
             if time.time() % 10 < 1:
                 self.logger.info({'status_data_': mqtt_send_status_data})
+
+    # 预先存储任务   计算距离并排序
+    def check_task(self):
+        if self.server_data_obj.mqtt_send_get_obj.get_task == 1 and self.server_data_obj.mqtt_send_get_obj.task_id:
+            print("获取任务task_id", self.server_data_obj.mqtt_send_get_obj.task_id)
+            task_data = self.send(
+                method='http',
+                data='',
+                url=config.http_get_task + "?taskId=%s" % self.server_data_obj.mqtt_send_get_obj.task_id,
+                http_type='GET')
+            if not task_data:
+                print('############ 没有任务数据')
+                return
+            print('##############task_data', task_data)
+            self.server_data_obj.mqtt_send_get_obj.get_task = 0
+            item = task_data.get('items')
+            tasks = item.get('task')
+            if tasks:
+                tasks = json.loads(tasks)
+                for task in tasks:
+                    temp_list = []
+                    lng_lat_str = task.get("jwd")
+                    lng_lat = [float(i) for i in lng_lat_str.split(',')]
+                    temp_list.append(tuple(lng_lat))
+                    for bottle in task.get("container"):
+                        bottle_id = int(bottle.get("id"))
+                        bottle_deep = float(bottle.get("deep"))
+                        bottle_amount = float(bottle.get("amount"))
+                        temp_list.append((bottle_id, bottle_deep, bottle_amount))
+                    self.task_list.append(tuple(temp_list))
+            print('##############self.task_list', self.task_list)
+            distance_list = []
+            if len(self.task_list) > 0 and self.gaode_lng_lat:
+                for i1 in self.task_list:
+                    distance = lng_lat_calculate.distanceFromCoordinate(self.gaode_lng_lat[0],
+                                                                        self.gaode_lng_lat[1],
+                                                                        i1[0][0],
+                                                                        i1[0][1])
+                    distance_list.append(distance)
+                d = dict(zip(self.task_list, distance_list))
+                self.sort_task_list = sorted(self.task_list, key=lambda x: d[x])
+                for i in self.sort_task_list:
+                    self.sort_task_done_list.append([0] * len(i[1:]))
+                lng_lat_list = []
+                for i2 in self.sort_task_list:
+                    lng_lat_list.append([i2[0][0], i2[0][1]])
+                # 发送需要去经纬度数据
+                user_lng_lat_data = {
+                    "deviceId": config.ship_code,
+                    # 先经度 后纬度
+                    "lng_lat": lng_lat_list,
+                    # 地图分辨率，单位：米/像素 2.0576093061946388
+                    "meter_pix": 2.0576093061946388,
+                    # 点击地图的图层
+                    "zoom": 14,
+                    # 配置
+                    "config":
+                        {
+                            "back_home": 0,
+                            "fix_point": 0,
+                        }
+                }
+                self.send(method='mqtt',
+                          topic='user_lng_lat_%s' % config.ship_code,
+                          data=user_lng_lat_data,
+                          qos=0)
+                self.has_task = 1
+                # self.server_data_obj.mqtt_send_get_obj.task_list = []
+
+    def loop_check_task(self):
+        while True:
+            time.sleep(1)
+            self.check_task()  # 检查是否需要发送预先存储任务
+            # 有任务发送任务状态 更新任务为正在执行
+            if self.has_task == 1:
+                print("task_id", self.server_data_obj.mqtt_send_get_obj.task_id)
+                update_task_data = self.send(
+                    method='http',
+                    data={"taskId": self.server_data_obj.mqtt_send_get_obj.task_id, "state": "1"},
+                    url=config.http_update_task,
+                    http_type='POST',
+                    parm_type=2)
+                if update_task_data:
+                    self.has_task = 0
+            if self.server_data_obj.mqtt_send_get_obj.cancel_task and self.server_data_obj.mqtt_send_get_obj.task_id:
+                print("task_id", self.server_data_obj.mqtt_send_get_obj.task_id)
+                cancel_task_data = self.send(
+                    method='http',
+                    data={"taskId": self.server_data_obj.mqtt_send_get_obj.task_id, "state": "0"},
+                    url=config.http_update_task,
+                    http_type='POST',
+                    parm_type=2)
+                if cancel_task_data:
+                    self.server_data_obj.mqtt_send_get_obj.cancel_task = 0
+                    self.server_data_obj.mqtt_send_get_obj.task_id = ''
+            if self.arrive_all_task:
+                del_task_data = self.send(
+                    method='http',
+                    data={'taskId': self.server_data_obj.mqtt_send_get_obj.task_id},
+                    url=config.http_delete_task,
+                    http_type='POST',
+                    parm_type=2)
+                if del_task_data:
+                    self.arrive_all_task = 0
+            # 发送任务状态
+            # if len(self.task_list) > 0:
+            #     task_status = 1
+            # else:
+            #     task_status = 2
+            # task_data = {
+            #     "info_type": 2,  # 类型  1 前端发给船 2 船发给前端
+            #     "task_status": task_status  # 1 任务正在执行  2 没有任务在执行
+            # }
+            # self.send(method='mqtt',
+            #           topic='task_%s' % config.ship_code,
+            #           data=task_data,
+            #           qos=0)
 
     # 配置更新
     def update_config(self):
@@ -1723,8 +1788,15 @@ class DataManager:
                     "mapId": self.data_define_obj.pool_code,
                     'sampling_points': self.server_data_obj.mqtt_send_get_obj.sampling_points,
                     'path_points': self.server_data_obj.mqtt_send_get_obj.path_planning_points,
-                    "draw_points": self.draw_points_list
+                    "draw_points": self.draw_points_list,
+
                 }
+                if self.server_data_obj.mqtt_send_get_obj.draw_bottle_id \
+                        and self.server_data_obj.mqtt_send_get_obj.draw_deep and \
+                        self.server_data_obj.mqtt_send_get_obj.draw_capacity:
+                    save_plan_path_data.update({'bottle_info': [self.server_data_obj.mqtt_send_get_obj.draw_bottle_id,
+                                                                self.server_data_obj.mqtt_send_get_obj.draw_deep,
+                                                                self.server_data_obj.mqtt_send_get_obj.draw_capacity]})
                 save_data.set_data(save_plan_path_data, config.save_plan_path)
                 if self.server_data_obj.mqtt_send_get_obj.refresh_info_type == 1:
                     save_plan_path_data.update({"info_type": 2})
@@ -1758,7 +1830,7 @@ class DataManager:
                 direction = int(random.random() * 360)
                 distance_info_data = {
                     # 设备号
-                    "deviceId": "3c50f4c3-a9c1-4872-9f18-883af014380a",
+                    "deviceId": "XXLJC4LCGSCSD1DA002",
                     # 船头角度  以北为0度 ，逆时针方向为正
                     "direction": direction,
                     # 距离信息 内部为列表，列中中元素为字典，distance为距离单位米  angle为角度单位度，以船头角度为0度 左正右负
@@ -1766,7 +1838,7 @@ class DataManager:
                                       {"distance": 7.5, "angle": -20},
                                       {"distance": 6, "angle": 0}],
                 }
-
+                # print('#############distance_info_data',distance_info_data)
                 self.send(method='mqtt',
                           topic='distance_info_%s' % config.ship_code,
                           data=distance_info_data,
@@ -1782,8 +1854,8 @@ class DataManager:
                         distance_info_data['distance_info'].append(
                             {'distance': self.pi_main_obj.distance_dict[k][0],
                              'angle': self.pi_main_obj.distance_dict[k][1]})
-                    if self.current_theta:
-                        distance_info_data.update({'direction': round(self.current_theta)})
+                    if self.pi_main_obj.theta:
+                        distance_info_data.update({'direction': round(self.pi_main_obj.theta)})
                     else:
                         distance_info_data.update({'direction': 0})
                     # print('distance_data',distance_info_data)
@@ -1801,6 +1873,7 @@ class DataManager:
         while True:
             time.sleep(0.5)
             switch_data = {
+                "info_type": 2,  # 树莓派发给前端
                 # 检测 1 检测 没有该键表示不检测
                 "b_sampling": self.server_data_obj.mqtt_send_get_obj.b_draw,
                 # 抽水 1 抽水 没有该键或者0表示不抽水
@@ -1838,7 +1911,7 @@ class DataManager:
             time.sleep(3)
 
     # 发送数据
-    def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):
+    def send(self, method, data, topic='test', qos=0, http_type='POST', url='', parm_type=1):
         """
         :param url:
         :param http_type:
@@ -1849,7 +1922,7 @@ class DataManager:
         """
         assert method in ['http', 'mqtt', 'com'], 'method error not in http mqtt com'
         if method == 'http':
-            return_data = self.server_data_obj.send_server_http_data(http_type, data, url)
+            return_data = self.server_data_obj.send_server_http_data(http_type, data, url, parm_type=parm_type)
             self.logger.info({'请求 url': url, 'status_code': return_data.status_code})
             # 如果是POST返回的数据，添加数据到地图数据保存文件中
             if http_type == 'POST' and r'map/save' in url:
@@ -1878,6 +1951,43 @@ class DataManager:
                     self.logger.error('GET请求失败')
                 save_data_binding = content_data["data"]
                 return save_data_binding
+            elif http_type == 'GET' and r'getOne' in url:
+                if return_data:
+                    content_data = json.loads(return_data.content)
+                    if not content_data["success"]:
+                        self.logger.info({'content_data': content_data})
+                        self.logger.error('task GET请求失败')
+                    task_data = content_data["data"]
+                    print('#########task_data', task_data)
+                    return task_data
+                else:
+                    return
+            elif http_type == 'POST' and r'upDataTask' in url:
+                if return_data:
+                    content_data = json.loads(return_data.content)
+                    self.logger.info({'content_data': content_data})
+                    if not content_data["success"]:
+                        self.logger.error('upDataTask请求失败')
+                    else:
+                        return True
+            elif http_type == 'POST' and r'delTask' in url:
+                if return_data:
+                    content_data = json.loads(return_data.content)
+                    self.logger.info({'content_data': content_data})
+                    if not content_data["success"]:
+                        self.logger.error('delTask请求失败')
+                    else:
+                        return True
+            elif http_type == 'POST' and r'task' in url:
+                if return_data:
+                    content_data = json.loads(return_data.content)
+                    if not content_data["success"]:
+                        self.logger.error('task GET请求失败')
+                    task_data = content_data["data"]
+                    # print('#########task_data',task_data)
+                    return task_data
+                else:
+                    return
             else:
                 # 如果是GET请求，返回所有数据的列表
                 content_data = json.loads(return_data.content)

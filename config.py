@@ -66,7 +66,11 @@ elif sysstr == "Linux":  # 树莓派上也是Linux
 else:
     print("other System tasks")
     current_platform = CurrentPlatform.others
-
+# 不是在树莓派上都是用调试模式
+if current_platform == CurrentPlatform.pi:
+    home_debug = 0
+else:
+    home_debug = 1
 # 百度地图key
 baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
 # 高德秘钥
@@ -217,8 +221,14 @@ http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
 http_draw_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/sampling/save'
 # http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/sampling/save'
 # 获取存储的任务数据
-# http_plan_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/plan/save'
-http_plan_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
+# if home_debug:
+#     http_get_task = 'http://192.168.199.186:8009/union/admin/xxl/task/getOne'
+#     http_update_task = 'http://192.168.199.186:8009/union/admin/xxl/task/upDataTask'
+#     http_delete_task = 'http://192.168.199.186:8009/union/admin/xxl/task/delTask'
+# else:
+http_get_task = 'http://wuhanligong.xxlun.com/union/admin/xxl/task/getOne'
+http_update_task = 'http://wuhanligong.xxlun.com/union/admin/xxl/task/upDataTask'
+http_delete_task = 'http://wuhanligong.xxlun.com/union/admin/xxl/task/delTask'
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884
@@ -268,11 +278,7 @@ b_tsp = 0
 b_check_network = 1
 # 是否播放声音
 b_play_audio = 0
-# 不是在树莓派上都是用调试模式
-if current_platform == CurrentPlatform.pi:
-    home_debug = 0
-else:
-    home_debug = 1
+
 # 添加避障方式设置0 不避障 1 避障停止  2 自动避障绕行  3 自动避障绕行和手动模式下避障停止
 obstacle_avoid_type = 0
 control_obstacle_distance = 2.5  # 手动模式避障距离 单位m
@@ -747,7 +753,7 @@ class WaterType(enum.Enum):
 draw_deep = 0.5  # 抽水深度
 draw_capacity = 1000  # 需要抽水容量
 max_draw_capacity = 2000  # 单个瓶子最大抽水容量
-draw_speed = 4000  # 抽水速度 毫升/分钟
+draw_speed = 2800  # 抽水速度 毫升/分钟
 number_of_bottles = 4  # 总共包含抽水瓶数
 max_draw_time = int(60*max_draw_capacity/draw_speed)
 

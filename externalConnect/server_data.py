@@ -18,19 +18,40 @@ class ServerData:
         self.mqtt_send_get_obj = MqttSendGet(self.logger, topics=topics)
 
     # 发送数据到服务器http
-    def send_server_http_data(self, request_type, data, url):
+    def send_server_http_data(self, request_type, data, url, parm_type=1):
+        """
+
+        @param request_type:
+        @param data:
+        @param url:
+        @param parm_type: 1 data 方式  2 params 方式
+        @return:
+        """
         # 请求头设置
         payload_header = {
             'Content-Type': 'application/json',
         }
         assert request_type in ['POST', 'GET']
-        self.logger.info(url)
+        # self.logger.info(url)
         if request_type == 'POST':
-            dump_json_data = json.dumps(data)
-            return_data = requests.post(
-                url=url, data=dump_json_data, headers=payload_header)
+
+            if parm_type == 1:
+                dump_json_data = json.dumps(data)
+                return_data = requests.post(
+                    url=url, data=dump_json_data, headers=payload_header)
+            else:
+                if isinstance(data, dict):
+                    dump_json_data = data
+                else:
+                    dump_json_data = json.dumps(data)
+                return_data = requests.post(
+                    url=url, params=dump_json_data, headers=payload_header)
         else:
-            return_data = requests.get(url=url)
+            if data:
+                dump_json_data = json.dumps(data)
+                return_data = requests.get(url=url, params=dump_json_data)
+            else:
+                return_data = requests.get(url=url)
         return return_data
 
     # 发送数据到服务器mqtt
@@ -178,6 +199,9 @@ class MqttSendGet:
         self.draw_bottle_id = None  # 前端设置抽水瓶号id
         self.draw_deep = None  # 前端设置抽水深度
         self.draw_capacity = None  # 前端设置抽水容量
+        self.get_task = 0  # 是否需要获取任务
+        self.task_id = ''  # 任务id
+        self.cancel_task = 0  # 取消任务
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -230,6 +254,8 @@ class MqttSendGet:
                 180: 1180,
                 270: 1270,
             }
+            if self.control_move_direction == -1 and control_data.get('mode') is None:
+                self.cancel_task = 1
             if control_data.get('mode'):
                 if int(control_data.get('mode')) == 1:
                     pass
@@ -244,6 +270,8 @@ class MqttSendGet:
         if topic == 'switch_%s' % config.ship_code:
             self.b_receive_mqtt = True
             switch_data = json.loads(msg.payload)
+            if switch_data.get('info_type') != 1:
+                return
             # 改变了暂时没用
             if switch_data.get('b_sampling') is not None:
                 self.b_sampling = int(switch_data.get('b_sampling'))
@@ -527,32 +555,23 @@ class MqttSendGet:
                 self.bank_distance = round(float(bank_distance_data.get('bank_distance')), 1)
             # print('############self.bank_distance',self.bank_distance)
 
-        # 抽水任务话题数据
-        elif topic == 'task_list_%s' % config.ship_code:
-            task_list_data = json.loads(msg.payload)
-            if task_list_data.get("task") is None:
-                self.logger.error('"task_list_data"设置启动消息没有"task"字段')
+        # 前端发送获取任务
+        elif topic == 'task_%s' % config.ship_code:
+            task_data = json.loads(msg.payload)
+            if task_data.get("info_type") is None:
+                self.logger.error('"get_task_"设置启动消息没有"task"字段')
                 return
-            self.logger.info({'topic': topic,
-                              '任务点数': len(task_list_data.get("task")),
-                              })
-
-            # 解析任务数据并排序
-            try:
-                for item in task_list_data.get("task"):
-                    temp_list = []
-                    lng_lat_str = item.get("jwd")
-                    lng_lat = [float(i) for i in lng_lat_str.split(',')]
-                    temp_list.append(tuple(lng_lat))
-                    for bottle in item.get("container"):
-                        bottle_id = int(bottle.get("id"))
-                        bottle_deep = float(bottle.get("deep"))
-                        bottle_amount = float(bottle.get("amount"))
-                        temp_list.append((bottle_id, bottle_deep, bottle_amount))
-                    self.task_list.append(tuple(temp_list))
-            except Exception as e:
-                print('task_list_data error', e)
-            # print('########## self.task_list', self.task_list)
+            if task_data.get("info_type") != 1:
+                return
+            self.get_task = int(task_data.get("get_task"))
+            # 发送 取消任务等于按暂停按键
+            if self.get_task == 2:
+                self.control_move_direction = 0
+                self.cancel_task = 1
+                self.task_id = task_data.get("task_id")
+            if self.get_task == 1 and not self.task_id:
+                self.task_id = task_data.get("task_id")
+            self.logger.info(task_data)
 
         # 采样瓶设置数据话题
         elif topic == 'bottle_setting_%s' % config.ship_code:
