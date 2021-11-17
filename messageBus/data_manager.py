@@ -264,7 +264,7 @@ class DataManager:
                     # 触发一次停止
                     self.pi_main_obj.stop()
                 else:
-                    print('##################################bottle_id',bottle_id)
+                    print('##################################bottle_id', bottle_id)
                     if bottle_id == 1:
                         self.send_stc_data('A1Z')
                     elif bottle_id == 2:
@@ -283,7 +283,6 @@ class DataManager:
                         self.server_data_obj.mqtt_send_get_obj.b_draw = 0
                         self.b_sampling = 2
                         self.b_draw_over_send_data = True  # 抽水超时发送数据
-                        self.bottle_draw_time_list[bottle_id - 1] += draw_time
                         self.draw_start_time = None
                         self.bottle_draw_time_list[bottle_id - 1] += draw_time
                         time.sleep(0.1)
@@ -321,7 +320,7 @@ class DataManager:
                         self.draw_over_bottle_info = [self.current_draw_bottle, self.current_draw_deep,
                                                       self.current_draw_capacity]
             # 预先存储任务深度和水量
-            if self.current_arriver_index==len(self.sort_task_done_list):
+            if self.current_arriver_index == len(self.sort_task_done_list):
                 return
             if self.current_arriver_index is not None and self.sort_task_done_list and self.sort_task_done_list[
                 self.current_arriver_index].count(
@@ -345,10 +344,10 @@ class DataManager:
                     print('self.sort_task_done_list', self.current_arriver_index, self.sort_task_done_list)
                     self.draw_over_bottle_info = [self.current_draw_bottle, self.current_draw_deep,
                                                   self.current_draw_capacity]
-            elif self.current_arriver_index is not None and self.sort_task_done_list and self.sort_task_done_list[
-                self.current_arriver_index].count(
-                0) == 0:
-                self.current_arriver_index +=1
+            # elif self.current_arriver_index is not None and self.sort_task_done_list and self.sort_task_done_list[
+            #     self.current_arriver_index].count(
+            #     0) == 0:
+            #     self.current_arriver_index += 1
         else:
             # 开启了遥控器
             if self.pi_main_obj.b_start_remote:
@@ -409,9 +408,9 @@ class DataManager:
                         self.current_draw_deep = temp_draw_deep
                         self.current_draw_capacity = self.server_data_obj.mqtt_send_get_obj.draw_capacity
                         self.draw_sub(True, False, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
-                # 预先存储任务深度和水量
-                if self.current_arriver_index == len(self.sort_task_done_list):
-                    self.draw_sub(False, False, 0, 0, 0)
+                    # # 预先存储任务深度和水量
+                    # if self.current_arriver_index == len(self.sort_task_done_list):
+                    #     self.draw_sub(False, False, 0, 0, 0)
                 elif self.current_arriver_index is not None and self.sort_task_done_list[
                     self.current_arriver_index].count(
                     0) > 0:  # 是否是使用预先存储任务
@@ -419,17 +418,19 @@ class DataManager:
                     temp_draw_bottle_id = self.sort_task_list[self.current_arriver_index][index + 1][0]
                     temp_draw_deep = self.sort_task_list[self.current_arriver_index][index + 1][1]
                     temp_draw_capacity = int(self.sort_task_list[self.current_arriver_index][index + 1][2])
-                    print('temp_draw_bottle_id,temp_draw_deep,temp_draw_capacity', temp_draw_bottle_id, temp_draw_deep,
+                    print('temp_draw_bottle_id,temp_draw_deep,temp_draw_capacity', temp_draw_bottle_id,
+                          temp_draw_deep,
                           temp_draw_capacity)
                     temp_draw_time = int(60 * temp_draw_capacity / config.draw_speed)  # 根据默认配置修改抽水时间
                     is_finish_draw = self.draw_sub(False, True, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
                     if is_finish_draw:
                         self.sort_task_done_list[self.current_arriver_index][index] = 1
                         print('self.sort_task_done_list', self.current_arriver_index, self.sort_task_done_list)
-                elif self.current_arriver_index is not None and self.sort_task_done_list and self.sort_task_done_list[
-                    self.current_arriver_index].count(
-                    0) == 0:
-                    self.current_arriver_index += 1
+                    # elif self.current_arriver_index is not None and self.sort_task_done_list and \
+                    #         self.sort_task_done_list[
+                    #             self.current_arriver_index].count(
+                    #             0) == 0:
+                    #     self.current_arriver_index += 1
                 else:
                     self.draw_sub(False, False, 0, 0, 0)
 
@@ -1614,6 +1615,7 @@ class DataManager:
             self.server_data_obj.mqtt_send_get_obj.get_task = 0
             if task_data is None or task_data.get('items') is None:
                 return
+            self.task_list = []
             item = task_data.get('items')
             tasks = item.get('task')
             if tasks:
@@ -1668,34 +1670,34 @@ class DataManager:
                           qos=0)
                 self.has_task = 1
                 # self.server_data_obj.mqtt_send_get_obj.task_list = []
-            elif len(self.task_list) > 0 and config.ship_gaode_lng_lat is None:
-                distance = 1
-                for i1 in self.task_list:
-                    distance_list.append(distance)
-                    distance+=1
-                d = dict(zip(self.task_list, distance_list))
-                self.sort_task_list = sorted(self.task_list, key=lambda x: d[x])
-                for i in self.sort_task_list:
-                    self.sort_task_done_list.append([0] * len(i[1:]))
-                print('##############self.sort_task_list', self.sort_task_list)
+            # elif len(self.task_list) > 0 and config.ship_gaode_lng_lat is None:
+            #     distance = 1
+            #     for i1 in self.task_list:
+            #         distance_list.append(distance)
+            #         distance += 1
+            #     d = dict(zip(self.task_list, distance_list))
+            #     self.sort_task_list = sorted(self.task_list, key=lambda x: d[x])
+            #     for i in self.sort_task_list:
+            #         self.sort_task_done_list.append([0] * len(i[1:]))
+            #     print('##############self.sort_task_list', self.sort_task_list)
 
     def loop_check_task(self):
-        start_time = time.time()
+        # start_time = time.time()
         while True:
             time.sleep(1)
             if len(self.sort_task_list) == 0:
                 self.check_task()  # 检查是否需要发送预先存储任务
-            else:
-                print('self.current_arriver_index',self.current_arriver_index)
-                if time.time() - start_time > 2:
-                    if self.current_arriver_index is None:
-                        self.current_arriver_index = 0
-                    else:
-                        if self.current_arriver_index == len(self.sort_task_list):
-                            self.arrive_all_task = 1
-                        # elif self.current_arriver_index < len(self.sort_task_list):
-                        #     self.current_arriver_index += 1
-                    start_time = time.time()
+            # else:
+            #     print('self.current_arriver_index', self.current_arriver_index)
+            #     if time.time() - start_time > 2:
+            #         if self.current_arriver_index is None:
+            #             self.current_arriver_index = 0
+            #         else:
+            #             if self.current_arriver_index == len(self.sort_task_list):
+            #                 self.arrive_all_task = 1
+            #             # elif self.current_arriver_index < len(self.sort_task_list):
+            #             #     self.current_arriver_index += 1
+            #         start_time = time.time()
 
             # 有任务发送任务状态 更新任务为正在执行
             if self.has_task == 1:

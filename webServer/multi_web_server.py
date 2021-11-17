@@ -114,6 +114,12 @@ class WebServer:
                     self.logger.error('GET请求失败')
                 save_data = content_data["data"]
                 return save_data
+            elif http_type == 'POST' and r'upData' in url:
+                content_data = json.loads(return_data.content)
+                if not content_data["success"]:
+                    self.logger.error('GET请求失败')
+                else:
+                    return True
             else:
                 # 如果是GET请求，返回所有数据的列表
                 content_data = json.loads(return_data.content)
@@ -140,9 +146,11 @@ class WebServer:
                 ship_code=ship_code,
                 url=config.http_save,
                 http_type='POST')
+            self.logger.info({'新的湖泊 poolid': pool_id})
+            assert isinstance(pool_id,str)
         except Exception as e1:
             self.logger.error({'config.http_save:': e1})
-        self.logger.info({'新的湖泊 poolid': pool_id})
+            return False
         with open(save_map_path, 'r') as f:
             local_map_data = json.load(f)
         with open(save_map_path, 'w') as f:
@@ -161,6 +169,7 @@ class WebServer:
                     "pool_lng_lats": save_pool_lng_lats,
                     "pool_cnts": save_pool_cnts})
             json.dump(local_map_data, f)
+        return pool_id
 
     # 状态检查函数，检查自身状态发送对应消息
     def find_pool(self):
@@ -279,12 +288,20 @@ class WebServer:
                     save_pool_lng_lats = [[int(i[0] * 1000000), int(i[1] * 1000000)]
                                           for i in self.baidu_map_obj_dict.get(ship_code).pool_lng_lats]
                     if not os.path.exists(save_map_path):
-                        self.get_pool_and_save(send_data=send_data,
-                                               ship_code=ship_code,
-                                               save_map_path=save_map_path,
-                                               save_pool_lng_lats=save_pool_lng_lats)
-                        # 发送请求获取湖泊ID
-                        self.logger.debug({'send_data': send_data})
+                        if isinstance(self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
+                            save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts.tolist()
+                        else:
+                            save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts
+
+                        # pood_id = self.get_pool_and_save(send_data=send_data,
+                        #                        ship_code=ship_code,
+                        #                        save_map_path=save_map_path,
+                        #                        save_pool_lng_lats=save_pool_lng_lats)
+                        # if pool_id:
+                        #     # 发送请求获取湖泊ID
+                        #     self.logger.info({'pood_id': pood_id})
+                        # else:
+                        #     self.logger.error({'请求湖泊id出错误': pood_id})
                         try:
                             pool_id = self.send(
                                 method='http',
@@ -295,10 +312,6 @@ class WebServer:
                         except Exception as e:
                             self.logger.error({'error': e})
                             continue
-                        if isinstance(self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
-                            save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts.tolist()
-                        else:
-                            save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts
                         save_data = {
                             "mapList": [
                                 {
@@ -309,7 +322,6 @@ class WebServer:
                         self.logger.info({'pool_id': pool_id})
                         with open(save_map_path, 'w') as f:
                             json.dump(save_data, f)
-
                     else:
                         with open(save_map_path, 'r') as f:
                             local_map_data = json.load(f)
@@ -326,16 +338,46 @@ class WebServer:
                                 if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_map_id == pool_id:
                                     self.logger.info({'更新湖泊 poolid': pool_id})
                                     send_data.update({"id": pool_id})
-                                    self.send(
+                                    update_flag = self.send(
                                         method='http',
                                         data=send_data,
                                         ship_code=ship_code,
                                         url=config.http_update_map,
                                         http_type='POST')
+                                    if update_flag:
+                                        self.logger.info({'更新湖泊成功': pool_id})
+                                    else:
+                                        self.logger.info({'更新湖泊失败': pool_id})
                                 else:
                                     self.logger.info({'湖泊 poolid不相等 本地id ': pool_id,
                                                       "传入id": self.server_data_obj_dict.get(
                                                           ship_code).mqtt_send_get_obj.update_map_id})
+                                    try:
+                                        pool_id = self.send(
+                                            method='http',
+                                            data=send_data,
+                                            ship_code=ship_code,
+                                            url=config.http_save,
+                                            http_type='POST')
+                                    except Exception as e1:
+                                        self.logger.error({'config.http_save:': e1})
+                                    self.logger.info({'新的湖泊 poolid': pool_id})
+                                    with open(save_map_path, 'w') as f:
+                                        # 以前存储键值
+                                        # local_map_data["mapList"].append({"id": pool_id,
+                                        #                                   "longitudeLatitude": self.baidu_map_obj.pool_center_lng_lat,
+                                        #                                   "mapData": self.baidu_map_obj.pool_lng_lat,
+                                        #                                   "pool_cnt": pool_cnts.tolist()})
+                                        if isinstance(self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
+                                            save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts.tolist()
+                                        local_map_data["mapList"].append(
+                                            {
+                                                "id": pool_id,
+                                                "pool_center_lng_lat": self.baidu_map_obj_dict.get(
+                                                    ship_code).pool_center_lng_lat,
+                                                "pool_lng_lats": save_pool_lng_lats,
+                                                "pool_cnts": save_pool_cnts})
+                                        json.dump(local_map_data, f)
                         # 不存在获取新的id
                         else:
                             try:
@@ -581,7 +623,7 @@ class WebServer:
                         # print('bank_distance', bank_distance)
                         send_data = {
                             # 设备号
-                            "deviceId": "3c50f4c3-a9c1-4872-9f18-883af014380a",
+                            "deviceId": ship_code,
                             # 距离 浮点数单位米
                             "bank_distance": bank_distance,
                         }

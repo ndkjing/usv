@@ -1,32 +1,50 @@
-2021-11-11 10:17:11,792 multi_web_server.py[line:421] INFO {'base_setting': {'speed_grade': '2', 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': '10', 'col': '10', 'pool_name': '梁子湖', 'video_url': None, 'info_type': 3}}
-2021-11-11 10:17:30,432 multi_web_server.py[line:216] INFO {'pool_center_lng_lat': [[114.523672, 30.505642]]}
-2021-11-11 10:17:30,588 multi_web_server.py[line:222] INFO {'config.pool_name': '湖北省武汉市江夏区豹澥街道提顶路'}
-2021-11-11 10:17:31,093 multi_web_server.py[line:92] INFO {'请求 url': 'http://192.168.199.186:8009/union/admin/xxl/map/save'}
-2021-11-11 10:17:31,093 multi_web_server.py[line:93] INFO {'status_code': 200}
-2021-11-11 10:17:31,094 multi_web_server.py[line:98] INFO {'map/save content_data success': True}
-2021-11-11 10:17:31,095 multi_web_server.py[line:264] INFO {'pool_id': '1458619869867122690'}
-2021-11-11 10:17:31,129 multi_web_server.py[line:351] INFO {'base_setting': {'speed_grade': '2', 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': '10', 'col': '10', 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
-2021-11-11 10:21:35,581 multi_web_server.py[line:421] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
-2021-11-11 10:22:53,585 multi_web_server.py[line:216] INFO {'pool_center_lng_lat': [[114.523676, 30.505641]]}
-2021-11-11 10:22:53,699 multi_web_server.py[line:222] INFO {'config.pool_name': '湖北省武汉市江夏区豹澥街道书画路'}
-2021-11-11 10:22:53,719 multi_web_server.py[line:276] INFO {'在本地找到湖泊 poolid': '1458619869867122690'}
-2021-11-11 10:22:53,720 multi_web_server.py[line:288] INFO {'湖泊 poolid不相等 本地id ': '1458619869867122690', '传入id': '1458619869867122690'}
-2021-11-11 10:22:53,722 multi_web_server.py[line:351] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道书画路', 'video_url': None, 'info_type': 3}}
-2021-11-11 10:24:53,672 multi_web_server.py[line:421] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道书画路', 'video_url': None, 'info_type': 3}}
-2021-11-11 10:24:55,583 multi_web_server.py[line:216] INFO {'pool_center_lng_lat': [[114.523928, 30.50559]]}
-2021-11-11 10:24:55,790 multi_web_server.py[line:222] INFO {'config.pool_name': '湖北省武汉市江夏区豹澥街道提顶路'}
-2021-11-11 10:24:55,812 multi_web_server.py[line:276] INFO {'在本地找到湖泊 poolid': '1458619869867122690'}
-2021-11-11 10:24:55,812 multi_web_server.py[line:288] INFO {'湖泊 poolid不相等 本地id ': '1458619869867122690', '传入id': '1458619869867122690'}
-2021-11-11 10:24:55,813 multi_web_server.py[line:351] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
-2021-11-11 10:25:08,872 multi_web_server.py[line:422] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
-2021-11-11 10:25:41,258 multi_web_server.py[line:422] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
-2021-11-11 10:27:47,187 multi_web_server.py[line:424] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道提顶路', 'video_url': None, 'info_type': 3}}
-2021-11-11 10:27:51,569 multi_web_server.py[line:218] INFO {'pool_center_lng_lat': [[114.523674, 30.505639]]}
-2021-11-11 10:27:51,687 multi_web_server.py[line:224] INFO {'config.pool_name': '湖北省武汉市江夏区豹澥街道书画路'}
-2021-11-11 10:27:51,695 multi_web_server.py[line:278] INFO {'在本地找到湖泊 poolid': '1458619869867122690'}
-2021-11-11 10:27:51,696 multi_web_server.py[line:354] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道书画路', 'video_url': None, 'info_type': 3}}
-2021-11-11 10:28:25,572 multi_web_server.py[line:424] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道书画路', 'video_url': None, 'info_type': 3}}
-2021-11-11 10:34:01,553 multi_web_server.py[line:217] INFO {'pool_center_lng_lat': [[114.523672, 30.505641]]}
-2021-11-11 10:34:01,675 multi_web_server.py[line:223] INFO {'config.pool_name': '湖北省武汉市江夏区豹澥街道提顶路'}
-2021-11-11 10:34:01,696 multi_web_server.py[line:277] INFO {'在本地找到湖泊 poolid': '1458619869867122690'}
-2021-11-11 10:34:01,696 multi_web_server.py[line:282] INFO {'更新湖泊 poolid': '1458619869867122690'}
+2021-11-17 09:41:05,055 multi_web_server.py[line:502] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': '5', 'row': 50, 'col': 50, 'pool_name': '湖北省武汉市江夏区豹澥街道书画路', 'video_url': None, 'info_type': 3}}
+2021-11-17 09:41:15,773 multi_web_server.py[line:260] INFO {'pool_center_lng_lat': [[113.844844, 30.313191]]}
+2021-11-17 09:41:15,894 multi_web_server.py[line:266] INFO {'config.pool_name': '沉湖'}
+2021-11-17 09:41:16,140 multi_web_server.py[line:92] INFO {'请求 url': 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'}
+2021-11-17 09:41:16,141 multi_web_server.py[line:93] INFO {'status_code': 200}
+2021-11-17 09:41:16,141 multi_web_server.py[line:98] INFO {'map/save content_data success': True}
+2021-11-17 09:41:16,142 multi_web_server.py[line:382] INFO {'新的湖泊 poolid': '1460785075851337729'}
+2021-11-17 09:41:16,228 multi_web_server.py[line:432] INFO {'base_setting': {'speed_grade': '3', 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': '5', 'row': 50, 'col': 50, 'pool_name': '沉湖', 'video_url': None, 'info_type': 3}}
+2021-11-17 09:54:06,877 multi_web_server.py[line:502] INFO {'base_setting': {'speed_grade': 3, 'arrive_range': 2.5, 'keep_point': 5, 'secure_distance': 15, 'row': 50, 'col': 50, 'pool_name': '沉湖', 'video_url': None, 'info_type': 3}}
+2021-11-17 09:54:43,934 multi_web_server.py[line:260] INFO {'pool_center_lng_lat': [[113.845024, 30.311846]]}
+2021-11-17 09:54:44,056 multi_web_server.py[line:266] INFO {'config.pool_name': '湖北省武汉市蔡甸区消泗乡'}
+2021-11-17 09:54:44,082 multi_web_server.py[line:328] INFO {'在本地找到湖泊 poolid': '1460785075851337729'}
+2021-11-17 09:54:44,082 multi_web_server.py[line:333] INFO {'更新湖泊 poolid': '1460785075851337729'}
+2021-11-17 09:54:44,342 multi_web_server.py[line:92] INFO {'请求 url': 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'}
+2021-11-17 09:54:44,342 multi_web_server.py[line:93] INFO {'status_code': 200}
+2021-11-17 09:54:44,343 multi_web_server.py[line:98] INFO {'map/save content_data success': False}
+2021-11-17 09:54:44,343 multi_web_server.py[line:100] ERROR POST请求发送地图数据失败
+2021-11-17 09:56:33,789 multi_web_server.py[line:260] INFO {'pool_center_lng_lat': [[113.845039, 30.311843]]}
+2021-11-17 09:56:33,891 multi_web_server.py[line:266] INFO {'config.pool_name': '湖北省武汉市蔡甸区消泗乡'}
+2021-11-17 09:56:33,902 multi_web_server.py[line:328] INFO {'在本地找到湖泊 poolid': '1460785075851337729'}
+2021-11-17 09:56:33,902 multi_web_server.py[line:333] INFO {'更新湖泊 poolid': '1460785075851337729'}
+2021-11-17 09:56:34,038 multi_web_server.py[line:92] INFO {'请求 url': 'http://wuhanligong.xxlun.com/union/admin/xxl/map/upData'}
+2021-11-17 09:56:34,039 multi_web_server.py[line:93] INFO {'status_code': 200}
+2021-11-17 10:00:30,038 multi_web_server.py[line:266] INFO {'pool_center_lng_lat': [[113.835689, 30.309572]]}
+2021-11-17 10:00:30,145 multi_web_server.py[line:272] INFO {'config.pool_name': '湖北省武汉市蔡甸区消泗乡'}
+2021-11-17 10:00:30,169 multi_web_server.py[line:334] INFO {'在本地找到湖泊 poolid': '1460785075851337729'}
+2021-11-17 10:00:30,170 multi_web_server.py[line:339] INFO {'更新湖泊 poolid': '1460785075851337729'}
+2021-11-17 10:00:30,274 multi_web_server.py[line:92] INFO {'请求 url': 'http://wuhanligong.xxlun.com/union/admin/xxl/map/upData'}
+2021-11-17 10:00:30,275 multi_web_server.py[line:93] INFO {'status_code': 200}
+2021-11-17 10:00:30,275 multi_web_server.py[line:348] INFO {'更新湖泊成功': '1460785075851337729'}
+2021-11-17 10:00:30,277 multi_web_server.py[line:431] ERROR {'base_setting_data is None': None}
+2021-11-17 10:00:58,524 multi_web_server.py[line:266] INFO {'pool_center_lng_lat': [[113.845076, 30.311825]]}
+2021-11-17 10:00:58,646 multi_web_server.py[line:272] INFO {'config.pool_name': '湖北省武汉市蔡甸区消泗乡'}
+2021-11-17 10:00:58,682 multi_web_server.py[line:334] INFO {'在本地找到湖泊 poolid': '1460785075851337729'}
+2021-11-17 10:00:58,682 multi_web_server.py[line:339] INFO {'更新湖泊 poolid': '1460785075851337729'}
+2021-11-17 10:00:58,816 multi_web_server.py[line:92] INFO {'请求 url': 'http://wuhanligong.xxlun.com/union/admin/xxl/map/upData'}
+2021-11-17 10:00:58,816 multi_web_server.py[line:93] INFO {'status_code': 200}
+2021-11-17 10:00:58,817 multi_web_server.py[line:348] INFO {'更新湖泊成功': '1460785075851337729'}
+2021-11-17 10:00:58,819 multi_web_server.py[line:431] ERROR {'base_setting_data is None': None}
+2021-11-17 10:02:54,870 multi_web_server.py[line:266] INFO {'pool_center_lng_lat': [[113.845031, 30.311811]]}
+2021-11-17 10:02:54,992 multi_web_server.py[line:272] INFO {'config.pool_name': '湖北省武汉市蔡甸区消泗乡'}
+2021-11-17 10:02:55,020 multi_web_server.py[line:334] INFO {'在本地找到湖泊 poolid': '1460785075851337729'}
+2021-11-17 10:02:55,021 multi_web_server.py[line:431] ERROR {'base_setting_data is None': None}
+2021-11-17 10:03:58,199 multi_web_server.py[line:266] INFO {'pool_center_lng_lat': [[113.888429, 30.346476]]}
+2021-11-17 10:03:58,321 multi_web_server.py[line:272] INFO {'config.pool_name': '湖北省武汉市蔡甸区消泗乡'}
+2021-11-17 10:03:58,492 multi_web_server.py[line:92] INFO {'请求 url': 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'}
+2021-11-17 10:03:58,492 multi_web_server.py[line:93] INFO {'status_code': 200}
+2021-11-17 10:03:58,492 multi_web_server.py[line:98] INFO {'map/save content_data success': True}
+2021-11-17 10:03:58,492 multi_web_server.py[line:392] INFO {'新的湖泊 poolid': '1460790790259187714'}
+2021-11-17 10:03:58,562 multi_web_server.py[line:431] ERROR {'base_setting_data is None': None}

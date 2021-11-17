@@ -1,32 +1,46 @@
-2021-11-11 10:17:29,041 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.523865,30.505929&zoom=17&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
-2021-11-11 10:17:29,422 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_114.523865_30.505929_17_1.png'}
-2021-11-11 10:17:29,758 baidu_map.py[line:393] INFO 无法在点击处找到湖
-2021-11-11 10:17:29,860 baidu_map.py[line:348] INFO {'png_url': 'https://apis.map.qq.com/ws/staticmap/v2/?center=30.505929,114.523865&zoom=17&size=1024*1024&scale=1&maptype=roadmap&key=PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'}
-2021-11-11 10:17:30,337 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\tecent_114.523865_30.505929_17_1.png'}
-2021-11-11 10:17:30,402 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 2236}
-2021-11-11 10:17:30,432 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1}
-2021-11-11 10:22:52,399 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.523816,30.505798&zoom=17&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
-2021-11-11 10:22:52,952 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_114.523816_30.505798_17_1.png'}
-2021-11-11 10:22:52,976 baidu_map.py[line:393] INFO 无法在点击处找到湖
-2021-11-11 10:22:53,079 baidu_map.py[line:348] INFO {'png_url': 'https://apis.map.qq.com/ws/staticmap/v2/?center=30.505798,114.523816&zoom=17&size=1024*1024&scale=1&maptype=roadmap&key=PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'}
-2021-11-11 10:22:53,512 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\tecent_114.523816_30.505798_17_1.png'}
-2021-11-11 10:22:53,539 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 2236}
-2021-11-11 10:22:53,585 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1}
-2021-11-11 10:24:54,983 baidu_map.py[line:348] INFO {'png_url': 'https://apis.map.qq.com/ws/staticmap/v2/?center=30.506002,114.523772&zoom=18&size=1024*1024&scale=1&maptype=roadmap&key=PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'}
-2021-11-11 10:24:55,484 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\tecent_114.523772_30.506002_18_1.png'}
-2021-11-11 10:24:55,526 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 3576}
-2021-11-11 10:24:55,583 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1}
-2021-11-11 10:27:49,973 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.523567,30.505861&zoom=17&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
-2021-11-11 10:27:50,489 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_114.523567_30.505861_17_1.png'}
-2021-11-11 10:27:50,520 baidu_map.py[line:393] INFO 无法在点击处找到湖
-2021-11-11 10:27:50,622 baidu_map.py[line:348] INFO {'png_url': 'https://apis.map.qq.com/ws/staticmap/v2/?center=30.505861,114.523567&zoom=17&size=1024*1024&scale=1&maptype=roadmap&key=PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'}
-2021-11-11 10:27:51,495 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\tecent_114.523567_30.505861_17_1.png'}
-2021-11-11 10:27:51,538 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 2236}
-2021-11-11 10:27:51,569 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1}
-2021-11-11 10:34:00,488 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.523865,30.505928&zoom=17&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
-2021-11-11 10:34:00,955 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_114.523865_30.505928_17_1.png'}
-2021-11-11 10:34:00,985 baidu_map.py[line:393] INFO 无法在点击处找到湖
-2021-11-11 10:34:01,087 baidu_map.py[line:348] INFO {'png_url': 'https://apis.map.qq.com/ws/staticmap/v2/?center=30.505928,114.523865&zoom=17&size=1024*1024&scale=1&maptype=roadmap&key=PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'}
-2021-11-11 10:34:01,484 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\tecent_114.523865_30.505928_17_1.png'}
-2021-11-11 10:34:01,526 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 2236}
-2021-11-11 10:34:01,552 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-11-17 09:41:15,163 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=113.844330,30.315039&zoom=14&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-11-17 09:41:15,684 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_113.844330_30.315039_14_1.png'}
+2021-11-17 09:41:15,721 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 3303}
+2021-11-17 09:41:15,773 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-11-17 09:46:56,948 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=30.310027,113.837991&zoom=10&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-11-17 09:46:57,303 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_30.310027_113.837991_10_1.png'}
+2021-11-17 09:46:57,331 baidu_map.py[line:393] INFO 无法在点击处找到湖
+2021-11-17 09:46:57,434 baidu_map.py[line:348] INFO {'png_url': 'https://apis.map.qq.com/ws/staticmap/v2/?center=113.837991,30.310027&zoom=10&size=1024*1024&scale=1&maptype=roadmap&key=PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'}
+2021-11-17 09:46:57,558 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\tecent_30.310027_113.837991_10_1.png'}
+2021-11-17 09:46:57,559 baidu_map.py[line:371] ERROR Error: 无法找到保存的地图图片,请检查图片文件路径
+2021-11-17 09:46:57,661 baidu_map.py[line:348] INFO {'png_url': 'http://api.map.baidu.com/staticimage/v2?ak=wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY&center=30.310027,113.837991&width=1024&height=1024&zoom=10'}
+2021-11-17 09:46:57,743 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\baidu_30.310027_113_10.png'}
+2021-11-17 09:46:57,743 baidu_map.py[line:371] ERROR Error: 无法找到保存的地图图片,请检查图片文件路径
+2021-11-17 09:48:15,027 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=30.310027,113.837991&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-11-17 09:48:15,262 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_30.310027_113.837991_15_1.png'}
+2021-11-17 09:48:15,275 baidu_map.py[line:393] INFO 无法在点击处找到湖
+2021-11-17 09:48:15,377 baidu_map.py[line:348] INFO {'png_url': 'https://apis.map.qq.com/ws/staticmap/v2/?center=113.837991,30.310027&zoom=15&size=1024*1024&scale=1&maptype=roadmap&key=PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'}
+2021-11-17 09:48:15,512 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\tecent_30.310027_113.837991_15_1.png'}
+2021-11-17 09:48:15,512 baidu_map.py[line:371] ERROR Error: 无法找到保存的地图图片,请检查图片文件路径
+2021-11-17 09:48:15,615 baidu_map.py[line:348] INFO {'png_url': 'http://api.map.baidu.com/staticimage/v2?ak=wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY&center=30.310027,113.837991&width=1024&height=1024&zoom=15'}
+2021-11-17 09:48:15,675 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\baidu_30.310027_113_15.png'}
+2021-11-17 09:48:15,675 baidu_map.py[line:371] ERROR Error: 无法找到保存的地图图片,请检查图片文件路径
+2021-11-17 09:54:43,227 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=113.848964,30.307780&zoom=13&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-11-17 09:54:43,860 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_113.848964_30.307780_13_1.png'}
+2021-11-17 09:54:43,913 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1708}
+2021-11-17 09:54:43,934 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-11-17 09:56:33,183 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=113.855487,30.306446&zoom=13&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-11-17 09:56:33,708 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_113.855487_30.306446_13_1.png'}
+2021-11-17 09:56:33,750 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1708}
+2021-11-17 09:56:33,788 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-11-17 10:00:29,238 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=113.849049,30.311347&zoom=11&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-11-17 10:00:29,994 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_113.849049_30.311347_11_1.png'}
+2021-11-17 10:00:30,028 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 668}
+2021-11-17 10:00:30,037 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-11-17 10:00:57,920 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=113.844477,30.311234&zoom=13&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-11-17 10:00:58,472 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_113.844477_30.311234_13_1.png'}
+2021-11-17 10:00:58,504 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1708}
+2021-11-17 10:00:58,524 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-11-17 10:02:54,195 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=113.844860,30.312846&zoom=13&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-11-17 10:02:54,786 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_113.844860_30.312846_13_1.png'}
+2021-11-17 10:02:54,826 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1708}
+2021-11-17 10:02:54,870 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1}
+2021-11-17 10:03:57,617 baidu_map.py[line:348] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=113.880290,30.341227&zoom=13&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2021-11-17 10:03:58,141 baidu_map.py[line:363] INFO {'save_img_path': 'F:\\pythonProject\\usv\\statics\\imgs\\gaode_113.880290_30.341227_13_1.png'}
+2021-11-17 10:03:58,172 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1877}
+2021-11-17 10:03:58,199 baidu_map.py[line:484] DEBUG {'pix_to_gps len(cnts)': 1}
