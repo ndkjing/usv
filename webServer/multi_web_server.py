@@ -467,7 +467,7 @@ class WebServer:
                     elif len_target_lng_lat > 1:
                         target_lng_lats = copy.deepcopy(
                             self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.target_lng_lat)
-                        print('###########################target_lng_lats', target_lng_lats)
+                        # print('###########################target_lng_lats', target_lng_lats)
                         # 是否返航
                         # if int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.back_home) == 1:
                         #     if config.home_debug:

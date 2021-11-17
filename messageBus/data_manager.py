@@ -325,6 +325,10 @@ class DataManager:
             if self.current_arriver_index is not None and self.sort_task_done_list and self.sort_task_done_list[
                 self.current_arriver_index].count(
                 0) > 0:  # 是否是使用预先存储任务
+                self.server_data_obj.mqtt_send_get_obj.b_draw = 1
+                self.server_data_obj.mqtt_send_get_obj.draw_bottle_id = None
+                self.server_data_obj.mqtt_send_get_obj.draw_deep = None
+                self.server_data_obj.mqtt_send_get_obj.draw_capacity = None
                 index = self.sort_task_done_list[self.current_arriver_index].index(0)
                 temp_draw_bottle_id = self.sort_task_list[self.current_arriver_index][index + 1][0]
                 temp_draw_deep = self.sort_task_list[self.current_arriver_index][index + 1][1]
@@ -414,6 +418,10 @@ class DataManager:
                 elif self.current_arriver_index is not None and self.sort_task_done_list[
                     self.current_arriver_index].count(
                     0) > 0:  # 是否是使用预先存储任务
+                    self.server_data_obj.mqtt_send_get_obj.b_draw = 1
+                    self.server_data_obj.mqtt_send_get_obj.draw_bottle_id = None
+                    self.server_data_obj.mqtt_send_get_obj.draw_deep = None
+                    self.server_data_obj.mqtt_send_get_obj.draw_capacity = None
                     index = self.sort_task_done_list[self.current_arriver_index].index(0)
                     temp_draw_bottle_id = self.sort_task_list[self.current_arriver_index][index + 1][0]
                     temp_draw_deep = self.sort_task_list[self.current_arriver_index][index + 1][1]
@@ -1030,7 +1038,7 @@ class DataManager:
             elif config.obstacle_avoid_type == 2:
                 angle = vfh.vfh_func(9, self.pi_main_obj.obstacle_list)
                 print('angle', angle)
-                if angle == -1: # 没有可通行区域
+                if angle == -1:  # 没有可通行区域
                     # 如果是离岸边太近就直接认为到达
                     if 1 in self.pi_main_obj.obstacle_list[
                             int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
@@ -1473,13 +1481,13 @@ class DataManager:
                 draw_data.update({'deviceId': config.ship_code})
                 draw_data.update({'mapId': self.data_define_obj.pool_code})
                 if len(self.draw_over_bottle_info) == 3:
-                    draw_data.update({"bottle_num": self.draw_over_bottle_info[0]})
+                    draw_data.update({"bottleNum": self.draw_over_bottle_info[0]})
                     draw_data.update({"deep": self.draw_over_bottle_info[1]})
                     draw_data.update({"capacity": self.draw_over_bottle_info[2]})
                 else:
                     draw_data.update({"capacity": '-1'})
                     draw_data.update({"deep": '-1'})
-                    draw_data.update({"bottle_num": '-1'})
+                    draw_data.update({"bottleNum": '-1'})
                 # 添加经纬度
                 draw_data.update({'jwd': json.dumps(self.lng_lat)})
                 draw_data.update({'gjwd': json.dumps(self.gaode_lng_lat)})

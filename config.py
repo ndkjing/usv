@@ -4,7 +4,6 @@ import json
 import os
 import platform
 import ship_code_config
-from utils import get_eviz_url
 
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
