@@ -1030,14 +1030,21 @@ class DataManager:
             elif config.obstacle_avoid_type == 2:
                 angle = vfh.vfh_func(9, self.pi_main_obj.obstacle_list)
                 print('angle', angle)
-                if angle == -1:
-                    abs_angle = (self.pi_main_obj.theta + 180) % 360
-                    next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-                                                                                     self.lng_lat[1],
-                                                                                     abs_angle,
-                                                                                     config.min_steer_distance)
-                    print('abs_angle', abs_angle)
-                    return next_point_lng_lat, False
+                if angle == -1: # 没有可通行区域
+                    # 如果是离岸边太近就直接认为到达
+                    if 1 in self.pi_main_obj.obstacle_list[
+                            int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
+                        if self.server_data_obj.mqtt_send_get_obj.bank_distance > 0 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                            return next_point_lng_lat, True
+                    else:
+                        # return path_planning_point_gps, False
+                        abs_angle = (self.pi_main_obj.theta + 180) % 360
+                        next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                         self.lng_lat[1],
+                                                                                         abs_angle,
+                                                                                         config.min_steer_distance)
+                        print('abs_angle', abs_angle)
+                        return next_point_lng_lat, False
                 elif angle == 0:
                     # 为0表示原始路径可以通行此时不跳过
                     return next_point_lng_lat, False
