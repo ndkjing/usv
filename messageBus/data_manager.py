@@ -1350,6 +1350,7 @@ class DataManager:
                         b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
                                                                      b_force_arrive=True)
                     if b_arrive_sample:
+                        self.path_track_obj.adjust_p_list.clear()
                         if len(self.sort_task_list) > 0:  # 如果是预先存储任务则更新抽水索引
                             self.current_arriver_index = index
                             if self.current_arriver_index == len(

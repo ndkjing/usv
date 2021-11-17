@@ -16,7 +16,7 @@ class SimplePid:
         self.left_distance = None
         self.right_distance = None
         # 调节p数组
-        self.adjust_p_size = 10
+        self.adjust_p_size = 6
         self.adjust_p_list = []
 
     def distance_p(self, distance, theta_error):
