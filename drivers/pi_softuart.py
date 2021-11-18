@@ -316,35 +316,35 @@ class PiSoftuart(object):
             try:
                 button_10 = int(item_data_list[9])
             except Exception as e9:
-                button_10 = 0
+                button_10 = -1
             try:
                 button_11 = int(item_data_list[10])
             except Exception as e10:
-                button_11 = 0
+                button_11 = -1
             try:
                 button_12 = int(item_data_list[11])
             except Exception as e11:
-                button_12 = 0
+                button_12 = -1
             try:
                 button_13 = int(float(item_data_list[12]))
             except Exception as e12:
-                button_13 = 0
+                button_13 = -1
             try:
                 lever_6 = int(float(item_data_list[5]))
             except Exception as e5:
-                lever_6 = 0
+                lever_6 = -1
             try:
                 lever_7 = int(item_data_list[6])
             except Exception as e6:
-                lever_7 = 0
+                lever_7 = -1
             try:
                 lever_8 = int(item_data_list[7])
             except Exception as e7:
-                lever_8 = 50
+                lever_8 = -1
             try:
                 lever_9 = int(item_data_list[8])
             except Exception as e8:
-                lever_9 = 50
+                lever_9 = -1
             try:
                 remote_dumpenergy = float(item_data_list[13])
             except Exception as e13:
@@ -352,11 +352,11 @@ class PiSoftuart(object):
             try:
                 draw_deep = float(item_data_list[14])
             except Exception as e14:
-                draw_deep = 0
+                draw_deep = -1
             try:
                 draw_capacity = int(item_data_list[15])
             except Exception as e15:
-                draw_capacity = 0
+                draw_capacity = -1
 
             return_list = [left_col,
                            left_row,

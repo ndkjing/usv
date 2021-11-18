@@ -1,6 +1,4 @@
 import requests
-a = [1,0,1,0]
-print(a.index(0))
-print(a.clear())
+a ={1:1,2:2}
+del a[1]
 print(a)
-

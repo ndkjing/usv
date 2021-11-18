@@ -145,6 +145,7 @@ class PiMain:
         self.pre_remote_draw_deep = 0
         self.current_draw_capacity = 0  # 抽水量
         self.pre_draw_capacity = 0
+        self.draw_deep_change_count = 0  # 记录抽水跳变次数
 
     # 获取串口对象
     @staticmethod
@@ -983,9 +984,9 @@ class PiMain:
                     else:
                         self.remote_draw_status = 0
                     # 判断收起舵机  展开舵机
-                    if int(self.remote_control_data[10]) == 1:
+                    if self.remote_control_data[10] == 1:
                         self.remote_target_draw_steer = 1
-                    else:
+                    elif self.remote_control_data[10] == 0:
                         self.remote_target_draw_steer = 0
                     # 判断打开舷灯  关闭舷灯
                     if int(self.remote_control_data[6]) == 10:
@@ -1009,26 +1010,32 @@ class PiMain:
                         if 0 < self.pre_remote_dump_energy < 100:
                             self.current_remote_dump_energy = self.pre_remote_dump_energy
                     # 遥控器控制抽水深度
-                    if 0 <= self.remote_control_data[-2] <= 0.5:
+                    if 0 < self.remote_control_data[-2] <= 0.5:
                         self.current_remote_draw_deep = self.remote_control_data[-2]
-                        self.pre_remote_draw_deep = self.current_remote_draw_deep
+                        if self.pre_remote_draw_deep == 0.5 and self.current_remote_draw_deep == 0.1 and self.draw_deep_change_count < 3:
+                            self.current_remote_draw_deep = self.pre_remote_draw_deep
+                            self.draw_deep_change_count += 1
+                        else:
+                            self.draw_deep_change_count = 0
+                            self.pre_remote_draw_deep = self.current_remote_draw_deep
                     else:
-                        if 0 <= self.pre_remote_draw_deep <= 0.5:
+                        if 0 < self.pre_remote_draw_deep <= 0.5:
                             self.current_remote_draw_deep = self.pre_remote_draw_deep
                     # 遥控器控制抽水量
-                    if 0 <= self.remote_control_data[-1] <= 5000:
+                    if self.remote_control_data[-1] in [200, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]:
                         self.current_draw_capacity = self.remote_control_data[-1]
                         self.pre_draw_capacity = self.current_draw_capacity
                     else:
-                        if 0 <= self.pre_draw_capacity <= 5000:
+                        if self.pre_draw_capacity in [200, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]:
                             self.current_draw_capacity = self.pre_draw_capacity
-                    print('self.remote_draw_status,self.remote_draw_status_0_1,self.remote_draw_status_2_3,self.current_remote_draw_deep,self.current_draw_capacity',
-                          self.remote_draw_status,
-                          self.remote_draw_status_0_1,
-                          self.remote_draw_status_2_3,
-                          self.current_remote_draw_deep,
-                          self.current_draw_capacity
-                          )
+                    print(
+                        'self.remote_draw_status,self.remote_draw_status_0_1,self.remote_draw_status_2_3,self.current_remote_draw_deep,self.current_draw_capacity',
+                        self.remote_draw_status,
+                        self.remote_draw_status_0_1,
+                        self.remote_draw_status_2_3,
+                        self.current_remote_draw_deep,
+                        self.current_draw_capacity
+                    )
             else:
                 if self.lora_control_receive_time and time.time() - self.lora_control_receive_time > 20:
                     self.b_start_remote = 0
@@ -1197,7 +1204,7 @@ if __name__ == '__main__':
                 pi_main_obj.get_distance_dict_millimeter(debug=True)
             elif key_input[0] in ['A', 'B', 'C', 'D', 'E']:
                 print('len(key_input)', len(key_input))
-                if len(key_input) == 2 and key_input[1] in ['0', '1', '2', '3', '4', '5','6']:
+                if len(key_input) == 2 and key_input[1] in ['0', '1', '2', '3', '4', '5', '6']:
                     send_data = key_input + 'Z'
                     print('send_data', send_data)
                     if config.b_com_stc:

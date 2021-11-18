@@ -254,8 +254,9 @@ class MqttSendGet:
                 180: 1180,
                 270: 1270,
             }
-            if self.control_move_direction == -1 and control_data.get('mode') is None:
+            if self.task_id and self.control_move_direction == -1 and control_data.get('mode') is None:
                 self.cancel_task = 1
+                self.task_id = ""
             if control_data.get('mode'):
                 if int(control_data.get('mode')) == 1:
                     pass
