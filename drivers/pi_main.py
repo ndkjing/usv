@@ -159,11 +159,11 @@ class PiMain:
 
     def get_millimeter_wave_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.millimeter_wave_rx, tx_pin=config.millimeter_wave_tx,
-                                      baud=config.millimeter_wave_baud, time_out=0.02,value_lock=self.value_lock)
+                                      baud=config.millimeter_wave_baud, time_out=0.02, value_lock=self.value_lock)
 
     def get_compass_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_compass_rx, tx_pin=config.pin_compass_tx,
-                                      baud=config.pin_compass_baud, time_out=0.1,value_lock=self.value_lock)
+                                      baud=config.pin_compass_baud, time_out=0.1, value_lock=self.value_lock)
 
     def get_weite_compass_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=21, tx_pin=20,
@@ -175,12 +175,12 @@ class PiMain:
         :return:
         """
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
-                                      baud=config.lora_baud, time_out=0.19,value_lock=self.value_lock)
+                                      baud=config.lora_baud, time_out=0.19, value_lock=self.value_lock)
 
     def get_gps_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx,
                                       baud=config.pin_gps_baud,
-                                      time_out=1,value_lock=self.value_lock)
+                                      time_out=1, value_lock=self.value_lock)
 
     def get_laser_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=19, tx_pin=13, baud=115200, time_out=0.01)
@@ -191,7 +191,7 @@ class PiMain:
 
     def get_stc_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.stc_rx, tx_pin=config.stc_tx,
-                                      baud=config.stc_baud, time_out=1,value_lock=self.value_lock)
+                                      baud=config.stc_baud, time_out=1, value_lock=self.value_lock)
 
     # 罗盘角度滤波
     def compass_filter(self, theta_):
