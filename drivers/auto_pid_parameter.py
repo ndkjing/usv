@@ -135,20 +135,20 @@ class AutoPidParameter:
             #         self.kd = self.kd + self.delta_kd
             #         self.delta_kd = self.delta_kd * 0.9
 
-    def caluate_error(self):
-        self.theta_error_list = []
-        for i in range(self.change_count):
-            theta_error = self.target_theta - self.theta
-            self.theta_error_list.append(abs(theta_error))
-            if abs(theta_error) > 180:
-                if theta_error > 0:
-                    theta_error = theta_error - 360
-                else:
-                    theta_error = 360 + theta_error
-            left_pwm, right_pwm = self.pid_obj.pid_pwm(distance=0,
-                                                       theta_error=theta_error)
-            self.pi_main_obj.set_pwm(left_pwm, right_pwm)
-            time.sleep(config.pid_interval)
+    # def caluate_error(self):
+    #     self.theta_error_list = []
+    #     for i in range(self.change_count):
+    #         theta_error = self.target_theta - self.theta
+    #         self.theta_error_list.append(abs(theta_error))
+    #         if abs(theta_error) > 180:
+    #             if theta_error > 0:
+    #                 theta_error = theta_error - 360
+    #             else:
+    #                 theta_error = 360 + theta_error
+    #         left_pwm, right_pwm = self.pid_obj.pid_pwm(distance=0,
+    #                                                    theta_error=theta_error)
+    #         self.pi_main_obj.set_pwm(left_pwm, right_pwm)
+    #         time.sleep(config.pid_interval)
 
 
 if __name__ == '__main__':

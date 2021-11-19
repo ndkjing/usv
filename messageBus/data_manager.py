@@ -263,6 +263,7 @@ class DataManager:
                     self.draw_start_time = time.time()
                     # 触发一次停止
                     self.pi_main_obj.stop()
+                    self.pi_main_obj.stop()
                 else:
                     print('##################################bottle_id', bottle_id)
                     if bottle_id == 1:
@@ -620,8 +621,7 @@ class DataManager:
         self.smooth_path_lng_lat = None  # 清空路径
         self.server_data_obj.mqtt_send_get_obj.b_start = 0
         self.server_data_obj.mqtt_send_get_obj.back_home = 0
-        self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
-        self.server_data_obj.mqtt_send_get_obj.keep_point = 0
+        self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
         self.point_arrive_start_time = None  # 清楚记录长期不到时间
         self.sort_task_list = []  # 获取存储的任务  经纬度，采样深度，采样量数据样式[[lng,lat],[bottle_id,deep,capacity],[bottle_id,deep,capacity]]
         self.sort_task_done_list = []  # 总共有多少个点抽水完成存储0/1  单个长度等于任务点数量[[0,0],[0,0,0,0]
@@ -699,7 +699,7 @@ class DataManager:
             self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
         # 从遥控器控制到空闲
         elif status_change_index == 7:
-            self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
+            self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
         # 从遥控器控制到任务执行
         elif status_change_index == 8:
             self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
@@ -779,8 +779,7 @@ class DataManager:
                 elif return_ship_status is not None:
                     self.change_status_info(target_status=return_ship_status)
                 # 切换到自动巡航模式
-                elif self.server_data_obj.mqtt_send_get_obj.keep_point and \
-                        len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
+                elif len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
                     if self.lng_lat is None:
                         self.logger.error('无当前GPS，不能自主巡航')
                         time.sleep(0.5)
@@ -794,15 +793,12 @@ class DataManager:
                     # 此时为遥控器控制模式 清除d控制状态
                     self.change_status_info(target_status=ShipStatus.remote_control)
                 # 切换到自动巡航模式
-                elif d == -1 and \
-                        self.server_data_obj.mqtt_send_get_obj.keep_point and \
-                        len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
+                elif len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
                     if self.lng_lat is None:
                         self.logger.error('无当前GPS，不能自主巡航')
                         time.sleep(0.5)
                     else:
                         self.change_status_info(target_status=ShipStatus.computer_auto)
-                        d = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
                 # 点击抽水
                 elif self.server_data_obj.mqtt_send_get_obj.b_draw:
                     self.last_ship_status = ShipStatus.computer_control
@@ -1167,7 +1163,6 @@ class DataManager:
                                                                        self.lng_lat[1])
                 else:
                     ship_theta = 0
-                # print(time.time(), 'ship_theta', ship_theta)
                 # 船头角度
                 self.current_theta = ship_theta
                 if self.current_theta is not None:
@@ -1299,12 +1294,12 @@ class DataManager:
                 if b_log_points:
                     self.logger.info({'点击地点': self.server_data_obj.mqtt_send_get_obj.path_planning_points})
                 # 判断是否是寻点模式点了寻点但是还没点开始
-                if self.server_data_obj.mqtt_send_get_obj.row_gap:
-                    if not self.server_data_obj.mqtt_send_get_obj.b_start:
-                        b_log_points = 0
-                        time.sleep(0.5)
-                        self.logger.info('等待点击开始寻点')
-                        continue
+                # if self.server_data_obj.mqtt_send_get_obj.row_gap:
+                #     if not self.server_data_obj.mqtt_send_get_obj.b_start:
+                #         b_log_points = 0
+                #         time.sleep(0.5)
+                #         self.logger.info('等待点击开始寻点')
+                #         continue
 
                 # 计算总里程 和其他需要在巡航开始前计算数据
                 if self.totle_distance == 0:
@@ -1847,8 +1842,6 @@ class DataManager:
                 notice_info_data.update({"b_start_remote": str(self.pi_main_obj.b_start_remote)})
             else:
                 notice_info_data.update({"b_start_remote": "0"})
-            notice_info_data.update(
-                {"compass_notice_info ": '瓶: ' + str(self.current_draw_bottle) + '  水量  ' + str(config.draw_time)})
             # 使用电量告警是提示消息
             notice_info_data.update({"low_dump_energy_warnning": self.low_dump_energy_warnning})
             self.send(
@@ -1856,7 +1849,7 @@ class DataManager:
                 topic='notice_info_%s' % config.ship_code,
                 data=notice_info_data,
                 qos=0)
-            if time.time() % 10 < config.check_status_interval:
+            if time.time() % 10 < 1:
                 self.logger.info({'notice_info_': notice_info_data})
 
             # 保存数据与发送刷新后提示消息
@@ -1886,16 +1879,14 @@ class DataManager:
     def check_ping_delay(self):
         # 检查网络
         while True:
-            time.sleep(config.check_network_interval)
+            time.sleep(5)
             if not self.server_data_obj.mqtt_send_get_obj.is_connected:
                 continue
-            if config.b_check_network:
+            if config.network_backhome:
                 ping = check_network.get_ping_delay()
                 if ping:
                     self.ping = ping
                 else:
-                    if config.b_play_audio:
-                        audios_manager.play_audio(2, b_backend=False)
                     self.logger.error('当前无网络信号')
                     self.server_data_obj.mqtt_send_get_obj.is_connected = 0
 
@@ -1915,7 +1906,6 @@ class DataManager:
                                       {"distance": 7.5, "angle": -20},
                                       {"distance": 6, "angle": 0}],
                 }
-                # print('#############distance_info_data',distance_info_data)
                 self.send(method='mqtt',
                           topic='distance_info_%s' % config.ship_code,
                           data=distance_info_data,
@@ -1979,7 +1969,7 @@ class DataManager:
                 self.pi_main_obj.init_motor()
                 self.pi_main_obj.set_draw_deep(deep_pwm=config.max_deep_steer_pwm, b_slow=False)
                 self.is_init_motor = 1
-            if not self.b_check_get_water_data and self.gaode_lng_lat is not None:
+            if not self.b_check_get_water_data and self.gaode_lng_lat is not None and config.current_ship_type ==config.ShipType.water_detect:
                 adcode = baidu_map.BaiduMap.get_area_code(self.gaode_lng_lat)
                 self.area_id = data_valid.adcode_2_area_id(adcode)
                 print('self.area_id', self.area_id)

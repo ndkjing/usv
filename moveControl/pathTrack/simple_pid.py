@@ -19,14 +19,14 @@ class SimplePid:
         self.adjust_p_size = 6
         self.adjust_p_list = []
 
-    def distance_p(self, distance, theta_error):
-        # motor_forward = int(config.motor_forward * (180-abs(theta_error))/(180*1.4))
-        motor_forward = int(config.motor_forward)
-        pwm = int((distance * (motor_forward / config.full_speed_meter)))
-        if pwm >= config.motor_forward:
-            pwm = config.motor_forward
-        pwm = int(pwm * (180 - abs(theta_error)) / 180)
-        return pwm
+    # def distance_p(self, distance, theta_error):
+    #     # motor_forward = int(config.motor_forward * (180-abs(theta_error))/(180*1.4))
+    #     motor_forward = int(config.motor_forward)
+    #     pwm = int((distance * (motor_forward / config.full_speed_meter)))
+    #     if pwm >= config.motor_forward:
+    #         pwm = config.motor_forward
+    #     pwm = int(pwm * (180 - abs(theta_error)) / 180)
+    #     return pwm
 
     def update_steer_pid(self, theta_error):
         errorSum = self.errorSum + theta_error
@@ -83,26 +83,26 @@ class SimplePid:
         elif abs(mean_var) > 30 and abs(std_var) < 30:
             config.kp += 0.02
 
-    def pid_pwm(self, distance, theta_error):
-        # 更新最近的误差角度队列
-        if len(self.adjust_p_list) < self.adjust_p_size - 1:
-            self.adjust_p_list.append(theta_error)
-        elif len(self.adjust_p_list) == self.adjust_p_size - 1:
-            # 通过误差角度队列修正p
-            self.update_p()
-            del self.adjust_p_list[0]
-            self.adjust_p_list.append(theta_error)
-        forward_pwm = self.distance_p(distance, theta_error)
-        steer_pwm = self.update_steer_pid(theta_error)
-        # 当前进分量过小时等比例减小转弯分量
-        # steer_pwm = int(steer_pwm*forward_pwm/config.motor_forward)
-        if (forward_pwm + steer_pwm) == 0:
-            return 1500, 1500
-        # scale_pwm = (config.max_pwm-config.stop_pwm)/(forward_pwm+abs(steer_pwm))
-        scale_pwm = 1
-        left_pwm = 1500 + int(forward_pwm * scale_pwm) - int(steer_pwm * scale_pwm)
-        right_pwm = 1500 + int(forward_pwm * scale_pwm) + int(steer_pwm * scale_pwm)
-        return left_pwm, right_pwm
+    # def pid_pwm(self, distance, theta_error):
+    #     # 更新最近的误差角度队列
+    #     if len(self.adjust_p_list) < self.adjust_p_size - 1:
+    #         self.adjust_p_list.append(theta_error)
+    #     elif len(self.adjust_p_list) == self.adjust_p_size - 1:
+    #         # 通过误差角度队列修正p
+    #         self.update_p()
+    #         del self.adjust_p_list[0]
+    #         self.adjust_p_list.append(theta_error)
+    #     forward_pwm = self.distance_p(distance, theta_error)
+    #     steer_pwm = self.update_steer_pid(theta_error)
+    #     # 当前进分量过小时等比例减小转弯分量
+    #     # steer_pwm = int(steer_pwm*forward_pwm/config.motor_forward)
+    #     if (forward_pwm + steer_pwm) == 0:
+    #         return 1500, 1500
+    #     # scale_pwm = (config.max_pwm-config.stop_pwm)/(forward_pwm+abs(steer_pwm))
+    #     scale_pwm = 1
+    #     left_pwm = 1500 + int(forward_pwm * scale_pwm) - int(steer_pwm * scale_pwm)
+    #     right_pwm = 1500 + int(forward_pwm * scale_pwm) + int(steer_pwm * scale_pwm)
+    #     return left_pwm, right_pwm
 
     def pid_pwm_2(self, distance, theta_error):
         # (1 / (1 + e ^ -0.2x) - 0.5) * 1000

@@ -48,14 +48,8 @@ sys.path.append(
 logger = log.LogHandler('main_log')
 
 
-# if not config.home_debug:
-#     time.sleep(config.start_sleep_time)
-
-
 def main():
     config.update_setting()
-    if config.b_play_audio:
-        audios_manager.play_audio(audio_index=audios_manager.AudioType.start)
     # 数据处理对象
     data_manager_obj = data_manager.DataManager()
     # 查询改船是否注册 若未注册直接退出
