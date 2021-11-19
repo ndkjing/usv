@@ -4,6 +4,7 @@ import os
 import sys
 from collections import deque
 import binascii
+import threading
 
 import config
 
@@ -25,7 +26,7 @@ sys.path.append(
 
 
 class PiSoftuart(object):
-    def __init__(self, pi, rx_pin, tx_pin, baud, time_out=0.1):
+    def __init__(self, pi, rx_pin, tx_pin, baud, time_out=0.1,value_lock=None):
         self._rx_pin = rx_pin
         self._tx_pin = tx_pin
         self.baud = baud
@@ -40,6 +41,7 @@ class PiSoftuart(object):
         self.last_lora_data = None  # 数据一次没有收完等待下次数据用于拼接
         self.dump_energy_queue = deque(maxlen=25)
         self.last_stc_print_time = time.time()  # 记录上一次打印接受转化数据报错信息时间用于超时打印
+        self._value_lock = value_lock
 
     def flushInput(self):
         pigpio.exceptions = False  # fatal exceptions off (so that closing an unopened gpio doesn't error)
@@ -90,9 +92,17 @@ class PiSoftuart(object):
         if len_data is None:
             len_data = 4
             try:
+                if self._value_lock:
+                    self._value_lock.require()
                 self.write_data(send_data)
+                if self._value_lock:
+                    self._value_lock.release()
                 time.sleep(self._thread_ts)
+                if self._value_lock:
+                    self._value_lock.require()
                 count, data = self._pi.bb_serial_read(self._rx_pin)
+                if self._value_lock:
+                    self._value_lock.release()
                 if debug:
                     print(time.time(), 'count', count, 'data', data)
                 if count > len_data:
@@ -135,7 +145,11 @@ class PiSoftuart(object):
             len_data = 4
             try:
                 time.sleep(self._thread_ts)
+                if self._value_lock:
+                    self._value_lock.require()
                 count, data = self._pi.bb_serial_read(self._rx_pin)
+                if self._value_lock:
+                    self._value_lock.release()
                 lng, lat = None, None
                 lng_lat_error, speed, course, magnetic_declination = None, None, None, None
                 if debug:
@@ -395,13 +409,25 @@ class PiSoftuart(object):
                 str_16 = str(binascii.b2a_hex(send_data.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
                 # str_16 = '41305a'
                 if self.last_send is None:
+                    if self._value_lock:
+                        self._value_lock.require()
                     self.write_data(str_16, baud=self.baud, debug=debug)
+                    if self._value_lock:
+                        self._value_lock.release()
                     self.last_send = time.time()
                 else:
                     if time.time() - self.last_send > 0.3:
+                        if self._value_lock:
+                            self._value_lock.require()
                         self.write_data(str_16, baud=self.baud, debug=debug)
+                        if self._value_lock:
+                            self._value_lock.release()
                         self.last_send = time.time()
+                if self._value_lock:
+                    self._value_lock.require()
                 count, data = self._pi.bb_serial_read(self._rx_pin)
+                if self._value_lock:
+                    self._value_lock.release()
                 if debug:
                     print(time.time(), 'count', count, 'data', data)
                 if count > 40:
@@ -453,10 +479,14 @@ class PiSoftuart(object):
             pass
             # print('send data', msg)
         self._pi.wave_clear()
+        if self._value_lock:
+            self._value_lock.require()
         if baud:
             self._pi.wave_add_serial(self._tx_pin, baud, bytes.fromhex(msg))
         else:
             self._pi.wave_add_serial(self._tx_pin, 9600, bytes.fromhex(msg))
+        if self._value_lock:
+            self._value_lock.release()
         data = self._pi.wave_create()
         self._pi.wave_send_once(data)
         if self._pi.wave_tx_busy():
@@ -479,7 +509,11 @@ class PiSoftuart(object):
         if len_data is None:
             len_data = 4
         time.sleep(self._thread_ts)
+        if self._value_lock:
+            self._value_lock.require()
         count, data = self._pi.bb_serial_read(self._rx_pin)
+        if self._value_lock:
+            self._value_lock.release()
         if debug:
             print(time.time(), 'count', count, 'data', data)
         data_dict = {}
@@ -565,7 +599,11 @@ class PiSoftuart(object):
     def read_stc_data(self, debug=False):
         try:
             # time.sleep(self._thread_ts)
+            if self._value_lock:
+                self._value_lock.require()
             count, data = self._pi.bb_serial_read(self._rx_pin)
+            if self._value_lock:
+                self._value_lock.release()
             return_dict = {}
             water_data_list = None
             if debug:

@@ -19,7 +19,7 @@ class SharedCounter:
             time.sleep(0.5)
             self._value_lock.acquire()
             self._value += 2*delta
-            self._value_lock.release()
+            # self._value_lock.release()
             print('########self._value ', self._value)
 
     def decr(self, delta=1):
@@ -27,8 +27,8 @@ class SharedCounter:
         Decrement the counter with locking
         '''
         while True:
-            time.sleep(0.5)
-            self._value_lock.acquire()
+            time.sleep(1.5)
+            self._value_lock.release()
             self._value -= delta
             self._value_lock.release()
 
