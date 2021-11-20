@@ -92,14 +92,10 @@ class PiSoftuart(object):
         if len_data is None:
             len_data = 4
             try:
-                if self._value_lock:
-                    self._value_lock.require()
                 self.write_data(send_data)
-                if self._value_lock:
-                    self._value_lock.release()
                 time.sleep(self._thread_ts)
                 if self._value_lock:
-                    self._value_lock.require()
+                    self._value_lock.acquire()
                 count, data = self._pi.bb_serial_read(self._rx_pin)
                 if self._value_lock:
                     self._value_lock.release()
@@ -146,7 +142,7 @@ class PiSoftuart(object):
             try:
                 time.sleep(self._thread_ts)
                 if self._value_lock:
-                    self._value_lock.require()
+                    self._value_lock.acquire()
                 count, data = self._pi.bb_serial_read(self._rx_pin)
                 if self._value_lock:
                     self._value_lock.release()
@@ -409,22 +405,14 @@ class PiSoftuart(object):
                 str_16 = str(binascii.b2a_hex(send_data.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
                 # str_16 = '41305a'
                 if self.last_send is None:
-                    if self._value_lock:
-                        self._value_lock.require()
                     self.write_data(str_16, baud=self.baud, debug=debug)
-                    if self._value_lock:
-                        self._value_lock.release()
                     self.last_send = time.time()
                 else:
                     if time.time() - self.last_send > 0.3:
-                        if self._value_lock:
-                            self._value_lock.require()
                         self.write_data(str_16, baud=self.baud, debug=debug)
-                        if self._value_lock:
-                            self._value_lock.release()
                         self.last_send = time.time()
                 if self._value_lock:
-                    self._value_lock.require()
+                    self._value_lock.acquire()
                 count, data = self._pi.bb_serial_read(self._rx_pin)
                 if self._value_lock:
                     self._value_lock.release()
@@ -479,14 +467,10 @@ class PiSoftuart(object):
             pass
             # print('send data', msg)
         self._pi.wave_clear()
-        if self._value_lock:
-            self._value_lock.require()
         if baud:
             self._pi.wave_add_serial(self._tx_pin, baud, bytes.fromhex(msg))
         else:
             self._pi.wave_add_serial(self._tx_pin, 9600, bytes.fromhex(msg))
-        if self._value_lock:
-            self._value_lock.release()
         data = self._pi.wave_create()
         self._pi.wave_send_once(data)
         if self._pi.wave_tx_busy():
@@ -501,7 +485,6 @@ class PiSoftuart(object):
 
     def read_millimeter_wave(self, len_data=None, debug=False):
         """
-
         @param len_data:
         @param debug:
         @return:None或者{索引:[距离，角度，速度]}
@@ -510,7 +493,7 @@ class PiSoftuart(object):
             len_data = 4
         time.sleep(self._thread_ts)
         if self._value_lock:
-            self._value_lock.require()
+            self._value_lock.acquire()
         count, data = self._pi.bb_serial_read(self._rx_pin)
         if self._value_lock:
             self._value_lock.release()
@@ -600,7 +583,7 @@ class PiSoftuart(object):
         try:
             # time.sleep(self._thread_ts)
             if self._value_lock:
-                self._value_lock.require()
+                self._value_lock.acquire()
             count, data = self._pi.bb_serial_read(self._rx_pin)
             if self._value_lock:
                 self._value_lock.release()

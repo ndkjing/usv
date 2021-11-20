@@ -172,6 +172,9 @@ http_draw_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/sampling/sav
 http_get_task = 'http://wuhanligong.xxlun.com/union/admin/xxl/task/getOne'
 http_update_task = 'http://wuhanligong.xxlun.com/union/admin/xxl/task/upDataTask'
 http_delete_task = 'http://wuhanligong.xxlun.com/union/admin/xxl/task/delTask'
+# 上传日志接口
+http_log = 'http://wuhanligong.xxlun.com/union/admin/xxl/log/log'
+
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884

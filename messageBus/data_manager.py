@@ -2060,8 +2060,8 @@ class DataManager:
                 content_data = json.loads(return_data.content)
                 if not content_data["success"]:
                     self.logger.error('GET请求失败')
-                save_data_map = content_data["data"]["mapList"]
-                return save_data_map
+                else:
+                    return True
         elif method == 'mqtt':
             self.server_data_obj.send_server_mqtt_data(data=data, topic=topic, qos=qos)
 

@@ -124,7 +124,6 @@ def main():
         for pi_thread in pi_thread_list:
             if pi_thread:
                 pi_thread.start()
-    print('home_debug', config.home_debug)
     thread_restart_time = 1
     #  判断线程是否死亡并重启线程
     while True:

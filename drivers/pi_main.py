@@ -40,6 +40,9 @@ class PiMain:
         self.diff = int(20000 / self.pice)
         self.hz = 50
         self.pi = pigpio.pi()
+        # self.value_lock = threading.Lock()
+        self.value_lock = None
+
         # gpio脚的编号顺序依照Broadcom number顺序，请自行参照gpio引脚图里面的“BCM编码”，
         self.pi.set_PWM_frequency(config.left_pwm_pin, self.hz)  # 设定左侧电机引脚产生的pwm波形的频率为50Hz
         self.pi.set_PWM_frequency(config.right_pwm_pin, self.hz)  # 设定右侧电机引脚产生的pwm波形的频率为50Hz
@@ -146,7 +149,6 @@ class PiMain:
         self.current_draw_capacity = 0  # 抽水量
         self.pre_draw_capacity = 0
         self.draw_deep_change_count = 0  # 记录抽水跳变次数
-        self.value_lock = threading.Lock()
 
     # 获取串口对象
     @staticmethod
