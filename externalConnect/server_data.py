@@ -26,61 +26,68 @@ class ServerData:
         @param parm_type: 1 data 方式  2 params 方式
         @return:
         """
-        # 请求头设置
-        payload_header = {
-            'Content-Type': 'application/json',
-        }
-        assert request_type in ['POST', 'GET']
-        # self.logger.info(url)
-        if request_type == 'POST':
-
-            if parm_type == 1:
-                dump_json_data = json.dumps(data)
-                return_data = requests.post(
-                    url=url, data=dump_json_data, headers=payload_header)
-            else:
-                if isinstance(data, dict):
-                    dump_json_data = data
-                else:
+        try:
+            # 请求头设置
+            payload_header = {
+                'Content-Type': 'application/json',
+            }
+            assert request_type in ['POST', 'GET']
+            # self.logger.info(url)
+            if request_type == 'POST':
+                if parm_type == 1:
                     dump_json_data = json.dumps(data)
-                return_data = requests.post(
-                    url=url, params=dump_json_data, headers=payload_header)
-        else:
-            if data:
-                dump_json_data = json.dumps(data)
-                return_data = requests.get(url=url, params=dump_json_data)
+                    return_data = requests.post(
+                        url=url, data=dump_json_data, headers=payload_header,timeout=8)
+                else:
+                    if isinstance(data, dict):
+                        dump_json_data = data
+                    else:
+                        dump_json_data = json.dumps(data)
+                    return_data = requests.post(
+                        url=url, params=dump_json_data, headers=payload_header,timeout=8)
             else:
-                return_data = requests.get(url=url)
-        return return_data
+                if data:
+                    dump_json_data = json.dumps(data)
+                    return_data = requests.get(url=url, params=dump_json_data,timeout=8)
+                else:
+                    return_data = requests.get(url=url,timeout=8)
+            return return_data
+        except Exception as e:
+            return None
 
     # 发送数据到服务器mqtt
     def send_server_mqtt_data(self, topic='test', data="", qos=1):
         self.mqtt_send_get_obj.publish_topic(topic=topic, data=data, qos=qos)
+
 
 def send_http_log(request_type, data, url, parm_type=1):
     assert request_type in ['POST', 'GET']
     payload_header = {
         'Content-Type': 'application/json',
     }
-    if request_type == 'POST':
-        if parm_type == 1:
-            dump_json_data = json.dumps(data)
-            return_data = requests.post(
-                url=url, data=dump_json_data, headers=payload_header)
-        else:
-            if isinstance(data, dict):
-                dump_json_data = data
-            else:
+    try:
+        if request_type == 'POST':
+            if parm_type == 1:
                 dump_json_data = json.dumps(data)
-            return_data = requests.post(
-                url=url, params=dump_json_data, headers=payload_header)
-    else:
-        if data:
-            dump_json_data = json.dumps(data)
-            return_data = requests.get(url=url, params=dump_json_data)
+                return_data = requests.post(
+                    url=url, data=dump_json_data, headers=payload_header,timeout=5)
+                print('return_data',return_data)
+            else:
+                if isinstance(data, dict):
+                    dump_json_data = data
+                else:
+                    dump_json_data = json.dumps(data)
+                return_data = requests.post(
+                    url=url, params=dump_json_data, headers=payload_header,timeout=5)
         else:
-            return_data = requests.get(url=url)
-    return return_data
+            if data:
+                dump_json_data = json.dumps(data)
+                return_data = requests.get(url=url, params=dump_json_data,timeout=5)
+            else:
+                return_data = requests.get(url=url,timeout=5)
+        return return_data
+    except Exception as e:
+        return None
 
 # class HttpSendGet:
 #     """
@@ -225,7 +232,7 @@ class MqttSendGet:
         self.get_task = 0  # 是否需要获取任务
         self.task_id = ''  # 任务id
         self.cancel_task = 0  # 取消任务
-        self.send_log = False
+        self.send_log = 1
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -287,7 +294,11 @@ class MqttSendGet:
                     elif int(control_data.get('mode')) == 2:
                         self.control_move_direction = nwse_dict[self.control_move_direction]
                 if self.send_log:
-                    send_http_log(request_type="POST",data={"运动":1},url=config.http_log)
+                    send_log_data = {
+                        "deviceId": config.ship_code,
+                        "operation": "运动:%d" % self.control_move_direction
+                    }
+                    send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
                 self.logger.info({'topic': topic,
                                   'control_move_direction': self.control_move_direction,
                                   'mode': control_data.get('mode')
@@ -318,7 +329,11 @@ class MqttSendGet:
                 if switch_data.get('side_light') is not None:
                     self.side_light = int(switch_data.get('side_light'))
                 if self.send_log:
-                    send_http_log(request_type="POST",data={"运动":1},url=config.http_log)
+                    send_log_data = {
+                        "deviceId": config.ship_code,
+                        "operation": "点击开关"
+                    }
+                    send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
                 # self.logger.info({'topic': topic,
                 #                   'b_sampling': switch_data.get('b_sampling'),
                 #                   'b_draw': switch_data.get('b_draw'),
@@ -555,7 +570,11 @@ class MqttSendGet:
                     return
                 self.set_home_gaode_lng_lat = set_home_data.get('lng_lat')[0]
                 if self.send_log:
-                    send_http_log(request_type="POST",data={"运动":1},url=config.http_log)
+                    send_log_data = {
+                        "deviceId": config.ship_code,
+                        "operation": "设置返航点"
+                    }
+                    send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
                 self.logger.info({'topic': topic,
                                   'lng_lat': set_home_data.get('lng_lat'),
                                   })
@@ -575,7 +594,11 @@ class MqttSendGet:
                 elif poweroff_restart_type == 1:
                     poweroff_restart.poweroff()
                 if self.send_log:
-                    send_http_log(request_type="POST",data={"运动":1},url=config.http_log)
+                    send_log_data = {
+                        "deviceId": config.ship_code,
+                        "operation": "关机/重启"
+                    }
+                    send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
 
             # 距离岸边距离话题
             elif topic == 'bank_distance_%s' % config.ship_code:
@@ -606,7 +629,11 @@ class MqttSendGet:
                     self.task_id = task_data.get("task_id")
                 self.logger.info(task_data)
                 if self.send_log:
-                    send_http_log(request_type="POST",data={"运动":1},url=config.http_log)
+                    send_log_data = {
+                        "deviceId": config.ship_code,
+                        "operation": "发送任务"
+                    }
+                    send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
 
             # 采样瓶设置数据话题
             elif topic == 'bottle_setting_%s' % config.ship_code:
@@ -643,7 +670,11 @@ class MqttSendGet:
                         "amount": self.draw_capacity,
                     })
                     if self.send_log:
-                        send_http_log(request_type="POST", data={"运动": 1}, url=config.http_log)
+                        send_log_data = {
+                            "deviceId": config.ship_code,
+                            "operation": "设置抽水瓶"
+                        }
+                        send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
         except Exception as e:
             self.logger.error({'server data error': e})
 

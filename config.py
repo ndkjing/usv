@@ -173,7 +173,15 @@ http_get_task = 'http://wuhanligong.xxlun.com/union/admin/xxl/task/getOne'
 http_update_task = 'http://wuhanligong.xxlun.com/union/admin/xxl/task/upDataTask'
 http_delete_task = 'http://wuhanligong.xxlun.com/union/admin/xxl/task/delTask'
 # 上传日志接口
-http_log = 'http://wuhanligong.xxlun.com/union/admin/xxl/log/log'
+# http_log = 'http://192.168.199.186:8009/union/admin/xxl/log/save'
+http_log = 'http://wuhanligong.xxlun.com/union/admin/xxl/log/save'
+# 里程接口
+# http_mileage_get = 'http://192.168.199.186:8009/union/admin/xxl/mileage/getOne'
+# http_mileage_save = 'http://192.168.199.186:8009/union/admin/xxl/mileage/save'
+# http_mileage_update = 'http://192.168.199.186:8009/union/admin/xxl/mileage/upData'
+http_mileage_get = 'http://wuhanligong.xxlun.com/union/admin/xxl/mileage/getOne'
+http_mileage_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/mileage/save'
+http_mileage_update = 'http://wuhanligong.xxlun.com/union/admin/xxl/mileage/upData'
 
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'

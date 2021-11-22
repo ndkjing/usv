@@ -210,6 +210,9 @@ class DataManager:
         self.draw_points_list = []  # 记录抽水点数据[[lng,lat,bottle_id,deep,amount],]
         self.has_task = 0  # 当前是否有任务在执行
         self.arrive_all_task = 0  # 是否完成所有任务
+        self.http_save_distance = None  # http 记录保存距离
+        self.http_save_time = None  # http记录保存时间
+        self.http_save_id = ''  # http记录保存id
 
     # 连接mqtt服务器
     def connect_mqtt_server(self):
@@ -228,7 +231,7 @@ class DataManager:
         @param draw_time: 抽水时间
         @return:
         """
-        # print('b_draw, b_plan_draw, bottle_id, draw_deep, draw_time',b_draw, b_plan_draw, bottle_id, draw_deep, draw_time)
+        print('b_draw, b_plan_draw, bottle_id, draw_deep, draw_time',b_draw, b_plan_draw, bottle_id, draw_deep, draw_time)
         if config.home_debug:
             if b_draw or b_plan_draw:
                 if self.draw_start_time is None:
@@ -374,7 +377,7 @@ class DataManager:
                         elif self.pi_main_obj.remote_draw_status_2_3 == 4:
                             self.current_draw_bottle = 4
                             self.send_stc_data('A5Z')
-                        print('self.current_draw_bottle',self.current_draw_bottle)
+                        print('self.current_draw_bottle', self.current_draw_bottle)
                         # 遥控器设置抽水深度和抽水时间
                         if self.pi_main_obj.current_draw_capacity:
                             temp_draw_time = int(
@@ -408,7 +411,7 @@ class DataManager:
                             self.server_data_obj.mqtt_send_get_obj.draw_capacity:
                         temp_draw_bottle_id = self.server_data_obj.mqtt_send_get_obj.draw_bottle_id
                         temp_draw_deep = self.server_data_obj.mqtt_send_get_obj.draw_deep
-                        temp_draw_capacity =  self.server_data_obj.mqtt_send_get_obj.draw_capacity
+                        temp_draw_capacity = self.server_data_obj.mqtt_send_get_obj.draw_capacity
                         temp_draw_time = int(
                             60 * self.server_data_obj.mqtt_send_get_obj.draw_capacity / config.draw_speed)
                         self.current_draw_bottle = temp_draw_bottle_id
@@ -1565,29 +1568,72 @@ class DataManager:
             if last_run_distance is None:
                 last_run_distance = 0
             if time.time() % 10 < 1:
-                if os.path.exists(config.run_distance_time_path):
-                    try:
-                        with open(config.run_distance_time_path, 'r') as f:
-                            run_distance_time_data = json.load(f)
-                            save_distance = run_distance_time_data.get('save_distance')
-                            save_time = run_distance_time_data.get('save_time')
-                    except Exception as e:
-                        save_distance = 0
-                        save_time = 0
-                        self.logger.error({'读取run_distance_time_path': e})
+                # if os.path.exists(config.run_distance_time_path):
+                #     try:
+                #         with open(config.run_distance_time_path, 'r') as f:
+                #             run_distance_time_data = json.load(f)
+                #             save_distance = run_distance_time_data.get('save_distance')
+                #             save_time = run_distance_time_data.get('save_time')
+                #     except Exception as e:
+                #         save_distance = 0
+                #         save_time = 0
+                #         self.logger.error({'读取run_distance_time_path': e})
+                # else:
+                #     save_distance = 0
+                #     save_time = 0
+                # with open(config.run_distance_time_path, 'w') as f:
+                #     save_distance = save_distance + round(self.run_distance, 1) - last_run_distance
+                #     # print('############################读取保存距离save_distance',save_distance)
+                #     save_time = save_time + round(time.time() - self.start_time) - last_runtime
+                #     json.dump({'save_distance': save_distance,
+                #                'save_time': save_time}, f)
+                if self.http_save_distance is not None and self.http_save_time is not None and self.http_save_id:
+                    self.http_save_distance = self.http_save_distance + int(self.run_distance) - last_run_distance
+                    self.http_save_time = self.http_save_time + int(time.time() - self.start_time) - last_runtime
+                    send_mileage_data = {
+                        "deviceId": config.ship_code,
+                        "id": self.http_save_id,
+                        "total": str(self.http_save_distance),
+                        "totalTime": str(self.http_save_time)
+                    }
+                    return_data = self.send(method='http', data=send_mileage_data,
+                                            url=config.http_mileage_update,
+                                            http_type='POST',
+                                            )
+                    if return_data:
+                        self.logger.info({'更新里程和时间成功': send_mileage_data})
                 else:
-                    save_distance = 0
-                    save_time = 0
-                with open(config.run_distance_time_path, 'w') as f:
-                    save_distance = save_distance + round(self.run_distance, 1) - last_run_distance
-                    # print('############################读取保存距离save_distance',save_distance)
-                    save_time = save_time + round(time.time() - self.start_time) - last_runtime
-                    json.dump({'save_distance': save_distance,
-                               'save_time': save_time}, f)
-                last_runtime = round(time.time() - self.start_time)
-                last_run_distance = round(self.run_distance, 1)
-                status_data.update({"totle_distance": round(save_distance, 1)})
-                status_data.update({"totle_time": round(save_time)})
+                    if self.http_save_distance is None or self.http_save_time is None:
+                        return_data = self.send(method='http',
+                                                data='',
+                                                url=config.http_mileage_get + "?deviceId=%s" % config.ship_code,
+                                                http_type='GET'
+                                                )
+                        if return_data:
+                            self.http_save_distance = int(return_data.get("total"))
+                            self.http_save_time = int(return_data.get("totalTime"))
+                            self.http_save_id = return_data.get("id")
+                    if self.http_save_distance and self.http_save_time:
+                        self.http_save_distance = self.http_save_distance + int(self.run_distance) - last_run_distance
+                        self.http_save_time = self.http_save_time + int(time.time() - self.start_time) - last_runtime
+                        send_mileage_data = {
+                            "id": config.ship_code,
+                            "deviceId": config.ship_code,
+                            "total": str(self.http_save_distance),
+                            "totalTime": str(self.http_save_time)
+                        }
+                        return_data = self.send(method='http', data=send_mileage_data,
+                                                url=config.http_mileage_update,
+                                                http_type='POST',
+                                                )
+                        if return_data:
+                            self.logger.info({'更新里程和时间成功': send_mileage_data})
+                last_runtime = int(time.time() - self.start_time)
+                last_run_distance = int(self.run_distance)
+                status_data.update({"totle_distance": self.http_save_distance})
+                status_data.update({"totle_time": self.http_save_time})
+            # status_data.update({"totle_distance": 0})
+            # status_data.update({"totle_time": 0})
             # 更新船头方向
             if config.home_debug and self.current_theta is not None:
                 status_data.update({"direction": round(self.current_theta, 1)})
@@ -1598,12 +1644,12 @@ class DataManager:
                 status_data.update({"lng_lat_error": self.lng_lat_error})
             # 更新真实数据
             if not config.home_debug:
-                mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
-                mqtt_send_detect_data['water'].update(self.pi_main_obj.water_data_dict)
+                # mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
+                # mqtt_send_detect_data['water'].update(self.pi_main_obj.water_data_dict)
                 mqtt_send_status_data = data_define.fake_status_data(status_data)
             # 更新模拟数据
             else:
-                mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
+                # mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
                 mqtt_send_status_data = data_define.fake_status_data(status_data)
             # # 替换键
             # for k_all, v_all in data_define.name_mappings.items():
@@ -1964,17 +2010,43 @@ class DataManager:
 
     # 开机启动一次函数
     def start_once_func(self):
+        http_get_time = False
         while True:
             if not config.home_debug and not self.is_init_motor:
                 self.pi_main_obj.init_motor()
                 self.pi_main_obj.set_draw_deep(deep_pwm=config.max_deep_steer_pwm, b_slow=False)
                 self.is_init_motor = 1
-            if not self.b_check_get_water_data and self.gaode_lng_lat is not None and config.current_ship_type ==config.ShipType.water_detect:
+            if not self.b_check_get_water_data and self.gaode_lng_lat is not None and config.current_ship_type == config.ShipType.water_detect:
                 adcode = baidu_map.BaiduMap.get_area_code(self.gaode_lng_lat)
                 self.area_id = data_valid.adcode_2_area_id(adcode)
                 print('self.area_id', self.area_id)
                 data_valid.get_current_water_data(area_id=self.area_id)
                 self.b_check_get_water_data = 1
+            if http_get_time:
+                if self.http_save_distance is None or self.http_save_time is None:
+                    return_data = self.send(method='http',
+                                            data='',
+                                            url=config.http_mileage_get + "?deviceId=%s" % config.ship_code,
+                                            http_type='GET'
+                                            )
+                    if return_data:
+                        self.http_save_distance = int(return_data.get("total"))
+                        self.http_save_time = int(return_data.get("totalTime"))
+                        self.http_save_id = return_data.get('id')
+                        print('self.http_save_distance,self.http_save_time,self.http_save_id', self.http_save_distance,
+                              self.http_save_time, self.http_save_id)
+                    if return_data is None:
+                        send_mileage_data = {
+                            "deviceId": config.ship_code,
+                            "total": str(0),
+                            "totalTime": str(0)
+                        }
+                        self.send(method='http',
+                                  data=send_mileage_data,
+                                  url=config.http_mileage_save,
+                                  http_type='POST',
+                                  )
+                http_get_time = False
             time.sleep(3)
 
     # 发送数据
@@ -1990,6 +2062,8 @@ class DataManager:
         assert method in ['http', 'mqtt', 'com'], 'method error not in http mqtt com'
         if method == 'http':
             return_data = self.server_data_obj.send_server_http_data(http_type, data, url, parm_type=parm_type)
+            if not return_data:
+                return False
             self.logger.info({'请求 url': url, 'status_code': return_data.status_code})
             # 如果是POST返回的数据，添加数据到地图数据保存文件中
             if http_type == 'POST' and r'map/save' in url:
@@ -2018,18 +2092,18 @@ class DataManager:
                     self.logger.error('GET请求失败')
                 save_data_binding = content_data["data"]
                 return save_data_binding
-            elif http_type == 'GET' and r'getOne' in url:
+            elif http_type == 'GET' and r'task/getOne' in url:
                 if return_data:
                     content_data = json.loads(return_data.content)
                     if not content_data["success"]:
                         self.logger.info({'content_data': content_data})
                         self.logger.error('task GET请求失败')
                     task_data = content_data["data"]
-                    print('#########task_data', task_data)
+                    self.logger.info({'content_data': content_data})
                     return task_data
                 else:
                     return
-            elif http_type == 'POST' and r'upDataTask' in url:
+            elif http_type == 'POST' and r'task/upDataTask' in url:
                 if return_data:
                     content_data = json.loads(return_data.content)
                     self.logger.info({'content_data': content_data})
@@ -2037,7 +2111,7 @@ class DataManager:
                         self.logger.error('upDataTask请求失败')
                     else:
                         return True
-            elif http_type == 'POST' and r'delTask' in url:
+            elif http_type == 'POST' and r'task/delTask' in url:
                 if return_data:
                     content_data = json.loads(return_data.content)
                     self.logger.info({'content_data': content_data})
@@ -2045,16 +2119,28 @@ class DataManager:
                         self.logger.error('delTask请求失败')
                     else:
                         return True
-            elif http_type == 'POST' and r'task' in url:
+            # elif http_type == 'POST' and r'task' in url:
+            #     if return_data:
+            #         content_data = json.loads(return_data.content)
+            #         if not content_data["success"]:
+            #             self.logger.error('task GET请求失败')
+            #         task_data = content_data["data"]
+            #         # print('#########task_data',task_data)
+            #         return task_data
+            #     else:
+            #         return
+            elif http_type == 'GET' and r'mileage/getOne' in url:
                 if return_data:
                     content_data = json.loads(return_data.content)
                     if not content_data["success"]:
                         self.logger.error('task GET请求失败')
-                    task_data = content_data["data"]
-                    # print('#########task_data',task_data)
-                    return task_data
+                    task_data = content_data.get("data")
+                    if task_data:
+                        self.logger.info({'mileage/getOne': task_data.get('items')})
+                        return task_data.get('items')
+                    return False
                 else:
-                    return
+                    return False
             else:
                 # 如果是GET请求，返回所有数据的列表
                 content_data = json.loads(return_data.content)
