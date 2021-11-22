@@ -231,7 +231,7 @@ class DataManager:
         @param draw_time: 抽水时间
         @return:
         """
-        print('b_draw, b_plan_draw, bottle_id, draw_deep, draw_time',b_draw, b_plan_draw, bottle_id, draw_deep, draw_time)
+        # print('b_draw, b_plan_draw, bottle_id, draw_deep, draw_time',b_draw, b_plan_draw, bottle_id, draw_deep, draw_time)
         if config.home_debug:
             if b_draw or b_plan_draw:
                 if self.draw_start_time is None:
@@ -289,6 +289,7 @@ class DataManager:
                         self.b_draw_over_send_data = True  # 抽水超时发送数据
                         self.draw_start_time = None
                         self.bottle_draw_time_list[bottle_id - 1] += draw_time
+                        self.pi_main_obj.bottle_status_code[bottle_id - 1] = int(100*draw_time/config.max_draw_time)
                         time.sleep(0.1)
                         return True
             else:
@@ -468,7 +469,7 @@ class DataManager:
             if draw_deep <= 0 or draw_deep > 0.5:
                 pass
             else:
-                return_pwm = 1500 - int(draw_deep * (1500 - config.min_deep_steer_pwm) / 0.5) // 10 * 10
+                return_pwm = 1400 - int(draw_deep * (1500 - config.min_deep_steer_pwm) / 0.5) // 10 * 10
         except Exception as e:
             print('deep2pwm error ', e)
             return config.max_deep_steer_pwm
@@ -553,8 +554,13 @@ class DataManager:
 
         # 舵机
         if self.pi_main_obj.b_start_remote:
-            if self.pi_main_obj.target_draw_steer_pwm != self.pi_main_obj.draw_steer_pwm:
-                self.pi_main_obj.set_draw_deep(self.pi_main_obj.target_draw_steer_pwm)
+            # print('self.pi_main_obj.b_start_remote,self.pi_main_obj.target_draw_steer_pwm,self.pi_main_obj.draw_steer_pwm',self.pi_main_obj.b_start_remote,self.pi_main_obj.target_draw_steer_pwm,self.pi_main_obj.draw_steer_pwm)
+            if self.pi_main_obj.remote_target_draw_steer:
+                # 计算目标深度的pwm值
+                target_pwm = self.deep2pwm(self.pi_main_obj.current_remote_draw_deep)
+                self.pi_main_obj.set_draw_deep(target_pwm)
+            else:
+                self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
         # 状态灯
         # if self.server_data_obj.mqtt_send_get_obj.status_light != self.last_status_light:
         # 启动后mqtt连接上亮绿灯
@@ -791,11 +797,14 @@ class DataManager:
 
             # 判断电脑手动状态切换到其他状态
             if self.ship_status == ShipStatus.computer_control:
+                # print('self.server_data_obj.mqtt_send_get_obj.path_planning_points',
+                #       self.server_data_obj.mqtt_send_get_obj.path_planning_points)
                 # 切换到遥控器控制
                 if not config.home_debug and self.pi_main_obj.b_start_remote:
                     # 此时为遥控器控制模式 清除d控制状态
                     self.change_status_info(target_status=ShipStatus.remote_control)
                 # 切换到自动巡航模式
+
                 elif len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
                     if self.lng_lat is None:
                         self.logger.error('无当前GPS，不能自主巡航')
@@ -1219,17 +1228,17 @@ class DataManager:
             # 修改发给遥控状态
             if not config.home_debug:
                 if self.ship_status == ShipStatus.idle:
-                    self.pi_main_obj.ship_status_code = 1
+                    self.pi_main_obj.ship_status_code = 0
                 elif self.ship_status == ShipStatus.remote_control:
-                    self.pi_main_obj.ship_status_code = 2
+                    self.pi_main_obj.ship_status_code = 1
                 elif self.ship_status == ShipStatus.computer_control:
+                    self.pi_main_obj.ship_status_code = 2
+                elif self.ship_status in [ShipStatus.computer_auto,ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
                     self.pi_main_obj.ship_status_code = 3
-                elif self.ship_status == ShipStatus.computer_auto:
-                    self.pi_main_obj.ship_status_code = 4
                 elif self.ship_status == ShipStatus.tasking:
-                    self.pi_main_obj.ship_status_code = 5
-                elif self.ship_status == [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
-                    self.pi_main_obj.ship_status_code = 6
+                    self.pi_main_obj.ship_status_code = 4
+                # elif self.ship_status == [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
+                #     self.pi_main_obj.ship_status_code = 6
             # 电脑手动
             if self.ship_status == ShipStatus.computer_control or self.ship_status == ShipStatus.tasking:
                 # 手动模式避障距离
@@ -2010,7 +2019,7 @@ class DataManager:
 
     # 开机启动一次函数
     def start_once_func(self):
-        http_get_time = False
+        http_get_time = True
         while True:
             if not config.home_debug and not self.is_init_motor:
                 self.pi_main_obj.init_motor()
@@ -2119,21 +2128,11 @@ class DataManager:
                         self.logger.error('delTask请求失败')
                     else:
                         return True
-            # elif http_type == 'POST' and r'task' in url:
-            #     if return_data:
-            #         content_data = json.loads(return_data.content)
-            #         if not content_data["success"]:
-            #             self.logger.error('task GET请求失败')
-            #         task_data = content_data["data"]
-            #         # print('#########task_data',task_data)
-            #         return task_data
-            #     else:
-            #         return
             elif http_type == 'GET' and r'mileage/getOne' in url:
                 if return_data:
                     content_data = json.loads(return_data.content)
                     if not content_data["success"]:
-                        self.logger.error('task GET请求失败')
+                        self.logger.error('mileage/getOne GET请求失败')
                     task_data = content_data.get("data")
                     if task_data:
                         self.logger.info({'mileage/getOne': task_data.get('items')})

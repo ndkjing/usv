@@ -499,8 +499,8 @@ class WaterType(enum.Enum):
 
 draw_deep = 0.5  # 抽水深度
 draw_capacity = 1000  # 需要抽水容量
-max_draw_capacity = 2000  # 单个瓶子最大抽水容量
-draw_speed = 2800  # 抽水速度 毫升/分钟
+max_draw_capacity = 5000  # 单个瓶子最大抽水容量
+draw_speed = 2000  # 抽水速度 毫升/分钟
 number_of_bottles = 4  # 总共包含抽水瓶数
 max_draw_time = int(60*max_draw_capacity/draw_speed)
 
