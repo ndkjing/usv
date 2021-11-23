@@ -200,11 +200,9 @@ min_pwm = 1200
 # 停止中位pwm
 stop_pwm = 1500
 # 左侧电机正反桨  0 正桨叶   1 反桨叶
-left_motor_cw = 1
+left_motor_cw = 0
 # 右侧电机正反桨  0 正桨叶   1 反桨叶
-right_motor_cw = 0
-# 电机初始化时间
-motor_init_time = 1
+right_motor_cw = 1
 # 断网返航 0关闭  1开启 大于1的数值表示断网超过该值就返航，默认600秒
 network_backhome = 1
 # 剩余电量返航 0关闭  1开启 大于1的数值表示剩余电量低于该值就返航，默认30
@@ -235,7 +233,7 @@ debug_send_detect_data = 0
 # 转向速度
 angular_velocity = 90
 
-
+motor_init_time = 1
 def update_height_setting():
     global kp
     global ki
@@ -245,7 +243,6 @@ def update_height_setting():
     global stop_pwm
     global left_motor_cw
     global right_motor_cw
-    global motor_init_time
     global network_backhome
     global energy_backhome
     global find_points_num
@@ -253,7 +250,6 @@ def update_height_setting():
     global obstacle_avoid_type
     global path_plan_type
     global calibration_compass
-
     if os.path.exists(height_setting_path):
         try:
             with open(height_setting_path, 'r') as f:
@@ -301,13 +297,13 @@ def update_height_setting():
                     stop_pwm = s_stop_pwm
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('left_motor_cw'):
+            if height_setting_data.get('left_motor_cw') is not None:
                 try:
-
+                    print('height_setting_data.getleft_motor_cw',height_setting_data.get('left_motor_cw'))
                     left_motor_cw = int(height_setting_data.get('left_motor_cw'))
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('right_motor_cw'):
+            if height_setting_data.get('left_motor_cw') is not None:
                 try:
                     right_motor_cw = int(height_setting_data.get('right_motor_cw'))
                 except Exception as e:
@@ -390,7 +386,6 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        'min_pwm': min_pwm,
                        'left_motor_cw': left_motor_cw,
                        'right_motor_cw': right_motor_cw,
-                       'motor_init_time': motor_init_time,
                        'stop_pwm': stop_pwm,
                        'network_backhome': network_backhome,
                        'energy_backhome': energy_backhome,
@@ -411,7 +406,6 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        'min_pwm': min_pwm,
                        'left_motor_cw': left_motor_cw,
                        'right_motor_cw': right_motor_cw,
-                       'motor_init_time': motor_init_time,
                        'stop_pwm': stop_pwm,
                        'network_backhome': network_backhome,
                        'energy_backhome': energy_backhome,

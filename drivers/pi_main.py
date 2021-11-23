@@ -107,6 +107,7 @@ class PiMain:
         self.target_draw_steer_pwm = config.max_deep_steer_pwm
         # 遥控器希望舵机位置 0 未按下 1 已经按下
         self.remote_target_draw_steer = 0
+        self.pre_remote_target_draw_steer = None
         # 云台舵机角度
         self.pan_angle_pwm = 1500
         self.tilt_angle_pwm = 1500
@@ -469,16 +470,16 @@ class PiMain:
             set_right_pwm = config.min_pwm
         # print('config.left_motor_cw,config.right_motor_cw',config.left_motor_cw,config.right_motor_cw)
         # 如果有反桨叶反转电机pwm值
-        # if config.left_motor_cw == 1:
-        #     set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
-        # if config.right_motor_cw == 1:
-        #     set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
-        left_motor_cw=0
-        right_motor_cw=1
-        if left_motor_cw == 1:
+        if config.left_motor_cw == 1:
             set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
-        if right_motor_cw == 1:
+        if config.right_motor_cw == 1:
             set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
+        # left_motor_cw=0
+        # right_motor_cw=1
+        # if left_motor_cw == 1:
+        #     set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
+        # if right_motor_cw == 1:
+        #     set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
         self.target_left_pwm = int(set_left_pwm / (20000 / self.pice) / (50 / self.hz))
         self.target_right_pwm = int(set_right_pwm / (20000 / self.pice) / (50 / self.hz))
 
@@ -950,7 +951,7 @@ class PiMain:
             send_speed = 0.1
             if self.speed:
                 send_speed = self.speed
-            print('self.ship_status_code',self.ship_status_code,'self.pi_main_obj.bottle_status_code',self.bottle_status_code)
+            # print('self.ship_status_code',self.ship_status_code,'self.pi_main_obj.bottle_status_code',self.bottle_status_code)
             send_remote_data = 'G%f,%f,%.1f,%.1f,%d,%d,%d,%d,%dZ\r\n' % (
                 send_lng_lat[0],
                 send_lng_lat[1],
@@ -994,10 +995,20 @@ class PiMain:
                     else:
                         self.remote_draw_status = 0
                     # 判断收起舵机  展开舵机
+
                     if self.remote_control_data[10] == 1:
-                        self.remote_target_draw_steer = 1
+                        if self.pre_remote_target_draw_steer == 0:
+                            self.remote_target_draw_steer = 0
+                        elif self.pre_remote_target_draw_steer == 1:
+                            self.remote_target_draw_steer = 1
+                        self.pre_remote_target_draw_steer = self.remote_control_data[10]
                     elif self.remote_control_data[10] == 0:
-                        self.remote_target_draw_steer = 0
+                        if self.pre_remote_target_draw_steer == 0:
+                            self.remote_target_draw_steer = 0
+                        elif self.pre_remote_target_draw_steer == 1:
+                            self.remote_target_draw_steer = 1
+                        self.pre_remote_target_draw_steer = self.remote_control_data[10]
+
                     # 判断打开舷灯  关闭舷灯
                     if int(self.remote_control_data[6]) == 10:
                         self.remote_side_light_status = 1
