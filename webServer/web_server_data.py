@@ -156,6 +156,9 @@ class MqttSendGet:
 
         # 更新船当前到岸边距离 当收到新的经纬度后设置该值为True
         self.update_safe_distance = False
+        self.back_home = 0
+        self.fix_point = 0
+
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -170,7 +173,6 @@ class MqttSendGet:
     # 发布消息回调
     def on_publish_callback(self, client, userdata, mid):
         pass
-        # print('publish',mid)
 
     # 消息处理函数回调
     def on_message_callback(self, client, userdata, msg):
@@ -227,30 +229,26 @@ class MqttSendGet:
             if user_lng_lat_data.get('lng_lat') is None:
                 self.logger.error('user_lng_lat_用户点击经纬度数据没有经纬度字段')
                 return
-            if user_lng_lat_data.get('zoom') is None:
-                self.logger.error('user_lng_lat_用户点击经纬度数据没有zoom字段')
-                return
-            if user_lng_lat_data.get('meter_pix') is None:
-                self.logger.error('user_lng_lat_用户点击经纬度数据没有meter_pix字段')
+            # if user_lng_lat_data.get('zoom') is None:
+            #     self.logger.error('user_lng_lat_用户点击经纬度数据没有zoom字段')
+            #     return
+            # if user_lng_lat_data.get('meter_pix') is None:
+            #     self.logger.error('user_lng_lat_用户点击经纬度数据没有meter_pix字段')
             if user_lng_lat_data.get('config') is None:
                 self.logger.error('user_lng_lat_用户点击经纬度数据没有config字段')
-
+                return
             # 添加新的点
             lng_lat = user_lng_lat_data.get('lng_lat')
             self.target_lng_lat = lng_lat
             self.target_lng_lat_status = [0] * len(lng_lat)
-            zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
-            self.zoom.append(zoom)
-            self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
+            # zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
+            # self.zoom.append(zoom)
+            # self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
             if user_lng_lat_data.get('config').get('back_home') is not None:
                 self.back_home = user_lng_lat_data.get('config').get('back_home')
-
             self.fix_point = user_lng_lat_data.get('config').get('fixpoint')
-
             self.logger.info({'topic': topic,
                               'target_lng_lat': self.target_lng_lat,
-                              'zoom': zoom,
-                              'meter_pix': user_lng_lat_data.get('meter_pix'),
                               'back_home': self.back_home,
                               'fix_point': self.fix_point,
                               })

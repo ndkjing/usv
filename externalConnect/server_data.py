@@ -367,30 +367,25 @@ class MqttSendGet:
                 if user_lng_lat_data.get('lng_lat') is None:
                     self.logger.error('user_lng_lat_用户点击经纬度数据没有经纬度字段')
                     return
-                if user_lng_lat_data.get('zoom') is None:
-                    self.logger.error('user_lng_lat_用户点击经纬度数据没有zoom字段')
-                    return
-                if user_lng_lat_data.get('meter_pix') is None:
-                    self.logger.error('user_lng_lat_用户点击经纬度数据没有meter_pix字段')
+                # if user_lng_lat_data.get('zoom') is None:
+                #     self.logger.error('user_lng_lat_用户点击经纬度数据没有zoom字段')
+                #     return
+                # if user_lng_lat_data.get('meter_pix') is None:
+                #     self.logger.error('user_lng_lat_用户点击经纬度数据没有meter_pix字段')
                 if user_lng_lat_data.get('config') is None:
                     self.logger.error('user_lng_lat_用户点击经纬度数据没有config字段')
-
                 # 添加新的点
                 lng_lat = user_lng_lat_data.get('lng_lat')
                 self.target_lng_lat = lng_lat
                 self.target_lng_lat_status = [0] * len(lng_lat)
-                zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
-                self.zoom.append(zoom)
-                self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
+                # zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
+                # self.zoom.append(zoom)
+                # self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
                 if user_lng_lat_data.get('config').get('back_home') is not None:
                     self.back_home = user_lng_lat_data.get('config').get('back_home')
-
                 self.fix_point = user_lng_lat_data.get('config').get('fixpoint')
-
                 self.logger.info({'topic': topic,
                                   'target_lng_lat': self.target_lng_lat,
-                                  'zoom': zoom,
-                                  'meter_pix': user_lng_lat_data.get('meter_pix'),
                                   'back_home': self.back_home,
                                   'fix_point': self.fix_point,
                                   })
@@ -428,6 +423,7 @@ class MqttSendGet:
                 self.sampling_points_status = [0] * len(self.sampling_points)
                 self.path_planning_points = path_planning_data.get('path_points')
                 self.keep_point = 1
+                print('self.sampling_points_status',self.sampling_points_status,'self.sampling_points',self.sampling_points)
                 self.logger.info({'topic': topic,
                                   'sampling_points': path_planning_data.get('sampling_points'),
                                   'path_points': path_planning_data.get('path_points'),
