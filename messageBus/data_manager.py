@@ -776,7 +776,6 @@ class DataManager:
     # 处理状态切换
     def change_status(self):
         deubg_status = 1 # 输出调试用状态切换信息
-
         while True:
             time.sleep(0.1)
             self.direction = self.server_data_obj.mqtt_send_get_obj.control_move_direction
@@ -2005,21 +2004,22 @@ class DataManager:
         while True:
             time.sleep(1)
             if config.home_debug:
-                direction = int(random.random() * 360)
-                distance_info_data = {
-                    # 设备号
-                    "deviceId": "XXLJC4LCGSCSD1DA002",
-                    # 船头角度  以北为0度 ，逆时针方向为正
-                    "direction": direction,
-                    # 距离信息 内部为列表，列中中元素为字典，distance为距离单位米  angle为角度单位度，以船头角度为0度 左正右负
-                    "distance_info": [{"distance": 4.5, "angle": 20},
-                                      {"distance": 7.5, "angle": -20},
-                                      {"distance": 6, "angle": 0}],
-                }
-                self.send(method='mqtt',
-                          topic='distance_info_%s' % config.ship_code,
-                          data=distance_info_data,
-                          qos=0)
+                pass
+                # direction = int(random.random() * 360)
+                # distance_info_data = {
+                #     # 设备号
+                #     "deviceId": "XXLJC4LCGSCSD1DA002",
+                #     # 船头角度  以北为0度 ，逆时针方向为正
+                #     "direction": direction,
+                #     # 距离信息 内部为列表，列中中元素为字典，distance为距离单位米  angle为角度单位度，以船头角度为0度 左正右负
+                #     "distance_info": [{"distance": 4.5, "angle": 20},
+                #                       {"distance": 7.5, "angle": -20},
+                #                       {"distance": 6, "angle": 0}],
+                # }
+                # self.send(method='mqtt',
+                #           topic='distance_info_%s' % config.ship_code,
+                #           data=distance_info_data,
+                #           qos=0)
             else:
                 if not self.server_data_obj.mqtt_send_get_obj.is_connected:
                     continue
