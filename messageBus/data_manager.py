@@ -289,7 +289,7 @@ class DataManager:
                         self.b_draw_over_send_data = True  # 抽水超时发送数据
                         self.draw_start_time = None
                         self.bottle_draw_time_list[bottle_id - 1] += draw_time
-                        self.pi_main_obj.bottle_status_code[bottle_id - 1] = int(100*draw_time/config.max_draw_time)
+                        self.pi_main_obj.bottle_status_code[bottle_id - 1] = int(100 * draw_time / config.max_draw_time)
                         time.sleep(0.1)
                         return True
             else:
@@ -775,7 +775,7 @@ class DataManager:
 
     # 处理状态切换
     def change_status(self):
-        deubg_status = 1 # 输出调试用状态切换信息
+        deubg_status = 1  # 输出调试用状态切换信息
         while True:
             time.sleep(0.1)
             self.direction = self.server_data_obj.mqtt_send_get_obj.control_move_direction
@@ -789,22 +789,25 @@ class DataManager:
                 # 切换到遥控器控制模式
                 if not config.home_debug and self.pi_main_obj.b_start_remote:
                     if deubg_status:
-                        print('等待切换到遥控器控制 self.pi_main_obj.b_start_remote',self.pi_main_obj.b_start_remote)
+                        print('等待切换到遥控器控制 self.pi_main_obj.b_start_remote', self.pi_main_obj.b_start_remote)
                     self.change_status_info(target_status=ShipStatus.remote_control)
                 # 切换到电脑手动模式
-                elif self.server_data_obj.mqtt_send_get_obj.control_move_direction in [-1, 0, 90, 180, 270, 10, 190, 1180, 1270]:
+                elif self.server_data_obj.mqtt_send_get_obj.control_move_direction in [-1, 0, 90, 180, 270, 10, 190,
+                                                                                       1180, 1270]:
                     if deubg_status:
-                        print('等待切换到电脑手动控制 self.server_data_obj.mqtt_send_get_obj.control_move_direction',self.server_data_obj.mqtt_send_get_obj.control_move_direction)
+                        print('等待切换到电脑手动控制 self.server_data_obj.mqtt_send_get_obj.control_move_direction',
+                              self.server_data_obj.mqtt_send_get_obj.control_move_direction)
                     self.change_status_info(target_status=ShipStatus.computer_control)
                 # 切换到返航
                 elif return_ship_status is not None:
                     if deubg_status:
-                        print('等待切换到返航 return_ship_status',return_ship_status)
+                        print('等待切换到返航 return_ship_status', return_ship_status)
                     self.change_status_info(target_status=return_ship_status)
                 # 切换到自动巡航模式
                 elif len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
                     if deubg_status:
-                        print('等待切换到自动 self.server_data_obj.mqtt_send_get_obj.path_planning_points', self.server_data_obj.mqtt_send_get_obj.path_planning_points)
+                        print('等待切换到自动 self.server_data_obj.mqtt_send_get_obj.path_planning_points',
+                              self.server_data_obj.mqtt_send_get_obj.path_planning_points)
                     if self.lng_lat is None:
                         self.logger.error('无当前GPS，不能自主巡航')
                         time.sleep(0.5)
@@ -822,7 +825,8 @@ class DataManager:
                 # 切换到自动巡航模式
                 elif len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
                     if deubg_status:
-                        print('电脑控制-->自动 self.server_data_obj.mqtt_send_get_obj.path_planning_points', self.server_data_obj.mqtt_send_get_obj.path_planning_points)
+                        print('电脑控制-->自动 self.server_data_obj.mqtt_send_get_obj.path_planning_points',
+                              self.server_data_obj.mqtt_send_get_obj.path_planning_points)
                     if self.lng_lat is None:
                         self.logger.error('无当前GPS，不能自主巡航')
                         time.sleep(0.5)
@@ -831,7 +835,8 @@ class DataManager:
                 # 点击抽水
                 elif self.server_data_obj.mqtt_send_get_obj.b_draw:
                     if deubg_status:
-                        print('电脑控制-->任务 self.server_data_obj.mqtt_send_get_obj.b_draw', self.server_data_obj.mqtt_send_get_obj.b_draw)
+                        print('电脑控制-->任务 self.server_data_obj.mqtt_send_get_obj.b_draw',
+                              self.server_data_obj.mqtt_send_get_obj.b_draw)
                     self.last_ship_status = ShipStatus.computer_control
                     self.change_status_info(target_status=ShipStatus.tasking)
                 # 切换到返航
@@ -855,12 +860,13 @@ class DataManager:
                 # 取消自动模式
                 elif self.server_data_obj.mqtt_send_get_obj.control_move_direction == -1:
                     if deubg_status:
-                        print('自动-->电脑控制 清除状态',self.server_data_obj.mqtt_send_get_obj.control_move_direction)
+                        print('自动-->电脑控制 清除状态', self.server_data_obj.mqtt_send_get_obj.control_move_direction)
                     self.change_status_info(target_status=ShipStatus.computer_control, b_clear_status=True)
                 # 切换到手动
-                elif self.server_data_obj.mqtt_send_get_obj.control_move_direction in [0, 90, 180, 270, 10, 190, 1180, 1270]:
+                elif self.server_data_obj.mqtt_send_get_obj.control_move_direction in [0, 90, 180, 270, 10, 190, 1180,
+                                                                                       1270]:
                     if deubg_status:
-                        print('自动-->电脑控制 清除状态',self.server_data_obj.mqtt_send_get_obj.control_move_direction)
+                        print('自动-->电脑控制 清除状态', self.server_data_obj.mqtt_send_get_obj.control_move_direction)
                     self.change_status_info(target_status=ShipStatus.computer_control)
                 # 到点
                 elif self.b_arrive_point:
@@ -871,7 +877,8 @@ class DataManager:
                 # 点击抽水
                 elif self.server_data_obj.mqtt_send_get_obj.b_draw:
                     if deubg_status:
-                        print('电脑控制-->任务 self.server_data_obj.mqtt_send_get_obj.b_draw', self.server_data_obj.mqtt_send_get_obj.b_draw)
+                        print('电脑控制-->任务 self.server_data_obj.mqtt_send_get_obj.b_draw',
+                              self.server_data_obj.mqtt_send_get_obj.b_draw)
                     self.last_ship_status = ShipStatus.computer_auto
                     self.change_status_info(target_status=ShipStatus.tasking)
 
@@ -897,7 +904,8 @@ class DataManager:
                         self.b_sampling = 0
                         self.server_data_obj.mqtt_send_get_obj.b_draw = 0
                         if deubg_status:
-                            print('任务-->等待/自动 self.b_sampling, self.server_data_obj.mqtt_send_get_obj.b_draw', self.b_sampling, self.server_data_obj.mqtt_send_get_obj.b_draw)
+                            print('任务-->等待/自动 self.b_sampling, self.server_data_obj.mqtt_send_get_obj.b_draw',
+                                  self.b_sampling, self.server_data_obj.mqtt_send_get_obj.b_draw)
                         self.change_status_info(self.last_ship_status)
 
             # 遥控器状态切换到其他状态
@@ -941,7 +949,8 @@ class DataManager:
 
             # 返航到家状态切换到其他状态
             if self.ship_status == ShipStatus.at_home:
-                if self.server_data_obj.mqtt_send_get_obj.control_move_direction in [-1, 0, 90, 180, 270, 10, 190, 1180, 1270]:
+                if self.server_data_obj.mqtt_send_get_obj.control_move_direction in [-1, 0, 90, 180, 270, 10, 190, 1180,
+                                                                                     1270]:
                     if deubg_status:
                         print('在家-->电脑控制 ', self.server_data_obj.mqtt_send_get_obj.control_move_direction)
                     self.change_status_info(target_status=ShipStatus.computer_control)
@@ -1192,6 +1201,7 @@ class DataManager:
             else:
                 if self.pi_main_obj.theta is not None:
                     theta_error = point_theta - self.pi_main_obj.theta
+                    print(time.time(), "theta_error", theta_error)
                 else:
                     theta_error = 0
             if abs(theta_error) > 180:
@@ -1285,7 +1295,8 @@ class DataManager:
                     self.pi_main_obj.ship_status_code = 1
                 elif self.ship_status == ShipStatus.computer_control:
                     self.pi_main_obj.ship_status_code = 2
-                elif self.ship_status in [ShipStatus.computer_auto,ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
+                elif self.ship_status in [ShipStatus.computer_auto, ShipStatus.backhome_network,
+                                          ShipStatus.backhome_low_energy]:
                     self.pi_main_obj.ship_status_code = 3
                 elif self.ship_status == ShipStatus.tasking:
                     self.pi_main_obj.ship_status_code = 4
@@ -1673,6 +1684,9 @@ class DataManager:
                                                 http_type='GET'
                                                 )
                         if return_data:
+                            print('self.http_save_distance,self.http_save_time,self.http_save_id',
+                                  self.http_save_distance,
+                                  self.http_save_time, self.http_save_id)
                             self.http_save_distance = int(return_data.get("total"))
                             self.http_save_time = int(return_data.get("totalTime"))
                             self.http_save_id = return_data.get("id")
@@ -2093,13 +2107,14 @@ class DataManager:
                                             url=config.http_mileage_get + "?deviceId=%s" % config.ship_code,
                                             http_type='GET'
                                             )
+                    print('return_data http_mileage_get', return_data)
                     if return_data:
                         self.http_save_distance = int(return_data.get("total"))
                         self.http_save_time = int(return_data.get("totalTime"))
                         self.http_save_id = return_data.get('id')
                         print('self.http_save_distance,self.http_save_time,self.http_save_id', self.http_save_distance,
                               self.http_save_time, self.http_save_id)
-                    if return_data is None:
+                    if return_data is None or not return_data:
                         send_mileage_data = {
                             "deviceId": config.ship_code,
                             "total": str(0),
