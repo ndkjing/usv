@@ -77,25 +77,11 @@ tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
 # 速度等级 1到5级 速度从低到高，仅能控制手动模式下速度   1 级表示1600 5 2000
 speed_grade = 3
 arrive_distance = 2.5
-# 路径搜索保留离湖泊边缘安全路径  单位米
-path_search_safe_distance = 15
-# 湖泊名称
-pool_name = "梁子湖"
-# 视频链接
-# try:
-#     video_url = get_eviz_url.get_url(ship_code_config.video_code, protocol=2)
-# except Exception as e_video_url:
-#     video_url = "url获取错误"
-#     print({'e_video_url': e_video_url})
-# video_url = ''
-
 
 def update_base_setting():
     global speed_grade
     global arrive_distance
     global find_points_num
-    global path_search_safe_distance
-    global pool_name
     if os.path.exists(base_setting_path):
         try:
             with open(base_setting_path, 'r') as f:
@@ -119,23 +105,6 @@ def update_base_setting():
                     elif s_arrive_distance > 10:
                         s_arrive_distance = 10.0
                     arrive_distance = s_arrive_distance
-                except Exception as e:
-                    print({'error': e})
-            if base_setting_data.get('secure_distance'):
-                try:
-                    s_path_search_safe_distance = int(base_setting_data.get('secure_distance'))
-                    if s_path_search_safe_distance > 100:
-                        s_path_search_safe_distance = 100
-                    elif s_path_search_safe_distance < 2:
-                        s_path_search_safe_distance = 2
-                    path_search_safe_distance = s_path_search_safe_distance
-                except Exception as e:
-                    print({'error': e})
-
-            if base_setting_data.get('pool_name'):
-                try:
-                    s_pool_name = base_setting_data.get('pool_name')
-                    pool_name = s_pool_name
                 except Exception as e:
                     print({'error': e})
         except Exception as e:
@@ -364,8 +333,6 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
             json.dump({'speed_grade': speed_grade,
                        'arrive_range': arrive_distance,
                        'keep_point': find_points_num,
-                       'secure_distance': path_search_safe_distance,
-                       'pool_name': pool_name,
                        },
                       bf)
     if b_base_default:
@@ -373,8 +340,6 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
             json.dump({'speed_grade': speed_grade,
                        'arrive_range': arrive_distance,
                        'keep_point': find_points_num,
-                       'secure_distance': path_search_safe_distance,
-                       'pool_name': pool_name,
                        },
                       bdf)
     if b_height:
@@ -444,6 +409,7 @@ b_lora_remote_control = 1
 lora_tx = 25
 lora_rx = 8
 lora_baud = 115200
+b_lora_com = 1 # lora是否使用TTL转串口模块
 # 单片机串口
 b_pin_stc = 1
 stc_tx = 3

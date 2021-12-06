@@ -1114,17 +1114,16 @@ class DataManager:
                 else:
                     return path_planning_point_gps, False
             # 避障绕行，根据障碍物计算下一个目标点
-            elif config.obstacle_avoid_type == 2:
+            elif config.obstacle_avoid_type in [2,3]:
                 angle = vfh.vfh_func(9, self.pi_main_obj.obstacle_list)
                 print('angle', angle)
                 if angle == -1:  # 没有可通行区域
                     # 如果是离岸边太近就直接认为到达
                     if 1 in self.pi_main_obj.obstacle_list[
                             int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                        if self.server_data_obj.mqtt_send_get_obj.bank_distance > 0 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                        if self.server_data_obj.mqtt_send_get_obj.bank_distance > -100and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
                             return next_point_lng_lat, True
                     else:
-                        # return path_planning_point_gps, False
                         abs_angle = (self.pi_main_obj.theta + 180) % 360
                         next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                                          self.lng_lat[1],
@@ -1133,9 +1132,19 @@ class DataManager:
                         print('abs_angle', abs_angle)
                         return next_point_lng_lat, False
                 elif angle == 0:
+                    if config.obstacle_avoid_type == 3:
+                        if 1 in self.pi_main_obj.obstacle_list[
+                                int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
+                            if self.server_data_obj.mqtt_send_get_obj.bank_distance > -100 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                                return next_point_lng_lat, True
                     # 为0表示原始路径可以通行此时不跳过
                     return next_point_lng_lat, False
                 else:
+                    if config.obstacle_avoid_type == 3:
+                        if 1 in self.pi_main_obj.obstacle_list[
+                                int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
+                            if self.server_data_obj.mqtt_send_get_obj.bank_distance > -100 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                                return next_point_lng_lat, True
                     abs_angle = (self.pi_main_obj.theta + angle) % 360
                     next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                                      self.lng_lat[1],
@@ -1196,6 +1205,8 @@ class DataManager:
             if config.home_debug:
                 if self.current_theta is not None:
                     theta_error = point_theta - self.current_theta
+                    print(time.time(), "theta_error", theta_error, "point_theta", point_theta, 'self.current_theta',
+                          self.current_theta)
                 else:
                     theta_error = 0
             else:
@@ -1603,7 +1614,7 @@ class DataManager:
         last_runtime = None
         last_run_distance = None
         while True:
-            time.sleep(1)  # 1秒发送一次
+            time.sleep(0.2)  # 1秒发送一次
             if not self.server_data_obj.mqtt_send_get_obj.is_connected:
                 continue
             if self.server_data_obj.mqtt_send_get_obj.pool_code:
@@ -1744,6 +1755,20 @@ class DataManager:
                       qos=0)
             if time.time() % 10 < 1:
                 self.logger.info({'status_data_': mqtt_send_status_data})
+
+    def send_high_f_status_data(self):
+        high_f_status_data = {}
+        while 1:
+            time.sleep(0.2)
+            # print('send high_f')
+            if config.home_debug and self.current_theta is None:
+                self.current_theta = 1
+            if config.home_debug and self.current_theta is not None:
+                high_f_status_data.update({"direction": round(self.current_theta, 1)})
+            elif not config.home_debug and self.pi_main_obj.theta:
+                high_f_status_data.update({"direction": round(self.pi_main_obj.theta, 1)})
+            self.send(method='mqtt', topic='high_f_status_data_%s' % config.ship_code, data=high_f_status_data,
+                      qos=0)
 
     # 预先存储任务   计算距离并排序
     def check_task(self):
@@ -1974,7 +1999,11 @@ class DataManager:
                 qos=0)
             if time.time() % 10 < 1:
                 self.logger.info({'notice_info_': notice_info_data})
-
+            # 调试时使用刷新角度用来更新地图上船
+            if self.server_data_obj.mqtt_send_get_obj.refresh_info_type == 1:
+                if config.home_debug and self.current_theta is not None:
+                    self.current_theta += 0.1
+                print('self.current_theta', self.current_theta)
             # 保存数据与发送刷新后提示消息
             if len(self.data_define_obj.pool_code) > 0:
                 save_plan_path_data = {
@@ -1997,6 +2026,8 @@ class DataManager:
                               topic='refresh_%s' % config.ship_code,
                               data=save_plan_path_data,
                               qos=0)
+            # 调试时更新角度后不能重复刷新
+            self.server_data_obj.mqtt_send_get_obj.refresh_info_type = 0
 
     # 检测网络延时
     def check_ping_delay(self):

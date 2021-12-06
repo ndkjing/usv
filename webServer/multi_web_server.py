@@ -488,30 +488,22 @@ class WebServer:
 
                 # 客户端获取基础设置数据
                 if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data_info in [1, 4]:
-                    if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data is None:
+                    if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data is None:
                         self.logger.error(
                             {'base_setting_data is None': self.server_data_obj_dict.get(
-                                ship_code).mqtt_send_get_obj.mqtt_send_get_obj.base_setting_data})
+                                ship_code).mqtt_send_get_obj.mqtt_send_get_obj.server_base_setting_data})
                     else:
-                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.update(
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data.update(
                             {'info_type': 3})
-                        try:
-                            video_url = get_eviz_url.get_url(server_config.ship_code_video_dict[ship_code],
-                                                             protocol=2)
-                        except Exception as e_get_url:
-                            video_url = None
-                            print({'e_get_url': e_get_url})
-                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.update(
-                            {'video_url': video_url})
                         self.send(method='mqtt',
                                   ship_code=ship_code,
-                                  topic='base_setting_%s' % (ship_code),
-                                  data=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data,
+                                  topic='base_setting_%s' % ship_code,
+                                  data=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data,
                                   qos=0)
                         self.logger.info({'base_setting': self.server_data_obj_dict.get(
-                            ship_code).mqtt_send_get_obj.base_setting_data})
+                            ship_code).mqtt_send_get_obj.server_base_setting_data})
                         # self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data = None
-                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data_info = 0
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data_info = 0
 
                 # 判断是否上传了间距使用自动生成采样点
                 if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.row_gap:

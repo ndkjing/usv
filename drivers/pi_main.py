@@ -92,15 +92,6 @@ class PiMain:
         self.cell_size = int(self.field_of_view / self.view_cell)
         self.obstacle_list = [0] * self.cell_size  # 自动避障列表
         self.control_obstacle_list = [0] * self.cell_size  #
-        # 设置为GPIO输出模式 输出高低电平
-        """
-        self.pi.set_mode(config.side_left_gpio_pin, pigpio.OUTPUT)
-        self.pi.set_mode(config.side_right_gpio_pin, pigpio.OUTPUT)
-        self.pi.set_mode(config.headlight_gpio_pin, pigpio.OUTPUT)
-        self.pi.set_mode(config.audio_light_alarm_gpio_pin, pigpio.OUTPUT)
-        self.pi.set_mode(config.draw_left_gpio_pin, pigpio.OUTPUT)
-        self.pi.set_mode(config.draw_right_gpio_pin, pigpio.OUTPUT)
-        """
         # 当前抽水泵舵机
         self.draw_steer_pwm = config.max_deep_steer_pwm - 100
         # 目标舵机位置
@@ -177,8 +168,27 @@ class PiMain:
         遥控器lora串口
         :return:
         """
-        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
-                                      baud=config.lora_baud, time_out=0.19, value_lock=self.value_lock)
+        if config.b_lora_com:
+            if os.path.exists('/dev/ttyUSB0'):
+                com = '/dev/ttyUSB0'
+            elif os.path.exists('/dev/ttyUSB1'):
+                com = '/dev/ttyUSB1'
+            elif os.path.exists('/dev/ttyUSB2'):
+                com = '/dev/ttyUSB2'
+            elif os.path.exists('/dev/ttyUSB3'):
+                com = '/dev/ttyUSB3'
+            else:
+                com = 0
+            if com == 0:
+                return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
+                                              baud=config.lora_baud, time_out=0.19, value_lock=self.value_lock)
+            baud = 9600
+            return com_data.ComData(com=com,
+                                    baud=baud,
+                                    timeout=0.2, )
+        else:
+            return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
+                                          baud=config.lora_baud, time_out=0.19, value_lock=self.value_lock)
 
     def get_gps_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx,
@@ -1049,14 +1059,14 @@ class PiMain:
                     else:
                         if self.pre_draw_capacity in [200, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]:
                             self.current_draw_capacity = self.pre_draw_capacity
-                    print(
-                        'self.remote_draw_status,self.remote_draw_status_0_1,self.remote_draw_status_2_3,self.current_remote_draw_deep,self.current_draw_capacity',
-                        self.remote_draw_status,
-                        self.remote_draw_status_0_1,
-                        self.remote_draw_status_2_3,
-                        self.current_remote_draw_deep,
-                        self.current_draw_capacity
-                    )
+                    # print(
+                    #     'self.remote_draw_status,self.remote_draw_status_0_1,self.remote_draw_status_2_3,self.current_remote_draw_deep,self.current_draw_capacity',
+                    #     self.remote_draw_status,
+                    #     self.remote_draw_status_0_1,
+                    #     self.remote_draw_status_2_3,
+                    #     self.current_remote_draw_deep,
+                    #     self.current_draw_capacity
+                    # )
             else:
                 if self.lora_control_receive_time and time.time() - self.lora_control_receive_time > 20:
                     self.b_start_remote = 0
