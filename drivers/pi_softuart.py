@@ -25,7 +25,7 @@ sys.path.append(
 
 
 class PiSoftuart(object):
-    def __init__(self, pi, rx_pin, tx_pin, baud, time_out=0.1):
+    def __init__(self, pi, rx_pin, tx_pin, baud, time_out=0.1,value_lock=None):
         self._rx_pin = rx_pin
         self._tx_pin = tx_pin
         self.baud = baud
@@ -39,6 +39,7 @@ class PiSoftuart(object):
         self.last_send = None
         self.last_lora_data = None  # 数据一次没有收完等待下次数据用于拼接
         self.dump_energy_queue = deque(maxlen=25)
+        self._value_lock = value_lock
 
     def flushInput(self):
         pigpio.exceptions = False  # fatal exceptions off (so that closing an unopened gpio doesn't error)
@@ -133,49 +134,16 @@ class PiSoftuart(object):
         if len_data is None:
             len_data = 4
             try:
+                time.sleep(self._thread_ts)
+                if self._value_lock:
+                    self._value_lock.acquire()
                 count, data = self._pi.bb_serial_read(self._rx_pin)
-                lng, lat = None,None
-                lng_lat_error, speed, course, magnetic_declination = None,None,None,None
+                if self._value_lock:
+                    self._value_lock.release()
+                lng, lat = None, None
+                lng_lat_error, speed, course, magnetic_declination = None, None, None, None
                 if debug:
                     print(time.time(), 'count', count, 'data', data)
-                # if count > len_data:
-                #     str_data = data.decode('utf-8', errors='ignore')
-                #     for i in str_data.split('$'):
-                #         i = i.strip()
-                #         if i.startswith('GPGGA') or i.startswith('$GPGGA') or i.startswith('GNGGA') or i.startswith(
-                #                 '$GNGGA'):
-                #             gps_data = i
-                #             data_list = gps_data.split(',')
-                #             if len(data_list) < 8:
-                #                 continue
-                #             if data_list[2] and data_list[4]:
-                #                 lng, lat = round(float(data_list[4][:3]) +
-                #                                  float(data_list[4][3:]) /
-                #                                  60, 6), round(float(data_list[2][:2]) +
-                #                                                float(data_list[2][2:]) /
-                #                                                60, 6)
-                #                 if lng < 1 or lat < 1:
-                #                     pass
-                #                 else:
-                #                     lng_lat_error = float(data_list[8])
-                #                     return [lng, lat, lng_lat_error,None]
-                #         if i.startswith('GPRMC') or i.startswith('$GPRMC') or i.startswith('GNRMC') or i.startswith(
-                #                 '$GNRMC'):
-                #             gps_data = i
-                #             data_list = gps_data.split(',')
-                #             if len(data_list) < 8:
-                #                 continue
-                #             if data_list[2] and data_list[4]:
-                #                 lng, lat = round(float(data_list[4][:3]) +
-                #                                  float(data_list[4][3:]) /
-                #                                  60, 6), round(float(data_list[2][:2]) +
-                #                                                float(data_list[2][2:]) /
-                #                                                60, 6)
-                #                 if lng < 1 or lat < 1:
-                #                     pass
-                #                 else:
-                #                     lng_lat_error = float(data_list[8])
-                #                     return [lng, lat, lng_lat_error,None]
                 if count > len_data:
                     str_data = data.decode('utf-8', errors='ignore')
                     data_list = str_data.split('$')
@@ -206,8 +174,23 @@ class PiSoftuart(object):
                             data_list = gps_data.split(',')
                             if len(data_list) < 8:
                                 continue
+                            if data_list[2] and data_list[4]:
+                                try:
+                                    lng = round(float(data_list[5][:3]) + float(data_list[5][3:]) / 60, 6)
+                                    lat = round(float(data_list[3][:2]) + float(data_list[3][2:]) / 60, 6)
+                                    if lng < 1 or lat < 1:  # 太小可能是假数据直接跳过
+                                        lng = None
+                                        lat = None
+                                except Exception as convert_lng_lat_error:
+                                    if debug:
+                                        print({'error read_gps convert_lng_lat_error': convert_lng_lat_error})
+                                try:
+                                    lng_lat_error = float(data_list[8])
+                                except Exception as convert_lng_lat_error:
+                                    if debug:
+                                        print({'error read_gps convert_lng_lat_error': convert_lng_lat_error})
                             try:
-                                speed = round(float(data_list[7]) * 1.852 / 3.6, 2)  # 将速度单位节转换为 m/s
+                                speed = round(float(data_list[7]) * 1.852 / 3.6, 1)  # 将速度单位节转换为 m/s
                             except Exception as convert_speed_error:
                                 if debug:
                                     print({'error read_gps convert_speed_error': convert_speed_error})
@@ -223,7 +206,7 @@ class PiSoftuart(object):
                                     print({
                                         'error read_gps convert_magnetic_declination_error': convert_magnetic_declination_error})
                     return [lng, lat, lng_lat_error, speed, course, magnetic_declination]
-                time.sleep(self._thread_ts * 10)
+
             except Exception as e:
                 print({'error read_gps': e})
                 return None

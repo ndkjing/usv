@@ -47,14 +47,9 @@ sys.path.append(
         'utils'))
 logger = log.LogHandler('main_log')
 
-# if not config.home_debug:
-#     time.sleep(config.start_sleep_time)
-
 
 def main():
     config.update_setting()
-    if config.b_play_audio:
-        audios_manager.play_audio(audio_index=audios_manager.AudioType.start)
     # 数据处理对象
     data_manager_obj = data_manager.DataManager()
     # 查询改船是否注册 若未注册直接退出
@@ -85,6 +80,8 @@ def main():
                         data_manager_obj.connect_mqtt_server,
                         data_manager_obj.start_once_func,
                         data_manager_obj.control_draw_thread,
+                        data_manager_obj.send_distacne,
+                        data_manager_obj.send_high_f_status_data,
                         ]
     common_thread_list = []
     # 树莓派对象数据处理

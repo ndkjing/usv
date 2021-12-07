@@ -39,6 +39,8 @@ class PiMain:
         self.diff = int(20000 / self.pice)
         self.hz = 50
         self.pi = pigpio.pi()
+        # self.value_lock = threading.Lock()
+        self.value_lock = None
         # gpio脚的编号顺序依照Broadcom number顺序，请自行参照gpio引脚图里面的“BCM编码”，
         self.pi.set_PWM_frequency(config.left_pwm_pin, self.hz)  # 设定左侧电机引脚产生的pwm波形的频率为50Hz
         self.pi.set_PWM_frequency(config.right_pwm_pin, self.hz)  # 设定右侧电机引脚产生的pwm波形的频率为50Hz
@@ -158,8 +160,27 @@ class PiMain:
         遥控器lora串口
         :return:
         """
-        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
-                                      baud=config.lora_baud, time_out=0.16)
+        if config.b_lora_com:
+            if os.path.exists('/dev/ttyUSB0'):
+                com = '/dev/ttyUSB0'
+            elif os.path.exists('/dev/ttyUSB1'):
+                com = '/dev/ttyUSB1'
+            elif os.path.exists('/dev/ttyUSB2'):
+                com = '/dev/ttyUSB2'
+            elif os.path.exists('/dev/ttyUSB3'):
+                com = '/dev/ttyUSB3'
+            else:
+                com = 0
+            if com == 0:
+                return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
+                                              baud=config.lora_baud, time_out=0.19, value_lock=self.value_lock)
+            baud = 9600
+            return com_data.ComData(com=com,
+                                    baud=baud,
+                                    timeout=0.2, )
+        else:
+            return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
+                                          baud=config.lora_baud, time_out=0.19, value_lock=self.value_lock)
 
     def get_gps_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx,
@@ -363,7 +384,7 @@ class PiMain:
                 add_or_sub = 1 if self.target_draw_steer_pwm - self.draw_steer_pwm > 0 else -1
                 self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
                 self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
-                time.sleep(0.02)
+                time.sleep(0.05)
             else:
                 time.sleep(0.1)
 
@@ -447,7 +468,7 @@ class PiMain:
         一直修改输出pwm波到目标pwm波
         :return:
         """
-        sleep_time = 0.006
+        sleep_time = 0.008
         change_pwm_ceil = 5
         while True:
             if abs(self.left_pwm - self.target_left_pwm) != 0 or abs(self.right_pwm != self.target_right_pwm) != 0:
@@ -464,17 +485,18 @@ class PiMain:
                 self.pi.set_PWM_dutycycle(config.left_pwm_pin, self.left_pwm)  # 1000=2000*50%
                 self.pi.set_PWM_dutycycle(config.right_pwm_pin, self.right_pwm)  # 1000=2000*50%
                 if self.b_start_remote:
-                    time.sleep(sleep_time / 3)
+                    time.sleep(sleep_time / 4)
                 else:
                     time.sleep(sleep_time)
             else:
                 if self.b_start_remote:
-                    time.sleep(sleep_time / 3)
+                    time.sleep(sleep_time / 4)
                 else:
                     time.sleep(sleep_time)
 
+
     def set_steer_engine(self, angle):
-        self.pi.set_PWM_dutycycle(26, angle)
+            self.pi.set_PWM_dutycycle(26, angle)
 
     # 记录罗盘数据
     def save_compass_data(self, theta_):

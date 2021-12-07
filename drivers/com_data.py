@@ -157,13 +157,121 @@ class ComData:
                 distance = int(i[6:12], 16) / 1000
                 return distance
 
+    @staticmethod
+    def split_lora_data(data: str) -> list:
+        item_data = data[1:-1]
+        item_data_list = item_data.split(',')
+        if len(item_data_list) >= 13:
+            try:
+                left_row = int(item_data_list[1])
+            except Exception as e1:
+                left_row = 50
+            try:
+                left_col = int(item_data_list[0])
+            except Exception as e0:
+                left_col = 50
+            try:
+                right_row = int(item_data_list[3])
+            except Exception as e3:
+                right_row = 49
+            try:
+                right_col = int(item_data_list[2])
+            except Exception as e2:
+                right_col = 49
+            try:
+                fine_tuning = int(item_data_list[4])
+            except Exception as e4:
+                fine_tuning = 50
+            try:
+                button_10 = int(item_data_list[9])
+            except Exception as e9:
+                button_10 = -1
+            try:
+                button_11 = int(item_data_list[10])
+            except Exception as e10:
+                button_11 = -1
+            try:
+                button_12 = int(item_data_list[11])
+            except Exception as e11:
+                button_12 = -1
+            try:
+                button_13 = int(float(item_data_list[12]))
+            except Exception as e12:
+                button_13 = -1
+            try:
+                lever_6 = int(float(item_data_list[5]))
+            except Exception as e5:
+                lever_6 = -1
+            try:
+                lever_7 = int(item_data_list[6])
+            except Exception as e6:
+                lever_7 = -1
+            try:
+                lever_8 = int(item_data_list[7])
+            except Exception as e7:
+                lever_8 = -1
+            try:
+                lever_9 = int(item_data_list[8])
+            except Exception as e8:
+                lever_9 = -1
+            try:
+                remote_dumpenergy = float(item_data_list[13])
+            except Exception as e13:
+                remote_dumpenergy = 0
+            try:
+                draw_deep = float(item_data_list[14])
+            except Exception as e14:
+                draw_deep = -1
+            try:
+                draw_capacity = int(item_data_list[15])
+            except Exception as e15:
+                draw_capacity = -1
+
+            return_list = [left_col,
+                           left_row,
+                           right_col,
+                           right_row,
+                           fine_tuning,
+                           lever_6,
+                           lever_7,
+                           lever_8,
+                           lever_9,
+                           button_10,
+                           button_11,
+                           button_12,
+                           button_13,
+                           remote_dumpenergy,
+                           draw_deep,
+                           draw_capacity
+                           ]
+            return return_list
+        else:
+            return []
+
+
+    def read_remote_control(self, debug=False, send_data='z00'):
+        self.send_data('G1')
+        lora_data = self.readline()
+        str_lora_data = str(lora_data)
+        if len(str_lora_data) < 10:
+            return []
+        str_lora_data.strip()
+        str_lora_data = str_lora_data[2:-5]
+        # print(time.time(), 'data', lora_data)
+        if str_lora_data[0] == 'A' and str_lora_data[-1] == 'Z':
+            return_list = ComData.split_lora_data(str_lora_data)
+            # print('return_list',return_list)
+            return return_list
+
+
 if __name__ == '__main__':
     import config
     b_ultrasonic = 0
     b_com_data = 0
     b_gps = 0
     b_laser = 0
-    check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  5 laser >')
+    b_lora = 0
+    check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  5 laser 6 lora>')
     if int(check_type) == 1:
         b_compass = 1
     elif int(check_type) == 2:
@@ -174,7 +282,9 @@ if __name__ == '__main__':
         b_gps = 1
     elif int(check_type) == 5:
         b_laser = 1
-    elif b_com_data:
+    elif int(check_type) == 6:
+        b_lora = 1
+    if b_com_data:
         serial_obj = ComData(config.stc_port,
                              config.stc_baud,
                              timeout=0.7,
@@ -204,36 +314,43 @@ if __name__ == '__main__':
             str_data = str(binascii.b2a_hex(data))[2:-1]
             # print(str_data)
             print(int(str_data[2:-2], 16) / 1000)
+    elif b_lora:
+        lora_serial_obj = ComData('/dev/ttyUSB0',
+                                  '9600',
+                                  timeout=0.2,
+                                  logger=logger)
+        lora_serial_obj.read_remote_control()
+
     elif b_gps:
-        serial_obj1 = ComData('com4',
-                              115200,
-                              timeout=1,
-                              logger=logger)
-        serial_obj2 = ComData('com7',
-                              9600,
-                              timeout=1,
-                              logger=logger)
-        while True:
-            data1 = serial_obj1.readline()
-            str_data1 = bytes(data1).decode('ascii')
-            if str_data1.startswith('$GNGGA'):
-                data_list1 = str_data1.split(',')
-                print(data_list1)
-                lng1, lat1 = float(data_list1[4][:3]) + float(data_list1[4][3:]) / 60, float(data_list1[2][:2]) + float(
-                    data_list1[2][2:]) / 60
-                print('经纬度1', lng1, lat1)
-                print('误差1', data_list1[8])
-            time.sleep(0.2)
-            data2 = serial_obj2.readline()
-            str_data2 = bytes(data2).decode('ascii')
-            if str_data2.startswith('$GNGGA') or str_data2.startswith('$GPGGA'):
-                data_list2 = str_data2.split(',')
-                print(data_list2)
-                lng2, lat2 = float(data_list2[4][:3]) + float(data_list2[4][3:]) / 60, float(data_list2[2][:2]) + float(
-                    data_list2[2][2:]) / 60
-                print('经纬度2', lng2, lat2)
-                print('误差2', data_list2[8])
-            time.sleep(0.2)
+            serial_obj1 = ComData('com4',
+                                  115200,
+                                  timeout=1,
+                                  logger=logger)
+            serial_obj2 = ComData('com7',
+                                  9600,
+                                  timeout=1,
+                                  logger=logger)
+            while True:
+                data1 = serial_obj1.readline()
+                str_data1 = bytes(data1).decode('ascii')
+                if str_data1.startswith('$GNGGA'):
+                    data_list1 = str_data1.split(',')
+                    print(data_list1)
+                    lng1, lat1 = float(data_list1[4][:3]) + float(data_list1[4][3:]) / 60, float(data_list1[2][:2]) + float(
+                        data_list1[2][2:]) / 60
+                    print('经纬度1', lng1, lat1)
+                    print('误差1', data_list1[8])
+                time.sleep(0.2)
+                data2 = serial_obj2.readline()
+                str_data2 = bytes(data2).decode('ascii')
+                if str_data2.startswith('$GNGGA') or str_data2.startswith('$GPGGA'):
+                    data_list2 = str_data2.split(',')
+                    print(data_list2)
+                    lng2, lat2 = float(data_list2[4][:3]) + float(data_list2[4][3:]) / 60, float(data_list2[2][:2]) + float(
+                        data_list2[2][2:]) / 60
+                    print('经纬度2', lng2, lat2)
+                    print('误差2', data_list2[8])
+                time.sleep(0.2)
     elif b_laser:
         serial_obj_laser = ComData('com9',
                              '115200',

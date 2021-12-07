@@ -18,48 +18,76 @@ class ServerData:
         self.mqtt_send_get_obj = MqttSendGet(self.logger, topics=topics)
 
     # 发送数据到服务器http
-    def send_server_http_data(self, request_type, data, url):
-        # 请求头设置
-        payload_header = {
-            'Content-Type': 'application/json',
-        }
-        assert request_type in ['POST', 'GET']
-        self.logger.info(url)
-        if request_type == 'POST':
-            dump_json_data = json.dumps(data)
-            return_data = requests.post(
-                url=url, data=dump_json_data, headers=payload_header)
-        else:
-            return_data = requests.get(url=url)
-        return return_data
+    def send_server_http_data(self, request_type, data, url, parm_type=1):
+        """
+        @param request_type:
+        @param data:
+        @param url:
+        @param parm_type: 1 data 方式  2 params 方式
+        @return:
+        """
+        try:
+            # 请求头设置
+            payload_header = {
+                'Content-Type': 'application/json',
+            }
+            assert request_type in ['POST', 'GET']
+            # self.logger.info(url)
+            if request_type == 'POST':
+                if parm_type == 1:
+                    dump_json_data = json.dumps(data)
+                    return_data = requests.post(
+                        url=url, data=dump_json_data, headers=payload_header, timeout=8)
+                else:
+                    if isinstance(data, dict):
+                        dump_json_data = data
+                    else:
+                        dump_json_data = json.dumps(data)
+                    return_data = requests.post(
+                        url=url, params=dump_json_data, headers=payload_header, timeout=8)
+            else:
+                if data:
+                    dump_json_data = json.dumps(data)
+                    return_data = requests.get(url=url, params=dump_json_data, timeout=8)
+                else:
+                    return_data = requests.get(url=url, timeout=8)
+            return return_data
+        except Exception as e:
+            return None
 
     # 发送数据到服务器mqtt
     def send_server_mqtt_data(self, topic='test', data="", qos=1):
         self.mqtt_send_get_obj.publish_topic(topic=topic, data=data, qos=qos)
 
 
-# class HttpSendGet:
-#     """
-#     处理ｊｓｏｎ数据收发
-#     """
-#
-#     def __init__(self, base_url='127.0.0.1'):
-#         self.base_url = base_url
-#
-#     def send_data(self, uri, data):
-#         """
-#         :param uri 发送接口uri
-#         :param data  需要发送数据
-#         """
-#         send_url = self.base_url + uri
-#         response = requests.post(send_url, data=data)
-#
-#     def get_data(self, uri):
-#         """
-#         :param uri 发送接口uri
-#         """
-#         get_url = self.base_url + uri
-#         response = requests.get(uri)
+def send_http_log(request_type, data, url, parm_type=1):
+    assert request_type in ['POST', 'GET']
+    payload_header = {
+        'Content-Type': 'application/json',
+    }
+    try:
+        if request_type == 'POST':
+            if parm_type == 1:
+                dump_json_data = json.dumps(data)
+                return_data = requests.post(
+                    url=url, data=dump_json_data, headers=payload_header,timeout=5)
+                print('return_data',return_data)
+            else:
+                if isinstance(data, dict):
+                    dump_json_data = data
+                else:
+                    dump_json_data = json.dumps(data)
+                return_data = requests.post(
+                    url=url, params=dump_json_data, headers=payload_header,timeout=5)
+        else:
+            if data:
+                dump_json_data = json.dumps(data)
+                return_data = requests.get(url=url, params=dump_json_data,timeout=5)
+            else:
+                return_data = requests.get(url=url,timeout=5)
+        return return_data
+    except Exception as e:
+        return None
 
 
 class MqttSendGet:
@@ -173,8 +201,8 @@ class MqttSendGet:
         # 是否接受到电脑端点击过任何按键
         self.b_receive_mqtt = False
         # 计算距离岸边距离
-        self.bank_distance = 20.0
-
+        self.bank_distance = -500
+        self.send_log=1 # 是否发送操作日志
     # 连接MQTT服务器
     def mqtt_connect(self):
         if not self.is_connected:
@@ -241,12 +269,13 @@ class MqttSendGet:
             if topic == 'switch_%s' % config.ship_code:
                 self.b_receive_mqtt = True
                 switch_data = json.loads(msg.payload)
+                if switch_data.get('info_type') != 1:
+                    return
                 # 改变了暂时没用
                 if switch_data.get('b_sampling') is not None:
                     self.b_sampling = int(switch_data.get('b_sampling'))
                 if switch_data.get('b_draw') is not None:
                     self.b_draw = int(switch_data.get('b_draw'))
-                    # print("###################b_draw",self.b_draw)
                 # 前大灯 1 打开前大灯 没有该键表示不打开
                 if switch_data.get('headlight') is not None:
                     self.headlight = int(switch_data.get('headlight'))
@@ -256,13 +285,19 @@ class MqttSendGet:
                 # 舷灯 1 允许打开舷灯 没有该键表示不打开
                 if switch_data.get('side_light') is not None:
                     self.side_light = int(switch_data.get('side_light'))
-                # self.logger.info({'topic': topic,
-                #                   'b_sampling': switch_data.get('b_sampling'),
-                #                   'b_draw': switch_data.get('b_draw'),
-                #                   'headlight': switch_data.get('headlight'),
-                #                   'audio_light': switch_data.get('audio_light'),
-                #                   'side_light': switch_data.get('side_light'),
-                #                   })
+                if self.send_log:
+                    send_log_data = {
+                        "deviceId": config.ship_code,
+                        "operation": "点击开关"
+                    }
+                    send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
+                self.logger.info({'topic': topic,
+                                  'b_sampling': switch_data.get('b_sampling'),
+                                  'b_draw': switch_data.get('b_draw'),
+                                  'headlight': switch_data.get('headlight'),
+                                  'audio_light': switch_data.get('audio_light'),
+                                  'side_light': switch_data.get('side_light'),
+                                  })
 
             # 处理初始点击确定湖数据
             elif topic == 'pool_click_%s' % config.ship_code:

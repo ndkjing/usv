@@ -38,6 +38,15 @@ class CurrentPlatform(enum.Enum):
     pi = 3
     others = 4
 
+# 船类型
+class ShipType(enum.Enum):
+    single_draw = 1
+    multi_draw = 2
+    water_detect = 3
+    dock = 4
+    adcp = 5
+
+current_ship_type = ShipType.water_detect
 
 sysstr = platform.system()
 if sysstr == "Windows":
@@ -53,7 +62,11 @@ elif sysstr == "Linux":  # 树莓派上也是Linux
 else:
     print("other System tasks")
     current_platform = CurrentPlatform.others
-
+# 不是在树莓派上都是用调试模式
+if current_platform == CurrentPlatform.pi:
+    home_debug = 0
+else:
+    home_debug = 1
 # 百度地图key
 baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
 # 高德秘钥
@@ -61,32 +74,19 @@ gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
 # 腾讯地图key
 tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
 
+draw_time=30
+
 # 速度等级 1到5级 速度从低到高，仅能控制手动模式下速度   1 级表示1600 5 2000
 speed_grade = 3
 arrive_distance = 2.5
 # 多点和寻点模式下查找连接点数量
-keep_point = 0
-# 路径搜索保留离湖泊边缘安全路径  单位米
-path_search_safe_distance = 15
-# 寻点模式行间隔
-row_gap = 50
-# 寻点模式列间隔
-col_gap = 50
-# 湖泊名称
-pool_name = "梁子湖"
-# 视频链接
-video_url = 'https://rtmp01open.ys7.com:9188/v3/openlive/C99929528_1_1.flv?expire=1667195738&id=376731287508074496&t=a7d469cafcd50d9d897174ad7732c1a2c88f335bcb376ebd804d99b7a49396cd&ev=100'
+# keep_point = 0
 
 
 def update_base_setting():
     global speed_grade
     global arrive_distance
     global find_points_num
-    global path_search_safe_distance
-    global row_gap
-    global col_gap
-    global pool_name
-    global video_url
     if os.path.exists(base_setting_path):
         try:
             with open(base_setting_path, 'r') as f:
@@ -112,58 +112,6 @@ def update_base_setting():
                     arrive_distance = s_arrive_distance
                 except Exception as e:
                     print({'error': e})
-
-            if base_setting_data.get('keep_point'):
-                try:
-                    s_keep_point = int(base_setting_data.get('keep_point'))
-                    if s_keep_point <= 0:
-                        s_keep_point = 0
-                    elif s_keep_point >= 1:
-                        s_keep_point = 1
-                    keep_point = s_keep_point
-                except Exception as e:
-                    print({'error': e})
-
-            if base_setting_data.get('secure_distance'):
-                try:
-                    s_path_search_safe_distance = int(base_setting_data.get('secure_distance'))
-                    if s_path_search_safe_distance > 100:
-                        s_path_search_safe_distance = 100
-                    elif s_path_search_safe_distance < 2:
-                        s_path_search_safe_distance = 2
-                    path_search_safe_distance = s_path_search_safe_distance
-                except Exception as e:
-                    print({'error': e})
-
-            if base_setting_data.get('row'):
-                try:
-                    s_row_gap = int(base_setting_data.get('row'))
-                    if s_row_gap < 0:
-                        s_row_gap = 10
-                    row_gap = s_row_gap
-                except Exception as e:
-                    print({'error': e})
-
-            if base_setting_data.get('col'):
-                try:
-                    s_col_gap = int(base_setting_data.get('col'))
-                    if s_col_gap < 0:
-                        s_col_gap = 10
-                    col_gap = s_col_gap
-                except Exception as e:
-                    print({'error': e})
-            if base_setting_data.get('pool_name'):
-                try:
-                    s_pool_name = base_setting_data.get('pool_name')
-                    pool_name = s_pool_name
-                except Exception as e:
-                    print({'error': e})
-            if base_setting_data.get('video_url'):
-                try:
-                    s_video_url = base_setting_data.get('video_url')
-                    video_url = s_video_url
-                except Exception as e:
-                    print({'error': e})
         except Exception as e:
             print({'error': e})
 
@@ -179,30 +127,43 @@ stc_baud = 115200
 b_com_stc = os.path.exists(stc_port) and b_use_com_stc  # 判断是否存在以及是否使用
 # http 接口
 # 查询船是否注册  wuhanligong.xxlun.com/union
-http_binding = 'http://wuhanligong.xxlun.com/union/admin/xxl/device/binding/%s' % (ship_code)
+http_binding = 'http://ship.xxlun.com/union/admin/xxl/device/binding/%s' % ship_code
 # 注册新的湖泊ID
-http_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/map/save'
-# http_save = 'http://192.168.8.13:8009/union/admin/xxl/map/save'
+http_save = 'http://ship.xxlun.com/union/admin/xxl/map/save'
+# http_save = 'http://192.168.199.186:8009/union/admin/xxl/map/save'
+# 更新湖泊轮廓
+http_update_map = 'http://ship.xxlun.com/union/admin/xxl/map/upData'
+# http_update_map = 'http://192.168.199.186:8009/union/admin/xxl/map/upData'
 # 发送检测数据
-http_data_save = 'http://wuhanligong.xxlun.com/union/admin/xxl/data/save'
+http_data_save = 'http://ship.xxlun.com/union/admin/xxl/data/save'
 # http_data_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
+# 发送抽水瓶号数据
+http_draw_save = 'http://ship.xxlun.com/union/admin/xxl/data/sampling/save'
+# http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/sampling/save'
+# 获取存储的任务数据
+http_get_task = 'http://ship.xxlun.com/union/admin/xxl/task/getOne'
+http_update_task = 'http://ship.xxlun.com/union/admin/xxl/task/upDataTask'
+http_delete_task = 'http://ship.xxlun.com/union/admin/xxl/task/delTask'
+# 上传日志接口
+# http_log = 'http://192.168.199.186:8009/union/admin/xxl/log/save'
+http_log = 'http://ship.xxlun.com/union/admin/xxl/log/save'
+# 里程接口
+# http_mileage_get = 'http://192.168.199.186:8009/union/admin/xxl/mileage/getOne'
+# http_mileage_save = 'http://192.168.199.186:8009/union/admin/xxl/mileage/save'
+# http_mileage_update = 'http://192.168.199.186:8009/union/admin/xxl/mileage/upData'
+http_mileage_get = 'http://ship.xxlun.com/union/admin/xxl/mileage/getOne'
+http_mileage_save = 'http://ship.xxlun.com/union/admin/xxl/mileage/save'
+http_mileage_update = 'http://ship.xxlun.com/union/admin/xxl/mileage/upData'
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884
 # 调试的时候使用初始经纬度
 ship_gaode_lng_lat = [114.524096, 30.506853]
-# 电机前进分量
-motor_forward = 200
-# 电机转弯分量
-motor_steer = 200
+# ship_gaode_lng_lat = None
 # pid三参数
 kp = 2.0
 ki = 0.3
 kd = 1.0
-# 大于多少米全速
-full_speed_meter = 6.0
-# 发送状态数据时间间隔
-check_status_interval = 1.0
 # 最大pwm值
 max_pwm = 1800
 # 最小pwm值
@@ -210,19 +171,9 @@ min_pwm = 1200
 # 停止中位pwm
 stop_pwm = 1500
 # 左侧电机正反桨  0 正桨叶   1 反桨叶
-left_motor_cw = 1
+left_motor_cw = 0
 # 右侧电机正反桨  0 正桨叶   1 反桨叶
-right_motor_cw = 0
-# 抽水时间单位秒
-draw_time = 30
-# pid间隔
-pid_interval = 0.2
-# 开机前等待时间
-start_sleep_time = 6
-# 电机初始化时间
-motor_init_time = 1
-# 检查网络连接状态间隔
-check_network_interval = 10
+right_motor_cw = 1
 # 断网返航 0关闭  1开启 大于1的数值表示断网超过该值就返航，默认600秒
 network_backhome = 1
 # 剩余电量返航 0关闭  1开启 大于1的数值表示剩余电量低于该值就返航，默认30
@@ -231,28 +182,15 @@ energy_backhome = 1
 find_points_num = 5
 # TSP优化路径 0 不使用  1使用
 b_tsp = 0
-# 断网检查
-b_check_network = 1
-# 是否播放声音
-b_play_audio = 0
-# 不是在树莓派上都是用调试模式
-if current_platform == CurrentPlatform.pi:
-    home_debug = 0
-else:
-    home_debug = 1
-# 添加避障方式设置0 不避障 1 避障停止  2 自动避障绕行 3 自动避障绕行和手动模式下避障停止
+# 添加避障方式设置0 不避障 1 避障停止  2 自动避障绕行  3 自动避障绕行和手动模式下避障停止
 obstacle_avoid_type = 0
 control_obstacle_distance = 2.5  # 手动模式避障距离 单位m
 # 路径规划方式  0 不平滑路径 1 平滑路径
 path_plan_type = 1
-# 路径跟踪方式  1 pid
-path_track_type = 1
 # 校准罗盘  0 不校准 1 开始校准 2 结束校准
 calibration_compass = 0
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
-# 是否使用平滑路径  1 平滑路径 0 不平滑
-b_smooth_path = path_plan_type
 # 平滑路径最小单位 m
 smooth_path_ceil_size = 5
 # 前视觉距离
@@ -266,61 +204,28 @@ debug_send_detect_data = 0
 # 转向速度
 angular_velocity = 90
 
-
+motor_init_time = 1
 def update_height_setting():
-    global motor_forward
-    global motor_steer
     global kp
     global ki
     global kd
-    global full_speed_meter
-    global check_status_interval
-    global check_network_interval
     global max_pwm
     global min_pwm
     global stop_pwm
     global left_motor_cw
     global right_motor_cw
-    global draw_time
-    global pid_interval
-    global start_sleep_time
-    global motor_init_time
     global network_backhome
     global energy_backhome
     global find_points_num
-    global b_check_network
-    global b_play_audio
     global home_debug
     global obstacle_avoid_type
     global path_plan_type
-    global path_track_type
     global calibration_compass
-
     if os.path.exists(height_setting_path):
         try:
             with open(height_setting_path, 'r') as f:
                 height_setting_data = json.load(f)
             # 读取配置
-            if height_setting_data.get('motor_forward'):
-                try:
-                    s_motor_forward = int(height_setting_data.get('motor_forward'))
-                    if s_motor_forward <= 0:
-                        s_motor_forward = 200
-                    elif s_motor_forward >= 500:
-                        s_motor_forward = 500
-                    motor_forward = s_motor_forward
-                except Exception as e:
-                    print({'error': e})
-            if height_setting_data.get('motor_steer'):
-                try:
-                    s_motor_steer = int(height_setting_data.get('motor_steer'))
-                    if s_motor_steer <= 0:
-                        s_motor_steer = 200
-                    elif s_motor_steer >= 1000:
-                        s_motor_steer = 1000
-                    motor_steer = s_motor_steer
-                except Exception as e:
-                    print({'error': e})
             if height_setting_data.get('kp'):
                 try:
                     s_kp = float(height_setting_data.get('kp'))
@@ -339,47 +244,19 @@ def update_height_setting():
                     kd = s_kd
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('full_speed_meter'):
-                try:
-                    s_full_speed_meter = float(height_setting_data.get('full_speed_meter'))
-                    if s_full_speed_meter < 3:
-                        s_full_speed_meter = 3
-                    full_speed_meter = s_full_speed_meter
-                except Exception as e:
-                    print({'error': e})
-            if height_setting_data.get('check_status_interval'):
-                try:
-                    s_check_status_interval = float(height_setting_data.get('check_status_interval'))
-                    if s_check_status_interval < 1:
-                        s_check_status_interval = 1
-                    elif s_check_status_interval > 10:
-                        s_check_status_interval = 10
-                    check_status_interval = s_check_status_interval
-                except Exception as e:
-                    print({'error': e})
-            if height_setting_data.get('check_network_interval'):
-                try:
-                    s_check_network_interval = float(height_setting_data.get('check_network_interval'))
-                    if s_check_network_interval < 5:
-                        s_check_network_interval = 5
-                    elif s_check_network_interval > 100:
-                        s_check_network_interval = 100
-                    check_network_interval = s_check_network_interval
-                except Exception as e:
-                    print({'error': e})
             if height_setting_data.get('max_pwm'):
                 try:
                     s_max_pwm = int(height_setting_data.get('max_pwm'))
-                    if s_max_pwm >= 2200:
-                        s_max_pwm = 2200
+                    if s_max_pwm >= 2000:
+                        s_max_pwm = 2000
                     max_pwm = s_max_pwm
                 except Exception as e:
                     print({'error': e})
             if height_setting_data.get('min_pwm'):
                 try:
                     s_min_pwm = int(height_setting_data.get('min_pwm'))
-                    if s_min_pwm <= 800:
-                        s_min_pwm = 800
+                    if s_min_pwm <= 1000:
+                        s_min_pwm = 1000
                     min_pwm = s_min_pwm
                 except Exception as e:
                     print({'error': e})
@@ -391,47 +268,15 @@ def update_height_setting():
                     stop_pwm = s_stop_pwm
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('left_motor_cw'):
+            if height_setting_data.get('left_motor_cw') is not None:
                 try:
-
+                    print('height_setting_data.getleft_motor_cw',height_setting_data.get('left_motor_cw'))
                     left_motor_cw = int(height_setting_data.get('left_motor_cw'))
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('right_motor_cw'):
+            if height_setting_data.get('left_motor_cw') is not None:
                 try:
                     right_motor_cw = int(height_setting_data.get('right_motor_cw'))
-                except Exception as e:
-                    print({'error': e})
-            if height_setting_data.get('draw_time'):
-                try:
-                    s_draw_time = int(height_setting_data.get('draw_time'))
-                    if s_draw_time < 0:
-                        s_draw_time = 10
-                    draw_time = s_draw_time
-                except Exception as e:
-                    print({'error': e})
-            if height_setting_data.get('pid_interval'):
-                try:
-                    s_pid_interval = float(height_setting_data.get('pid_interval'))
-                    if s_pid_interval < 0:
-                        s_pid_interval = 0.1
-                    pid_interval = s_pid_interval
-                except Exception as e:
-                    print({'error': e})
-            if height_setting_data.get('start_sleep_time'):
-                try:
-                    s_start_sleep_time = int(height_setting_data.get('start_sleep_time'))
-                    if s_start_sleep_time < 0:
-                        s_start_sleep_time = 3
-                    start_sleep_time = s_start_sleep_time
-                except Exception as e:
-                    print({'error': e})
-            if height_setting_data.get('motor_init_time'):
-                try:
-                    s_motor_init_time = int(height_setting_data.get('motor_init_time'))
-                    if s_motor_init_time < 0:
-                        s_motor_init_time = 3
-                    motor_init_time = s_motor_init_time
                 except Exception as e:
                     print({'error': e})
             if height_setting_data.get('network_backhome'):
@@ -453,49 +298,6 @@ def update_height_setting():
                     energy_backhome = s_energy_backhome
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('find_points_num'):
-                try:
-                    s_find_points_num = int(height_setting_data.get('find_points_num'))
-                    if s_find_points_num <= 0:
-                        s_find_points_num = 5
-                    elif s_find_points_num >= 20:
-                        s_find_points_num = 20
-                    find_points_num = s_find_points_num
-                except Exception as e:
-                    print({'error': e})
-            if height_setting_data.get('b_check_network'):
-                try:
-                    s_b_check_network = int(height_setting_data.get('b_check_network'))
-                    if s_b_check_network in [0, 1]:
-                        pass
-                    else:
-                        s_b_check_network = 0
-                    b_check_network = s_b_check_network
-                except Exception as e:
-                    print({'error': e})
-            if height_setting_data.get('b_play_audio'):
-                try:
-                    s_b_play_audio = int(height_setting_data.get('b_play_audio'))
-                    if s_b_play_audio in [0, 1, 2, 3, 4, 5, 6, 7, 8]:
-                        pass
-                    else:
-                        s_b_play_audio = 0
-                    b_play_audio = s_b_play_audio
-                except Exception as e:
-                    print({'error': e})
-            if height_setting_data.get('home_debug'):
-                try:
-                    s_home_debug = int(height_setting_data.get('home_debug'))
-                    if s_home_debug in [0, 1]:
-                        pass
-                    else:
-                        s_home_debug = 0
-                    home_debug = s_home_debug
-                    # 如果在树莓派上不能使用调试模式
-                    if current_platform == CurrentPlatform.pi:
-                        home_debug = 0
-                except Exception as e:
-                    print({'error': e})
             if height_setting_data.get('obstacle_avoid_type'):
                 try:
                     s_obstacle_avoid_type = int(height_setting_data.get('obstacle_avoid_type'))
@@ -504,26 +306,6 @@ def update_height_setting():
                     else:
                         s_obstacle_avoid_type = 0
                     obstacle_avoid_type = s_obstacle_avoid_type
-                except Exception as e:
-                    print({'error': e})
-            if height_setting_data.get('path_plan_type'):
-                try:
-                    s_path_plan_type = int(height_setting_data.get('path_plan_type'))
-                    if s_path_plan_type in [0, 1]:
-                        pass
-                    else:
-                        s_path_plan_type = 0
-                    path_plan_type = s_path_plan_type
-                except Exception as e:
-                    print({'error': e})
-            if height_setting_data.get('path_track_type'):
-                try:
-                    s_path_track_type = int(height_setting_data.get('path_track_type'))
-                    if s_path_track_type in [0, 1, 2, 3]:
-                        pass
-                    else:
-                        s_path_track_type = 0
-                    path_track_type = s_path_track_type
                 except Exception as e:
                     print({'error': e})
             if height_setting_data.get('calibration_compass'):
@@ -553,11 +335,6 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
             json.dump({'speed_grade': speed_grade,
                        'arrive_range': arrive_distance,
                        'keep_point': find_points_num,
-                       'secure_distance': path_search_safe_distance,
-                       'row': row_gap,
-                       'col': col_gap,
-                       'pool_name': pool_name,
-                       'video_url': video_url
                        },
                       bf)
     if b_base_default:
@@ -565,74 +342,45 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
             json.dump({'speed_grade': speed_grade,
                        'arrive_range': arrive_distance,
                        'keep_point': find_points_num,
-                       'secure_distance': path_search_safe_distance,
-                       'row': row_gap,
-                       'col': col_gap,
-                       'pool_name': pool_name,
-                       'video_url': video_url
                        },
                       bdf)
     if b_height:
         with open(height_setting_path, 'w') as hf:
-            json.dump({'motor_forward': motor_forward,
-                       'motor_steer': motor_steer,
-                       'kp': kp,
+            json.dump({'kp': kp,
                        'ki': ki,
                        'kd': kd,
-                       'full_speed_meter': full_speed_meter,
-                       'check_status_interval': check_status_interval,
                        'max_pwm': max_pwm,
                        'min_pwm': min_pwm,
                        'left_motor_cw': left_motor_cw,
                        'right_motor_cw': right_motor_cw,
-                       'draw_time': draw_time,
-                       'pid_interval': pid_interval,
-                       'start_sleep_time': start_sleep_time,
-                       'motor_init_time': motor_init_time,
-                       'check_network_interval': check_network_interval,
                        'stop_pwm': stop_pwm,
                        'network_backhome': network_backhome,
                        'energy_backhome': energy_backhome,
                        'find_points_num': find_points_num,
                        'b_tsp': b_tsp,
-                       'b_check_network': b_check_network,
-                       'b_play_audio': b_play_audio,
                        'home_debug': home_debug,
                        'obstacle_avoid_type': obstacle_avoid_type,
                        'path_plan_type': path_plan_type,
-                       'path_track_type': path_track_type,
                        'calibration_compass': calibration_compass
                        },
                       hf)
     if b_height_default:
         with open(height_setting_default_path, 'w') as hdf:
-            json.dump({'motor_forward': motor_forward,
-                       'motor_steer': motor_steer,
-                       'kp': kp,
+            json.dump({'kp': kp,
                        'ki': ki,
                        'kd': kd,
-                       'full_speed_meter': full_speed_meter,
-                       'check_status_interval': check_status_interval,
                        'max_pwm': max_pwm,
                        'min_pwm': min_pwm,
                        'left_motor_cw': left_motor_cw,
                        'right_motor_cw': right_motor_cw,
-                       'draw_time': draw_time,
-                       'pid_interval': pid_interval,
-                       'start_sleep_time': start_sleep_time,
-                       'motor_init_time': motor_init_time,
-                       'check_network_interval': check_network_interval,
                        'stop_pwm': stop_pwm,
                        'network_backhome': network_backhome,
                        'energy_backhome': energy_backhome,
                        'find_points_num': find_points_num,
                        'b_tsp': b_tsp,
-                       'b_check_network': b_check_network,
-                       'b_play_audio': b_play_audio,
                        'home_debug': home_debug,
                        'obstacle_avoid_type': obstacle_avoid_type,
                        'path_plan_type': path_plan_type,
-                       'path_track_type': path_track_type,
                        'calibration_compass': calibration_compass
                        },
                       hdf)
@@ -664,6 +412,7 @@ b_lora_remote_control = 1
 lora_tx = 25
 lora_rx = 8
 lora_baud = 9600
+b_lora_com = 0 # lora是否使用TTL转串口模块
 # 单片机串口
 b_pin_stc = 1
 stc_tx = 3
@@ -691,12 +440,12 @@ sonar_baud = 9600
 sonar_steer = 21  # 声呐舵机
 
 # 抽水
-b_draw = 0  # 是否有抽水泵
+b_draw = 1  # 是否有抽水泵
 b_control_deep = 0  # 是否可调深度
 draw_steer = 13  # 舵机接口
 
 # 排水
-b_drain = 1  # 是否有排水泵
+b_drain = 0  # 是否有排水泵
 
 min_deep_steer_pwm = 800  # 最下面
 max_deep_steer_pwm = 2400  # 最上面
@@ -709,6 +458,13 @@ class WaterType(enum.Enum):
     DO = 3
     TD = 4
     NH3_NH4 = 5
+
+draw_deep = 0.5  # 抽水深度
+draw_capacity = 1000  # 需要抽水容量
+max_draw_capacity = 5000  # 单个瓶子最大抽水容量
+draw_speed = 2000  # 抽水速度 毫升/分钟
+number_of_bottles = 4  # 总共包含抽水瓶数
+max_draw_time = int(60*max_draw_capacity/draw_speed)
 
 
 if __name__ == '__main__':
