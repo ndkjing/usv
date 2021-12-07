@@ -1316,11 +1316,11 @@ class DataManager:
             # 电脑手动
             if self.ship_status == ShipStatus.computer_control or self.ship_status == ShipStatus.tasking:
                 # 手动模式避障距离
-                if config.obstacle_avoid_type == 3:
-                    if 1 in self.pi_main_obj.control_obstacle_list[
-                            int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                        if self.direction == 0:
-                            self.direction = -1
+                # if config.obstacle_avoid_type == 3:
+                #     if 1 in self.pi_main_obj.control_obstacle_list[
+                #             int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
+                #         if self.direction == 0:
+                #             self.direction = -1
                 if not config.home_debug:
                     if self.direction == 0:
                         self.control_info += ' 向前'
@@ -1767,6 +1767,7 @@ class DataManager:
                 high_f_status_data.update({"direction": round(self.current_theta, 1)})
             elif not config.home_debug and self.pi_main_obj.theta:
                 high_f_status_data.update({"direction": round(self.pi_main_obj.theta, 1)})
+            high_f_status_data.update({"theta_error": round(self.theta_error,1)})
             self.send(method='mqtt', topic='high_f_status_data_%s' % config.ship_code, data=high_f_status_data,
                       qos=0)
 
@@ -1914,7 +1915,13 @@ class DataManager:
                         {'base_setting_data is None': self.server_data_obj.mqtt_send_get_obj.base_setting_data})
                 else:
                     self.server_data_obj.mqtt_send_get_obj.base_setting_data.update({'info_type': 3})
-                    self.server_data_obj.mqtt_send_get_obj.base_setting_data.update({'video_url': 3})
+                    # 删除湖泊名称和安全距离 这两个值放到服务器上
+                    if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get('pool_name') is not None:
+                        del self.server_data_obj.mqtt_send_get_obj.base_setting_data['pool_name']
+                    if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get('secure_distance') is not None:
+                        del self.server_data_obj.mqtt_send_get_obj.base_setting_data['secure_distance']
+                    if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get('keep_point') is not None:
+                        del self.server_data_obj.mqtt_send_get_obj.base_setting_data['keep_point']
                     self.send(method='mqtt', topic='base_setting_%s' % config.ship_code,
                               data=self.server_data_obj.mqtt_send_get_obj.base_setting_data,
                               qos=0)

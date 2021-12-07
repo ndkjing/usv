@@ -7,7 +7,7 @@ from messageBus import data_define
 from webServer import server_config
 from utils import log
 import copy
-
+import os
 import paho.mqtt.client as mqtt
 import time
 import json
@@ -337,6 +337,7 @@ class MqttSendGet:
                 self.home_lng_lat = status_data.get('home_lng_lat')
         # 服务器基础配置
         elif topic == 'server_base_setting_%s' % self.ship_code:
+            server_base_setting_path = os.path.join(server_config.setting_dir, 'setting_%s.json' % self.ship_code)
             self.logger.info({'server_base_setting_ ': json.loads(msg.payload)})
             if len(msg.payload) < 5:
                 return
@@ -348,23 +349,23 @@ class MqttSendGet:
                 info_type = int(server_base_setting_data.get('info_type'))
                 self.server_base_setting_data_info = info_type
                 if info_type == 1:
-                    with open(server_config.server_base_setting_path, 'r') as f:
+                    with open(server_base_setting_path, 'r') as f:
                         self.server_base_setting_data = json.load(f)
                 elif info_type == 2:
-                    with open(server_config.server_base_setting_path, 'r') as f:
+                    with open(server_base_setting_path, 'r') as f:
                         self.server_base_setting_data = json.load(f)
-                    with open(server_config.server_base_setting_path, 'w') as f:
+                    with open(server_base_setting_path, 'w') as f:
                         self.server_base_setting_data.update(server_base_setting_data)
                         json.dump(self.server_base_setting_data, f)
-                    server_config.update_base_setting()
+                    server_config.update_base_setting(server_base_setting_path)
                 # 恢复默认配置
-                elif info_type == 4:
-                    with open(server_config.server_base_setting_path, 'w') as f:
-                        with open(server_config.server_base_default_setting_path, 'r') as df:
-                            self.server_base_default_setting_data = json.load(df)
-                            self.server_base_setting_data = copy.deepcopy(self.server_base_default_setting_data)
-                            json.dump(self.server_base_setting_data, f)
-                    server_config.update_base_setting()
+                # elif info_type == 4:
+                #     with open(server_base_setting_path, 'w') as f:
+                #         with open(server_config.server_base_default_setting_path, 'r') as df:
+                #             self.server_base_default_setting_data = json.load(df)
+                #             self.server_base_setting_data = copy.deepcopy(self.server_base_default_setting_data)
+                #             json.dump(self.server_base_setting_data, f)
+                #     server_config.update_base_setting()
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):

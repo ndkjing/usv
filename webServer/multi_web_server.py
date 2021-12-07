@@ -266,10 +266,10 @@ class WebServer:
                         {'pool_center_lng_lat': self.baidu_map_obj_dict.get(ship_code).pool_center_lng_lat})
                     self.baidu_map_obj_dict.get(ship_code).get_pool_name()
                     if self.baidu_map_obj_dict.get(ship_code).pool_name is not None:
-                        config.pool_name = self.baidu_map_obj_dict.get(ship_code).pool_name
+                        server_config.pool_name = self.baidu_map_obj_dict.get(ship_code).pool_name
                     else:
-                        config.pool_name = self.baidu_map_obj_dict.get(ship_code).address
-                    self.logger.info({'config.pool_name': config.pool_name})
+                        server_config.pool_name = self.baidu_map_obj_dict.get(ship_code).address
+                    self.logger.info({'server_config.pool_name': server_config.pool_name})
                     # 判断当前湖泊是否曾经出现，出现过则获取的ID 没出现过发送请求获取新ID
                     if isinstance(self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
                         save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts.tolist()
@@ -281,7 +281,7 @@ class WebServer:
                         "mapData": json.dumps(
                             self.baidu_map_obj_dict.get(ship_code).pool_lng_lats),
                         "deviceId": ship_code,
-                        "name": config.pool_name,
+                        "name": server_config.pool_name,
                         "pixData": json.dumps(save_pool_cnts)}
 
                     # 本地保存经纬度信息，放大1000000倍 用来只保存整数
@@ -419,23 +419,23 @@ class WebServer:
                         ship_code=ship_code,
                         data=pool_info_data,
                         qos=1)
-
-                    config.write_setting(True)
-                    config.update_base_setting()
+                    # 将数据保存到本地设置中并且更新设置
+                    server_config.write_ship_code_setting(ship_code)
+                    server_config.update_base_setting(ship_code)
                     # 在基础设置中发送湖泊名称
                     if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.b_pool_click:
-                        if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data is None:
+                        if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data is None:
                             self.logger.error(
                                 {
                                     'base_setting_data is None': self.server_data_obj_dict.get(
-                                        ship_code).mqtt_send_get_obj.base_setting_data})
+                                        ship_code).mqtt_send_get_obj.server_base_setting_data})
                         else:
-                            self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.update(
+                            self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data.update(
                                 {'info_type': 3})
-                            send_data = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data
-                            send_data.update({'pool_name': config.pool_name})
+                            send_data = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data
+                            send_data.update({'pool_name': server_config.pool_name})
                             self.send(method='mqtt',
-                                      topic='base_setting_%s' % config.ship_code,
+                                      topic='server_base_setting_%s' % ship_code,
                                       ship_code=ship_code,
                                       data=send_data,
                                       qos=0)
@@ -487,7 +487,7 @@ class WebServer:
                             self.path_planning(target_lng_lats=target_lng_lats, ship_code=ship_code)
 
                 # 客户端获取基础设置数据
-                if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data_info in [1, 4]:
+                if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data_info in [1, 4]:
                     if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data is None:
                         self.logger.error(
                             {'base_setting_data is None': self.server_data_obj_dict.get(
@@ -497,10 +497,10 @@ class WebServer:
                             {'info_type': 3})
                         self.send(method='mqtt',
                                   ship_code=ship_code,
-                                  topic='base_setting_%s' % ship_code,
+                                  topic='server_base_setting_%s' % ship_code,
                                   data=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data,
                                   qos=0)
-                        self.logger.info({'base_setting': self.server_data_obj_dict.get(
+                        self.logger.info({'server_base_setting_': self.server_data_obj_dict.get(
                             ship_code).mqtt_send_get_obj.server_base_setting_data})
                         # self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data = None
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data_info = 0
