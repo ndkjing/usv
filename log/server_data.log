@@ -2082,3 +2082,7 @@
 2021-12-07 14:33:35,757 server_data.py[line:479] INFO {'base_setting ': {'info_type': 1}}
 2021-12-07 14:33:36,146 server_data.py[line:541] INFO {'refresh_setting ': {'mapId': '1458632338594308097', 'sampling_points': [], 'path_points': [], 'draw_points': [], 'info_type': 2}}
 2021-12-07 14:33:36,680 server_data.py[line:479] INFO {'base_setting ': {'speed_grade': '5', 'arrive_range': '3', 'info_type': 3}}
+2021-12-07 14:40:23,768 server_data.py[line:541] INFO {'refresh_setting ': {'info_type': 1}}
+2021-12-07 14:40:23,792 server_data.py[line:479] INFO {'base_setting ': {'info_type': 1}}
+2021-12-07 14:40:24,797 server_data.py[line:479] INFO {'base_setting ': {'speed_grade': '5', 'arrive_range': '3', 'info_type': 3}}
+2021-12-07 14:40:24,936 server_data.py[line:541] INFO {'refresh_setting ': {'mapId': '1458632338594308097', 'sampling_points': [], 'path_points': [], 'draw_points': [], 'info_type': 2}}
