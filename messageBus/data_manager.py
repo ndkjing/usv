@@ -226,6 +226,7 @@ class DataManager:
                         self.server_data_obj.mqtt_send_get_obj.b_draw = 0
             else:
                 self.draw_start_time = None
+                self.dump_draw_time = 0
         else:
             # 开启了遥控器
             if self.pi_main_obj.b_start_remote:
@@ -297,13 +298,13 @@ class DataManager:
                                 self.b_sampling = 2
                                 self.send_stc_data('A0Z')
                 else:
+                    self.dump_draw_time = 0
                     # 没有在排水才能发送停止
                     if not self.is_auto_drain:
                         self.send_stc_data('A0Z')
                     # 没有抽水的情况下杆子都要收回来
-                    # else:
-                    #     if config.b_control_deep:
-                    #         self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
+                    if config.b_control_deep and self.drain_start_time is None:
+                        self.pi_main_obj.set_draw_deep(config.max_deep_steer_pwm)
                     self.draw_start_time = None
 
                 # 判断没有排水则先排水再收杆子
@@ -888,8 +889,8 @@ class DataManager:
                                                                 angle,
                                                                 config.min_steer_distance / 5)
             self.lng_lat = point
-            if random.random()>0.5:
-                self.current_theta+=0.1
+            if random.random() > 0.5:
+                self.current_theta += 0.1
             else:
                 self.current_theta -= 0.1
         elif lrfb == 'b':
@@ -899,8 +900,8 @@ class DataManager:
                                                                 angle,
                                                                 config.min_steer_distance / 5)
             self.lng_lat = point
-            if random.random()>0.5:
-                self.current_theta+=0.1
+            if random.random() > 0.5:
+                self.current_theta += 0.1
             else:
                 self.current_theta -= 0.1
         elif lrfb == 'l':
@@ -1430,7 +1431,7 @@ class DataManager:
             detect_data.update({'mapId': self.data_define_obj.pool_code})
             status_data.update({'ping': round(self.ping, 1)})
             status_data.update({'current_lng_lat': self.gaode_lng_lat})
-            status_data.update({'draw_time': self.dump_draw_time})
+            status_data.update({'draw_time': [self.dump_draw_time, config.draw_time]})
             if config.b_sonar:
                 self.lng_lat_list.append(self.gaode_lng_lat)
                 deep_ = self.pi_main_obj.get_sonar_data()
@@ -1522,6 +1523,7 @@ class DataManager:
                                                 )
                         if return_data:
                             self.logger.info({'更新里程和时间成功': send_mileage_data})
+                        # self.logger.info({'status_data_': })
                 last_runtime = int(time.time() - self.start_time)
                 last_run_distance = int(self.run_distance)
                 status_data.update({"totle_distance": self.http_save_distance})
@@ -1579,6 +1581,8 @@ class DataManager:
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
                       qos=0)
+            if time.time() % 10 < 1:
+                self.logger.info({'status_data_':mqtt_send_status_data})
 
     # 配置更新
     def update_config(self):

@@ -161,9 +161,9 @@ mqtt_port = 1884
 ship_gaode_lng_lat = [114.524096, 30.506853]
 # ship_gaode_lng_lat = None
 # pid三参数
-kp = 2.0
-ki = 0.3
-kd = 1.0
+kp = 0.6
+ki = 0.2
+kd = 2.0
 # 最大pwm值
 max_pwm = 1800
 # 最小pwm值
@@ -441,7 +441,7 @@ sonar_steer = 21  # 声呐舵机
 
 # 抽水
 b_draw = 1  # 是否有抽水泵
-b_control_deep = 0  # 是否可调深度
+b_control_deep = 1 # 是否可调深度
 draw_steer = 13  # 舵机接口
 
 # 排水
