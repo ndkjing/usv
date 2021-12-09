@@ -213,6 +213,8 @@ class DataManager:
         self.http_save_distance = None  # http 记录保存距离
         self.http_save_time = None  # http记录保存时间
         self.http_save_id = ''  # http记录保存id
+        self.dump_draw_time = 0  # 剩余抽水时间
+        self.dump_draw_list = [0, 0]  # 用于前端显示抽水剩余时间
 
     # 连接mqtt服务器
     def connect_mqtt_server(self):
@@ -242,6 +244,7 @@ class DataManager:
                     # 测试限制水满
                     if self.bottle_draw_time_list[bottle_id - 1] > config.max_draw_time:
                         print('该瓶抽水已满不能再抽', self.bottle_draw_time_list[bottle_id - 1])
+                    self.dump_draw_list = [draw_time-int(time.time() - self.draw_start_time), draw_time]
                     if time.time() - self.draw_start_time > draw_time:
                         self.b_draw_over_send_data = True
                         self.server_data_obj.mqtt_send_get_obj.b_draw = 0
@@ -283,6 +286,7 @@ class DataManager:
                     if self.bottle_draw_time_list[bottle_id - 1] > config.max_draw_time:
                         print('该瓶抽水已满不能再抽', self.bottle_draw_time_list[bottle_id - 1])
                     # 超时中断抽水
+                    self.dump_draw_list = [draw_time - int(time.time() - self.draw_start_time), draw_time]
                     if time.time() - self.draw_start_time > draw_time:
                         self.server_data_obj.mqtt_send_get_obj.b_draw = 0
                         self.b_sampling = 2
@@ -324,6 +328,8 @@ class DataManager:
                     if b_finish_draw:
                         self.draw_over_bottle_info = [self.current_draw_bottle, self.current_draw_deep,
                                                       self.current_draw_capacity]
+            else:
+                self.dump_draw_list = [0, 0]
             # 预先存储任务深度和水量
             if self.current_arriver_index == len(self.sort_task_done_list):
                 return
@@ -346,6 +352,7 @@ class DataManager:
                 temp_draw_time = int(60 * temp_draw_capacity / config.draw_speed)  # 根据默认配置修改抽水时间
                 is_finish_draw = self.draw_sub(False, True, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
                 if is_finish_draw:
+                    self.dump_draw_list = [0, 0]
                     print('self.current_arriver_index index temp_draw_bottle_id,temp_draw_deep,temp_draw_time',
                           self.current_arriver_index, index, temp_draw_bottle_id,
                           temp_draw_deep, temp_draw_capacity)
@@ -420,6 +427,7 @@ class DataManager:
                         self.current_draw_capacity = temp_draw_capacity
                         is_finish_draw = self.draw_sub(True, False, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
                         if is_finish_draw:
+                            self.dump_draw_list = [0, 0]
                             self.draw_over_bottle_info = [self.current_draw_bottle, self.current_draw_deep,
                                                           self.current_draw_capacity]
                     # # 预先存储任务深度和水量
@@ -445,6 +453,7 @@ class DataManager:
                     self.current_draw_capacity = temp_draw_capacity
                     is_finish_draw = self.draw_sub(False, True, temp_draw_bottle_id, temp_draw_deep, temp_draw_time)
                     if is_finish_draw:
+                        self.dump_draw_list = [0, 0]
                         self.sort_task_done_list[self.current_arriver_index][index] = 1
                         print('self.sort_task_done_list', self.current_arriver_index, self.sort_task_done_list)
                         self.draw_over_bottle_info = [self.current_draw_bottle, self.current_draw_deep,
@@ -455,6 +464,7 @@ class DataManager:
                     #             0) == 0:
                     #     self.current_arriver_index += 1
                 else:
+                    self.dump_draw_list = [0, 0]
                     self.draw_sub(False, False, 0, 0, 0)
 
     # 深度转化为pwm值
@@ -673,6 +683,8 @@ class DataManager:
             (ShipStatus.backhome_network, ShipStatus.remote_control): 21,
             (ShipStatus.backhome_low_energy, ShipStatus.remote_control): 22,
             (ShipStatus.at_home, ShipStatus.idle): 23,
+            (ShipStatus.at_home, ShipStatus.computer_control): 29,
+            (ShipStatus.at_home, ShipStatus.remote_control): 30,
         }
         status_tuple = (self.ship_status, target_status)
         self.logger.info({'status change': status_tuple})
@@ -1093,6 +1105,42 @@ class DataManager:
                                                             config.min_steer_distance * 5)
         self.points_arrive_control(point, point, False, False)
 
+    # 调试模式下往前后左右运动
+    def debug_lrfb_control(self, lrfb):
+        "lrfb 表示前后左右left right forward backward"
+        if self.current_theta is None:
+            return
+        if lrfb == 'f':
+            angle = self.current_theta
+            point = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                self.lng_lat[1],
+                                                                angle,
+                                                                config.min_steer_distance / 5)
+            self.lng_lat = point
+            if random.random() > 0.5:
+                self.current_theta += 0.1
+            else:
+                self.current_theta -= 0.1
+        elif lrfb == 'b':
+            angle = (self.current_theta + 180) % 360
+            point = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                self.lng_lat[1],
+                                                                angle,
+                                                                config.min_steer_distance / 5)
+            self.lng_lat = point
+            if random.random() > 0.5:
+                self.current_theta += 0.1
+            else:
+                self.current_theta -= 0.1
+        elif lrfb == 'l':
+            self.current_theta += 3
+        else:
+            self.current_theta -= 3
+        # point = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+        #                                                     self.lng_lat[1],
+        #                                                     angle,
+        #                                                     config.min_steer_distance * 5)
+        # self.points_arrive_control(point, point, False, False)
     # 计算障碍物下目标点
     def get_avoid_obstacle_point(self, path_planning_point_gps=None):
         """
@@ -1114,14 +1162,14 @@ class DataManager:
                 else:
                     return path_planning_point_gps, False
             # 避障绕行，根据障碍物计算下一个目标点
-            elif config.obstacle_avoid_type in [2,3]:
+            elif config.obstacle_avoid_type in [2, 3]:
                 angle = vfh.vfh_func(9, self.pi_main_obj.obstacle_list)
                 print('angle', angle)
                 if angle == -1:  # 没有可通行区域
                     # 如果是离岸边太近就直接认为到达
                     if 1 in self.pi_main_obj.obstacle_list[
                             int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                        if self.server_data_obj.mqtt_send_get_obj.bank_distance > -100and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                        if self.server_data_obj.mqtt_send_get_obj.bank_distance > -100 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
                             return next_point_lng_lat, True
                     else:
                         abs_angle = (self.pi_main_obj.theta + 180) % 360
@@ -1351,7 +1399,19 @@ class DataManager:
                         self.point_arrive_start_time = None
                         self.pi_main_obj.stop()
                 else:
-                    if self.direction == 10:
+                    if self.direction == 0:
+                        self.control_info += ' 向前'
+                        self.debug_lrfb_control(lrfb='f')
+                    elif self.direction == 90:
+                        self.control_info += ' 向左'
+                        self.debug_lrfb_control(lrfb='l')
+                    elif self.direction == 180:
+                        self.control_info += ' 向后'
+                        self.debug_lrfb_control(lrfb='b')
+                    elif self.direction == 270:
+                        self.control_info += ' 向右'
+                        self.debug_lrfb_control(lrfb='r')
+                    elif self.direction == 10:
                         self.control_info += ' 向北'
                         self.nesw_control(nest=Nwse.north)
                     elif self.direction == 190:
@@ -1363,6 +1423,8 @@ class DataManager:
                     elif self.direction == 1270:
                         self.control_info += ' 向东'
                         self.nesw_control(nest=Nwse.east)
+                    elif self.direction == -1:
+                        self.control_info += ' 停止'
             # 遥控器控制
             elif self.ship_status == ShipStatus.remote_control or self.ship_status == ShipStatus.tasking:
                 # lora遥控器
@@ -1614,7 +1676,7 @@ class DataManager:
         last_runtime = None
         last_run_distance = None
         while True:
-            time.sleep(0.2)  # 1秒发送一次
+            time.sleep(1)  # 1秒发送一次
             if not self.server_data_obj.mqtt_send_get_obj.is_connected:
                 continue
             if self.server_data_obj.mqtt_send_get_obj.pool_code:
@@ -1760,14 +1822,13 @@ class DataManager:
         high_f_status_data = {}
         while 1:
             time.sleep(0.2)
-            # print('send high_f')
             if config.home_debug and self.current_theta is None:
                 self.current_theta = 1
             if config.home_debug and self.current_theta is not None:
                 high_f_status_data.update({"direction": round(self.current_theta, 1)})
             elif not config.home_debug and self.pi_main_obj.theta:
                 high_f_status_data.update({"direction": round(self.pi_main_obj.theta, 1)})
-            high_f_status_data.update({"theta_error": round(self.theta_error,1)})
+            high_f_status_data.update({"theta_error": round(self.theta_error, 1)})
             self.send(method='mqtt', topic='high_f_status_data_%s' % config.ship_code, data=high_f_status_data,
                       qos=0)
 

@@ -1,4 +1,5 @@
 import copy
+import time
 import numpy as np
 from numpy import e
 from utils import log
@@ -34,28 +35,29 @@ class SimplePid:
                   config.kd * (theta_error - self.previousError)
         self.previousError = theta_error
         max_error_sum = 1000
-        if errorSum>max_error_sum:
+        if errorSum > max_error_sum:
             errorSum = max_error_sum
-        elif errorSum<-max_error_sum:
+        elif errorSum < -max_error_sum:
             errorSum = -max_error_sum
         self.errorSum = errorSum
         return control
 
     def update_steer_pid_1(self, theta_error):
-        self.adjust_p_list.append(theta_error)
         # 统计累计误差
         if len(self.adjust_p_list) == self.adjust_p_size:
             # 通过误差角度队列修正p
             del self.adjust_p_list[0]
             self.adjust_p_list.append(theta_error)
-            del self.adjust_p_list[self.adjust_p_list.index(max(self.adjust_p_list))]
-            del self.adjust_p_list[self.adjust_p_list.index(min(self.adjust_p_list))]
+            # del self.adjust_p_list[self.adjust_p_list.index(max(self.adjust_p_list))]
+            # del self.adjust_p_list[self.adjust_p_list.index(min(self.adjust_p_list))]
             error_sum = sum(self.adjust_p_list)
         else:
             self.adjust_p_list.append(theta_error)
-            error_sum = 0
+            error_sum = sum(self.adjust_p_list)
         control = config.kp * theta_error + config.ki * error_sum + \
                   config.kd * (theta_error - self.previousError)
+        print(time.time(), 'theta_error', theta_error, 'error_sum', error_sum, 'delta_error',
+              theta_error - self.previousError)
         self.previousError = theta_error
         return control
 
@@ -110,11 +112,11 @@ class SimplePid:
         steer_pwm = (1.0 / (1.0 + e ** (-0.02 * steer_control)) - 0.5) * 1000
         forward_pwm = (1.0 / (1.0 + e ** (-0.2 * distance)) - 0.5) * 1000
         # 缩放到指定最大值范围内
-        max_control = config.max_pwm-config.stop_pwm
-        if forward_pwm+abs(steer_pwm) > max_control:
+        max_control = config.max_pwm - config.stop_pwm
+        if forward_pwm + abs(steer_pwm) > max_control:
             temp_forward_pwm = forward_pwm
-            forward_pwm = max_control*(temp_forward_pwm)/(temp_forward_pwm+abs(steer_pwm))
-            steer_pwm = max_control*(steer_pwm/(temp_forward_pwm+abs(steer_pwm)))
+            forward_pwm = max_control * (temp_forward_pwm) / (temp_forward_pwm + abs(steer_pwm))
+            steer_pwm = max_control * (steer_pwm / (temp_forward_pwm + abs(steer_pwm)))
         left_pwm = config.stop_pwm + int(forward_pwm) - int(steer_pwm)
         right_pwm = config.stop_pwm + int(forward_pwm) + int(steer_pwm)
         return left_pwm, right_pwm
