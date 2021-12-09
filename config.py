@@ -49,7 +49,7 @@ class ShipType(enum.Enum):
     adcp = 5
 
 
-current_ship_type = ShipType.multi_draw
+current_ship_type = ShipType.adcp
 
 sysstr = platform.system()
 if sysstr == "Windows":
