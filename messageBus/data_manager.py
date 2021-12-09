@@ -904,6 +904,7 @@ class DataManager:
         #                                                     angle,
         #                                                     config.min_steer_distance * 5)
         # self.points_arrive_control(point, point, False, False)
+
     # 计算障碍物下目标点
     def get_avoid_obstacle_point(self, path_planning_point_gps=None):
         """
@@ -1580,6 +1581,25 @@ class DataManager:
                       qos=0)
             if time.time() % 10 < 1:
                 self.logger.info({'status_data_': mqtt_send_status_data})
+
+    # 测深数据上传
+    def send_deep(self):
+        while True:
+            time.sleep(1)
+            if not config.b_deep_detect:
+                continue
+            deep_data = {
+                  "deep": "2.7",
+                  "deviceId": "XXLJC4LCGSCSD1DA002",
+                  "jwd": "[114.524098, 30.506853]",
+                  "mapId": "1434770242236428290"
+                }
+            try:
+                self.send(method='http', data=deep_data,
+                          url=config.http_deep_data,
+                          http_type='POST')
+            except Exception as e:
+                self.data_save_logger.info({"发送测深error": e})
 
     def send_high_f_status_data(self):
         high_f_status_data = {}

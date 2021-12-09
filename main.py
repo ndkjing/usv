@@ -83,6 +83,7 @@ def main():
                         data_manager_obj.send_distacne,
                         data_manager_obj.loop_check_task,
                         data_manager_obj.send_high_f_status_data,
+                        data_manager_obj.send_deep,
                         ]
     common_thread_list = []
     # 树莓派对象数据处理
