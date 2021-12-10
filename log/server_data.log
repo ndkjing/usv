@@ -2170,3 +2170,27 @@
 2021-12-09 09:11:42,383 server_data.py[line:479] INFO {'base_setting ': {'info_type': 1}}
 2021-12-09 09:11:42,477 server_data.py[line:479] INFO {'base_setting ': {'speed_grade': '5', 'arrive_range': '3', 'info_type': 3}}
 2021-12-09 09:11:46,845 server_data.py[line:666] INFO {'info_type': 2, 'bottle_id': 2, 'deep': 0.1, 'amount': 200}
+2021-12-10 09:40:26,778 server_data.py[line:705] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:26,790 server_data.py[line:705] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:26,808 server_data.py[line:705] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:26,826 server_data.py[line:255] INFO Connected with result code:  0
+2021-12-10 09:40:26,838 server_data.py[line:705] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:26,856 server_data.py[line:705] INFO {'topic': 'start_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:26,886 server_data.py[line:705] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:26,904 server_data.py[line:705] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:26,922 server_data.py[line:705] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:26,947 server_data.py[line:705] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:26,977 server_data.py[line:705] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:26,995 server_data.py[line:705] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:27,019 server_data.py[line:705] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:27,043 server_data.py[line:705] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:27,061 server_data.py[line:705] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:27,090 server_data.py[line:705] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:27,122 server_data.py[line:705] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:27,146 server_data.py[line:705] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:27,164 server_data.py[line:705] INFO {'topic': 'task_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:27,200 server_data.py[line:705] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:27,236 server_data.py[line:705] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA002', 'qos': 0}
+2021-12-10 09:40:30,071 server_data.py[line:543] INFO {'refresh_setting ': {'info_type': 1}}
+2021-12-10 09:40:30,095 server_data.py[line:481] INFO {'base_setting ': {'info_type': 1}}
+2021-12-10 09:40:30,762 server_data.py[line:481] INFO {'base_setting ': {'speed_grade': '5', 'arrive_range': '3', 'info_type': 3}}
