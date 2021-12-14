@@ -1,3 +1,4 @@
+import copy
 import enum
 import json
 import logging
@@ -112,9 +113,35 @@ def is_in_contours(point_, local_map_data):
             print('in_cnt', in_cnt)
             if in_cnt >= 0:
                 print(r'cnt id ', cnt['id'])
+                print('周长',cal_map_circle(cnt))
                 return cnt['id']
         # 循环结束返回None
         return None
+
+
+# 计算地图轮廓周长 返回单位米
+def cal_map_circle(cnt):
+    """
+    
+    @return: 
+    """
+    sum_circle = 0
+    f_point = None
+    s_point = None
+    for index, point in enumerate(cnt['pool_lng_lats']):
+        if index == 0:
+            f_point = [point[0]/1000000,point[1]/1000000]
+            continue
+        else:
+            s_point = [point[0]/1000000,point[1]/1000000]
+        if index == len(cnt['pool_lng_lats']) - 1:
+            return sum_circle
+        if f_point is not None and s_point is not None:
+            sum_circle += lng_lat_calculate.distanceFromCoordinate(f_point[0],
+                                                     f_point[1],
+                                                     s_point[0],
+                                                     s_point[1])
+            f_point = copy.deepcopy(s_point)
 
 
 # 枚举地图类型

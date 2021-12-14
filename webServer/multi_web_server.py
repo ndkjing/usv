@@ -322,6 +322,8 @@ class WebServer:
                         self.logger.info({'pool_id': pool_id})
                         with open(save_map_path, 'w') as f:
                             json.dump(save_data, f)
+                        sum_circle = self.baidu_map_obj_dict.get(ship_code).cal_map_circle(save_pool_lng_lats)
+                        self.logger.info({'周长为': sum_circle})
                     else:
                         with open(save_map_path, 'r') as f:
                             local_map_data = json.load(f)
