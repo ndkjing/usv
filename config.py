@@ -38,6 +38,7 @@ class CurrentPlatform(enum.Enum):
     pi = 3
     others = 4
 
+
 # 船类型
 class ShipType(enum.Enum):
     single_draw = 1
@@ -45,6 +46,7 @@ class ShipType(enum.Enum):
     water_detect = 3
     dock = 4
     adcp = 5
+
 
 current_ship_type = ShipType.water_detect
 
@@ -74,11 +76,13 @@ gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
 # 腾讯地图key
 tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
 
-draw_time=30
+draw_time = 30
 
 # 速度等级 1到5级 速度从低到高，仅能控制手动模式下速度   1 级表示1600 5 2000
 speed_grade = 3
 arrive_distance = 2.5
+
+
 # 多点和寻点模式下查找连接点数量
 # keep_point = 0
 
@@ -121,8 +125,8 @@ stc2pi_timeout = 1
 # 船编号
 ship_code = ship_code_config.ship_code
 # 串口位置和波特率
-b_use_com_stc = 0   # 是否使用单片机硬件转接串口
-stc_port = '/dev/ttyUSB0'# '/dev/ttyAMA0'
+b_use_com_stc = 0  # 是否使用单片机硬件转接串口
+stc_port = '/dev/ttyUSB0'  # '/dev/ttyAMA0'
 stc_baud = 115200
 b_com_stc = os.path.exists(stc_port) and b_use_com_stc  # 判断是否存在以及是否使用
 # http 接口
@@ -205,6 +209,8 @@ debug_send_detect_data = 0
 angular_velocity = 90
 
 motor_init_time = 1
+
+
 def update_height_setting():
     global kp
     global ki
@@ -270,7 +276,7 @@ def update_height_setting():
                     print({'error': e})
             if height_setting_data.get('left_motor_cw') is not None:
                 try:
-                    print('height_setting_data.getleft_motor_cw',height_setting_data.get('left_motor_cw'))
+                    print('height_setting_data.getleft_motor_cw', height_setting_data.get('left_motor_cw'))
                     left_motor_cw = int(height_setting_data.get('left_motor_cw'))
                 except Exception as e:
                     print({'error': e})
@@ -412,12 +418,12 @@ b_lora_remote_control = 1
 lora_tx = 25
 lora_rx = 8
 lora_baud = 9600
-b_lora_com = 0 # lora是否使用TTL转串口模块
+b_lora_com = 0  # lora是否使用TTL转串口模块
 # 单片机串口
 b_pin_stc = 1
 stc_tx = 3
 stc_rx = 4
-stc_baud = 115200
+remote_control_stc_baud = 115200
 # 是否通用2.4g遥控器
 b_use_remote_control = 0
 channel_1_pin = 5  # 水平是1通道
@@ -441,11 +447,11 @@ sonar_steer = 21  # 声呐舵机
 
 # 抽水
 b_draw = 1  # 是否有抽水泵
-b_control_deep = 1 # 是否可调深度
+b_control_deep = 0  # 是否可调深度
 draw_steer = 13  # 舵机接口
 
 # 排水
-b_drain = 0  # 是否有排水泵
+b_drain = 1  # 是否有排水泵
 
 min_deep_steer_pwm = 800  # 最下面
 max_deep_steer_pwm = 2400  # 最上面
@@ -459,13 +465,13 @@ class WaterType(enum.Enum):
     TD = 4
     NH3_NH4 = 5
 
+
 draw_deep = 0.5  # 抽水深度
 draw_capacity = 1000  # 需要抽水容量
 max_draw_capacity = 5000  # 单个瓶子最大抽水容量
 draw_speed = 2000  # 抽水速度 毫升/分钟
 number_of_bottles = 4  # 总共包含抽水瓶数
-max_draw_time = int(60*max_draw_capacity/draw_speed)
-
+max_draw_time = int(60 * max_draw_capacity / draw_speed)
 
 if __name__ == '__main__':
     write_setting(True, True, True, True)

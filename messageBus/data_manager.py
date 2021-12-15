@@ -1459,7 +1459,7 @@ class DataManager:
                 last_runtime = 0
             if last_run_distance is None:
                 last_run_distance = 0
-            if time.time() % 10 < 1:
+            if time.time() % 10 < 1 and self.dump_draw_time==0:
                 # if os.path.exists(config.run_distance_time_path):
                 #     try:
                 #         with open(config.run_distance_time_path, 'r') as f:
