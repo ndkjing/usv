@@ -34,7 +34,8 @@ sys.path.append(
 
 import config
 from moveControl.pathPlanning import a_star
-from externalConnect import baidu_map
+# from externalConnect import baidu_map
+from webServer import server_baidu_map as baidu_map
 from utils.log import LogHandler
 from webServer.web_server_data import ServerData
 from webServer import server_data_define
@@ -133,7 +134,6 @@ class WebServer:
 
     def get_pool_and_save(self,send_data,ship_code,save_map_path,save_pool_lng_lats):
         """
-
         @param send_data:
         @param ship_code:
         @param save_map_path:
@@ -144,7 +144,7 @@ class WebServer:
                 method='http',
                 data=send_data,
                 ship_code=ship_code,
-                url=config.http_save,
+                url=server_config.http_save,
                 http_type='POST')
             self.logger.info({'新的湖泊 poolid': pool_id})
             assert isinstance(pool_id,str)
@@ -183,7 +183,7 @@ class WebServer:
                 #         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom is None:
                 #     continue
                 # 查找与更新湖泊id
-                save_img_dir = os.path.join(config.root_path, 'statics', 'imgs')
+                save_img_dir = os.path.join(server_config.root_path, 'statics', 'imgs')
                 if not os.path.exists(save_img_dir):
                     os.mkdir(save_img_dir)
                 # 超过1000张图片时候删除图片
@@ -307,7 +307,7 @@ class WebServer:
                                 method='http',
                                 data=send_data,
                                 ship_code=ship_code,
-                                url=config.http_save,
+                                url=server_config.http_save,
                                 http_type='POST')
                         except Exception as e:
                             self.logger.error({'error': e})
@@ -322,6 +322,8 @@ class WebServer:
                         self.logger.info({'pool_id': pool_id})
                         with open(save_map_path, 'w') as f:
                             json.dump(save_data, f)
+                        sum_circle = self.baidu_map_obj_dict.get(ship_code).cal_map_circle(save_pool_lng_lats)
+                        self.logger.info({'周长为': sum_circle})
                     else:
                         with open(save_map_path, 'r') as f:
                             local_map_data = json.load(f)
@@ -342,7 +344,7 @@ class WebServer:
                                         method='http',
                                         data=send_data,
                                         ship_code=ship_code,
-                                        url=config.http_update_map,
+                                        url=server_config.http_update_map,
                                         http_type='POST')
                                     if update_flag:
                                         self.logger.info({'更新湖泊成功': pool_id})
@@ -357,7 +359,7 @@ class WebServer:
                                             method='http',
                                             data=send_data,
                                             ship_code=ship_code,
-                                            url=config.http_save,
+                                            url=server_config.http_save,
                                             http_type='POST')
                                     except Exception as e1:
                                         self.logger.error({'config.http_save:': e1})
@@ -385,10 +387,10 @@ class WebServer:
                                     method='http',
                                     data=send_data,
                                     ship_code=ship_code,
-                                    url=config.http_save,
+                                    url=server_config.http_save,
                                     http_type='POST')
                             except Exception as e1:
-                                self.logger.error({'config.http_save:': e1})
+                                self.logger.error({'server_config.http_save:': e1})
                             self.logger.info({'新的湖泊 poolid': pool_id})
                             with open(save_map_path, 'w') as f:
                                 # 以前存储键值
@@ -612,7 +614,6 @@ class WebServer:
                             current_pix,
                             self.baidu_map_obj_dict.get(ship_code).pix_2_meter)
                         bank_distance = round(bank_distance, 1)
-                        # print('bank_distance', bank_distance)
                         send_data = {
                             # 设备号
                             "deviceId": ship_code,

@@ -78,6 +78,7 @@ tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
 speed_grade = 3
 arrive_distance = 2.5
 
+
 def update_base_setting():
     global speed_grade
     global arrive_distance
@@ -110,6 +111,7 @@ def update_base_setting():
         except Exception as e:
             print({'error': e})
 
+
 # 单片机发送给树莓派等待时间
 stc2pi_timeout = 1
 # 给单片机发送等待时间
@@ -124,38 +126,37 @@ stc_baud = 115200
 b_com_stc = 1 if os.path.exists(stc_port) and b_use_stc else 0
 # http 接口
 # 查询船是否注册  wuhanligong.xxlun.com/union
-http_binding = 'http://ship.xxlun.com/union/admin/xxl/device/binding/%s' % ship_code
+http_binding = 'https://ship.xxlun.com/union/admin/xxl/device/binding/%s' % ship_code
 # 注册新的湖泊ID
-http_save = 'http://ship.xxlun.com/union/admin/xxl/map/save'
+http_save = 'https://ship.xxlun.com/union/admin/xxl/map/save'
 # http_save = 'http://192.168.199.186:8009/union/admin/xxl/map/save'
 # 更新湖泊轮廓
-http_update_map = 'http://ship.xxlun.com/union/admin/xxl/map/upData'
+http_update_map = 'https://ship.xxlun.com/union/admin/xxl/map/upData'
 # http_update_map = 'http://192.168.199.186:8009/union/admin/xxl/map/upData'
 # 发送检测数据
-http_data_save = 'http://ship.xxlun.com/union/admin/xxl/data/save'
+http_data_save = 'https://ship.xxlun.com/union/admin/xxl/data/save'
 # http_data_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
 # 发送抽水瓶号数据
-http_draw_save = 'http://ship.xxlun.com/union/admin/xxl/data/sampling/save'
+http_draw_save = 'https://ship.xxlun.com/union/admin/xxl/data/sampling/save'
 # http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/sampling/save'
 # 获取存储的任务数据
-http_get_task = 'http://ship.xxlun.com/union/admin/xxl/task/getOne'
-http_update_task = 'http://ship.xxlun.com/union/admin/xxl/task/upDataTask'
-http_delete_task = 'http://ship.xxlun.com/union/admin/xxl/task/delTask'
+http_get_task = 'https://ship.xxlun.com/union/admin/xxl/task/getOne'
+http_update_task = 'https://ship.xxlun.com/union/admin/xxl/task/upDataTask'
+http_delete_task = 'https://ship.xxlun.com/union/admin/xxl/task/delTask'
 # 上传日志接口
 # http_log = 'http://192.168.199.186:8009/union/admin/xxl/log/save'
-http_log = 'http://ship.xxlun.com/union/admin/xxl/log/save'
+http_log = 'https://ship.xxlun.com/union/admin/xxl/log/save'
 # 里程接口
 # http_mileage_get = 'http://192.168.199.186:8009/union/admin/xxl/mileage/getOne'
 # http_mileage_save = 'http://192.168.199.186:8009/union/admin/xxl/mileage/save'
 # http_mileage_update = 'http://192.168.199.186:8009/union/admin/xxl/mileage/upData'
-http_mileage_get = 'http://ship.xxlun.com/union/admin/xxl/mileage/getOne'
-http_mileage_save = 'http://ship.xxlun.com/union/admin/xxl/mileage/save'
-http_mileage_update = 'http://ship.xxlun.com/union/admin/xxl/mileage/upData'
+http_mileage_get = 'https://ship.xxlun.com/union/admin/xxl/mileage/getOne'
+http_mileage_save = 'https://ship.xxlun.com/union/admin/xxl/mileage/save'
+http_mileage_update = 'https://ship.xxlun.com/union/admin/xxl/mileage/upData'
 
 # 测深接口
 # http_deep_data = 'http://ship.xxlun.com/union//admin/xxl/data/mapping/save'
-http_deep_data = 'http://192.168.8.26:8009//union//admin/xxl/data/mapping/save'
-
+http_deep_data = 'https://192.168.8.26:8009//union//admin/xxl/data/mapping/save'
 
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
@@ -208,6 +209,8 @@ debug_send_detect_data = 0
 angular_velocity = 90
 
 motor_init_time = 1
+
+
 def update_height_setting():
     global kp
     global ki
@@ -273,7 +276,7 @@ def update_height_setting():
                     print({'error': e})
             if height_setting_data.get('left_motor_cw') is not None:
                 try:
-                    print('height_setting_data.getleft_motor_cw',height_setting_data.get('left_motor_cw'))
+                    print('height_setting_data.getleft_motor_cw', height_setting_data.get('left_motor_cw'))
                     left_motor_cw = int(height_setting_data.get('left_motor_cw'))
                 except Exception as e:
                     print({'error': e})
@@ -388,6 +391,7 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        },
                       hdf)
 
+
 # 树莓派GPIO端口相关设置 均使用BCM编码端口
 # 水下摄像头云台水平和俯仰
 # 激光雷达
@@ -414,7 +418,7 @@ b_lora_remote_control = 1
 lora_tx = 25
 lora_rx = 8
 lora_baud = 115200
-b_lora_com = 1 # lora是否使用TTL转串口模块
+b_lora_com = 1  # lora是否使用TTL转串口模块
 # 单片机串口
 b_pin_stc = 1
 stc_tx = 3
@@ -440,10 +444,14 @@ sonar_rx = 16  # RX
 sonar_tx = 20  # TX
 sonar_baud = 9600
 sonar_steer = 21  # 声呐舵机
-
+# 维特罗盘
+b_weite_compass = 1
+weite_compass_rx = 15  # RX
+weite_compass_tx = 14  # TX
+weite_compass_baud = 9600
 # 抽水
 b_draw = 1  # 是否有抽水泵
-b_control_deep = 1  # 是否可调深度
+b_control_deep = 0  # 是否可调深度
 draw_steer = 13  # 舵机接口
 
 # 排水
@@ -467,8 +475,9 @@ draw_capacity = 1000  # 需要抽水容量
 max_draw_capacity = 5000  # 单个瓶子最大抽水容量
 draw_speed = 2000  # 抽水速度 毫升/分钟
 number_of_bottles = 4  # 总共包含抽水瓶数
-max_draw_time = int(60*max_draw_capacity/draw_speed)
+max_draw_time = int(60 * max_draw_capacity / draw_speed)
 
-b_deep_detect=0
+b_deep_detect = 0  # 当前是否含有深度检测功能
+
 if __name__ == '__main__':
     write_setting(True, True, True, True)

@@ -6,7 +6,6 @@ import time
 import config
 from utils import log
 from messageBus import data_manager
-from drivers import audios_manager
 import sys
 import os
 
@@ -52,8 +51,8 @@ def main():
     config.update_setting()
     # 数据处理对象
     data_manager_obj = data_manager.DataManager()
-    # 查询改船是否注册 若未注册直接退出
     """
+    # 查询改船是否注册 若未注册直接退出
         try:
         binding_data = data_manager_obj.send(
             method='http', data="", url=config.http_binding, http_type='GET')
@@ -94,6 +93,7 @@ def main():
         pi_func_list = [data_manager_obj.pi_main_obj.loop_change_pwm,
                         data_manager_obj.pi_main_obj.get_gps_data,
                         data_manager_obj.pi_main_obj.get_compass_data,
+                        data_manager_obj.pi_main_obj.get_weite_compass_data,
                         data_manager_obj.pi_main_obj.get_com_data,
                         data_manager_obj.pi_main_obj.get_distance_dict,
                         data_manager_obj.pi_main_obj.get_distance_dict_millimeter,
@@ -103,7 +103,8 @@ def main():
                         ]
         pi_func_flag.append(True)
         pi_func_flag.append(True)
-        pi_func_flag.append(True)
+        pi_func_flag.append(True if config.b_pin_compass else False)
+        pi_func_flag.append(True if config.b_weite_compass else False)
         pi_func_flag.append(True if config.b_com_stc else False)
         pi_func_flag.append(True if config.b_laser else False)
         pi_func_flag.append(True if config.b_millimeter_wave else False)

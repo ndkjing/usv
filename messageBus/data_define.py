@@ -172,14 +172,14 @@ def fake_status_data(status_data):
     """
     return_dict = copy.deepcopy(status_data)
     return_dict.update({'dump_energy': get_dump_energy()})
-    return_dict.update({"liquid_level": round(round(random.random(), 2) * 10, 1)})
-    return_dict.update({"b_leakage": False})
-    return_dict.update({"b_homing": False})
-    return_dict.update({"charge_energy": round(round(random.random(), 3) * 100, 1)})
-    return_dict.update({'sampling_depth': random.randint(1, 50) / 10.0})
-    return_dict.update({'data_flow': get_data_flow()})
-    return_dict.update({'sampling_count': get_sampling_count()})
-    return_dict.update({'capicity': get_capicity()})
+    # return_dict.update({"liquid_level": round(round(random.random(), 2) * 10, 1)})
+    # return_dict.update({"b_leakage": False})
+    # return_dict.update({"b_homing": False})
+    # return_dict.update({"charge_energy": round(round(random.random(), 3) * 100, 1)})
+    # return_dict.update({'sampling_depth': random.randint(1, 50) / 10.0})
+    # return_dict.update({'data_flow': get_data_flow()})
+    # return_dict.update({'sampling_count': get_sampling_count()})
+    # return_dict.update({'capicity': get_capicity()})
     return return_dict
 
 
@@ -335,7 +335,7 @@ class DataDefine:
         漏水　　　　　b_leakage      布尔值（船舱内部是否漏水）
         船头方向　　　direction      浮点数（０.0－３６０　单位度）
         速度　　　　　speed　　　　　　浮点数　（ｍ/s）
-        姿态        attitude_angle   列表[r,p,y]  (ｒ,p,y 为横滚，俯仰，偏航角度　取值均为浮点数０.0－３６０)
+        # 姿态        attitude_angle   列表[r,p,y]  (ｒ,p,y 为横滚，俯仰，偏航角度　取值均为浮点数０.0－３６０)
         在线／离线  　b_online      布尔值（船是否在线）
         归位状态：　　b_homing　　    布尔值    （是否返回充电桩）　　　
         充电状态：　　charge_energy　　浮点数（0.0--1.0  百分比率　在充电状态下的充电电量）　　　
@@ -346,22 +346,22 @@ class DataDefine:
         采样量：　　　sampling_count　　整数（采样点的个数）
         船舱容量状态：　　capicity　　　浮点数（0.0--1.0  百分比率　垃圾收集船内部容量）
         """
-        return_dict = {"dump_energy": None,
+        return_dict = {"dump_energy": 0,
                        "current_lng_lat": None,
-                       "liquid_level": None,
-                       "b_leakage": None,
+                       # "liquid_level": 0,
+                       # "b_leakage": 0,
                        "direction": None,
                        "speed": None,
-                       "attitude_angle": None,
-                       "b_online": True,
-                       "b_homing": None,
-                       "charge_energy": None,
-                       "sampling_depth": None,
+                       # "attitude_angle": None,
+                       # "b_online": True,
+                       # "b_homing": None,
+                       # "charge_energy": None,
+                       # "sampling_depth": None,
                        "ship_code": config.ship_code,
-                       "pool_code": None,
-                       "data_flow": None,
-                       "sampling_count": None,
-                       "capicity": None,
+                       # "pool_code": None,
+                       # "data_flow": None,
+                       # "sampling_count": None,
+                       # "capicity": None,
                        "totle_time": None,
                        "runtime": 0,
                        "totle_distance": None,

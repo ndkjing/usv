@@ -61,7 +61,7 @@ class PiMain:
         if config.current_platform == config.CurrentPlatform.pi:
             self.gps_obj = self.get_gps_obj()
             self.compass_obj = self.get_compass_obj()
-            self.weite_compass_obj = self.get_weite_compass_obj()
+
             if config.b_pin_stc:
                 self.stc_obj = self.get_stc_obj()
             if config.b_laser:
@@ -72,6 +72,8 @@ class PiMain:
                 self.millimeter_wave_obj = self.get_millimeter_wave_obj()
             if config.b_lora_remote_control:
                 self.remote_control_obj = self.get_remote_control_obj()
+            if config.b_weite_compass:
+                self.weite_compass_obj = self.get_weite_compass_obj()
             if config.b_use_remote_control:
                 self.cb1 = self.pi.callback(config.channel_1_pin, pigpio.EITHER_EDGE, self.mycallback)
                 self.cb2 = self.pi.callback(config.channel_3_pin, pigpio.EITHER_EDGE, self.mycallback)
@@ -160,8 +162,8 @@ class PiMain:
                                       baud=config.pin_compass_baud, time_out=0.1, value_lock=self.value_lock)
 
     def get_weite_compass_obj(self):
-        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=21, tx_pin=20,
-                                      baud=9600)
+        return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.weite_compass_rx, tx_pin=config.weite_compass_tx,
+                                      baud=config.weite_compass_baud,time_out=0.07)
 
     def get_remote_control_obj(self):
         """
@@ -901,23 +903,25 @@ class PiMain:
                     print('time', time.time(), self.theta, self.angular_velocity)
 
     # 读取维特罗盘数据
-    def get_weite_compass_data(self):
+    def get_weite_compass_data(self,debug=False):
         if config.current_platform == config.CurrentPlatform.pi:
             # 记录上一次发送数据
             last_send_data = None
             while True:
                 # 检查罗盘是否需要校准 # 开始校准
                 if int(config.calibration_compass) == 1:
-                    if last_send_data != 'C0':
-                        info_data = self.weite_compass_obj.read_weite_compass(send_data='C0')
+                    if last_send_data != "AT+CALI=1\r\n":
+                        info_data = self.weite_compass_obj.read_weite_compass(send_data="AT+CALI=2\r\n")
+                        time.sleep(0.2)
+                        info_data = self.weite_compass_obj.read_weite_compass(send_data="AT+CALI=1\r\n")
                         time.sleep(0.05)
                         self.compass_notice_info = info_data
-                        last_send_data = 'C0'
+                        last_send_data = "AT+CALI=1\r\n"
                 # 结束校准
                 elif int(config.calibration_compass) == 2:
-                    if last_send_data != 'C1':
+                    if last_send_data != "AT+CALI=0\r\n":
                         self.compass_notice_info = ''
-                        info_data = self.compass_obj.read_compass(send_data='C1')
+                        info_data = self.compass_obj.read_weite_compass(send_data="AT+CALI=0\r\n")
                         time.sleep(0.05)
                         self.compass_notice_info = info_data
                         last_send_data = 'C1'
@@ -925,7 +929,8 @@ class PiMain:
                         config.calibration_compass = 0
                         config.write_setting(b_height=True)
                 else:
-                    theta_ = self.weite_compass_obj.read_weite_compass(send_data='31')
+                    theta_ = self.weite_compass_obj.read_weite_compass(send_data=None,debug=debug)
+                    # print(time.time(),'theta_',theta_)
                     theta_ = self.compass_filter(theta_)
                     if theta_:
                         self.theta = theta_
@@ -1199,22 +1204,23 @@ if __name__ == '__main__':
                 elif len(key_input) > 1 and int(key_input[1]) == 1:
                     pi_main_obj.get_compass_data(debug=True)
             elif key_input.startswith('H'):
-                key_input = input('input:  校准 s  开始  e 结束  a 设置自动回传  i 初始化 其他为读取 >')
+                key_input = input('input:  清除磁偏角:s  开始校准:e 结束校准:a 设置自动回传  i 初始化 其他为读取 >')
                 if key_input == 's':
-                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data='41542B43414C493D310D0A',
-                                                                             debug=True)
+                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data="AT+CALI=2\r\n",
+                                                                             debug=True,)
                 elif key_input == 'e':
-                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data='41542B43414C493D300D0A',
+                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data="AT+CALI=1\r\n",
                                                                              debug=True)
                 elif key_input == 'a':
-                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data='41542B50524154453D3130300D0A',
+                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data="AT+CALI=0\r\n",
                                                                              debug=True)
                 elif key_input == 'i':
                     theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data='41542B494E49540D0A', debug=True)
+                elif len(key_input) > 1 and int(key_input[1]) == 1:
+                    pi_main_obj.get_weite_compass_data(debug=False)
                 else:
-                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data='41542B50524154453D300D0A',
-                                                                             debug=True)
-                print('theta', theta)
+                    theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data=None,
+                                                                             debug=False)
             elif key_input.startswith('x'):
                 while True:
                     try:

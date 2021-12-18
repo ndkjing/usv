@@ -1,10 +1,13 @@
 import json
 import time
-
 import requests
 from storage import save_data
 import server_config
 
+"""
+功能：
+    获取萤石云摄像头视频地址
+"""
 token_global_dict = {}  # {'设备序列号':[token ,过期时间]}
 
 

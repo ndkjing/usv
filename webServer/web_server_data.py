@@ -161,7 +161,6 @@ class MqttSendGet:
         self.back_home = 0
         self.fix_point = 0
 
-
     # 连接MQTT服务器
     def mqtt_connect(self):
         self.mqtt_client.connect(self.mqtt_host, self.mqtt_port, 60)
@@ -397,25 +396,3 @@ class MqttSendGet:
         self.mqtt_client.subscribe(topic, qos)
 
 
-if __name__ == '__main__':
-    # obj = ServerData()
-    logger = log.LogHandler('server_data_test')
-    mqtt_obj = MqttSendGet(logger)
-    data_define_obj = DataDefine()
-    # 启动后自动订阅话题
-    for topic, qos in data_define_obj.topics:
-        logger.info(topic + '    ' + str(qos))
-        mqtt_obj.subscribe_topic(topic=topic, qos=qos)
-    # http发送检测数据给服务器
-    while True:
-        mqtt_obj.publish_topic(
-            topic='status_data_%s' %
-                  (config.ship_code),
-            data=data_define.init_ststus_data,
-            qos=1)
-        mqtt_obj.publish_topic(
-            topic='detect_data_%s' %
-                  (config.ship_code),
-            data=data_define.init_detect_data,
-            qos=1)
-        time.sleep(1)

@@ -1447,10 +1447,9 @@ class DataManager:
                 self.data_define_obj.pool_code = self.server_data_obj.mqtt_send_get_obj.pool_code
             status_data = self.data_define_obj.status
             status_data.update({'mapId': self.data_define_obj.pool_code})
-            detect_data = self.data_define_obj.detect
-            detect_data.update({'mapId': self.data_define_obj.pool_code})
             status_data.update({'ping': round(self.ping, 1)})
             status_data.update({'current_lng_lat': self.gaode_lng_lat})
+            status_data.update({"draw_time": [0, config.max_draw_time]})
             if config.b_sonar:
                 self.lng_lat_list.append(self.gaode_lng_lat)
                 deep_ = self.pi_main_obj.get_sonar_data()
@@ -1472,6 +1471,8 @@ class DataManager:
             # 更新速度  更新里程
             if self.speed is not None:
                 status_data.update({'speed': self.speed})
+            else:
+                status_data.update({'speed': '0'})
             status_data.update({"runtime": round(time.time() - self.start_time)})
             status_data.update({"run_distance": round(self.run_distance, 1)})
             if last_runtime is None:
@@ -1479,25 +1480,6 @@ class DataManager:
             if last_run_distance is None:
                 last_run_distance = 0
             if time.time() % 10 < 1:
-                # if os.path.exists(config.run_distance_time_path):
-                #     try:
-                #         with open(config.run_distance_time_path, 'r') as f:
-                #             run_distance_time_data = json.load(f)
-                #             save_distance = run_distance_time_data.get('save_distance')
-                #             save_time = run_distance_time_data.get('save_time')
-                #     except Exception as e:
-                #         save_distance = 0
-                #         save_time = 0
-                #         self.logger.error({'读取run_distance_time_path': e})
-                # else:
-                #     save_distance = 0
-                #     save_time = 0
-                # with open(config.run_distance_time_path, 'w') as f:
-                #     save_distance = save_distance + round(self.run_distance, 1) - last_run_distance
-                #     # print('############################读取保存距离save_distance',save_distance)
-                #     save_time = save_time + round(time.time() - self.start_time) - last_runtime
-                #     json.dump({'save_distance': save_distance,
-                #                'save_time': save_time}, f)
                 if self.http_save_distance is not None and self.http_save_time is not None and self.http_save_id:
                     self.http_save_distance = self.http_save_distance + int(self.run_distance) - last_run_distance
                     self.http_save_time = self.http_save_time + int(time.time() - self.start_time) - last_runtime
@@ -1546,8 +1528,6 @@ class DataManager:
                 last_run_distance = int(self.run_distance)
                 status_data.update({"totle_distance": self.http_save_distance})
                 status_data.update({"totle_time": self.http_save_time})
-            # status_data.update({"totle_distance": 0})
-            # status_data.update({"totle_time": 0})
             # 更新船头方向
             if config.home_debug and self.current_theta is not None:
                 status_data.update({"direction": round(self.current_theta, 1)})
@@ -1558,29 +1538,22 @@ class DataManager:
                 status_data.update({"lng_lat_error": self.lng_lat_error})
             # 更新真实数据
             if not config.home_debug:
-                # mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
-                # mqtt_send_detect_data['water'].update(self.pi_main_obj.water_data_dict)
                 mqtt_send_status_data = data_define.fake_status_data(status_data)
             # 更新模拟数据
             else:
-                # mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
                 mqtt_send_status_data = data_define.fake_status_data(status_data)
-            # # 替换键
-            # for k_all, v_all in data_define.name_mappings.items():
-            #     for old_key, new_key in v_all.items():
-            #         pop_value = mqtt_send_detect_data[k_all].pop(old_key)
-            #         mqtt_send_detect_data[k_all].update({new_key: pop_value})
             if self.dump_energy is not None:
                 self.dump_energy_deque.append(self.dump_energy)
                 mqtt_send_status_data.update({'dump_energy': self.dump_energy})
             if not config.home_debug and self.pi_main_obj.dump_energy is not None:
                 self.dump_energy_deque.append(self.pi_main_obj.dump_energy)
                 mqtt_send_status_data.update({'dump_energy': self.pi_main_obj.dump_energy})
+            json.dumps(mqtt_send_status_data)
             # 向mqtt发送数据
-            self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
+            self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=json.dumps(mqtt_send_status_data),
                       qos=0)
             if time.time() % 10 < 1:
-                self.logger.info({'status_data_': mqtt_send_status_data})
+                self.logger.info({'status_data_': json.dumps(mqtt_send_status_data)})
 
     # 测深数据上传
     def send_deep(self):
@@ -1589,11 +1562,11 @@ class DataManager:
             if not config.b_deep_detect:
                 continue
             deep_data = {
-                  "deep": "2.7",
-                  "deviceId": "XXLJC4LCGSCSD1DA002",
-                  "jwd": "[114.524098, 30.506853]",
-                  "mapId": "1434770242236428290"
-                }
+                "deep": "2.7",
+                "deviceId": "XXLJC4LCGSCSD1DA002",
+                "jwd": "[114.524098, 30.506853]",
+                "mapId": "1434770242236428290"
+            }
             try:
                 self.send(method='http', data=deep_data,
                           url=config.http_deep_data,
@@ -1611,6 +1584,8 @@ class DataManager:
                 high_f_status_data.update({"direction": round(self.current_theta, 1)})
             elif not config.home_debug and self.pi_main_obj.theta:
                 high_f_status_data.update({"direction": round(self.pi_main_obj.theta, 1)})
+            # elif not config.home_debug and not self.pi_main_obj.theta:
+            #     high_f_status_data.update({"direction": round(self.pi_main_obj.theta, 1)})
             high_f_status_data.update({"theta_error": round(self.theta_error, 1)})
             self.send(method='mqtt', topic='high_f_status_data_%s' % config.ship_code, data=high_f_status_data,
                       qos=0)
