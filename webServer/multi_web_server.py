@@ -34,7 +34,8 @@ sys.path.append(
 
 import config
 from moveControl.pathPlanning import a_star
-from externalConnect import baidu_map
+# from externalConnect import baidu_map
+from webServer import server_baidu_map as baidu_map
 from utils.log import LogHandler
 from webServer.web_server_data import ServerData
 from webServer import server_data_define
@@ -114,6 +115,12 @@ class WebServer:
                     self.logger.error('GET请求失败')
                 save_data = content_data["data"]
                 return save_data
+            elif http_type == 'POST' and r'upData' in url:
+                content_data = json.loads(return_data.content)
+                if not content_data["success"]:
+                    self.logger.error('GET请求失败')
+                else:
+                    return True
             else:
                 # 如果是GET请求，返回所有数据的列表
                 content_data = json.loads(return_data.content)
@@ -125,6 +132,45 @@ class WebServer:
             self.server_data_obj_dict.get(ship_code).send_server_mqtt_data(
                 data=data, topic=topic, qos=qos)
 
+    def get_pool_and_save(self,send_data,ship_code,save_map_path,save_pool_lng_lats):
+        """
+        @param send_data:
+        @param ship_code:
+        @param save_map_path:
+        @return:
+        """
+        try:
+            pool_id = self.send(
+                method='http',
+                data=send_data,
+                ship_code=ship_code,
+                url=server_config.http_save,
+                http_type='POST')
+            self.logger.info({'新的湖泊 poolid': pool_id})
+            assert isinstance(pool_id,str)
+        except Exception as e1:
+            self.logger.error({'config.http_save:': e1})
+            return False
+        with open(save_map_path, 'r') as f:
+            local_map_data = json.load(f)
+        with open(save_map_path, 'w') as f:
+            # 以前存储键值
+            # local_map_data["mapList"].append({"id": pool_id,
+            #                                   "longitudeLatitude": self.baidu_map_obj.pool_center_lng_lat,
+            #                                   "mapData": self.baidu_map_obj.pool_lng_lat,
+            #                                   "pool_cnt": pool_cnts.tolist()})
+            if isinstance(self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
+                save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts.tolist()
+            local_map_data["mapList"].append(
+                {
+                    "id": pool_id,
+                    "pool_center_lng_lat": self.baidu_map_obj_dict.get(
+                        ship_code).pool_center_lng_lat,
+                    "pool_lng_lats": save_pool_lng_lats,
+                    "pool_cnts": save_pool_cnts})
+            json.dump(local_map_data, f)
+        return pool_id
+
     # 状态检查函数，检查自身状态发送对应消息
     def find_pool(self):
         while True:
@@ -132,12 +178,12 @@ class WebServer:
             time.sleep(0.1)
             for ship_code in server_config.ship_code_list:
                 save_map_path = os.path.join(server_config.save_map_dir, 'map_%s.json' % ship_code)
-                # 若是用户没有点击点
-                if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat is None or \
-                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom is None:
-                    continue
+                # # 若是用户没有点击点
+                # if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat is None or \
+                #         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom is None:
+                #     continue
                 # 查找与更新湖泊id
-                save_img_dir = os.path.join(config.root_path, 'statics', 'imgs')
+                save_img_dir = os.path.join(server_config.root_path, 'statics', 'imgs')
                 if not os.path.exists(save_img_dir):
                     os.mkdir(save_img_dir)
                 # 超过1000张图片时候删除图片
@@ -146,27 +192,31 @@ class WebServer:
                     for i in save_img_name_list:
                         print(os.path.join(save_img_dir, i))
                         os.remove(os.path.join(save_img_dir, i))
-                if self.current_map_type == baidu_map.MapType.gaode:
-                    save_img_path = os.path.join(
-                        save_img_dir, 'gaode_%f_%f_%i_%i.png' %
-                                      (self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat[0],
-                                       self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat[1],
-                                       self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom,
-                                       1))
-                elif self.current_map_type == baidu_map.MapType.tecent:
-                    save_img_path = os.path.join(
-                        save_img_dir, 'tecent_%f_%f_%i_%i.png' %
-                                      (self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat[0],
-                                       self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat[1],
-                                       self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom,
-                                       1))
+                # 两种方式点击湖泊 新增和修改
+                if self.server_data_obj_dict.get(
+                        ship_code).mqtt_send_get_obj.pool_click_lng_lat and self.server_data_obj_dict.get(
+                    ship_code).mqtt_send_get_obj.pool_click_zoom:
+                    click_lng_lat = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat
+                    click_zoom = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom
+                elif self.server_data_obj_dict.get(
+                        ship_code).mqtt_send_get_obj.update_pool_click_lng_lat and self.server_data_obj_dict.get(
+                    ship_code).mqtt_send_get_obj.update_pool_click_zoom:
+                    click_lng_lat = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_pool_click_lng_lat
+                    click_zoom = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_pool_click_zoom
                 else:
-                    save_img_path = os.path.join(
-                        save_img_dir, 'baidu_%f_%f_%i_%i.png' %
-                                      (self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat[0],
-                                       self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat[1],
-                                       self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom,
-                                       1))
+                    continue
+                if self.current_map_type == baidu_map.MapType.gaode:
+                    title = 'gaode'
+                elif self.current_map_type == baidu_map.MapType.tecent:
+                    title = 'tecent'
+                else:
+                    title = 'baidu'
+                save_img_path = os.path.join(
+                    save_img_dir, '%s_%f_%f_%i_%i.png' %
+                                  (title, click_lng_lat[0],
+                                   click_lng_lat[1],
+                                   click_zoom,
+                                   1))
                 # 创建于查找湖泊
                 if self.data_define_obj_dict.get(ship_code).pool_code or not os.path.exists(save_img_path):
                     # 创建地图对象
@@ -174,8 +224,8 @@ class WebServer:
                         continue
                     else:
                         baidu_map_obj = baidu_map.BaiduMap(
-                            lng_lat=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat,
-                            zoom=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom,
+                            lng_lat=click_lng_lat,
+                            zoom=click_zoom,
                             logger=self.map_log,
                             map_type=self.current_map_type)
                         self.baidu_map_obj_dict.update({ship_code: baidu_map_obj})
@@ -216,10 +266,10 @@ class WebServer:
                         {'pool_center_lng_lat': self.baidu_map_obj_dict.get(ship_code).pool_center_lng_lat})
                     self.baidu_map_obj_dict.get(ship_code).get_pool_name()
                     if self.baidu_map_obj_dict.get(ship_code).pool_name is not None:
-                        config.pool_name = self.baidu_map_obj_dict.get(ship_code).pool_name
+                        server_config.pool_name = self.baidu_map_obj_dict.get(ship_code).pool_name
                     else:
-                        config.pool_name = self.baidu_map_obj_dict.get(ship_code).address
-                    self.logger.info({'config.pool_name': config.pool_name})
+                        server_config.pool_name = self.baidu_map_obj_dict.get(ship_code).address
+                    self.logger.info({'server_config.pool_name': server_config.pool_name})
                     # 判断当前湖泊是否曾经出现，出现过则获取的ID 没出现过发送请求获取新ID
                     if isinstance(self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
                         save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts.tolist()
@@ -231,29 +281,37 @@ class WebServer:
                         "mapData": json.dumps(
                             self.baidu_map_obj_dict.get(ship_code).pool_lng_lats),
                         "deviceId": ship_code,
-                        "name": config.pool_name,
+                        "name": server_config.pool_name,
                         "pixData": json.dumps(save_pool_cnts)}
 
                     # 本地保存经纬度信息，放大1000000倍 用来只保存整数
                     save_pool_lng_lats = [[int(i[0] * 1000000), int(i[1] * 1000000)]
                                           for i in self.baidu_map_obj_dict.get(ship_code).pool_lng_lats]
                     if not os.path.exists(save_map_path):
-                        # 发送请求获取湖泊ID
-                        self.logger.debug({'send_data': send_data})
+                        if isinstance(self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
+                            save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts.tolist()
+                        else:
+                            save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts
+
+                        # pood_id = self.get_pool_and_save(send_data=send_data,
+                        #                        ship_code=ship_code,
+                        #                        save_map_path=save_map_path,
+                        #                        save_pool_lng_lats=save_pool_lng_lats)
+                        # if pool_id:
+                        #     # 发送请求获取湖泊ID
+                        #     self.logger.info({'pood_id': pood_id})
+                        # else:
+                        #     self.logger.error({'请求湖泊id出错误': pood_id})
                         try:
                             pool_id = self.send(
                                 method='http',
                                 data=send_data,
                                 ship_code=ship_code,
-                                url=config.http_save,
+                                url=server_config.http_save,
                                 http_type='POST')
                         except Exception as e:
                             self.logger.error({'error': e})
                             continue
-                        if isinstance(self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
-                            save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts.tolist()
-                        else:
-                            save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts
                         save_data = {
                             "mapList": [
                                 {
@@ -264,6 +322,8 @@ class WebServer:
                         self.logger.info({'pool_id': pool_id})
                         with open(save_map_path, 'w') as f:
                             json.dump(save_data, f)
+                        sum_circle = self.baidu_map_obj_dict.get(ship_code).cal_map_circle(save_pool_lng_lats)
+                        self.logger.info({'周长为': sum_circle})
                     else:
                         with open(save_map_path, 'r') as f:
                             local_map_data = json.load(f)
@@ -274,19 +334,63 @@ class WebServer:
                             print('pool_id', pool_id)
                         if pool_id is not None:
                             self.logger.info({'在本地找到湖泊 poolid': pool_id})
+                            # 判断是否是用的更新湖泊
+                            if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_pool_click_lng_lat and \
+                                    self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_map_id:
+                                if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_map_id == pool_id:
+                                    self.logger.info({'更新湖泊 poolid': pool_id})
+                                    send_data.update({"id": pool_id})
+                                    update_flag = self.send(
+                                        method='http',
+                                        data=send_data,
+                                        ship_code=ship_code,
+                                        url=server_config.http_update_map,
+                                        http_type='POST')
+                                    if update_flag:
+                                        self.logger.info({'更新湖泊成功': pool_id})
+                                    else:
+                                        self.logger.info({'更新湖泊失败': pool_id})
+                                else:
+                                    self.logger.info({'湖泊 poolid不相等 本地id ': pool_id,
+                                                      "传入id": self.server_data_obj_dict.get(
+                                                          ship_code).mqtt_send_get_obj.update_map_id})
+                                    try:
+                                        pool_id = self.send(
+                                            method='http',
+                                            data=send_data,
+                                            ship_code=ship_code,
+                                            url=server_config.http_save,
+                                            http_type='POST')
+                                    except Exception as e1:
+                                        self.logger.error({'config.http_save:': e1})
+                                    self.logger.info({'新的湖泊 poolid': pool_id})
+                                    with open(save_map_path, 'w') as f:
+                                        # 以前存储键值
+                                        # local_map_data["mapList"].append({"id": pool_id,
+                                        #                                   "longitudeLatitude": self.baidu_map_obj.pool_center_lng_lat,
+                                        #                                   "mapData": self.baidu_map_obj.pool_lng_lat,
+                                        #                                   "pool_cnt": pool_cnts.tolist()})
+                                        if isinstance(self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
+                                            save_pool_cnts = self.baidu_map_obj_dict.get(ship_code).pool_cnts.tolist()
+                                        local_map_data["mapList"].append(
+                                            {
+                                                "id": pool_id,
+                                                "pool_center_lng_lat": self.baidu_map_obj_dict.get(
+                                                    ship_code).pool_center_lng_lat,
+                                                "pool_lng_lats": save_pool_lng_lats,
+                                                "pool_cnts": save_pool_cnts})
+                                        json.dump(local_map_data, f)
                         # 不存在获取新的id
                         else:
                             try:
-                                self.logger.info({config.http_save: send_data})
                                 pool_id = self.send(
                                     method='http',
                                     data=send_data,
                                     ship_code=ship_code,
-                                    url=config.http_save,
+                                    url=server_config.http_save,
                                     http_type='POST')
-                            except Exception as e:
-                                # self.logger.info({config.http_save: send_data})
-                                self.logger.error({'error': e})
+                            except Exception as e1:
+                                self.logger.error({'server_config.http_save:': e1})
                             self.logger.info({'新的湖泊 poolid': pool_id})
                             with open(save_map_path, 'w') as f:
                                 # 以前存储键值
@@ -313,28 +417,27 @@ class WebServer:
                     }
                     self.send(
                         method='mqtt',
-                        topic='pool_info_%s' %
-                              (ship_code),
+                        topic='pool_info_%s' % ship_code,
                         ship_code=ship_code,
                         data=pool_info_data,
                         qos=1)
-
-                    config.write_setting(True)
-                    config.update_base_setting()
+                    # 将数据保存到本地设置中并且更新设置
+                    server_config.write_ship_code_setting(ship_code)
+                    server_config.update_base_setting(ship_code)
                     # 在基础设置中发送湖泊名称
                     if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.b_pool_click:
-                        if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data is None:
+                        if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data is None:
                             self.logger.error(
                                 {
                                     'base_setting_data is None': self.server_data_obj_dict.get(
-                                        ship_code).mqtt_send_get_obj.base_setting_data})
+                                        ship_code).mqtt_send_get_obj.server_base_setting_data})
                         else:
-                            self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.update(
+                            self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data.update(
                                 {'info_type': 3})
-                            send_data = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data
-                            send_data.update({'pool_name': config.pool_name})
+                            send_data = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data
+                            send_data.update({'pool_name': server_config.pool_name})
                             self.send(method='mqtt',
-                                      topic='base_setting_%s' % (config.ship_code),
+                                      topic='server_base_setting_%s' % ship_code,
                                       ship_code=ship_code,
                                       data=send_data,
                                       qos=0)
@@ -366,6 +469,7 @@ class WebServer:
                     elif len_target_lng_lat > 1:
                         target_lng_lats = copy.deepcopy(
                             self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.target_lng_lat)
+                        # print('###########################target_lng_lats', target_lng_lats)
                         # 是否返航
                         # if int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.back_home) == 1:
                         #     if config.home_debug:
@@ -385,31 +489,23 @@ class WebServer:
                             self.path_planning(target_lng_lats=target_lng_lats, ship_code=ship_code)
 
                 # 客户端获取基础设置数据
-                if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data_info in [1, 4]:
-                    if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data is None:
+                if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data_info in [1, 4]:
+                    if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data is None:
                         self.logger.error(
                             {'base_setting_data is None': self.server_data_obj_dict.get(
-                                ship_code).mqtt_send_get_obj.mqtt_send_get_obj.base_setting_data})
+                                ship_code).mqtt_send_get_obj.mqtt_send_get_obj.server_base_setting_data})
                     else:
-                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.update(
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data.update(
                             {'info_type': 3})
-                        try:
-                            video_url = get_eviz_url.get_url(server_config.ship_code_video_dict[ship_code],
-                                                             protocol=2)
-                        except Exception as e_get_url:
-                            video_url = None
-                            print({'e_get_url': e_get_url})
-                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.update(
-                            {'video_url': video_url})
                         self.send(method='mqtt',
                                   ship_code=ship_code,
-                                  topic='base_setting_%s' % (ship_code),
-                                  data=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data,
+                                  topic='server_base_setting_%s' % ship_code,
+                                  data=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data,
                                   qos=0)
-                        self.logger.info({'base_setting': self.server_data_obj_dict.get(
-                            ship_code).mqtt_send_get_obj.base_setting_data})
+                        self.logger.info({'server_base_setting_': self.server_data_obj_dict.get(
+                            ship_code).mqtt_send_get_obj.server_base_setting_data})
                         # self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data = None
-                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data_info = 0
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data_info = 0
 
                 # 判断是否上传了间距使用自动生成采样点
                 if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.row_gap:
@@ -501,6 +597,36 @@ class WebServer:
             qos=0)
         self.logger.info({'mqtt_send_path_planning_data': mqtt_send_path_planning_data})
 
+    # 发送离岸距离
+    def send_bank_distance(self):
+        while True:
+            for ship_code in server_config.ship_code_list:
+                time.sleep(0.1)
+                # 判断是否需要更新安全距离
+                if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_safe_distance:
+                    # 计算距离岸边距离
+                    if self.baidu_map_obj_dict.get(ship_code) and isinstance(
+                            self.baidu_map_obj_dict.get(ship_code).pool_cnts, np.ndarray):
+                        current_pix = self.baidu_map_obj_dict.get(ship_code).gaode_lng_lat_to_pix(
+                            self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.current_lng_lat)
+                        bank_distance = self.baidu_map_obj_dict.get(ship_code).cal_bank_distance(
+                            self.baidu_map_obj_dict.get(ship_code).pool_cnts,
+                            current_pix,
+                            self.baidu_map_obj_dict.get(ship_code).pix_2_meter)
+                        bank_distance = round(bank_distance, 1)
+                        send_data = {
+                            # 设备号
+                            "deviceId": ship_code,
+                            # 距离 浮点数单位米
+                            "bank_distance": bank_distance,
+                        }
+                        self.send(method='mqtt',
+                                  topic='bank_distance_%s' % ship_code,
+                                  ship_code=ship_code,
+                                  data=send_data,
+                                  qos=0)
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_safe_distance = False
+
 
 if __name__ == '__main__':
     while True:
@@ -508,8 +634,10 @@ if __name__ == '__main__':
             web_server_obj = WebServer()
             find_pool_thread = threading.Thread(target=web_server_obj.find_pool)
             get_plan_path_thread = threading.Thread(target=web_server_obj.get_plan_path)
+            send_bank_distance_thread = threading.Thread(target=web_server_obj.send_bank_distance)
             find_pool_thread.start()
             get_plan_path_thread.start()
+            send_bank_distance_thread.start()
             while True:
                 if not find_pool_thread.is_alive():
                     find_pool_thread = threading.Thread(target=web_server_obj.find_pool)
@@ -517,6 +645,9 @@ if __name__ == '__main__':
                 if not get_plan_path_thread.is_alive():
                     get_plan_path_thread = threading.Thread(target=web_server_obj.get_plan_path)
                     get_plan_path_thread.start()
+                if not send_bank_distance_thread.is_alive():
+                    send_bank_distance_thread = threading.Thread(target=web_server_obj.send_bank_distance)
+                    send_bank_distance_thread.start()
                 time.sleep(1)
         except Exception as e:
             print({'error': e})

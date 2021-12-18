@@ -4,14 +4,14 @@
 from messageBus.data_define import DataDefine
 import config
 from messageBus import data_define
+from webServer import server_config
 from utils import log
 import copy
-
+import os
 import paho.mqtt.client as mqtt
 import time
 import json
 import requests
-
 
 class ServerData:
     def __init__(self, logger,
@@ -301,37 +301,38 @@ class MqttSendGet:
                 pass
             else:
                 self.home_lng_lat = status_data.get('home_lng_lat')
-        # 基础配置
-        elif topic == 'base_setting_%s' % self.ship_code:
-            self.logger.info({'base_setting ': json.loads(msg.payload)})
+
+        # 服务器基础配置
+        elif topic == 'server_base_setting_%s' % self.ship_code:
+            server_base_setting_path = os.path.join(server_config.setting_dir, 'setting_%s.json' % self.ship_code)
+            self.logger.info({'server_base_setting_ ': json.loads(msg.payload)})
             if len(msg.payload) < 5:
                 return
-            base_setting_data = json.loads(msg.payload)
-            if base_setting_data.get("info_type") is None:
-                self.logger.error('"base_setting_data"设置启动消息没有"info_type"字段')
+            server_base_setting_data = json.loads(msg.payload)
+            if server_base_setting_data.get("info_type") is None:
+                self.logger.error('"server_base_setting_data"设置启动消息没有"info_type"字段')
                 return
             else:
-                info_type = int(base_setting_data.get('info_type'))
-                self.base_setting_data_info = info_type
+                info_type = int(server_base_setting_data.get('info_type'))
+                self.server_base_setting_data_info = info_type
                 if info_type == 1:
-                    print('base_setting_path', config.base_setting_path)
-                    with open(config.base_setting_path, 'r') as f:
-                        self.base_setting_data = json.load(f)
+                    with open(server_base_setting_path, 'r') as f:
+                        self.server_base_setting_data = json.load(f)
                 elif info_type == 2:
-                    with open(config.base_setting_path, 'r') as f:
-                        self.base_setting_data = json.load(f)
-                    with open(config.base_setting_path, 'w') as f:
-                        self.base_setting_data.update(base_setting_data)
-                        json.dump(self.base_setting_data, f)
-                    config.update_base_setting()
-                # 恢复默认配置
-                elif info_type == 4:
-                    with open(config.base_setting_path, 'w') as f:
-                        with open(config.base_setting_default_path, 'r') as df:
-                            self.base_setting_default_data = json.load(df)
-                            self.base_setting_data = copy.deepcopy(self.base_setting_default_data)
-                            json.dump(self.base_setting_data, f)
-                    config.update_base_setting()
+                    with open(server_base_setting_path, 'r') as f:
+                        self.server_base_setting_data = json.load(f)
+                    with open(server_base_setting_path, 'w') as f:
+                        self.server_base_setting_data.update(server_base_setting_data)
+                        json.dump(self.server_base_setting_data, f)
+                    server_config.update_base_setting(server_base_setting_path)
+            # 恢复默认配置
+            # elif info_type == 4:
+            #     with open(server_base_setting_path, 'w') as f:
+            #         with open(server_config.server_base_default_setting_path, 'r') as df:
+            #             self.server_base_default_setting_data = json.load(df)
+            #             self.server_base_setting_data = copy.deepcopy(self.server_base_default_setting_data)
+            #             json.dump(self.server_base_setting_data, f)
+            #     server_config.update_base_setting()
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):

@@ -908,11 +908,7 @@ class DataManager:
             self.current_theta += 3
         else:
             self.current_theta -= 3
-        # point = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-        #                                                     self.lng_lat[1],
-        #                                                     angle,
-        #                                                     config.min_steer_distance * 5)
-        # self.points_arrive_control(point, point, False, False)
+        self.current_theta %= 360
 
     # 计算障碍物下目标点
     def get_avoid_obstacle_point(self, path_planning_point_gps=None):
