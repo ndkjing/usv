@@ -694,3 +694,34 @@
 2021-12-18 17:54:37,696 server_data.py[line:468] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'mapId': '1472131549474172929'}
 2021-12-18 17:54:42,574 server_data.py[line:393] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'target_lng_lat': [[114.523699, 30.506106]], 'back_home': 0, 'fix_point': None}
 2021-12-18 17:54:43,371 server_data.py[line:432] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'sampling_points': [[114.523699, 30.506106]], 'path_points': [[114.523695, 30.506109]]}
+2021-12-20 09:41:01,035 server_data.py[line:706] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,048 server_data.py[line:256] INFO Connected with result code:  0
+2021-12-20 09:41:01,054 server_data.py[line:706] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,080 server_data.py[line:706] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,098 server_data.py[line:706] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,116 server_data.py[line:706] INFO {'topic': 'start_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,151 server_data.py[line:706] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,169 server_data.py[line:706] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,197 server_data.py[line:706] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,215 server_data.py[line:706] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,226 server_data.py[line:706] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,244 server_data.py[line:706] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,262 server_data.py[line:706] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,286 server_data.py[line:706] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,309 server_data.py[line:706] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,344 server_data.py[line:706] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,362 server_data.py[line:706] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,392 server_data.py[line:706] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,398 server_data.py[line:706] INFO {'topic': 'task_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,422 server_data.py[line:706] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:01,434 server_data.py[line:706] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2021-12-20 09:41:11,125 server_data.py[line:544] INFO {'refresh_setting ': {'info_type': 1}}
+2021-12-20 09:41:11,143 server_data.py[line:482] INFO {'base_setting ': {'info_type': 1}}
+2021-12-20 09:41:12,111 server_data.py[line:482] INFO {'base_setting ': {'speed_grade': '5', 'arrive_range': '3', 'info_type': 3}}
+2021-12-20 09:41:22,595 server_data.py[line:364] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'lng_lat': [114.524014, 30.505932], 'zoom': 16.89}
+2021-12-20 09:41:23,259 server_data.py[line:468] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'mapId': '1472131549474172929'}
+2021-12-20 09:41:26,361 server_data.py[line:393] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'target_lng_lat': [[114.523746, 30.506104]], 'back_home': 0, 'fix_point': None}
+2021-12-20 09:41:26,566 server_data.py[line:432] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'sampling_points': [[114.523746, 30.506104]], 'path_points': [[114.523746, 30.506108]]}
+2021-12-20 09:41:31,855 server_data.py[line:307] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -2, 'mode': None}
+2021-12-20 09:41:32,515 server_data.py[line:307] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -1, 'mode': None}
+2021-12-20 09:41:32,996 server_data.py[line:307] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -1, 'mode': None}

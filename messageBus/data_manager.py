@@ -1577,7 +1577,7 @@ class DataManager:
     def send_high_f_status_data(self):
         high_f_status_data = {}
         while 1:
-            time.sleep(0.2)
+            time.sleep(0.16)
             if config.home_debug and self.current_theta is None:
                 self.current_theta = 1
             if config.home_debug and self.current_theta is not None:

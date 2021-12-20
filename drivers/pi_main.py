@@ -163,7 +163,7 @@ class PiMain:
 
     def get_weite_compass_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.weite_compass_rx, tx_pin=config.weite_compass_tx,
-                                      baud=config.weite_compass_baud,time_out=0.07)
+                                      baud=config.weite_compass_baud, time_out=0.07)
 
     def get_remote_control_obj(self):
         """
@@ -481,17 +481,17 @@ class PiMain:
         if set_right_pwm <= config.min_pwm:
             set_right_pwm = config.min_pwm
         # print('config.left_motor_cw,config.right_motor_cw',config.left_motor_cw,config.right_motor_cw)
-        # 如果有反桨叶反转电机pwm值
-        if config.left_motor_cw == 1:
-            set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
-        if config.right_motor_cw == 1:
-            set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
-        # left_motor_cw=0
-        # right_motor_cw=1
-        # if left_motor_cw == 1:
+        # 如果有反桨叶反转电机pwm值 改为固定值
+        # if config.left_motor_cw == 1:
         #     set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
-        # if right_motor_cw == 1:
+        # if config.right_motor_cw == 1:
         #     set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
+        left_motor_cw = 1
+        right_motor_cw = 0
+        if left_motor_cw == 1:
+            set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
+        if right_motor_cw == 1:
+            set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
         self.target_left_pwm = int(set_left_pwm / (20000 / self.pice) / (50 / self.hz))
         self.target_right_pwm = int(set_right_pwm / (20000 / self.pice) / (50 / self.hz))
 
@@ -903,7 +903,7 @@ class PiMain:
                     print('time', time.time(), self.theta, self.angular_velocity)
 
     # 读取维特罗盘数据
-    def get_weite_compass_data(self,debug=False):
+    def get_weite_compass_data(self, debug=False):
         if config.current_platform == config.CurrentPlatform.pi:
             # 记录上一次发送数据
             last_send_data = None
@@ -929,7 +929,7 @@ class PiMain:
                         config.calibration_compass = 0
                         config.write_setting(b_height=True)
                 else:
-                    theta_ = self.weite_compass_obj.read_weite_compass(send_data=None,debug=debug)
+                    theta_ = self.weite_compass_obj.read_weite_compass(send_data=None, debug=debug)
                     # print(time.time(),'theta_',theta_)
                     theta_ = self.compass_filter(theta_)
                     if theta_:
@@ -1207,7 +1207,7 @@ if __name__ == '__main__':
                 key_input = input('input:  清除磁偏角:s  开始校准:e 结束校准:a 设置自动回传  i 初始化 其他为读取 >')
                 if key_input == 's':
                     theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data="AT+CALI=2\r\n",
-                                                                             debug=True,)
+                                                                             debug=True, )
                 elif key_input == 'e':
                     theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data="AT+CALI=1\r\n",
                                                                              debug=True)
