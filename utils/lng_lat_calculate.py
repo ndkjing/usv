@@ -149,7 +149,7 @@ if __name__ == '__main__':
     print('theta1 -1:', theta)
     # 30.505588, 114.524145
     # 30.505588,114.528145
-    distance = distanceFromCoordinate(114.524145, 30.505588, 114.528145, 30.505588)
+    distance = distanceFromCoordinate(114.504145, 30.501588, 114.528145, 30.505588)
     print('distance', distance)
     temp = one_point_diatance_to_end(114.316966, 30.576768, 90, 1)
     print(temp)

@@ -19,6 +19,7 @@ from drivers import audios_manager, pi_main
 from utils import lng_lat_calculate
 from utils import check_network
 from utils import data_valid
+from utils import draw_img
 from storage import save_data
 import config
 from moveControl.pathTrack import simple_pid
@@ -1664,6 +1665,14 @@ class DataManager:
                     del draw_data["bottle_num"]
                     draw_data.update({"bottleNum": self.draw_over_bottle_info[0]})
                     try:
+                        # 上传图片给服务器
+                        server_save_img_path = draw_img.all_throw_img(config.http_get_img_path,
+                                                                      config.http_upload_img,
+                                                                      config.ship_code,
+                                                                      [draw_data['jwd'], draw_data['bottleNum'],
+                                                                       draw_data['deep'], draw_data['capacity']])
+                        if server_save_img_path:
+                            draw_data.update({"pic": server_save_img_path})
                         self.send(method='http', data=draw_data,
                                   url=config.http_draw_save,
                                   http_type='POST')
@@ -1717,7 +1726,7 @@ class DataManager:
                 last_runtime = 0
             if last_run_distance is None:
                 last_run_distance = 0
-            if time.time() % 10 < 1 and self.dump_draw_time==0:
+            if time.time() % 10 < 1 and self.dump_draw_time == 0:
                 # if os.path.exists(config.run_distance_time_path):
                 #     try:
                 #         with open(config.run_distance_time_path, 'r') as f:

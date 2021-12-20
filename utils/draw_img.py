@@ -4,7 +4,10 @@ import json
 import os
 import cv2
 
-import config
+"""
+用于保存抽水时上传数据
+"""
+# import config
 
 headers = {
     'Content-Type': 'application/json',
@@ -108,16 +111,27 @@ def add_img_info(save_path, add_info: []):
                 cv2.putText(img, 'bottle:' + str(data), (img.shape[1] - 400, 80), font, 0.7, (0, 0, 200), 1,
                             cv2.LINE_AA)
             if index == 2:
-                cv2.putText(img, 'deep:' + str(data), (img.shape[1] - 400, 110), font, 0.7, (0, 0, 200), 1, cv2.LINE_AA)
+                cv2.putText(img, 'deep:' + str(data)+'m', (img.shape[1] - 400, 110), font, 0.7, (0, 0, 200), 1, cv2.LINE_AA)
             if index == 3:
-                cv2.putText(img, 'capacity:' + str(data), (img.shape[1] - 400, 140), font, 0.7, (0, 0, 200), 1,
+                cv2.putText(img, 'capacity:' + str(data)+'ml', (img.shape[1] - 400, 140), font, 0.7, (0, 0, 200), 1,
                             cv2.LINE_AA)
             cv2.imwrite('image_text.png', img)
 
+def all_throw_img(http_get_img_path,http_upload_img,ship_code,add_info=None):
+    print(http_get_img_path,http_upload_img,ship_code,add_info)
+    img_url = get_img_url(http_get_img_path, {"deviceId": ship_code})
+    if img_url:
+        img_path = 'temp.png'
+        if add_info is None:
+            add_info =[[114.123412, 31.112345], 1, 0.5, 5000]
+        save_img(img_url,img_path)
+        if os.path.exists(img_path):
+            add_img_info(img_path,add_info=add_info)
+            server_save_img_path = post_file(url=http_upload_img,file_path="image_text.png",file_name=None)
+            return server_save_img_path
 
 if __name__ == "__main__":
-    # response = post_file("http://192.168.8.26:8009/union/admin/uploadFile", "./webServer/demo.png")
-    # print('res',response.content)
+    import config
     img_url = get_img_url(config.http_get_img_path, {"deviceId": config.ship_code})
     if img_url:
         img_path = 'temp.png'
