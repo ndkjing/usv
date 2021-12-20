@@ -1556,18 +1556,10 @@ class DataManager:
                 status_data.update({"lng_lat_error": self.lng_lat_error})
             # 更新真实数据
             if not config.home_debug:
-                mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
-                mqtt_send_detect_data['water'].update(self.pi_main_obj.water_data_dict)
                 mqtt_send_status_data = data_define.fake_status_data(status_data)
             # 更新模拟数据
             else:
-                mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
                 mqtt_send_status_data = data_define.fake_status_data(status_data)
-            # 替换键
-            for k_all, v_all in data_define.name_mappings.items():
-                for old_key, new_key in v_all.items():
-                    pop_value = mqtt_send_detect_data[k_all].pop(old_key)
-                    mqtt_send_detect_data[k_all].update({new_key: pop_value})
             if self.dump_energy is not None:
                 self.dump_energy_deque.append(self.dump_energy)
                 mqtt_send_status_data.update({'dump_energy': self.dump_energy})
@@ -1629,7 +1621,7 @@ class DataManager:
     def send_high_f_status_data(self):
         high_f_status_data = {}
         while 1:
-            time.sleep(0.2)
+            time.sleep(0.16)
             # print('send high_f')
             if config.home_debug and self.current_theta is None:
                 self.current_theta = 1

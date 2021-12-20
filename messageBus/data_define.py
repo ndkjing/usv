@@ -172,14 +172,14 @@ def fake_status_data(status_data):
     """
     return_dict = copy.deepcopy(status_data)
     return_dict.update({'dump_energy': get_dump_energy()})
-    return_dict.update({"liquid_level": round(round(random.random(), 2) * 10, 1)})
-    return_dict.update({"b_leakage": False})
-    return_dict.update({"b_homing": False})
-    return_dict.update({"charge_energy": round(round(random.random(), 3) * 100, 1)})
-    return_dict.update({'sampling_depth': random.randint(1, 50) / 10.0})
-    return_dict.update({'data_flow': get_data_flow()})
-    return_dict.update({'sampling_count': get_sampling_count()})
-    return_dict.update({'capicity': get_capicity()})
+    # return_dict.update({"liquid_level": round(round(random.random(), 2) * 10, 1)})
+    # return_dict.update({"b_leakage": False})
+    # return_dict.update({"b_homing": False})
+    # return_dict.update({"charge_energy": round(round(random.random(), 3) * 100, 1)})
+    # return_dict.update({'sampling_depth': random.randint(1, 50) / 10.0})
+    # return_dict.update({'data_flow': get_data_flow()})
+    # return_dict.update({'sampling_count': get_sampling_count()})
+    # return_dict.update({'capicity': get_capicity()})
     return return_dict
 
 
@@ -346,20 +346,20 @@ class DataDefine:
         """
         return_dict = {"dump_energy": None,
                        "current_lng_lat": None,
-                       "liquid_level": None,
-                       "b_leakage": None,
+                       # "liquid_level": None,
+                       # "b_leakage": None,
                        "direction": None,
                        "speed": None,
-                       "attitude_angle": None,
-                       "b_online": True,
-                       "b_homing": None,
-                       "charge_energy": None,
-                       "sampling_depth": None,
+                       # "attitude_angle": None,
+                       # "b_online": True,
+                       # "b_homing": None,
+                       # "charge_energy": None,
+                       # "sampling_depth": None,
                        "ship_code": config.ship_code,
-                       "pool_code": None,
-                       "data_flow": None,
-                       "sampling_count": None,
-                       "capicity": None,
+                       # "pool_code": None,
+                       # "data_flow": None,
+                       # "sampling_count": None,
+                       # "capicity": None,
                        "totle_time": None,
                        "runtime": 0,
                        "totle_distance": None,
