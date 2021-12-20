@@ -408,6 +408,7 @@ class DataManager:
         self.sort_task_list = []  # 获取存储的任务  经纬度，采样深度，采样量数据样式[[lng,lat],[bottle_id,deep,capacity],[bottle_id,deep,capacity]]
         self.sort_task_done_list = []  # 总共有多少个点抽水完成存储0/1  单个长度等于任务点数量[[0,0],[0,0,0,0]
         self.current_arriver_index = None  # 当前到达预存储任务点索引
+        self.theta_error = 0
 
     # 当模式改变是改变保存的状态消息
     def change_status_info(self, target_status, b_clear_status=False):
