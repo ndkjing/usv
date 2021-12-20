@@ -244,7 +244,7 @@ class DataManager:
                     # 测试限制水满
                     if self.bottle_draw_time_list[bottle_id - 1] > config.max_draw_time:
                         print('该瓶抽水已满不能再抽', self.bottle_draw_time_list[bottle_id - 1])
-                    self.dump_draw_list = [draw_time-int(time.time() - self.draw_start_time), draw_time]
+                    self.dump_draw_list = [draw_time - int(time.time() - self.draw_start_time), draw_time]
                     if time.time() - self.draw_start_time > draw_time:
                         self.b_draw_over_send_data = True
                         self.server_data_obj.mqtt_send_get_obj.b_draw = 0
@@ -1136,11 +1136,13 @@ class DataManager:
             self.current_theta += 3
         else:
             self.current_theta -= 3
+        self.current_theta %= 360
         # point = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
         #                                                     self.lng_lat[1],
         #                                                     angle,
         #                                                     config.min_steer_distance * 5)
         # self.points_arrive_control(point, point, False, False)
+
     # 计算障碍物下目标点
     def get_avoid_obstacle_point(self, path_planning_point_gps=None):
         """
@@ -1687,6 +1689,7 @@ class DataManager:
             detect_data.update({'mapId': self.data_define_obj.pool_code})
             status_data.update({'ping': round(self.ping, 1)})
             status_data.update({'current_lng_lat': self.gaode_lng_lat})
+            status_data.update({"draw_time": self.dump_draw_list})
             if config.b_sonar:
                 self.lng_lat_list.append(self.gaode_lng_lat)
                 deep_ = self.pi_main_obj.get_sonar_data()
@@ -1714,7 +1717,7 @@ class DataManager:
                 last_runtime = 0
             if last_run_distance is None:
                 last_run_distance = 0
-            if time.time() % 10 < 1:
+            if time.time() % 10 < 1 and self.dump_draw_time==0:
                 # if os.path.exists(config.run_distance_time_path):
                 #     try:
                 #         with open(config.run_distance_time_path, 'r') as f:
@@ -1793,19 +1796,11 @@ class DataManager:
             if self.lng_lat_error is not None:
                 status_data.update({"lng_lat_error": self.lng_lat_error})
             # 更新真实数据
-            if not config.home_debug:
-                # mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
-                # mqtt_send_detect_data['water'].update(self.pi_main_obj.water_data_dict)
+            if config.home_debug:
                 mqtt_send_status_data = data_define.fake_status_data(status_data)
             # 更新模拟数据
             else:
-                # mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
                 mqtt_send_status_data = data_define.fake_status_data(status_data)
-            # # 替换键
-            # for k_all, v_all in data_define.name_mappings.items():
-            #     for old_key, new_key in v_all.items():
-            #         pop_value = mqtt_send_detect_data[k_all].pop(old_key)
-            #         mqtt_send_detect_data[k_all].update({new_key: pop_value})
             if self.dump_energy is not None:
                 self.dump_energy_deque.append(self.dump_energy)
                 mqtt_send_status_data.update({'dump_energy': self.dump_energy})
@@ -1813,15 +1808,15 @@ class DataManager:
                 self.dump_energy_deque.append(self.pi_main_obj.dump_energy)
                 mqtt_send_status_data.update({'dump_energy': self.pi_main_obj.dump_energy})
             # 向mqtt发送数据
-            self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
+            self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=json.dumps(mqtt_send_status_data),
                       qos=0)
             if time.time() % 10 < 1:
-                self.logger.info({'status_data_': mqtt_send_status_data})
+                self.logger.info({'status_data_': json.dumps(mqtt_send_status_data)})
 
     def send_high_f_status_data(self):
         high_f_status_data = {}
         while 1:
-            time.sleep(0.2)
+            time.sleep(0.16)
             if config.home_debug and self.current_theta is None:
                 self.current_theta = 1
             if config.home_debug and self.current_theta is not None:
@@ -1976,13 +1971,19 @@ class DataManager:
                         {'base_setting_data is None': self.server_data_obj.mqtt_send_get_obj.base_setting_data})
                 else:
                     self.server_data_obj.mqtt_send_get_obj.base_setting_data.update({'info_type': 3})
-                    # 删除湖泊名称和安全距离 这两个值放到服务器上
+                    # 删除湖泊名称和安全距离 将下面这些值放到服务器上
                     if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get('pool_name') is not None:
                         del self.server_data_obj.mqtt_send_get_obj.base_setting_data['pool_name']
                     if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get('secure_distance') is not None:
                         del self.server_data_obj.mqtt_send_get_obj.base_setting_data['secure_distance']
                     if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get('keep_point') is not None:
                         del self.server_data_obj.mqtt_send_get_obj.base_setting_data['keep_point']
+                    if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get('video_url') is not None:
+                        del self.server_data_obj.mqtt_send_get_obj.base_setting_data['video_url']
+                    if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get('row') is not None:
+                        del self.server_data_obj.mqtt_send_get_obj.base_setting_data['row']
+                    if self.server_data_obj.mqtt_send_get_obj.base_setting_data.get('col') is not None:
+                        del self.server_data_obj.mqtt_send_get_obj.base_setting_data['col']
                     self.send(method='mqtt', topic='base_setting_%s' % config.ship_code,
                               data=self.server_data_obj.mqtt_send_get_obj.base_setting_data,
                               qos=0)

@@ -124,33 +124,33 @@ stc_baud = 115200
 b_com_stc = 1 if os.path.exists(stc_port) and b_use_stc else 0
 # http 接口
 # 查询船是否注册  wuhanligong.xxlun.com/union
-http_binding = 'http://ship.xxlun.com/union/admin/xxl/device/binding/%s' % ship_code
+http_binding = 'https://ship.xxlun.com/union/admin/xxl/device/binding/%s' % ship_code
 # 注册新的湖泊ID
-http_save = 'http://ship.xxlun.com/union/admin/xxl/map/save'
+http_save = 'https://ship.xxlun.com/union/admin/xxl/map/save'
 # http_save = 'http://192.168.199.186:8009/union/admin/xxl/map/save'
 # 更新湖泊轮廓
-http_update_map = 'http://ship.xxlun.com/union/admin/xxl/map/upData'
+http_update_map = 'https://ship.xxlun.com/union/admin/xxl/map/upData'
 # http_update_map = 'http://192.168.199.186:8009/union/admin/xxl/map/upData'
 # 发送检测数据
-http_data_save = 'http://ship.xxlun.com/union/admin/xxl/data/save'
+http_data_save = 'https://ship.xxlun.com/union/admin/xxl/data/save'
 # http_data_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
 # 发送抽水瓶号数据
-http_draw_save = 'http://ship.xxlun.com/union/admin/xxl/data/sampling/save'
+http_draw_save = 'https://ship.xxlun.com/union/admin/xxl/data/sampling/save'
 # http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/sampling/save'
 # 获取存储的任务数据
-http_get_task = 'http://ship.xxlun.com/union/admin/xxl/task/getOne'
-http_update_task = 'http://ship.xxlun.com/union/admin/xxl/task/upDataTask'
-http_delete_task = 'http://ship.xxlun.com/union/admin/xxl/task/delTask'
+http_get_task = 'https://ship.xxlun.com/union/admin/xxl/task/getOne'
+http_update_task = 'https://ship.xxlun.com/union/admin/xxl/task/upDataTask'
+http_delete_task = 'https://ship.xxlun.com/union/admin/xxl/task/delTask'
 # 上传日志接口
 # http_log = 'http://192.168.199.186:8009/union/admin/xxl/log/save'
-http_log = 'http://ship.xxlun.com/union/admin/xxl/log/save'
+http_log = 'https://ship.xxlun.com/union/admin/xxl/log/save'
 # 里程接口
 # http_mileage_get = 'http://192.168.199.186:8009/union/admin/xxl/mileage/getOne'
 # http_mileage_save = 'http://192.168.199.186:8009/union/admin/xxl/mileage/save'
 # http_mileage_update = 'http://192.168.199.186:8009/union/admin/xxl/mileage/upData'
-http_mileage_get = 'http://ship.xxlun.com/union/admin/xxl/mileage/getOne'
-http_mileage_save = 'http://ship.xxlun.com/union/admin/xxl/mileage/save'
-http_mileage_update = 'http://ship.xxlun.com/union/admin/xxl/mileage/upData'
+http_mileage_get = 'https://ship.xxlun.com/union/admin/xxl/mileage/getOne'
+http_mileage_save = 'https://ship.xxlun.com/union/admin/xxl/mileage/save'
+http_mileage_update = 'https://ship.xxlun.com/union/admin/xxl/mileage/upData'
 
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
