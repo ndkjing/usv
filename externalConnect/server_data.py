@@ -196,6 +196,9 @@ class MqttSendGet:
                     self.subscribe_topic(topic=topic_, qos=qos_)
             except TimeoutError:
                 return
+            except Exception as e:
+                print('mqtt_connect error',e)
+                return
 
     # 建立连接时候回调
     def on_connect_callback(self, client, userdata, flags, rc):

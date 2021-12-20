@@ -3,12 +3,11 @@
 """
 from messageBus.data_define import DataDefine
 import config
-import os
 from messageBus import data_define
 from webServer import server_config
 from utils import log
 import copy
-
+import os
 import paho.mqtt.client as mqtt
 import time
 import json
@@ -103,10 +102,13 @@ class MqttSendGet:
         # self.mqtt_client.on_subscribe = self.on_message_come
         self.mqtt_client.on_message = self.on_message_callback
         self.mqtt_connect()
-
         # 湖泊初始点击点信息
         self.pool_click_lng_lat = None
         self.pool_click_zoom = None
+        # 更新湖泊初始点击点信息
+        self.update_pool_click_lng_lat = None
+        self.update_pool_click_zoom = None
+        self.update_map_id = None
         # 接收到点击的经纬度目标地点和点击是地图层次，二维矩阵
         self.target_lng_lat = []
         self.zoom = []
@@ -126,8 +128,6 @@ class MqttSendGet:
         self.current_lng_lat = None
         # 船返航点经纬度 给服务器路径规划使用
         self.home_lng_lat = None
-        # 更新船当前到岸边距离 当收到新的经纬度后设置该值为True
-        self.update_safe_distance = False
 
         # 自动求取经纬度设置 行间距 列间距 离岸边安全距离
         self.row_gap = None
@@ -148,12 +148,19 @@ class MqttSendGet:
         # 启动还是停止寻点模式
         self.b_start = 0
         # 请求设置类型
-        self.base_setting_data = None
-        self.base_setting_data_info = -1
+        self.server_base_setting_data = None
+        self.server_base_default_setting_data = None
+        self.server_base_setting_data_info = -1
         # 点击湖泊
         self.b_pool_click = 0
         # 重置选择湖泊
         self.reset_pool_click = 0
+
+        # 更新船当前到岸边距离 当收到新的经纬度后设置该值为True
+        self.update_safe_distance = False
+        self.back_home = 0
+        self.fix_point = 0
+
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -168,34 +175,12 @@ class MqttSendGet:
     # 发布消息回调
     def on_publish_callback(self, client, userdata, mid):
         pass
-        # print('publish',mid)
-
-    # 检测是否需要删除地图
-    def delete_map_id(self, map_id: str):
-        """
-        :param map_id: 地图id
-        :return:
-        """
-        save_map_path = os.path.join(server_config.save_map_dir, 'map_%s.json' % self.ship_code)
-        with open(save_map_path, 'r') as f:
-            local_map_data = json.load(f)
-        has_map_id = False
-        map_id_index = None
-        for index, map_item in enumerate(local_map_data["mapList"]):
-            if map_id == map_item.get("id"):
-                has_map_id = True
-                map_id_index = index
-                break
-        if has_map_id:
-            local_map_data["mapList"].remove(map_id_index)
-        with open(save_map_path, 'w') as f:
-            json.dump(local_map_data, f)
 
     # 消息处理函数回调
     def on_message_callback(self, client, userdata, msg):
         topic = msg.topic
         # 处理初始点击确定湖数据
-        if topic == 'pool_click_%s' % (self.ship_code):
+        if topic == 'pool_click_%s' % self.ship_code:
             pool_click_data = json.loads(msg.payload)
             if pool_click_data.get('lng_lat') is None:
                 self.logger.error('pool_click  用户点击经纬度数据没有经纬度字段')
@@ -207,42 +192,65 @@ class MqttSendGet:
             self.pool_click_lng_lat = lng_lat
             zoom = int(round(float(pool_click_data.get('zoom')), 0))
             self.pool_click_zoom = zoom
+            # 清空更新湖泊
+            self.update_pool_click_lng_lat = None
+            self.update_pool_click_zoom = None
+
             self.b_pool_click = 1
             self.logger.info({'topic': topic,
                               'lng_lat': pool_click_data.get('lng_lat'),
                               'zoom': pool_click_data.get('zoom')
                               })
-
+        # 处理初始点击确定湖数据
+        if topic == 'update_pool_click_%s' % self.ship_code:
+            update_pool_click_data = json.loads(msg.payload)
+            if update_pool_click_data.get('lng_lat') is None:
+                self.logger.error('update_pool_click_data  用户点击经纬度数据没有经纬度字段')
+                return
+            if update_pool_click_data.get('zoom') is None:
+                self.logger.error('update_pool_click_data 用户点击经纬度数据没有zoom字段')
+                return
+            lng_lat = update_pool_click_data.get('lng_lat')
+            self.update_pool_click_lng_lat = lng_lat
+            zoom = int(round(float(update_pool_click_data.get('zoom')), 0))
+            self.update_pool_click_zoom = zoom
+            # 清空选择湖泊
+            self.pool_click_lng_lat=None
+            self.pool_click_zoom=None
+            if update_pool_click_data.get('mapId'):
+                self.update_map_id = update_pool_click_data.get('mapId')
+            self.b_pool_click = 1
+            self.logger.info({'topic': topic,
+                              'self.update_pool_click_lng_lat': self.update_pool_click_lng_lat,
+                              'self.update_pool_click_zoom': self.update_pool_click_zoom,
+                              'self.update_map_id': self.update_map_id
+                              })
         # 用户点击经纬度和图层 保存到指定路径
-        elif topic == 'user_lng_lat_%s' % (self.ship_code):
+        elif topic == 'user_lng_lat_%s' % self.ship_code:
             user_lng_lat_data = json.loads(msg.payload)
             if user_lng_lat_data.get('lng_lat') is None:
                 self.logger.error('user_lng_lat_用户点击经纬度数据没有经纬度字段')
                 return
-            if user_lng_lat_data.get('zoom') is None:
-                self.logger.error('user_lng_lat_用户点击经纬度数据没有zoom字段')
-                return
-            if user_lng_lat_data.get('meter_pix') is None:
-                self.logger.error('user_lng_lat_用户点击经纬度数据没有meter_pix字段')
+            # if user_lng_lat_data.get('zoom') is None:
+            #     self.logger.error('user_lng_lat_用户点击经纬度数据没有zoom字段')
+            #     return
+            # if user_lng_lat_data.get('meter_pix') is None:
+            #     self.logger.error('user_lng_lat_用户点击经纬度数据没有meter_pix字段')
             if user_lng_lat_data.get('config') is None:
                 self.logger.error('user_lng_lat_用户点击经纬度数据没有config字段')
-
+                return
             # 添加新的点
             lng_lat = user_lng_lat_data.get('lng_lat')
             self.target_lng_lat = lng_lat
             self.target_lng_lat_status = [0] * len(lng_lat)
-            zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
-            self.zoom.append(zoom)
-            self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
+            # zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
+            # self.zoom.append(zoom)
+            # self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
             if user_lng_lat_data.get('config').get('back_home') is not None:
                 self.back_home = user_lng_lat_data.get('config').get('back_home')
-
             self.fix_point = user_lng_lat_data.get('config').get('fixpoint')
-
             self.logger.info({'topic': topic,
                               'target_lng_lat': self.target_lng_lat,
-                              'zoom': zoom,
-                              'meter_pix': user_lng_lat_data.get('meter_pix'),
                               'back_home': self.back_home,
                               'fix_point': self.fix_point,
                               })
@@ -322,52 +330,42 @@ class MqttSendGet:
                 return
             else:
                 self.current_lng_lat = status_data.get('current_lng_lat')
-                self.update_safe_distance =True
+                self.update_safe_distance = True
             if status_data.get("home_lng_lat") is None:
                 pass
             else:
                 self.home_lng_lat = status_data.get('home_lng_lat')
-
-        # 删除当前存在id地图
-        elif topic == 'delete_map_id_%s' % self.ship_code:
-            delete_map_id_data = json.loads(msg.payload)
-            if delete_map_id_data.get("map_id") is None:
-                self.logger.error('delete_map_id_data设置启动消息没有map_id字段')
-                return
-            else:
-                self.delete_map_id(delete_map_id_data.get("map_id"))
-
-        # 基础配置
-        elif topic == 'base_setting_%s' % self.ship_code:
-            self.logger.info({'base_setting ': json.loads(msg.payload)})
+        # 服务器基础配置
+        elif topic == 'server_base_setting_%s' % self.ship_code:
+            server_base_setting_path = os.path.join(server_config.setting_dir, 'setting_%s.json' % self.ship_code)
+            self.logger.info({'server_base_setting_ ': json.loads(msg.payload)})
             if len(msg.payload) < 5:
                 return
-            base_setting_data = json.loads(msg.payload)
-            if base_setting_data.get("info_type") is None:
-                self.logger.error('"base_setting_data"设置启动消息没有"info_type"字段')
+            server_base_setting_data = json.loads(msg.payload)
+            if server_base_setting_data.get("info_type") is None:
+                self.logger.error('"server_base_setting_data"设置启动消息没有"info_type"字段')
                 return
             else:
-                info_type = int(base_setting_data.get('info_type'))
-                self.base_setting_data_info = info_type
+                info_type = int(server_base_setting_data.get('info_type'))
+                self.server_base_setting_data_info = info_type
                 if info_type == 1:
-                    print('base_setting_path', config.base_setting_path)
-                    with open(config.base_setting_path, 'r') as f:
-                        self.base_setting_data = json.load(f)
+                    with open(server_base_setting_path, 'r') as f:
+                        self.server_base_setting_data = json.load(f)
                 elif info_type == 2:
-                    with open(config.base_setting_path, 'r') as f:
-                        self.base_setting_data = json.load(f)
-                    with open(config.base_setting_path, 'w') as f:
-                        self.base_setting_data.update(base_setting_data)
-                        json.dump(self.base_setting_data, f)
-                    config.update_base_setting()
+                    with open(server_base_setting_path, 'r') as f:
+                        self.server_base_setting_data = json.load(f)
+                    with open(server_base_setting_path, 'w') as f:
+                        self.server_base_setting_data.update(server_base_setting_data)
+                        json.dump(self.server_base_setting_data, f)
+                    server_config.update_base_setting(server_base_setting_path)
                 # 恢复默认配置
-                elif info_type == 4:
-                    with open(config.base_setting_path, 'w') as f:
-                        with open(config.base_setting_default_path, 'r') as df:
-                            self.base_setting_default_data = json.load(df)
-                            self.base_setting_data = copy.deepcopy(self.base_setting_default_data)
-                            json.dump(self.base_setting_data, f)
-                    config.update_base_setting()
+                # elif info_type == 4:
+                #     with open(server_base_setting_path, 'w') as f:
+                #         with open(server_config.server_base_default_setting_path, 'r') as df:
+                #             self.server_base_default_setting_data = json.load(df)
+                #             self.server_base_setting_data = copy.deepcopy(self.server_base_default_setting_data)
+                #             json.dump(self.server_base_setting_data, f)
+                #     server_config.update_base_setting()
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):
@@ -420,4 +418,4 @@ if __name__ == '__main__':
                   (config.ship_code),
             data=data_define.init_detect_data,
             qos=1)
-        time.sleep(config.pi2mqtt_interval)
+        time.sleep(1)

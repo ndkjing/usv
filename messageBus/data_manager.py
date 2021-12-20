@@ -487,6 +487,8 @@ class DataManager:
             (ShipStatus.backhome_network, ShipStatus.remote_control): 21,
             (ShipStatus.backhome_low_energy, ShipStatus.remote_control): 22,
             (ShipStatus.at_home, ShipStatus.idle): 23,
+            (ShipStatus.at_home, ShipStatus.computer_control): 33,
+            (ShipStatus.at_home, ShipStatus.remote_control): 34,
             (ShipStatus.back_dock, ShipStatus.computer_control): 30,
             (ShipStatus.back_dock, ShipStatus.remote_control): 31,
             (ShipStatus.back_dock, ShipStatus.idle): 32,
@@ -1673,6 +1675,7 @@ class DataManager:
             detect_data.update({'mapId': self.data_define_obj.pool_code})
             status_data.update({'ping': round(self.ping, 1)})
             status_data.update({'current_lng_lat': self.gaode_lng_lat})
+            status_data.update({"draw_time":[0,1]})
             if config.b_sonar:
                 self.lng_lat_list.append(self.gaode_lng_lat)
                 deep_ = self.pi_main_obj.get_sonar_data()
@@ -1700,28 +1703,74 @@ class DataManager:
                 last_runtime = 0
             if last_run_distance is None:
                 last_run_distance = 0
-            if os.path.exists(config.run_distance_time_path):
-                try:
-                    with open(config.run_distance_time_path, 'r') as f:
-                        run_distance_time_data = json.load(f)
-                        save_distance = run_distance_time_data.get('save_distance')
-                        save_time = run_distance_time_data.get('save_time')
-                except Exception as e:
-                    save_distance = 0
-                    save_time = 0
-                    self.logger.error({'读取run_distance_time_path': e})
-            else:
-                save_distance = 0
-                save_time = 0
-            with open(config.run_distance_time_path, 'w') as f:
-                save_distance = save_distance + round(self.run_distance, 1) - last_run_distance
-                save_time = save_time + round(time.time() - self.start_time) - last_runtime
-                json.dump({'save_distance': save_distance,
-                           'save_time': save_time}, f)
-            last_runtime = round(time.time() - self.start_time)
-            last_run_distance = round(self.run_distance, 1)
-            status_data.update({"totle_distance": round(save_distance, 1)})
-            status_data.update({"totle_time": round(save_time)})
+            if time.time() % 10 < 1 :
+                # if os.path.exists(config.run_distance_time_path):
+                #     try:
+                #         with open(config.run_distance_time_path, 'r') as f:
+                #             run_distance_time_data = json.load(f)
+                #             save_distance = run_distance_time_data.get('save_distance')
+                #             save_time = run_distance_time_data.get('save_time')
+                #     except Exception as e:
+                #         save_distance = 0
+                #         save_time = 0
+                #         self.logger.error({'读取run_distance_time_path': e})
+                # else:
+                #     save_distance = 0
+                #     save_time = 0
+                # with open(config.run_distance_time_path, 'w') as f:
+                #     save_distance = save_distance + round(self.run_distance, 1) - last_run_distance
+                #     # print('############################读取保存距离save_distance',save_distance)
+                #     save_time = save_time + round(time.time() - self.start_time) - last_runtime
+                #     json.dump({'save_distance': save_distance,
+                #                'save_time': save_time}, f)
+                if self.http_save_distance is not None and self.http_save_time is not None and self.http_save_id:
+                    self.http_save_distance = self.http_save_distance + int(self.run_distance) - last_run_distance
+                    self.http_save_time = self.http_save_time + int(time.time() - self.start_time) - last_runtime
+                    send_mileage_data = {
+                        "deviceId": config.ship_code,
+                        "id": self.http_save_id,
+                        "total": str(self.http_save_distance),
+                        "totalTime": str(self.http_save_time)
+                    }
+                    return_data = self.send(method='http', data=send_mileage_data,
+                                            url=config.http_mileage_update,
+                                            http_type='POST',
+                                            )
+                    if return_data:
+                        self.logger.info({'更新里程和时间成功': send_mileage_data})
+                else:
+                    if self.http_save_distance is None or self.http_save_time is None:
+                        return_data = self.send(method='http',
+                                                data='',
+                                                url=config.http_mileage_get + "?deviceId=%s" % config.ship_code,
+                                                http_type='GET'
+                                                )
+                        if return_data:
+                            print('self.http_save_distance,self.http_save_time,self.http_save_id',
+                                  self.http_save_distance,
+                                  self.http_save_time, self.http_save_id)
+                            self.http_save_distance = int(return_data.get("total"))
+                            self.http_save_time = int(return_data.get("totalTime"))
+                            self.http_save_id = return_data.get("id")
+                    if self.http_save_distance and self.http_save_time:
+                        self.http_save_distance = self.http_save_distance + int(self.run_distance) - last_run_distance
+                        self.http_save_time = self.http_save_time + int(time.time() - self.start_time) - last_runtime
+                        send_mileage_data = {
+                            "id": config.ship_code,
+                            "deviceId": config.ship_code,
+                            "total": str(self.http_save_distance),
+                            "totalTime": str(self.http_save_time)
+                        }
+                        return_data = self.send(method='http', data=send_mileage_data,
+                                                url=config.http_mileage_update,
+                                                http_type='POST',
+                                                )
+                        if return_data:
+                            self.logger.info({'更新里程和时间成功': send_mileage_data})
+                last_runtime = int(time.time() - self.start_time)
+                last_run_distance = int(self.run_distance)
+                status_data.update({"totle_distance": self.http_save_distance})
+                status_data.update({"totle_time": self.http_save_time})
             # 更新船头方向
             if self.current_theta:
                 status_data.update({"direction": round(self.current_theta)})
@@ -1730,18 +1779,10 @@ class DataManager:
                 status_data.update({"lng_lat_error": self.lng_lat_error})
             # 更新真实数据
             if not config.home_debug:
-                mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
-                mqtt_send_detect_data['water'].update(self.pi_main_obj.water_data_dict)
                 mqtt_send_status_data = data_define.fake_status_data(status_data)
             # 更新模拟数据
             else:
-                mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
                 mqtt_send_status_data = data_define.fake_status_data(status_data)
-            # 替换键
-            for k_all, v_all in data_define.name_mappings.items():
-                for old_key, new_key in v_all.items():
-                    pop_value = mqtt_send_detect_data[k_all].pop(old_key)
-                    mqtt_send_detect_data[k_all].update({new_key: pop_value})
             if self.dump_energy is not None:
                 self.dump_energy_deque.append(self.dump_energy)
                 mqtt_send_status_data.update({'dump_energy': self.dump_energy})
@@ -1749,7 +1790,23 @@ class DataManager:
                 self.dump_energy_deque.append(self.pi_main_obj.dump_energy)
                 mqtt_send_status_data.update({'dump_energy': self.pi_main_obj.dump_energy})
             # 向mqtt发送数据
-            self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
+            self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=json.dumps(mqtt_send_status_data),
+                      qos=0)
+            if time.time() % 10 < 1:
+                self.logger.info({'status_data_': json.dumps(mqtt_send_status_data)})
+
+    def send_high_f_status_data(self):
+        high_f_status_data = {}
+        while 1:
+            time.sleep(0.16)
+            if config.home_debug and self.current_theta is None:
+                self.current_theta = 1
+            if config.home_debug and self.current_theta is not None:
+                high_f_status_data.update({"direction": round(self.current_theta, 1)})
+            elif not config.home_debug and self.pi_main_obj.theta:
+                high_f_status_data.update({"direction": round(self.pi_main_obj.theta, 1)})
+            high_f_status_data.update({"theta_error": round(self.theta_error, 1)})
+            self.send(method='mqtt', topic='high_f_status_data_%s' % config.ship_code, data=high_f_status_data,
                       qos=0)
 
     # 外围设备控制线程函数

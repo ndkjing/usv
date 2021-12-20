@@ -86,6 +86,8 @@ def main():
                         data_manager_obj.connect_mqtt_server,
                         data_manager_obj.start_once_func,
                         data_manager_obj.control_draw_thread,
+                        data_manager_obj.send_distacne,
+                        data_manager_obj.send_high_f_status_data
                         ]
     common_thread_list = []
     # 树莓派对象数据处理
@@ -99,7 +101,6 @@ def main():
                         data_manager_obj.pi_main_obj.get_com_data,
                         data_manager_obj.pi_main_obj.get_distance_dict,
                         data_manager_obj.pi_main_obj.get_distance_dict_millimeter,
-                        data_manager_obj.send_distacne,
                         data_manager_obj.pi_main_obj.get_stc_data,
                         data_manager_obj.pi_main_obj.get_remote_control_data,
                         data_manager_obj.pi_main_obj.loop_change_draw_steer,
