@@ -34,12 +34,14 @@ sys.path.append(
 
 import config
 from moveControl.pathPlanning import a_star
-from externalConnect import baidu_map
+# from externalConnect import baidu_map
+from webServer import server_baidu_map as baidu_map
 from utils.log import LogHandler
+from webServer import ship_state_utils
 from webServer.web_server_data import ServerData
 from webServer import server_data_define
 from webServer import server_config
-import get_eviz_url
+# import get_eviz_url
 
 
 class WebServer:
@@ -131,9 +133,8 @@ class WebServer:
             self.server_data_obj_dict.get(ship_code).send_server_mqtt_data(
                 data=data, topic=topic, qos=qos)
 
-    def get_pool_and_save(self,send_data,ship_code,save_map_path,save_pool_lng_lats):
+    def get_pool_and_save(self, send_data, ship_code, save_map_path, save_pool_lng_lats):
         """
-
         @param send_data:
         @param ship_code:
         @param save_map_path:
@@ -144,10 +145,10 @@ class WebServer:
                 method='http',
                 data=send_data,
                 ship_code=ship_code,
-                url=config.http_save,
+                url=server_config.http_save,
                 http_type='POST')
             self.logger.info({'新的湖泊 poolid': pool_id})
-            assert isinstance(pool_id,str)
+            assert isinstance(pool_id, str)
         except Exception as e1:
             self.logger.error({'config.http_save:': e1})
             return False
@@ -183,7 +184,7 @@ class WebServer:
                 #         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom is None:
                 #     continue
                 # 查找与更新湖泊id
-                save_img_dir = os.path.join(config.root_path, 'statics', 'imgs')
+                save_img_dir = os.path.join(server_config.root_path, 'statics', 'imgs')
                 if not os.path.exists(save_img_dir):
                     os.mkdir(save_img_dir)
                 # 超过1000张图片时候删除图片
@@ -307,7 +308,7 @@ class WebServer:
                                 method='http',
                                 data=send_data,
                                 ship_code=ship_code,
-                                url=config.http_save,
+                                url=server_config.http_save,
                                 http_type='POST')
                         except Exception as e:
                             self.logger.error({'error': e})
@@ -344,7 +345,7 @@ class WebServer:
                                         method='http',
                                         data=send_data,
                                         ship_code=ship_code,
-                                        url=config.http_update_map,
+                                        url=server_config.http_update_map,
                                         http_type='POST')
                                     if update_flag:
                                         self.logger.info({'更新湖泊成功': pool_id})
@@ -359,7 +360,7 @@ class WebServer:
                                             method='http',
                                             data=send_data,
                                             ship_code=ship_code,
-                                            url=config.http_save,
+                                            url=server_config.http_save,
                                             http_type='POST')
                                     except Exception as e1:
                                         self.logger.error({'config.http_save:': e1})
@@ -387,10 +388,10 @@ class WebServer:
                                     method='http',
                                     data=send_data,
                                     ship_code=ship_code,
-                                    url=config.http_save,
+                                    url=server_config.http_save,
                                     http_type='POST')
                             except Exception as e1:
-                                self.logger.error({'config.http_save:': e1})
+                                self.logger.error({'server_config.http_save:': e1})
                             self.logger.info({'新的湖泊 poolid': pool_id})
                             with open(save_map_path, 'w') as f:
                                 # 以前存储键值
@@ -434,7 +435,8 @@ class WebServer:
                         else:
                             self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data.update(
                                 {'info_type': 3})
-                            send_data = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data
+                            send_data = self.server_data_obj_dict.get(
+                                ship_code).mqtt_send_get_obj.server_base_setting_data
                             send_data.update({'pool_name': server_config.pool_name})
                             self.send(method='mqtt',
                                       topic='server_base_setting_%s' % ship_code,
@@ -500,7 +502,8 @@ class WebServer:
                         self.send(method='mqtt',
                                   ship_code=ship_code,
                                   topic='server_base_setting_%s' % ship_code,
-                                  data=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.server_base_setting_data,
+                                  data=self.server_data_obj_dict.get(
+                                      ship_code).mqtt_send_get_obj.server_base_setting_data,
                                   qos=0)
                         self.logger.info({'server_base_setting_': self.server_data_obj_dict.get(
                             ship_code).mqtt_send_get_obj.server_base_setting_data})
@@ -614,7 +617,6 @@ class WebServer:
                             current_pix,
                             self.baidu_map_obj_dict.get(ship_code).pix_2_meter)
                         bank_distance = round(bank_distance, 1)
-                        # print('bank_distance', bank_distance)
                         send_data = {
                             # 设备号
                             "deviceId": ship_code,
@@ -628,6 +630,40 @@ class WebServer:
                                   qos=0)
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_safe_distance = False
 
+    # 发送离岸距离
+    def check_online_ship(self):
+        ship_status_dict = {}  # 船状态字典
+        while True:
+            time.sleep(0.1)
+            for ship_code in server_config.ship_code_list:
+                if ship_status_dict.get(ship_code) is None:
+                    b_online = ship_state_utils.get_status(url=server_config.http_get_ship_status, devicd_id=ship_code)
+                    if b_online is None:
+                        continue
+                    else:
+                        ship_status_dict.update({ship_code: b_online})
+            # 判断是否需要更新在线消息
+            for ship_code in server_config.ship_code_list:
+                if time.time() - self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.receice_time[0] < 5:
+                    if ship_status_dict.get(ship_code) == 0:
+                        is_success = ship_state_utils.send_status(url=server_config.http_set_ship_status,
+                                                                  data={"deviceId": ship_code, "state": "1"})
+                        if is_success:
+                            ship_status_dict.update({ship_code: 1})
+                        else:
+                            time.sleep(2)
+                        print('ship_status_dict', ship_status_dict)
+                else:
+                    if ship_status_dict.get(ship_code) == 1:
+                        is_success = ship_state_utils.send_status(url=server_config.http_set_ship_status,
+                                                                  data={"deviceId": ship_code, "state": "0"})
+
+                        if is_success:
+                            ship_status_dict.update({ship_code: 0})
+                        else:
+                            time.sleep(2)
+                        print('ship_status_dict', ship_status_dict)
+
 
 if __name__ == '__main__':
     while True:
@@ -636,9 +672,11 @@ if __name__ == '__main__':
             find_pool_thread = threading.Thread(target=web_server_obj.find_pool)
             get_plan_path_thread = threading.Thread(target=web_server_obj.get_plan_path)
             send_bank_distance_thread = threading.Thread(target=web_server_obj.send_bank_distance)
+            check_online_ship_thread = threading.Thread(target=web_server_obj.check_online_ship)
             find_pool_thread.start()
             get_plan_path_thread.start()
             send_bank_distance_thread.start()
+            check_online_ship_thread.start()
             while True:
                 if not find_pool_thread.is_alive():
                     find_pool_thread = threading.Thread(target=web_server_obj.find_pool)
@@ -649,6 +687,9 @@ if __name__ == '__main__':
                 if not send_bank_distance_thread.is_alive():
                     send_bank_distance_thread = threading.Thread(target=web_server_obj.send_bank_distance)
                     send_bank_distance_thread.start()
+                if not check_online_ship_thread.is_alive():
+                    check_online_ship_thread = threading.Thread(target=web_server_obj.check_online_ship)
+                    check_online_ship_thread.start()
                 time.sleep(1)
         except Exception as e:
             print({'error': e})

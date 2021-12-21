@@ -160,7 +160,8 @@ class MqttSendGet:
         self.update_safe_distance = False
         self.back_home = 0
         self.fix_point = 0
-
+        self.receice_time = [0, self.ship_code]  # 记录下最近接受到数据的时间和船号
+        self.b_send_online = 0  # 判断是否需要发送在线数据
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -215,8 +216,8 @@ class MqttSendGet:
             zoom = int(round(float(update_pool_click_data.get('zoom')), 0))
             self.update_pool_click_zoom = zoom
             # 清空选择湖泊
-            self.pool_click_lng_lat=None
-            self.pool_click_zoom=None
+            self.pool_click_lng_lat = None
+            self.pool_click_zoom = None
             if update_pool_click_data.get('mapId'):
                 self.update_map_id = update_pool_click_data.get('mapId')
             self.b_pool_click = 1
@@ -325,6 +326,7 @@ class MqttSendGet:
         # 服务器从状态数据中获取 当前经纬度
         elif topic == 'status_data_%s' % (self.ship_code):
             status_data = json.loads(msg.payload)
+            self.receice_time = [time.time(), self.ship_code]  # 记录下最近接受到数据的时间和船号
             if status_data.get("current_lng_lat") is None:
                 # self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
                 return
@@ -367,6 +369,16 @@ class MqttSendGet:
                 #             json.dump(self.server_base_setting_data, f)
                 #     server_config.update_base_setting()
 
+        # 服务器从状态数据中获取 当前经纬度
+        elif topic == 'online_ship':
+            online_ship_data = json.loads(msg.payload)
+            if online_ship_data.get("info_type") is None:
+                self.logger.error('"online_ship_data"消息没有"info_type"字段')
+                return
+            else:
+                if int(online_ship_data.get("info_type")) == 1:
+                    self.b_send_online = 1
+            # print('online_ship_data',online_ship_data,self.b_send_online)
     # 发布消息
     def publish_topic(self, topic, data, qos=0):
         """

@@ -1,6 +1,8 @@
 import os
 import json
-
+"""
+服务器相关数据设置
+"""
 ship_code_list = [
     'XXLJC4LCGSCAHSD0DA000',
     'XXLJC4LCGSCSD1DA001',
@@ -10,13 +12,12 @@ ship_code_list = [
     'XXLJC4LCGSCSD1DA005',
     'XXLJC4LCGSCSD1DA006',
     'XXLJC4LCGSCSD1DA007',
-    'XXLJC4LCGSCSD1DA008',
-    'XXLJC4LCGSCSD1DA009',
-    'XXLJC4LCGSCSD1DA010',
-    'XXLJC4LCGSCSD1DA011',
+    # 'XXLJC4LCGSCSD1DA008',
+    # 'XXLJC4LCGSCSD1DA009',
+    # 'XXLJC4LCGSCSD1DA010',
+    # 'XXLJC4LCGSCSD1DA011',
 ]
 root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-pool_name = "梁子湖"
 b_use_path_planning = 1
 # 检测像素间隔
 pix_interval = 4
@@ -33,6 +34,18 @@ save_token_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'save
 path_search_safe_distance = 15
 # 湖泊名称
 pool_name = "梁子湖"
+# 注册新的湖泊ID
+http_save = 'https://ship.xxlun.com/union/admin/xxl/map/save'
+# http_save = 'http://192.168.199.186:8009/union/admin/xxl/map/save'
+# 更新湖泊轮廓
+http_update_map = 'https://ship.xxlun.com/union/admin/xxl/map/upData'
+# http_update_map = 'http://192.168.199.186:8009/union/admin/xxl/map/upData'
+# 获取船状态
+http_get_ship_status = 'https://ship.xxlun.com/union/admin/xxl/data/state'
+# http_get_ship_status = 'http://192.168.8.26:8009/union/admin/xxl/data/state'
+# 更新船状态
+http_set_ship_status = 'https://ship.xxlun.com/union/admin/xxl/data/upstate'
+# http_set_ship_status = 'http://192.168.8.26:8009/union/admin/xxl/data/upstate'
 
 
 def update_base_setting(ship_code_):

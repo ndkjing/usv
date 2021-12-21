@@ -19,7 +19,8 @@ class DataDefine:
             ('path_planning_%s' % ship_code, 1),
             ('status_data_%s' % ship_code, 0),
             ('path_planning_confirm_%s' % ship_code, 1),
-            ('server_base_setting_%s' % ship_code, 0))
+            ('server_base_setting_%s' % ship_code, 0),
+            ('online_ship', 0))
         self.pool_code = ''
 
 

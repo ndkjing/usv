@@ -135,28 +135,28 @@ http_update_map = 'https://ship.xxlun.com/union/admin/xxl/map/upData'
 http_data_save = 'https://ship.xxlun.com/union/admin/xxl/data/save'
 # http_data_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
 # 发送抽水瓶号数据
-# http_draw_save = 'https://ship.xxlun.com/union/admin/xxl/data/sampling/save'
-http_draw_save = 'http://192.168.8.26:8009/union/admin/xxl/data/sampling/save'
+http_draw_save = 'https://ship.xxlun.com/union/admin/xxl/data/sampling/save'
+# http_draw_save = 'http://192.168.8.26:8009/union/admin/xxl/data/sampling/save'
 # 获取存储的任务数据
 http_get_task = 'https://ship.xxlun.com/union/admin/xxl/task/getOne'
 http_update_task = 'https://ship.xxlun.com/union/admin/xxl/task/upDataTask'
 http_delete_task = 'https://ship.xxlun.com/union/admin/xxl/task/delTask'
 # 上传日志接口
-# http_log = 'http://192.168.199.186:8009/union/admin/xxl/log/save'
 http_log = 'https://ship.xxlun.com/union/admin/xxl/log/save'
+# http_log = 'http://192.168.199.186:8009/union/admin/xxl/log/save'
 # 里程接口
-# http_mileage_get = 'http://192.168.199.186:8009/union/admin/xxl/mileage/getOne'
-# http_mileage_save = 'http://192.168.199.186:8009/union/admin/xxl/mileage/save'
-# http_mileage_update = 'http://192.168.199.186:8009/union/admin/xxl/mileage/upData'
 http_mileage_get = 'https://ship.xxlun.com/union/admin/xxl/mileage/getOne'
 http_mileage_save = 'https://ship.xxlun.com/union/admin/xxl/mileage/save'
 http_mileage_update = 'https://ship.xxlun.com/union/admin/xxl/mileage/upData'
+# http_mileage_get = 'http://192.168.199.186:8009/union/admin/xxl/mileage/getOne'
+# http_mileage_save = 'http://192.168.199.186:8009/union/admin/xxl/mileage/save'
+# http_mileage_update = 'http://192.168.199.186:8009/union/admin/xxl/mileage/upData'
 # 上传图片接口
+http_upload_img = "https://ship.xxlun.com/union/admin/uploadFile"
 # http_upload_img = "http://192.168.8.26:8009/union/admin/uploadFile"
-http_upload_img = "http://192.168.8.26:8009/union/admin/uploadFile"
 # 获取图片下载地址接口
-# http_get_img_path = "http://192.168.8.26:8009/union/admin/uploadFile"
-http_get_img_path = "http://192.168.8.26:8009/union/admin/xxl/data/getPicUrl"
+http_get_img_path = "https://ship.xxlun.com/union/admin/xxl/data/getPicUrl"
+# http_get_img_path = "http://192.168.8.26:8009/union/admin/xxl/data/getPicUrl"
 
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'

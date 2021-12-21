@@ -1,3 +1,5 @@
+import time
+
 import requests
 from urllib3 import encode_multipart_formdata
 import json
@@ -42,6 +44,8 @@ def post_file(url, file_path, file_name=None):
     :param file_name: 文件名称（上传到服务端文件即为这个名称， 不管原文件名称）
     :return: 服务器返回的内容
     """
+    """
+
     # 读取文件内容
     file = open(file_path, "rb")
     file_content = file.read()
@@ -63,11 +67,19 @@ def post_file(url, file_path, file_name=None):
     headers['Content-Type'] = encode_data[1]
     # 发送post请求
     try:
+        print(time.time(),'上传图片')
         response = requests.post(url=url, headers=headers, data=data)
     except Exception as e:
         print('error', e)
         response = None
-    print('上传图片response',response,response.content)
+    """
+    try:
+        print(time.time(),'上传图片')
+        response = requests.post(url=url, files={'file': (file_path, open(file_path,"rb"))})
+    except Exception as e:
+        print('error', e)
+        response = None
+    print(time.time(),'上传图片response',response,response.content)
     return_data = json.loads(response.content)
     if return_data and return_data.get("success"):
         server_save_img_path = return_data.get("data").get("picName")
@@ -115,19 +127,25 @@ def add_img_info(save_path, add_info: []):
             if index == 3:
                 cv2.putText(img, 'capacity:' + str(data)+'ml', (img.shape[1] - 400, 140), font, 0.7, (0, 0, 200), 1,
                             cv2.LINE_AA)
-            cv2.imwrite('image_text.png', img)
+            cv2.imwrite('image_text.jpg', img)
+
 
 def all_throw_img(http_get_img_path,http_upload_img,ship_code,add_info=None):
     print(http_get_img_path,http_upload_img,ship_code,add_info)
+    time1 = time.time()
     img_url = get_img_url(http_get_img_path, {"deviceId": ship_code})
+    print(time.time()-time1)
     if img_url:
         img_path = 'temp.png'
         if add_info is None:
             add_info =[[114.123412, 31.112345], 1, 0.5, 5000]
         save_img(img_url,img_path)
+        print(time.time() - time1)
         if os.path.exists(img_path):
             add_img_info(img_path,add_info=add_info)
-            server_save_img_path = post_file(url=http_upload_img,file_path="image_text.png",file_name=None)
+            print(time.time() - time1)
+            server_save_img_path = post_file(url=http_upload_img,file_path="image_text.jpg",file_name=None)
+            print(time.time() - time1)
             return server_save_img_path
 
 if __name__ == "__main__":
