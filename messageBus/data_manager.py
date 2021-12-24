@@ -457,7 +457,7 @@ class DataManager:
         self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
         self.server_data_obj.mqtt_send_get_obj.keep_point = 0
         self.point_arrive_start_time = None  # 清楚记录长期不到时间
-
+        self.theta_error = 0
     # 当模式改变是改变保存的状态消息
     def change_status_info(self, target_status, b_clear_status=False):
         """
