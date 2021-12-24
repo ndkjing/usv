@@ -12,10 +12,10 @@ ship_code_list = [
     'XXLJC4LCGSCSD1DA005',
     'XXLJC4LCGSCSD1DA006',
     'XXLJC4LCGSCSD1DA007',
-    'XXLJC4LCGSCSD1DA008',
-    'XXLJC4LCGSCSD1DA009',
-    'XXLJC4LCGSCSD1DA010',
-    'XXLJC4LCGSCSD1DA011',
+    # 'XXLJC4LCGSCSD1DA008',
+    # 'XXLJC4LCGSCSD1DA009',
+    # 'XXLJC4LCGSCSD1DA010',
+    # 'XXLJC4LCGSCSD1DA011',
 ]
 root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 b_use_path_planning = 1
@@ -40,6 +40,13 @@ http_save = 'https://ship.xxlun.com/union/admin/xxl/map/save'
 # 更新湖泊轮廓
 http_update_map = 'https://ship.xxlun.com/union/admin/xxl/map/upData'
 # http_update_map = 'http://192.168.199.186:8009/union/admin/xxl/map/upData'
+# 获取船状态
+http_get_ship_status = 'https://ship.xxlun.com/union/admin/xxl/data/state'
+# http_get_ship_status = 'http://192.168.8.26:8009/union/admin/xxl/data/state'
+# 更新船状态
+http_set_ship_status = 'https://ship.xxlun.com/union/admin/xxl/data/upstate'
+# http_set_ship_status = 'http://192.168.8.26:8009/union/admin/xxl/data/upstate'
+
 
 def update_base_setting(ship_code_):
     global path_search_safe_distance
