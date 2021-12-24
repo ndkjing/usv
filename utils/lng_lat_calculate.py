@@ -4,15 +4,25 @@
 import math
 
 
-# 测试通过
-def DDD2DMS(number):
-    D = number // 1
-    temp = number % 1
-    M = (temp * 60) // 1
-    temp = (temp * 60) % 1
-    S = (temp * 60)
-    return D + (M / 100) + (S / 10000)
+# 度格式转度分格式
+# def DDD2DMS(number):
+#     D = number // 1
+#     temp = number % 1
+#     M = (temp * 60) // 1
+#     temp = (temp * 60) % 1
+#     S = (temp * 60)
+#     return D + (M / 100) + (S / 10000)
 
+# 度格式转度分格式
+# def DDD2DMS(number):
+#     D = number // 1
+#     temp = number % 1
+#     M = (temp * 60)
+#     return D + (M / 100)
+
+# 直接返回度格式数据
+def DDD2DMS(number):
+    return number
 
 def angleFromCoordinate(long1, lat1, long2, lat2):
     """
@@ -116,34 +126,29 @@ def gps_gaode_to_gps(gps, gps_gaode, gaode):
                                      distance)
 
 
-def get_x_y_distance(lon_lat0, lon_lat1, debug=False):
+def get_x_y_distance(lon_lat0, lon_lat1):
     """
     计算两点之间的x和y轴距离
     :return:
     """
-    distance = distanceFromCoordinate(lon_lat0[0], lon_lat0[1], lon_lat1[0], lon_lat1[1])
-    theta = angleFromCoordinate(lon_lat0[0], lon_lat0[1], lon_lat1[0], lon_lat1[1])
-    rad = math.radians(theta)
-    x = distance * math.sin(rad)
-    y = distance * math.cos(rad)
-    if theta > 180:
-        x = abs(x)
-    else:
-        x = -abs(x)
-    if 0<theta<90 or 270<theta<360:
-        y = abs(y)
-    else:
-        y = -abs(y)
-    if debug:
-        print("theta:%f,rad:%f,x:%f,y:%f" % (theta, rad, x, y))
+    distance = distanceFromCoordinate(lon_lat0[0], lon_lat0[0], lon_lat1[1], lon_lat1[1])
+    theta = angleFromCoordinate(lon_lat0[0], lon_lat0[0], lon_lat1[1], lon_lat1[1])
+    # NED 坐标系下距离
+    theta = ((360 - theta) % 360 + 90) % 360
+    x = distance * math.sin(theta)
+    y = distance * math.cos(theta)
     return x, y
 
 
 if __name__ == '__main__':
-    theta = angleFromCoordinate(114.435546, 30.539298, 114.432546, 30.541674)
-    print('theta1 0:', theta)
+
     theta = angleFromCoordinate(114.435546, 30.539298, 114.425546, 30.539298)
     print('theta1 :', theta)
+    print('diatance1 :', distanceFromCoordinate(114.435546, 30.539298, 114.425546, 30.539298))
+    theta = angleFromCoordinate(114.433546, 30.539298, 114.432546, 30.541674)
+    print('theta1 0:!==', theta)
+    theta = angleFromCoordinate(114.435546, 30.539298, 114.335546, 30.639298)
+    print('theta1 0:!==', theta)
     theta = angleFromCoordinate(114.435546, 30.539298, 114.435546, 30.529298)
     print('theta0 1:', theta)
     theta = angleFromCoordinate(114.435546, 30.539298, 114.445546, 30.539298)
@@ -152,13 +157,17 @@ if __name__ == '__main__':
     print('theta-1 0:', theta)
     theta = angleFromCoordinate(114.435546, 30.539298, 114.348369, 30.464498)
     print('theta-1 -1:', theta)
+    print('diatance2:', distanceFromCoordinate(114.435546, 30.539298, 114.348369, 30.464498))
+
     theta = angleFromCoordinate(114.435546, 30.539298, 114.348469, 30.4644988)
     print('theta0 -1:', theta)
-    theta = angleFromCoordinate(114.435546, 30.539298, 114.348569, 30.464498)
+    theta = angleFromCoordinate(114.435546, 30.539298, 114.535546, 30.639298)
     print('theta1 -1:', theta)
+    print('diatance3 :', distanceFromCoordinate(114.435546, 30.539298, 114.535546, 30.639298))
+
     # 30.505588, 114.524145
     # 30.505588,114.528145
-    distance = distanceFromCoordinate(114.524145, 30.505588, 114.528145, 30.505588)
+    distance = distanceFromCoordinate(114.504145, 30.501588, 114.528145, 30.505588)
     print('distance', distance)
     temp = one_point_diatance_to_end(114.316966, 30.576768, 90, 1)
     print(temp)
