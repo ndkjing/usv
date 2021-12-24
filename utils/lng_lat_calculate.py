@@ -4,15 +4,25 @@
 import math
 
 
-# 测试通过
-def DDD2DMS(number):
-    D = number // 1
-    temp = number % 1
-    M = (temp * 60) // 1
-    temp = (temp * 60) % 1
-    S = (temp * 60)
-    return D + (M / 100) + (S / 10000)
+# 度格式转度分格式
+# def DDD2DMS(number):
+#     D = number // 1
+#     temp = number % 1
+#     M = (temp * 60) // 1
+#     temp = (temp * 60) % 1
+#     S = (temp * 60)
+#     return D + (M / 100) + (S / 10000)
 
+# 度格式转度分格式
+# def DDD2DMS(number):
+#     D = number // 1
+#     temp = number % 1
+#     M = (temp * 60)
+#     return D + (M / 100)
+
+# 直接返回度格式数据
+def DDD2DMS(number):
+    return number
 
 def angleFromCoordinate(long1, lat1, long2, lat2):
     """
@@ -131,10 +141,14 @@ def get_x_y_distance(lon_lat0, lon_lat1):
 
 
 if __name__ == '__main__':
-    theta = angleFromCoordinate(114.435546, 30.539298, 114.432546, 30.541674)
-    print('theta1 0:', theta)
+
     theta = angleFromCoordinate(114.435546, 30.539298, 114.425546, 30.539298)
     print('theta1 :', theta)
+    print('diatance1 :', distanceFromCoordinate(114.435546, 30.539298, 114.425546, 30.539298))
+    theta = angleFromCoordinate(114.433546, 30.539298, 114.432546, 30.541674)
+    print('theta1 0:!==', theta)
+    theta = angleFromCoordinate(114.435546, 30.539298, 114.335546, 30.639298)
+    print('theta1 0:!==', theta)
     theta = angleFromCoordinate(114.435546, 30.539298, 114.435546, 30.529298)
     print('theta0 1:', theta)
     theta = angleFromCoordinate(114.435546, 30.539298, 114.445546, 30.539298)
@@ -143,10 +157,14 @@ if __name__ == '__main__':
     print('theta-1 0:', theta)
     theta = angleFromCoordinate(114.435546, 30.539298, 114.348369, 30.464498)
     print('theta-1 -1:', theta)
+    print('diatance2:', distanceFromCoordinate(114.435546, 30.539298, 114.348369, 30.464498))
+
     theta = angleFromCoordinate(114.435546, 30.539298, 114.348469, 30.4644988)
     print('theta0 -1:', theta)
-    theta = angleFromCoordinate(114.435546, 30.539298, 114.348569, 30.464498)
+    theta = angleFromCoordinate(114.435546, 30.539298, 114.535546, 30.639298)
     print('theta1 -1:', theta)
+    print('diatance3 :', distanceFromCoordinate(114.435546, 30.539298, 114.535546, 30.639298))
+
     # 30.505588, 114.524145
     # 30.505588,114.528145
     distance = distanceFromCoordinate(114.504145, 30.501588, 114.528145, 30.505588)

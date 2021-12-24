@@ -652,7 +652,7 @@ class WebServer:
                             ship_status_dict.update({ship_code: 1})
                         else:
                             time.sleep(2)
-                        print('ship_status_dict', ship_status_dict)
+                        # print('ship_status_dict', ship_status_dict)
                 else:
                     if ship_status_dict.get(ship_code) == 1:
                         is_success = ship_state_utils.send_status(url=server_config.http_set_ship_status,

@@ -165,7 +165,7 @@ class MqttSendGet:
 
     # 连接MQTT服务器
     def mqtt_connect(self):
-        self.mqtt_client.connect(self.mqtt_host, self.mqtt_port, 60)
+        self.mqtt_client.connect(self.mqtt_host, self.mqtt_port, 30)
         # 开启接收循环，直到程序终止
         self.mqtt_client.loop_start()
 
