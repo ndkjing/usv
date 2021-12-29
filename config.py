@@ -295,6 +295,16 @@ http_log = 'https://ship.xxlun.com/union/admin/xxl/log/save'
 http_mileage_get = 'https://ship.xxlun.com/union/admin/xxl/mileage/getOne'
 http_mileage_save = 'https://ship.xxlun.com/union/admin/xxl/mileage/save'
 http_mileage_update = 'https://ship.xxlun.com/union/admin/xxl/mileage/upData'
+# 上传图片接口
+http_upload_img = "https://ship.xxlun.com/union/admin/uploadFile"
+# http_upload_img = "http://192.168.8.26:8009/union/admin/uploadFile"
+# 获取图片下载地址接口
+http_get_img_path = "https://ship.xxlun.com/union/admin/xxl/data/getPicUrl"
+# http_get_img_path = "http://192.168.8.26:8009/union/admin/xxl/data/getPicUrl"
+# 上传异常情况接口
+http_send_abnormal = "https://ship.xxlun.com/union/admin/xxl/data/abnormal/save"
+# http_send_abnormal = "http://192.168.8.26:8009/union/admin/xxl/data/abnormal/save"
+
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884

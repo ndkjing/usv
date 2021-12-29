@@ -207,6 +207,11 @@ class DataManager:
         self.pre_dock_lng_lat = None  # 船舶预停泊经纬度
         self.is_arriver_pre_dock = False  # 船已经到达预停泊经纬度
         self.is_at_dock = False  # 船已经到达预停泊经纬度
+        self.http_save_distance = None  # http 记录保存距离
+        self.http_save_time = None  # http记录保存时间
+        self.http_save_id = ''  # http记录保存id
+        self.dump_draw_time = 0  # 剩余抽水时间
+        self.dump_draw_list = [0, 0]  # 用于前端显示抽水剩余时间
 
     # 测试发送障碍物数据 调试时使用
     def send_test_distance(self):
@@ -449,6 +454,7 @@ class DataManager:
         self.point_arrive_start_time = None  # 清楚记录长期不到时间
         self.theta_error=0
     # 当模式改变是改变保存的状态消息
+
     def change_status_info(self, target_status, b_clear_status=False):
         """
         当模式改变是改变保存的状态消息
@@ -862,7 +868,7 @@ class DataManager:
         return obstacle_map
 
     # 发送数据
-    def send(self, method, data, topic='test', qos=0, http_type='POST', url=''):
+    def send(self, method, data, topic='test', qos=0, http_type='POST', url='', parm_type=1):
         """
         :param url:
         :param http_type:
@@ -873,7 +879,9 @@ class DataManager:
         """
         assert method in ['http', 'mqtt', 'com'], 'method error not in http mqtt com'
         if method == 'http':
-            return_data = self.server_data_obj.send_server_http_data(http_type, data, url)
+            return_data = self.server_data_obj.send_server_http_data(http_type, data, url, parm_type=parm_type)
+            if not return_data:
+                return False
             self.logger.info({'请求 url': url, 'status_code': return_data.status_code})
             # 如果是POST返回的数据，添加数据到地图数据保存文件中
             if http_type == 'POST' and r'map/save' in url:
@@ -890,19 +898,64 @@ class DataManager:
                 self.logger.debug({'data/save content_data success': content_data["success"]})
                 if not content_data["success"]:
                     self.logger.error('POST发送检测请求失败')
+            # http发送采样数据给服务器
+            elif http_type == 'POST' and r'data/sampling' in url:
+                content_data = json.loads(return_data.content)
+                self.logger.debug({'data/save content_data success': content_data["success"]})
+                if not content_data["success"]:
+                    self.logger.error('POST发送采样请求失败')
             elif http_type == 'GET' and r'device/binding' in url:
                 content_data = json.loads(return_data.content)
                 if not content_data["success"]:
                     self.logger.error('GET请求失败')
                 save_data_binding = content_data["data"]
                 return save_data_binding
+            elif http_type == 'GET' and r'task/getOne' in url:
+                if return_data:
+                    content_data = json.loads(return_data.content)
+                    if not content_data["success"]:
+                        self.logger.info({'content_data': content_data})
+                        self.logger.error('task GET请求失败')
+                    task_data = content_data["data"]
+                    self.logger.info({'content_data': content_data})
+                    return task_data
+                else:
+                    return
+            elif http_type == 'POST' and r'task/upDataTask' in url:
+                if return_data:
+                    content_data = json.loads(return_data.content)
+                    self.logger.info({'content_data': content_data})
+                    if not content_data["success"]:
+                        self.logger.error('upDataTask请求失败')
+                    else:
+                        return True
+            elif http_type == 'POST' and r'task/delTask' in url:
+                if return_data:
+                    content_data = json.loads(return_data.content)
+                    self.logger.info({'content_data': content_data})
+                    if not content_data["success"]:
+                        self.logger.error('delTask请求失败')
+                    else:
+                        return True
+            elif http_type == 'GET' and r'mileage/getOne' in url:
+                if return_data:
+                    content_data = json.loads(return_data.content)
+                    if not content_data["success"]:
+                        self.logger.error('mileage/getOne GET请求失败')
+                    task_data = content_data.get("data")
+                    if task_data:
+                        self.logger.info({'mileage/getOne': task_data.get('items')})
+                        return task_data.get('items')
+                    return False
+                else:
+                    return False
             else:
                 # 如果是GET请求，返回所有数据的列表
                 content_data = json.loads(return_data.content)
                 if not content_data["success"]:
                     self.logger.error('GET请求失败')
-                save_data_map = content_data["data"]["mapList"]
-                return save_data_map
+                else:
+                    return True
         elif method == 'mqtt':
             self.server_data_obj.send_server_mqtt_data(data=data, topic=topic, qos=qos)
 
@@ -1854,7 +1907,7 @@ class DataManager:
                 if self.server_data_obj.mqtt_send_get_obj.dock_setting_data is None:
                     self.logger.error(
                         {
-                            'height_setting_data is None': self.server_data_obj.mqtt_send_get_obj.height_setting_data})
+                            'dock_setting_ is None': self.server_data_obj.mqtt_send_get_obj.height_setting_data})
                 else:
                     self.server_data_obj.mqtt_send_get_obj.dock_setting_data.update({'info_type': 3})
                     self.send(method='mqtt', topic='dock_setting_%s' % config.ship_code,
@@ -1991,6 +2044,8 @@ class DataManager:
         while True:
             time.sleep(1)
             if not self.server_data_obj.mqtt_send_get_obj.is_connected:
+                continue
+            if config.home_debug:
                 continue
             distance_info_data = {}
             if len(self.pi_main_obj.distance_dict) > 0:

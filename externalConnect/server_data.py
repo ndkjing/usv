@@ -18,24 +18,99 @@ class ServerData:
         self.mqtt_send_get_obj = MqttSendGet(self.logger, topics=topics)
 
     # 发送数据到服务器http
-    def send_server_http_data(self, request_type, data, url):
-        # 请求头设置
-        payload_header = {
-            'Content-Type': 'application/json',
-        }
-        assert request_type in ['POST', 'GET']
-        self.logger.info(url)
-        if request_type == 'POST':
-            dump_json_data = json.dumps(data)
-            return_data = requests.post(
-                url=url, data=dump_json_data, headers=payload_header)
-        else:
-            return_data = requests.get(url=url)
-        return return_data
+    def send_server_http_data(self, request_type, data, url, parm_type=1):
+        """
+        @param request_type:
+        @param data:
+        @param url:
+        @param parm_type: 1 data 方式  2 params 方式
+        @return:
+        """
+        try:
+            # 请求头设置
+            payload_header = {
+                'Content-Type': 'application/json',
+            }
+            assert request_type in ['POST', 'GET']
+            # self.logger.info(url)
+            if request_type == 'POST':
+                if parm_type == 1:
+                    dump_json_data = json.dumps(data)
+                    return_data = requests.post(
+                        url=url, data=dump_json_data, headers=payload_header, timeout=8)
+                else:
+                    if isinstance(data, dict):
+                        dump_json_data = data
+                    else:
+                        dump_json_data = json.dumps(data)
+                    return_data = requests.post(
+                        url=url, params=dump_json_data, headers=payload_header, timeout=8)
+            else:
+                if data:
+                    dump_json_data = json.dumps(data)
+                    return_data = requests.get(url=url, params=dump_json_data, timeout=8)
+                else:
+                    return_data = requests.get(url=url, timeout=8)
+            return return_data
+        except Exception as e:
+            return None
 
     # 发送数据到服务器mqtt
     def send_server_mqtt_data(self, topic='test', data="", qos=1):
         self.mqtt_send_get_obj.publish_topic(topic=topic, data=data, qos=qos)
+
+
+def send_http_log(request_type, data, url, parm_type=1):
+    assert request_type in ['POST', 'GET']
+    payload_header = {
+        'Content-Type': 'application/json',
+    }
+    try:
+        if request_type == 'POST':
+            if parm_type == 1:
+                dump_json_data = json.dumps(data)
+                return_data = requests.post(
+                    url=url, data=dump_json_data, headers=payload_header, timeout=5)
+                print('return_data', return_data)
+            else:
+                if isinstance(data, dict):
+                    dump_json_data = data
+                else:
+                    dump_json_data = json.dumps(data)
+                return_data = requests.post(
+                    url=url, params=dump_json_data, headers=payload_header, timeout=5)
+        else:
+            if data:
+                dump_json_data = json.dumps(data)
+                return_data = requests.get(url=url, params=dump_json_data, timeout=5)
+            else:
+                return_data = requests.get(url=url, timeout=5)
+        return return_data
+    except Exception as e:
+        return None
+
+    # class HttpSendGet:
+    #     """
+    #     处理ｊｓｏｎ数据收发
+    #     """
+    #
+    #     def __init__(self, base_url='127.0.0.1'):
+    #         self.base_url = base_url
+    #
+    #     def send_data(self, uri, data):
+    #         """
+    #         :param uri 发送接口uri
+    #         :param data  需要发送数据
+    #         """
+    #         send_url = self.base_url + uri
+    #         response = requests.post(send_url, data=data)
+    #
+    #     def get_data(self, uri):
+    #         """
+    #         :param uri 发送接口uri
+    #         """
+    #         get_url = self.base_url + uri
+    #         response = requests.get(uri)
 
 
 # class HttpSendGet:
@@ -197,7 +272,7 @@ class MqttSendGet:
             except TimeoutError:
                 return
             except Exception as e:
-                print('mqtt_connect error',e)
+                print('mqtt_connect error', e)
                 return
 
     # 建立连接时候回调
@@ -524,17 +599,32 @@ class MqttSendGet:
                     self.bank_distance = round(float(bank_distance_data.get('bank_distance')), 1)
 
             # 船坞位置话题
-            elif topic == 'dock_position_%s' % (config.ship_code):
+            elif topic == 'dock_position_%s' % config.ship_code:
                 self.logger.info({'dock_position_ ': json.loads(msg.payload)})
                 dock_position_data = json.loads(msg.payload)
-                if dock_position_data.get("dock_lng_lat") is None:
-                    self.logger.error('"dock_position_data"设置启动消息没有dock_lng_lat字段')
-                    return
-                elif dock_position_data.get("dock_direction") is None:
-                    self.logger.error('"dock_position_data"设置启动消息没有dock_direction字段')
-                    return
+                # 前端发送返回船坞
+                if dock_position_data.get("back_dock") is not None:
+                    with open(config.dock_setting_path, 'r') as f:
+                        self.dock_setting_data = json.load(f)
+                    print('self.dock_setting_data', self.dock_setting_data)
+                    if self.dock_setting_data.get("dock_lng_lat"):
+                        self.dock_position_data = {
+                            "dock_lng_lat": [float(i) for i in self.dock_setting_data.get("dock_lng_lat").split(',')],
+                            "dock_direction": float(self.dock_setting_data.get("dock_direction"))
+                        }
+                        print('self.dock_position_data', self.dock_position_data)
+                    else:
+                        print("没有船坞经纬度数据")
+                # 自己发送返回
                 else:
-                    self.dock_position_data = dock_position_data
+                    if dock_position_data.get("dock_lng_lat") is None:
+                        self.logger.error('"dock_position_data"设置启动消息没有dock_lng_lat字段')
+                        return
+                    elif dock_position_data.get("dock_direction") is None:
+                        self.logger.error('"dock_position_data"设置启动消息没有dock_direction字段')
+                        return
+                    else:
+                        self.dock_position_data = dock_position_data
 
             # 处理重置
             elif topic == 'reset_pool_%s' % config.ship_code:

@@ -420,11 +420,11 @@ class PiMain:
     # 初始化电机
     def init_motor(self):
         self.set_pwm(config.stop_pwm, config.stop_pwm)
-        time.sleep(2)
+        time.sleep(1)
         self.set_pwm(config.stop_pwm + 200, config.stop_pwm + 200)
-        time.sleep(3)
+        time.sleep(1)
         self.set_pwm(config.stop_pwm - 200, config.stop_pwm - 200)
-        time.sleep(2)
+        time.sleep(1)
         self.set_pwm(config.stop_pwm, config.stop_pwm)
         time.sleep(config.motor_init_time)
 
