@@ -452,7 +452,8 @@ class DataManager:
         self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
         self.server_data_obj.mqtt_send_get_obj.keep_point = 0
         self.point_arrive_start_time = None  # 清楚记录长期不到时间
-        self.theta_error=0
+        self.theta_error = 0
+
     # 当模式改变是改变保存的状态消息
 
     def change_status_info(self, target_status, b_clear_status=False):
@@ -1085,7 +1086,7 @@ class DataManager:
                     theta_error = 360 + theta_error
             self.theta_error = theta_error
             left_pwm, right_pwm = self.path_track_obj.pid_pwm_forawrd(distance=all_distance,
-                                                                theta_error=theta_error)
+                                                                      theta_error=theta_error)
             self.last_left_pwm = left_pwm
             self.last_right_pwm = right_pwm
             # 在家调试模式下预测目标经纬度
@@ -1163,7 +1164,9 @@ class DataManager:
                                                                 self.lng_lat[1],
                                                                 dock_lng_lat_gps[0],
                                                                 dock_lng_lat_gps[1])
-            theta_error = point_theta - self.current_theta
+            dock_direction = float(self.server_data_obj.mqtt_send_get_obj.dock_position_data.get(
+                "dock_direction"))
+            theta_error = dock_direction - self.current_theta
             if abs(theta_error) > 180:
                 if theta_error > 0:
                     theta_error = theta_error - 360
@@ -1172,8 +1175,8 @@ class DataManager:
             self.theta_error = theta_error
             left_pwm, right_pwm = self.path_track_obj.pid_back_dock(distance=distance,
                                                                     theta_error=theta_error,
-                                                                    debug=True)
-            print('倒退误差', distance, 'pwm', left_pwm, right_pwm)
+                                                                    debug=False)
+            print(time.time(),'倒退误差', distance, 'pwm', left_pwm, right_pwm)
             self.last_left_pwm = left_pwm
             self.last_right_pwm = right_pwm
             # 在家调试模式下预测目标经纬度
@@ -1550,31 +1553,33 @@ class DataManager:
                 if self.server_data_obj.mqtt_send_get_obj.dock_position_data:
                     # 计算船坞前预定义到达点
                     if not self.pre_dock_lng_lat:
-                        dock_gaode_lng_lat = self.server_data_obj.mqtt_send_get_obj.dock_position_data.get(
+                        # dock_gaode_lng_lat = self.server_data_obj.mqtt_send_get_obj.dock_position_data.get(
+                        #     "dock_lng_lat")
+                        dock_lng_lat = self.server_data_obj.mqtt_send_get_obj.dock_position_data.get(
                             "dock_lng_lat")
-                        dock_direction = self.server_data_obj.mqtt_send_get_obj.dock_position_data.get("dock_direction")
-                        dock_direction = round(dock_direction, 1)
-                        self.dock_lng_lat = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
-                                                                               self.gaode_lng_lat,
-                                                                               dock_gaode_lng_lat)
-                        self.pre_dock_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.dock_lng_lat[0],
-                                                                                            self.dock_lng_lat[1],
-                                                                                            dock_direction, 3.5)
+                        dock_direction =  round(float(self.server_data_obj.mqtt_send_get_obj.dock_position_data.get("dock_direction")), 1)
+                        # self.dock_lng_lat = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
+                        #                                                        self.gaode_lng_lat,
+                        #                                                        dock_gaode_lng_lat)
+                        self.pre_dock_lng_lat = lng_lat_calculate.one_point_diatance_to_end(dock_lng_lat[0],
+                                                                                            dock_lng_lat[1],
+                                                                                            dock_direction, 5)
+                        self.dock_lng_lat = dock_lng_lat
                     pre_dock_distance = lng_lat_calculate.distanceFromCoordinate(
-                        self.gaode_lng_lat[0],
-                        self.gaode_lng_lat[1],
+                        self.lng_lat[0],
+                        self.lng_lat[1],
                         self.pre_dock_lng_lat[0],
                         self.pre_dock_lng_lat[1])
                     if pre_dock_distance > 2.5 and not self.is_arriver_pre_dock:
                         b_arrive_sample = self.points_arrive_control(self.pre_dock_lng_lat, self.pre_dock_lng_lat,
                                                                      b_force_arrive=False)
-                        print('到达船坞预定义点', b_arrive_sample)
                         if b_arrive_sample:
+                            print('到达船坞预定义点', b_arrive_sample)
                             self.is_arriver_pre_dock = True
                     # 到达预到达点后调整姿态后退到达
                     else:
                         is_smooth_dock = 0
-                        dock_smooth_ceil = 0.4
+                        dock_smooth_ceil = 0.1
                         dock_arrive_distance = dock_smooth_ceil
                         # 平滑路径 计算当前后退最优跟踪点
                         if is_smooth_dock:
@@ -1591,17 +1596,6 @@ class DataManager:
                             self.is_at_dock = True
                             if not config.home_debug:
                                 self.pi_main_obj.stop()
-
-            # 执行任务中
-            # elif self.ship_status == ShipStatus.tasking:
-            #     if not config.home_debug:
-            #         self.pi_main_obj.stop()
-            #     # 不是使能遥控导致进入任务模式就需要放下抽水管
-            #     if not config.home_debug and not self.pi_main_obj.b_start_remote:
-            #         # 放下抽水杆子
-            #         self.pi_main_obj.set_draw_deep(config.min_deep_steer_pwm)
-            #     # 执行抽水
-            #     self.draw()
 
     # 更新经纬度为高德经纬度
     def update_ship_gaode_lng_lat(self):
@@ -1658,7 +1652,7 @@ class DataManager:
                         # 计算速度
                         else:
                             self.speed = round(speed_distance / (time.time() - last_read_time), 1)
-                        print('data manager speed',self.speed)
+                        print('data manager speed', self.speed)
                         # 替换上一次的值
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
                         # self.gps_log.info({'lng_lat': self.lng_lat})
@@ -1666,7 +1660,7 @@ class DataManager:
                     else:
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
                         last_read_time = time.time()
-            time.sleep(0.5)
+            time.sleep(0.2)
 
     # 必须使用线程发送发送检测数据
     def send_mqtt_detect_data(self):
@@ -1728,7 +1722,8 @@ class DataManager:
             detect_data.update({'mapId': self.data_define_obj.pool_code})
             status_data.update({'ping': round(self.ping, 1)})
             status_data.update({'current_lng_lat': self.gaode_lng_lat})
-            status_data.update({"draw_time":[0,1]})
+            status_data.update({"draw_time": [0, 1]})
+            status_data.update({"dock_lng_lat": self.lng_lat})
             if config.b_sonar:
                 self.lng_lat_list.append(self.gaode_lng_lat)
                 deep_ = self.pi_main_obj.get_sonar_data()
@@ -1756,7 +1751,7 @@ class DataManager:
                 last_runtime = 0
             if last_run_distance is None:
                 last_run_distance = 0
-            if time.time() % 10 < 1 :
+            if time.time() % 10 < 1:
                 # if os.path.exists(config.run_distance_time_path):
                 #     try:
                 #         with open(config.run_distance_time_path, 'r') as f:

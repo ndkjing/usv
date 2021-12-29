@@ -162,8 +162,8 @@ class ComData:
         try:
             gps_data = self.readline()
             str_data = bytes(gps_data).decode('ascii')
-            print('rtk readline gps_data', gps_data)
-            print('rtk readline str_data', str_data)
+            # print('rtk readline gps_data', gps_data)
+            # print('rtk readline str_data', str_data)
             if str_data.startswith('$GNGGA'):
                 data_list1 = str_data.split(',')
                 try:
@@ -198,11 +198,12 @@ class ComData:
                     if debug:
                         print({
                             'error read_gps convert_magnetic_declination_error': convert_magnetic_declination_error})
-            print(' rtk [lng, lat, lng_lat_error, speed, course, magnetic_declination]',
-                  [lng, lat, lng_lat_error, speed, course, magnetic_declination])
+            # print(' rtk [lng, lat, lng_lat_error, speed, course, magnetic_declination]',
+            #       [lng, lat, lng_lat_error, speed, course, magnetic_declination])
             return [lng, lat, lng_lat_error, speed, course, magnetic_declination]
         except Exception as e1:
-            print('读取GPS 错误', e1)
+            pass
+            # print('读取GPS 错误', e1)
 
 
     def get_laser_data(self):
