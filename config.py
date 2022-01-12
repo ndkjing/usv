@@ -34,7 +34,16 @@ home_location_path = os.path.join(root_path, 'home_location.json')
 # 记录罗盘数据
 save_compass_data_dir = os.path.join(root_path, 'statics')
 
+# 船类型
+class ShipType(enum.Enum):
+    single_draw = 1
+    multi_draw = 2
+    water_detect = 3
+    dock = 4
+    adcp = 5
 
+
+current_ship_type = ShipType.dock
 # 记录gps数据
 
 class CurrentPlatform(enum.Enum):
@@ -323,7 +332,7 @@ full_speed_meter = 6.0
 # 发送状态数据时间间隔
 check_status_interval = 1.0
 # 最大pwm值
-max_pwm = 1800
+max_pwm = 1700
 # 最小pwm值
 min_pwm = 1200
 # 停止中位pwm
@@ -947,7 +956,11 @@ sonar_rx = 16  # RX
 sonar_tx = 20  # TX
 sonar_baud = 9600
 sonar_steer = 21  # 声呐舵机
-
+# 维特罗盘
+b_weite_compass = 0
+weite_compass_rx = 15  # RX
+weite_compass_tx = 14  # TX
+weite_compass_baud = 9600
 # 抽水
 b_draw = 1  # 是否有抽水泵
 b_control_deep = 1  # 是否可调深度

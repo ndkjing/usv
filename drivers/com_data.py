@@ -205,7 +205,6 @@ class ComData:
             pass
             # print('读取GPS 错误', e1)
 
-
     def get_laser_data(self):
         data = self.read_size(30)
         # print(time.time(), type(data), data)

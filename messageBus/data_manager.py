@@ -1176,7 +1176,7 @@ class DataManager:
             left_pwm, right_pwm = self.path_track_obj.pid_back_dock(distance=distance,
                                                                     theta_error=theta_error,
                                                                     debug=False)
-            print(time.time(),'倒退误差', distance, 'pwm', left_pwm, right_pwm)
+            print(time.time(), '倒退误差', distance, 'pwm', left_pwm, right_pwm)
             self.last_left_pwm = left_pwm
             self.last_right_pwm = right_pwm
             # 在家调试模式下预测目标经纬度
@@ -1557,13 +1557,14 @@ class DataManager:
                         #     "dock_lng_lat")
                         dock_lng_lat = self.server_data_obj.mqtt_send_get_obj.dock_position_data.get(
                             "dock_lng_lat")
-                        dock_direction =  round(float(self.server_data_obj.mqtt_send_get_obj.dock_position_data.get("dock_direction")), 1)
+                        dock_direction = round(
+                            float(self.server_data_obj.mqtt_send_get_obj.dock_position_data.get("dock_direction")), 1)
                         # self.dock_lng_lat = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
                         #                                                        self.gaode_lng_lat,
                         #                                                        dock_gaode_lng_lat)
                         self.pre_dock_lng_lat = lng_lat_calculate.one_point_diatance_to_end(dock_lng_lat[0],
                                                                                             dock_lng_lat[1],
-                                                                                            dock_direction, 5)
+                                                                                            dock_direction, 0.5)
                         self.dock_lng_lat = dock_lng_lat
                     pre_dock_distance = lng_lat_calculate.distanceFromCoordinate(
                         self.lng_lat[0],
@@ -1652,7 +1653,7 @@ class DataManager:
                         # 计算速度
                         else:
                             self.speed = round(speed_distance / (time.time() - last_read_time), 1)
-                        print('data manager speed', self.speed)
+                        # print('data manager speed', self.speed)
                         # 替换上一次的值
                         self.last_lng_lat = copy.deepcopy(self.lng_lat)
                         # self.gps_log.info({'lng_lat': self.lng_lat})
@@ -1840,6 +1841,15 @@ class DataManager:
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=json.dumps(mqtt_send_status_data),
                       qos=0)
+            # 打印到船坞距离
+            # if time.time() % 3 < 1:
+            if self.lng_lat and self.dock_lng_lat:
+                dock_distance = lng_lat_calculate.distanceFromCoordinate(
+                    self.lng_lat[0],
+                    self.lng_lat[1],
+                    self.dock_lng_lat[0],
+                    self.dock_lng_lat[1])
+                print('dock_distance', dock_distance)
             if time.time() % 10 < 1:
                 self.logger.info({'status_data_': json.dumps(mqtt_send_status_data)})
 
@@ -2097,7 +2107,7 @@ class DataManager:
                 self.pi_main_obj.init_motor()
                 self.pi_main_obj.set_draw_deep(deep_pwm=config.max_deep_steer_pwm, b_slow=False)
                 self.is_init_motor = 1
-            if not self.b_check_get_water_data and self.gaode_lng_lat is not None:
+            if not self.b_check_get_water_data and self.gaode_lng_lat is not None and config.current_ship_type == config.ShipType.water_detect:
                 adcode = baidu_map.BaiduMap.get_area_code(self.gaode_lng_lat)
                 self.area_id = data_valid.adcode_2_area_id(adcode)
                 print('self.area_id', self.area_id)

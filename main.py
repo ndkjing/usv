@@ -98,6 +98,7 @@ def main():
         pi_func_list = [data_manager_obj.pi_main_obj.loop_change_pwm,
                         data_manager_obj.pi_main_obj.get_gps_data,
                         data_manager_obj.pi_main_obj.get_compass_data,
+                        data_manager_obj.pi_main_obj.get_weite_compass_data,
                         data_manager_obj.pi_main_obj.get_com_data,
                         data_manager_obj.pi_main_obj.get_distance_dict,
                         data_manager_obj.pi_main_obj.get_distance_dict_millimeter,
@@ -109,7 +110,8 @@ def main():
             pi_func_list[1] = data_manager_obj.pi_main_obj.get_rtk_data
         pi_func_flag.append(True)
         pi_func_flag.append(True)
-        pi_func_flag.append(True)
+        pi_func_flag.append(True if config.b_pin_compass else False)
+        pi_func_flag.append(True if config.b_weite_compass else False)
         pi_func_flag.append(True if config.b_com_stc else False)
         pi_func_flag.append(True if config.b_laser else False)
         pi_func_flag.append(True if config.b_millimeter_wave else False)
