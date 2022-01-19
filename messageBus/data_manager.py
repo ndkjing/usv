@@ -746,7 +746,6 @@ class DataManager:
         :return:平滑路径线路
         """
         smooth_path_lng_lat = []
-        distance_matrix = []
         for index, target_lng_lat in enumerate(points_gps):
             if index == 0:
                 theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
@@ -789,21 +788,6 @@ class DataManager:
                             smooth_ceil * i)
                         smooth_path_lng_lat.append(cal_lng_lat)
                     smooth_path_lng_lat.append(target_lng_lat)
-        for smooth_lng_lat_i in smooth_path_lng_lat:
-            distance_list = []
-            for sampling_points_gps_i in self.server_data_obj.mqtt_send_get_obj.sampling_points_gps:
-                s_d = lng_lat_calculate.distanceFromCoordinate(sampling_points_gps_i[0],
-                                                               sampling_points_gps_i[1],
-                                                               smooth_lng_lat_i[0],
-                                                               smooth_lng_lat_i[1])
-                distance_list.append(s_d)
-            distance_matrix.append(distance_list)
-        a_d_m = np.asarray(distance_matrix)
-        for k in range(len(distance_matrix[0])):
-            temp_a = a_d_m[:, k]
-            temp_list = temp_a.tolist()
-            index_l = temp_list.index(min(temp_list))
-            self.smooth_path_lng_lat_index.append(index_l)
         return smooth_path_lng_lat
 
     # 根据当前点和路径计算下一个经纬度点
@@ -1397,11 +1381,16 @@ class DataManager:
                 if not config.home_debug:
                     if self.direction == 0:
                         self.control_info += ' 向前'
+                        self.pi_main_obj.remote_control_obj.send_stc_data("M1Z")
+                        print("send_stc_data M1Z")
                         self.pi_main_obj.forward()
                     elif self.direction == 90:
+                        # 测试用打开和关闭
                         self.control_info += ' 向左'
                         self.pi_main_obj.left()
                     elif self.direction == 180:
+                        self.pi_main_obj.remote_control_obj.send_stc_data("M2Z")
+                        print("send_stc_data M2Z")
                         self.control_info += ' 向后'
                         self.pi_main_obj.backword()
                     elif self.direction == 270:
@@ -1551,52 +1540,49 @@ class DataManager:
             # 返回船坞充电
             elif self.ship_status == ShipStatus.back_dock:
                 if self.server_data_obj.mqtt_send_get_obj.dock_position_data:
+                    dock_lng_lat = self.server_data_obj.mqtt_send_get_obj.dock_position_data.get(
+                        "dock_lng_lat")
                     # 计算船坞前预定义到达点
                     if not self.pre_dock_lng_lat:
-                        # dock_gaode_lng_lat = self.server_data_obj.mqtt_send_get_obj.dock_position_data.get(
-                        #     "dock_lng_lat")
-                        dock_lng_lat = self.server_data_obj.mqtt_send_get_obj.dock_position_data.get(
-                            "dock_lng_lat")
                         dock_direction = round(
                             float(self.server_data_obj.mqtt_send_get_obj.dock_position_data.get("dock_direction")), 1)
-                        # self.dock_lng_lat = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
-                        #                                                        self.gaode_lng_lat,
-                        #                                                        dock_gaode_lng_lat)
                         self.pre_dock_lng_lat = lng_lat_calculate.one_point_diatance_to_end(dock_lng_lat[0],
                                                                                             dock_lng_lat[1],
                                                                                             dock_direction, 0.5)
                         self.dock_lng_lat = dock_lng_lat
+                    # 平滑路径并计算下一个目标点经纬度
+                    is_smooth_dock = 1
+                    dock_smooth_ceil = 1
+                    dock_arrive_distance = 0.2
+                    # 平滑路径 计算当前后退最优跟踪点
+                    if is_smooth_dock:
+                        points_gps = [self.dock_lng_lat]
+                        smooth_dock_point_lng_lat = self.calc_dock_lng_lat(points_gps, dock_smooth_ceil)
+                        print('smooth dock', smooth_dock_point_lng_lat, len(self.smooth_dock_path_lng_lat))
+                    else:
+                        smooth_dock_point_lng_lat = self.dock_lng_lat
                     pre_dock_distance = lng_lat_calculate.distanceFromCoordinate(
                         self.lng_lat[0],
                         self.lng_lat[1],
                         self.pre_dock_lng_lat[0],
                         self.pre_dock_lng_lat[1])
-                    if pre_dock_distance > 2.5 and not self.is_arriver_pre_dock:
-                        b_arrive_sample = self.points_arrive_control(self.pre_dock_lng_lat, self.pre_dock_lng_lat,
+                    # 靠近船坞后减小速度
+                    if pre_dock_distance < 6:
+                        config.max_pwm = 1700
+                    if pre_dock_distance < 2 and not config.home_debug:
+                        self.pi_main_obj.remote_control_obj.send_stc_data("M1Z")
+                    print('pre_dock_distance', pre_dock_distance)
+                    print('dock_lng_lat', dock_lng_lat)
+                    if pre_dock_distance > dock_arrive_distance and not self.is_arriver_pre_dock:
+                        b_arrive_sample = self.points_arrive_control(smooth_dock_point_lng_lat, smooth_dock_point_lng_lat, arrive_distance=dock_arrive_distance,
                                                                      b_force_arrive=False)
-                        if b_arrive_sample:
+                        if b_arrive_sample :
                             print('到达船坞预定义点', b_arrive_sample)
                             self.is_arriver_pre_dock = True
-                    # 到达预到达点后调整姿态后退到达
-                    else:
-                        is_smooth_dock = 0
-                        dock_smooth_ceil = 0.1
-                        dock_arrive_distance = dock_smooth_ceil
-                        # 平滑路径 计算当前后退最优跟踪点
-                        if is_smooth_dock:
-                            points_gps = [self.dock_lng_lat]
-                            smooth_dock_point_lng_lat = self.calc_dock_lng_lat(points_gps, dock_arrive_distance)
-                            print('smooth dock', smooth_dock_point_lng_lat, len(self.smooth_dock_path_lng_lat))
-                            is_at_dock = self.back_dock_control(dock_lng_lat_gps=smooth_dock_point_lng_lat,
-                                                                arrive_distance=dock_arrive_distance)
-                        else:
-                            # 根据跟踪点和误差计算pid参数调节
-                            is_at_dock = self.back_dock_control(dock_lng_lat_gps=self.dock_lng_lat,
-                                                                arrive_distance=dock_arrive_distance)
-                        if is_at_dock:
-                            self.is_at_dock = True
                             if not config.home_debug:
-                                self.pi_main_obj.stop()
+                                self.pi_main_obj.remote_control_obj.send_stc_data("M1Z")
+                    if pre_dock_distance < dock_arrive_distance and not config.home_debug:  # 距离太近了就停止认为到达了目标点
+                        self.pi_main_obj.stop()
 
     # 更新经纬度为高德经纬度
     def update_ship_gaode_lng_lat(self):

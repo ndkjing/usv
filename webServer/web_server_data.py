@@ -99,6 +99,7 @@ class MqttSendGet:
         self.mqtt_client.username_pw_set(self.mqtt_user, password=self.mqtt_passwd)
         self.mqtt_client.on_connect = self.on_connect_callback
         self.mqtt_client.on_publish = self.on_publish_callback
+        self.mqtt_client.on_disconnect = self.on_disconnect_callback
         # self.mqtt_client.on_subscribe = self.on_message_come
         self.mqtt_client.on_message = self.on_message_callback
         self.mqtt_connect()
@@ -160,17 +161,28 @@ class MqttSendGet:
         self.update_safe_distance = False
         self.back_home = 0
         self.fix_point = 0
+        self.receice_time = [0, self.ship_code]  # 记录下最近接受到数据的时间和船号
+        self.b_send_online = 0  # 判断是否需要发送在线数据
+        self.start_time = time.time()
+        self.is_need_reconnect = False
 
+    def on_disconnect_callback(self, client, userdata, rc):
+        self.logger.info('disconnected with result code:  ' + str(rc), )
+        self.is_need_reconnect = True
+        print(time.time(), self.ship_code, 'self.is_need_reconnect', self.is_need_reconnect)
 
     # 连接MQTT服务器
     def mqtt_connect(self):
-        self.mqtt_client.connect(self.mqtt_host, self.mqtt_port, 60)
+        self.mqtt_client.connect(self.mqtt_host, self.mqtt_port, 30)
         # 开启接收循环，直到程序终止
         self.mqtt_client.loop_start()
 
     # 建立连接时候回调
     def on_connect_callback(self, client, userdata, flags, rc):
         self.logger.info('Connected with result code:  ' + str(rc), )
+        # 当改函数调用时间大于0秒就认为是掉线发送的消息
+        # if time.time() - self.start_time > 10:
+
 
     # 发布消息回调
     def on_publish_callback(self, client, userdata, mid):
@@ -215,8 +227,8 @@ class MqttSendGet:
             zoom = int(round(float(update_pool_click_data.get('zoom')), 0))
             self.update_pool_click_zoom = zoom
             # 清空选择湖泊
-            self.pool_click_lng_lat=None
-            self.pool_click_zoom=None
+            self.pool_click_lng_lat = None
+            self.pool_click_zoom = None
             if update_pool_click_data.get('mapId'):
                 self.update_map_id = update_pool_click_data.get('mapId')
             self.b_pool_click = 1
@@ -325,6 +337,7 @@ class MqttSendGet:
         # 服务器从状态数据中获取 当前经纬度
         elif topic == 'status_data_%s' % (self.ship_code):
             status_data = json.loads(msg.payload)
+            self.receice_time = [time.time(), self.ship_code]  # 记录下最近接受到数据的时间和船号
             if status_data.get("current_lng_lat") is None:
                 # self.logger.error('"status_data"设置启动消息没有"current_lng_lat"字段')
                 return
@@ -366,6 +379,17 @@ class MqttSendGet:
                 #             self.server_base_setting_data = copy.deepcopy(self.server_base_default_setting_data)
                 #             json.dump(self.server_base_setting_data, f)
                 #     server_config.update_base_setting()
+
+        # 服务器从状态数据中获取 当前经纬度
+        elif topic == 'online_ship':
+            online_ship_data = json.loads(msg.payload)
+            if online_ship_data.get("info_type") is None:
+                self.logger.error('"online_ship_data"消息没有"info_type"字段')
+                return
+            else:
+                if int(online_ship_data.get("info_type")) == 1:
+                    self.b_send_online = 1
+            # print('online_ship_data',online_ship_data,self.b_send_online)
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):

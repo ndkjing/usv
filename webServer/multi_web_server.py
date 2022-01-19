@@ -41,7 +41,7 @@ from webServer import ship_state_utils
 from webServer.web_server_data import ServerData
 from webServer import server_data_define
 from webServer import server_config
-# import get_eviz_url
+import get_eviz_url
 
 
 class WebServer:
@@ -630,7 +630,7 @@ class WebServer:
                                   qos=0)
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_safe_distance = False
 
-    # 发送离岸距离
+    # 检查在线船只
     def check_online_ship(self):
         ship_status_dict = {}  # 船状态字典
         while True:
@@ -652,7 +652,7 @@ class WebServer:
                             ship_status_dict.update({ship_code: 1})
                         else:
                             time.sleep(2)
-                        # print('ship_status_dict', ship_status_dict)
+                        print('ship_status_dict', ship_status_dict)
                 else:
                     if ship_status_dict.get(ship_code) == 1:
                         is_success = ship_state_utils.send_status(url=server_config.http_set_ship_status,
@@ -664,6 +664,16 @@ class WebServer:
                             time.sleep(2)
                         print('ship_status_dict', ship_status_dict)
 
+    # 判断是否需要重连mqtt
+    def check_reconnrct(self):
+        while True:
+            time.sleep(1)
+            # 判断是否需要更新在线消息
+            for ship_code in server_config.ship_code_list:
+                if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.is_need_reconnect:
+                    self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.mqtt_connect()
+                    self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.is_need_reconnect = False
+
 
 if __name__ == '__main__':
     while True:
@@ -673,10 +683,12 @@ if __name__ == '__main__':
             get_plan_path_thread = threading.Thread(target=web_server_obj.get_plan_path)
             send_bank_distance_thread = threading.Thread(target=web_server_obj.send_bank_distance)
             check_online_ship_thread = threading.Thread(target=web_server_obj.check_online_ship)
+            check_reconnrct_thread = threading.Thread(target=web_server_obj.check_reconnrct)
             find_pool_thread.start()
             get_plan_path_thread.start()
             send_bank_distance_thread.start()
             check_online_ship_thread.start()
+            check_reconnrct_thread.start()
             while True:
                 if not find_pool_thread.is_alive():
                     find_pool_thread = threading.Thread(target=web_server_obj.find_pool)
@@ -690,6 +702,9 @@ if __name__ == '__main__':
                 if not check_online_ship_thread.is_alive():
                     check_online_ship_thread = threading.Thread(target=web_server_obj.check_online_ship)
                     check_online_ship_thread.start()
+                if not check_reconnrct_thread.is_alive():
+                    check_reconnrct_thread = threading.Thread(target=web_server_obj.check_reconnrct)
+                    check_reconnrct_thread.start()
                 time.sleep(1)
         except Exception as e:
             print({'error': e})
