@@ -594,6 +594,7 @@ class DataManager:
             self.server_data_obj.mqtt_send_get_obj.dock_position_data = None
             self.is_arriver_pre_dock = False
             self.is_at_dock = False
+            config.max_pwm=1800
         if b_clear_status:
             self.clear_all_status()
         self.ship_status = target_status
@@ -1539,6 +1540,7 @@ class DataManager:
                         self.pi_main_obj.stop()
             # 返回船坞充电
             elif self.ship_status == ShipStatus.back_dock:
+                config.max_pwm = 1800
                 if self.server_data_obj.mqtt_send_get_obj.dock_position_data:
                     dock_lng_lat = self.server_data_obj.mqtt_send_get_obj.dock_position_data.get(
                         "dock_lng_lat")
@@ -1548,41 +1550,47 @@ class DataManager:
                             float(self.server_data_obj.mqtt_send_get_obj.dock_position_data.get("dock_direction")), 1)
                         self.pre_dock_lng_lat = lng_lat_calculate.one_point_diatance_to_end(dock_lng_lat[0],
                                                                                             dock_lng_lat[1],
-                                                                                            dock_direction, 0.5)
+                                                                                            dock_direction, 5)
                         self.dock_lng_lat = dock_lng_lat
                     # 平滑路径并计算下一个目标点经纬度
-                    is_smooth_dock = 1
-                    dock_smooth_ceil = 1
-                    dock_arrive_distance = 0.2
+                    is_smooth_dock = 0
+                    dock_smooth_ceil = 3
+                    pre_dock_arrive_distance = 1  # 到达船坞前预停泊点距离
+                    dock_arrive_distance = 0.2   # 到达船坞距离
                     # 平滑路径 计算当前后退最优跟踪点
                     if is_smooth_dock:
                         points_gps = [self.dock_lng_lat]
                         smooth_dock_point_lng_lat = self.calc_dock_lng_lat(points_gps, dock_smooth_ceil)
                         print('smooth dock', smooth_dock_point_lng_lat, len(self.smooth_dock_path_lng_lat))
                     else:
-                        smooth_dock_point_lng_lat = self.dock_lng_lat
+                        smooth_dock_point_lng_lat = self.pre_dock_lng_lat
                     pre_dock_distance = lng_lat_calculate.distanceFromCoordinate(
                         self.lng_lat[0],
                         self.lng_lat[1],
                         self.pre_dock_lng_lat[0],
                         self.pre_dock_lng_lat[1])
-                    # 靠近船坞后减小速度
-                    if pre_dock_distance < 6:
-                        config.max_pwm = 1700
-                    if pre_dock_distance < 2 and not config.home_debug:
-                        self.pi_main_obj.remote_control_obj.send_stc_data("M1Z")
                     print('pre_dock_distance', pre_dock_distance)
                     print('dock_lng_lat', dock_lng_lat)
-                    if pre_dock_distance > dock_arrive_distance and not self.is_arriver_pre_dock:
-                        b_arrive_sample = self.points_arrive_control(smooth_dock_point_lng_lat, smooth_dock_point_lng_lat, arrive_distance=dock_arrive_distance,
+                    if pre_dock_distance > pre_dock_arrive_distance and not self.is_arriver_pre_dock:
+                        b_arrive_sample = self.points_arrive_control(smooth_dock_point_lng_lat,
+                                                                     smooth_dock_point_lng_lat,
+                                                                     arrive_distance=pre_dock_arrive_distance,
                                                                      b_force_arrive=False)
-                        if b_arrive_sample :
+                        if b_arrive_sample:
                             print('到达船坞预定义点', b_arrive_sample)
                             self.is_arriver_pre_dock = True
-                            if not config.home_debug:
-                                self.pi_main_obj.remote_control_obj.send_stc_data("M1Z")
-                    if pre_dock_distance < dock_arrive_distance and not config.home_debug:  # 距离太近了就停止认为到达了目标点
-                        self.pi_main_obj.stop()
+                    # 到达船坞前预停泊点
+                    if self.is_arriver_pre_dock:
+                        # 靠近船坞后减小速度
+                        config.max_pwm = 1700
+                        if pre_dock_distance < 2 and not config.home_debug:
+                            self.pi_main_obj.remote_control_obj.send_stc_data("M1Z")
+                        b_arrive_sample = self.points_arrive_control(self.dock_lng_lat,
+                                                                     self.dock_lng_lat,
+                                                                     arrive_distance=dock_arrive_distance,
+                                                                     b_force_arrive=False)
+                        if b_arrive_sample and pre_dock_distance < dock_arrive_distance and not config.home_debug:  # 距离太近了就停止认为到达了目标点
+                            self.pi_main_obj.stop()
 
     # 更新经纬度为高德经纬度
     def update_ship_gaode_lng_lat(self):
