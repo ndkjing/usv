@@ -2096,6 +2096,7 @@ class DataManager:
 
     # 开机启动一次函数
     def start_once_func(self):
+        http_get_time = True
         while True:
             if not config.home_debug and not self.is_init_motor:
                 self.pi_main_obj.init_motor()
@@ -2107,4 +2108,30 @@ class DataManager:
                 print('self.area_id', self.area_id)
                 data_valid.get_current_water_data(area_id=self.area_id)
                 self.b_check_get_water_data = 1
+            if http_get_time:
+                if self.http_save_distance is None or self.http_save_time is None:
+                    return_data = self.send(method='http',
+                                            data='',
+                                            url=config.http_mileage_get + "?deviceId=%s" % config.ship_code,
+                                            http_type='GET'
+                                            )
+                    print('return_data http_mileage_get', return_data)
+                    if return_data:
+                        self.http_save_distance = int(return_data.get("total"))
+                        self.http_save_time = int(return_data.get("totalTime"))
+                        self.http_save_id = return_data.get('id')
+                        print('self.http_save_distance,self.http_save_time,self.http_save_id', self.http_save_distance,
+                              self.http_save_time, self.http_save_id)
+                    if return_data is None or not return_data:
+                        send_mileage_data = {
+                            "deviceId": config.ship_code,
+                            "total": str(0),
+                            "totalTime": str(0)
+                        }
+                        self.send(method='http',
+                                  data=send_mileage_data,
+                                  url=config.http_mileage_save,
+                                  http_type='POST',
+                                  )
+                http_get_time = False
             time.sleep(3)
