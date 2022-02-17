@@ -668,6 +668,7 @@ class WebServer:
     def check_reconnrct(self):
         while True:
             time.sleep(1)
+            # continue
             # 判断是否需要更新在线消息
             for ship_code in server_config.ship_code_list:
                 if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.is_need_reconnect:
