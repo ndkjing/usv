@@ -26,6 +26,11 @@ class ServerData:
         for topic, qos in self.topics:
             self.mqtt_send_get_obj.subscribe_topic(topic=topic, qos=qos)
 
+    # 重新连接mqtt话题
+    def resubscribe(self):
+        for topic, qos in self.topics:
+            self.mqtt_send_get_obj.subscribe_topic(topic=topic, qos=qos)
+
     # 发送数据到服务器http
     def send_server_http_data(self, request_type, data, url):
         # 请求头设置
@@ -164,7 +169,8 @@ class MqttSendGet:
         self.receice_time = [0, self.ship_code]  # 记录下最近接受到数据的时间和船号
         self.b_send_online = 0  # 判断是否需要发送在线数据
         self.start_time = time.time()
-        self.is_need_reconnect = False
+        self.is_need_reconnect = False  # 判断是否需要重连
+        self.is_reconnect_connected = False  # 判断重连是否连上
 
     def on_disconnect_callback(self, client, userdata, rc):
         self.logger.info('disconnected with result code:  ' + str(rc), )
@@ -180,9 +186,10 @@ class MqttSendGet:
     # 建立连接时候回调
     def on_connect_callback(self, client, userdata, flags, rc):
         self.logger.info('Connected with result code:  ' + str(rc), )
+        if self.is_need_reconnect:
+            self.is_reconnect_connected = True
         # 当改函数调用时间大于0秒就认为是掉线发送的消息
         # if time.time() - self.start_time > 10:
-
 
     # 发布消息回调
     def on_publish_callback(self, client, userdata, mid):

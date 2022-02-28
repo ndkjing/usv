@@ -672,8 +672,15 @@ class WebServer:
             # 判断是否需要更新在线消息
             for ship_code in server_config.ship_code_list:
                 if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.is_need_reconnect:
-                    self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.mqtt_connect()
+                    try:
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.mqtt_connect()
+                        while not self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.is_reconnect_connected:
+                            time.sleep(0.2)
+                        self.server_data_obj_dict.get(ship_code).resubscribe()
+                    except ConnectionRefusedError:
+                        break
                     self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.is_need_reconnect = False
+                    self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.is_reconnect_connected = False
 
 
 if __name__ == '__main__':
