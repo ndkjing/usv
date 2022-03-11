@@ -3,7 +3,7 @@
 """
 import os
 # ship_code = 'XXLJC4LCGSCAHSD0DA000'
-ship_code = 'XXLJC4LCGSCSD1DA004'
+ship_code = 'XXLJC4LCGSCSD1DA011'
 root_path = os.path.dirname(os.path.abspath(__file__))
 # 保存视频播放地址
 save_token_path = os.path.join(root_path, 'statics', 'save_token.json')

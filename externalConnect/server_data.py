@@ -336,7 +336,6 @@ class MqttSendGet:
                 user_lng_lat_data = json.loads(msg.payload)
                 if user_lng_lat_data.get('area_scan'):
                     self.surrounded_start = 1
-                    print()
                 elif user_lng_lat_data.get('path_id'):
                     self.path_id = user_lng_lat_data.get('path_id')
                 else:

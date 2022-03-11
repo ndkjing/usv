@@ -15,7 +15,7 @@ ship_code_list = [
     # 'XXLJC4LCGSCSD1DA008',
     # 'XXLJC4LCGSCSD1DA009',
     # 'XXLJC4LCGSCSD1DA010',
-    # 'XXLJC4LCGSCSD1DA011',
+    'XXLJC4LCGSCSD1DA011',
 ]
 root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 b_use_path_planning = 1

@@ -373,7 +373,7 @@ class MqttSendGet:
                 self.height_width = distribution_info[1]
                 if distribution_info[0] == 2:
                     # 发送到mqtt话题
-                    self.need_send_distribution = distribution_info
+                    self.need_send_distribution = 2
                 else:
                     # 绘制地图
                     distribution_map.MyOrdinaryKriging(distribution_map_data.get("deviceId"),
