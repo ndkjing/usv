@@ -581,10 +581,13 @@ class WebServer:
                               data={
                                   "info": self.server_data_obj_dict.get(
                                       ship_code).mqtt_send_get_obj.need_send_distribution,
-                                  "width": 1000,  # 图片宽度
-                                  "height": 700  # 图片高度
+                                  "width": 100,  # 图片宽度
+                                  "height": self.server_data_obj_dict.get(
+                                      ship_code).mqtt_send_get_obj.height_width  # 图片高度
                               },
                               qos=0)
+                    print('self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.height_width',self.server_data_obj_dict.get(
+                                      ship_code).mqtt_send_get_obj.height_width)
                     self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.need_send_distribution = None
 
     # 发送离岸距离

@@ -14,8 +14,10 @@ import json
 import geopandas as gpd
 import requests
 import os
+import cv2
 
 draw_data = {}  # 用于绘制数据
+height_width = 100
 
 
 # 1 请求轮廓并保存为geojson
@@ -24,7 +26,8 @@ def save_geo_json_map(deviceId="XXLJC4LCGSCAHSD0DA000",
                       startTime="2019-03-01",
                       endTime="2022-03-01",
                       data_type="wt"):
-    print('data_type',data_type)
+    global height_width
+    print('data_type', data_type)
     url1 = "https://ship.xxlun.com/union/admin/xxl/data/getData"
     url1 = url1 + "?deviceId=%s&mapId=%s&startTime=%s&endTime=%s" % (deviceId, mapId, startTime, endTime)
     print('url1', url1)
@@ -69,7 +72,7 @@ def save_geo_json_map(deviceId="XXLJC4LCGSCAHSD0DA000",
             draw_data['know_z'] = know_z_wt
     else:
         # 告诉用户没有数据
-        return 2
+        return [2, height_width]
     # 2  请求数据并绘制绘制地图图片保存到本地
     url2 = "https://ship.xxlun.com/union//admin/xxl/map/list/0/1"
     url2 = url2 + "?mapId=%s" % mapId
@@ -80,6 +83,17 @@ def save_geo_json_map(deviceId="XXLJC4LCGSCAHSD0DA000",
             content_data2.get("data").get("mapList").get("records") and \
             len(content_data2.get("data").get("mapList").get("records")) > 0:
         pool_lng_lats = json.loads(content_data2.get("data").get("mapList").get("records")[0].get("mapData"))
+        pool_int_cnts = []  # 整形经纬度用于计算轮廓
+        for i1 in pool_lng_lats:
+            pool_int_cnts.append([int(i1[0] * 1000000), int(i1[1] * 1000000)])
+
+        # 计算宽高比 近似用经纬度之比就可以
+        (x, y, w, h) = cv2.boundingRect(np.asarray(pool_int_cnts))
+        height_width = int((h / w) * 100)
+        print('height_width', height_width)
+        # from utils import lng_lat_calculate
+        # x_dis = lng_lat_calculate.distanceFromCoordinate(x/1000000.0,y/1000000.0,(x+w)/1000000.0,y/1000000.0)
+        # y_dis = lng_lat_calculate.distanceFromCoordinate(x/1000000.0,y/1000000.0,x/1000000.0,(y+h)/1000000.0)
         geojson_dict = {
             "type": "Polygon",
             "coordinates": [
@@ -97,9 +111,10 @@ def save_geo_json_map(deviceId="XXLJC4LCGSCAHSD0DA000",
         geojson_dict["coordinates"] = coordinates
         with open("map_geojson.json", 'w') as f:
             json.dump(geojson_dict, f)
+        return [1, height_width]
     else:
         # 找不到地图
-        return 2
+        return [2, height_width]
 
 
 # 3  发送数据到服务器
@@ -280,6 +295,7 @@ def idw_clip():
 
 # OrdinaryKriging 方法
 def MyOrdinaryKriging(deviceId, data_type):
+    global height_width
     print('data_type', data_type)
     js = gpd.read_file(r"map_geojson.json")  # 读取geojson 文件
     js_box = js.geometry.total_bounds  # 获取包围框
@@ -337,8 +353,12 @@ def MyOrdinaryKriging(deviceId, data_type):
     save_img_name = r"%s.png" % deviceId
     if os.path.exists(save_img_name):
         os.remove(save_img_name)
+    width=5
+    height_width = int(width*height_width/100.0)
+    if height_width > 4*width:
+        height_width = 4*width
     Krig_inter_no_grid.save(save_img_name,
-                            width=5, height=4, dpi=900, kwargs={"bbox_inches": 'tight'})
+                            width=width, height=height_width, dpi=900, kwargs={"bbox_inches": 'tight'})
 
 
 if __name__ == '__main__':
@@ -346,14 +366,13 @@ if __name__ == '__main__':
     # 请求数据
     save_geo_json_map(deviceId=deviceId)
     # 绘制地图
-    MyOrdinaryKriging(deviceId, date_type='wt')
+    MyOrdinaryKriging(deviceId, data_type='wt')
     # 发送给服务器
     from webServer import upload_file
 
     ip_local = '192.168.8.26:8009'
     ip_xxl = 'ship.xxlun.com'
-    url_data = "http://%s/union/admin/uploadFile" % ip_local
-    url_descpi = "http://%s/union/admin/xxl/data/monitoring" % ip_local
+    url_data = "https://%s/union/admin/uploadFile" % ip_xxl
     # file = "weixin.jpg"
     file = "%s.png" % deviceId
     # file = "F:\downloads\SampleVideo_1280x720_5mb.mp4"

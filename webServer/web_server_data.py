@@ -165,6 +165,7 @@ class MqttSendGet:
         self.reset_pool_click = 0
         # 检查要发给前端绘图话题数据
         self.need_send_distribution = None
+        self.height_width=100   # 宽高比 设置宽为100  计算高度与宽比值
         # 更新船当前到岸边距离 当收到新的经纬度后设置该值为True
         self.update_safe_distance = False
         self.back_home = 0
@@ -369,7 +370,8 @@ class MqttSendGet:
                                                                        startTime=distribution_map_data.get("startTime"),
                                                                        data_type=distribution_map_data.get("data_type"),
                                                                        endTime=distribution_map_data.get("endTime"))
-                if distribution_info == 2:
+                self.height_width = distribution_info[1]
+                if distribution_info[0] == 2:
                     # 发送到mqtt话题
                     self.need_send_distribution = distribution_info
                 else:
