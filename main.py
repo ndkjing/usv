@@ -82,6 +82,8 @@ def main():
                         data_manager_obj.control_draw_thread,
                         data_manager_obj.send_distacne,
                         data_manager_obj.send_high_f_status_data,
+                        data_manager_obj.send_record_point_data,
+                        data_manager_obj.scan_cal,
                         ]
     common_thread_list = []
     # 树莓派对象数据处理

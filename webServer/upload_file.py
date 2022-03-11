@@ -1,8 +1,10 @@
+import time
+
 import requests
 import json
 
 
-def post_data(url, file):
+def post_data(url, file, id=0):
     """
         :param url: 接口url
         :param file: 上传文件的路径
@@ -10,7 +12,10 @@ def post_data(url, file):
         """
     files = {"file": open(file, "rb")}
     s = requests.session()
-    r = s.post(url, files=files, verify=False)
+    if id == 1:
+        r = s.post(url, params={"id": 1}, files=files, verify=False)
+    else:
+        r = s.post(url, files=files, verify=False)
     r_json = r.json()
     print('r', r_json)
     if r_json.get('success'):
@@ -35,14 +40,15 @@ def post_descip(data, url, request_type='POST'):
 
 
 if __name__ == "__main__":
-    ip_local = '192.168.199.186:8009'
-    ip_xxl = 'wuhanligong.xxlun.com'
-    url_data = "http://%s/union/admin/uploadFile" % ip_xxl
-    url_descpi = "http://%s/union/admin/xxl/data/monitoring" % ip_xxl
+    ip_local = '192.168.8.26:8009'
+    ip_xxl = 'ship.xxlun.com/'
+    url_data = "http://%s/union/admin/uploadFile" % ip_local
+    url_descpi = "http://%s/union/admin/xxl/data/monitoring" % ip_local
     # file = "weixin.jpg"
-    # file = "demo.png"
-    file = "F:\downloads\SampleVideo_1280x720_5mb.mp4"
+    file = "../a001.png"
+    # file = "F:\downloads\SampleVideo_1280x720_5mb.mp4"
     save_name = post_data(url=url_data, file=file)
+    time.sleep(10000)
     if save_name:
         print('save_name', save_name)
         send_data = {

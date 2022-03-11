@@ -18,7 +18,8 @@ class DataDefine:
             ('auto_lng_lat_%s' % ship_code, 1),
             ('path_planning_%s' % ship_code, 1),
             ('status_data_%s' % ship_code, 0),
-            ('path_planning_confirm_%s' % ship_code, 1),
+            ('path_planning_confirm_%s' % ship_code, 0),
+            ('distribution_map_%s' % ship_code, 0),
             ('server_base_setting_%s' % ship_code, 0))
         self.pool_code = ''
 

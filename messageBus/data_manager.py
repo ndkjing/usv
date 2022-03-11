@@ -199,6 +199,7 @@ class DataManager:
         self.http_save_id = None  # http记录保存id
         self.last_read_time_debug = None  # 调试用计算速度
         self.dump_draw_time = 0  # 剩余抽水时间
+        self.record_path = []  # 记录手动轨迹点
 
     def connect_mqtt_server(self):
         while True:
@@ -458,6 +459,7 @@ class DataManager:
         self.server_data_obj.mqtt_send_get_obj.keep_point = 0
         self.point_arrive_start_time = None  # 清楚记录长期不到时间
         self.theta_error = 0
+
     # 当模式改变是改变保存的状态消息
     def change_status_info(self, target_status, b_clear_status=False):
         """
@@ -471,6 +473,7 @@ class DataManager:
             (ShipStatus.idle, ShipStatus.backhome_network): 26,
             (ShipStatus.idle, ShipStatus.backhome_low_energy): 27,
             (ShipStatus.idle, ShipStatus.remote_control): 1,
+            (ShipStatus.idle, ShipStatus.tasking): 31,
             (ShipStatus.computer_control, ShipStatus.tasking): 2,
             (ShipStatus.computer_control, ShipStatus.remote_control): 3,
             (ShipStatus.computer_control, ShipStatus.computer_auto): 4,
@@ -649,6 +652,9 @@ class DataManager:
                         time.sleep(0.5)
                     else:
                         self.change_status_info(target_status=ShipStatus.computer_auto)
+                # 切换到抽水模式
+                elif self.server_data_obj.mqtt_send_get_obj.b_draw == 1:
+                    self.change_status_info(target_status=ShipStatus.tasking)
 
             # 判断电脑手动状态切换到其他状态
             if self.ship_status == ShipStatus.computer_control:
@@ -707,6 +713,8 @@ class DataManager:
                     self.b_sampling = 0
                     self.server_data_obj.mqtt_send_get_obj.b_draw = 0
                     self.change_status_info(self.last_ship_status)
+                if self.server_data_obj.mqtt_send_get_obj.b_draw == 0:
+                    self.change_status_info(target_status=ShipStatus.idle)
 
             # 遥控器状态切换到其他状态
             if self.ship_status == ShipStatus.remote_control:
@@ -1253,10 +1261,12 @@ class DataManager:
                                                                                     sampling_point)
                             self.server_data_obj.mqtt_send_get_obj.sampling_points_gps.append(sampling_point_gps)
                     self.path_info = [0, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
-                    print('self.server_data_obj.mqtt_send_get_obj.sampling_points_status',
-                          self.server_data_obj.mqtt_send_get_obj.sampling_points_status)
+                    # print('self.server_data_obj.mqtt_send_get_obj.sampling_points_status',
+                    #       self.server_data_obj.mqtt_send_get_obj.sampling_points_status,
+                    #       self.server_data_obj.mqtt_send_get_obj.sampling_points_gps)
                 while self.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(0) > 0:
                     index = self.server_data_obj.mqtt_send_get_obj.sampling_points_status.index(0)
+                    # print('index', index)
                     sampling_point_gps = self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[index]
                     # 计算下一个目标点经纬度
                     if config.path_plan_type:
@@ -1282,13 +1292,18 @@ class DataManager:
                         self.path_track_obj.adjust_p_list.clear()
                         print('b_arrive_sample', b_arrive_sample)
                         # 更新目标点提示消息
-                        self.b_arrive_point = 1  # 到点了用于通知抽水
+                        # self.b_arrive_point = 1  # 到点了用于通知抽水  暂时修改为不抽水
                         self.point_arrive_start_time = None
                         self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] = 1
                         self.path_info = [index + 1, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
                         time.sleep(1)
+                    # 全部点到达后清除自动状态
+                    if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) == sum(
+                            self.server_data_obj.mqtt_send_get_obj.sampling_points_status):
+                        self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
                     if self.ship_status != ShipStatus.computer_auto:
                         break
+
             # 返航 断网返航 低电量返航
             elif self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
                 # 有返航点下情况下返回返航点，没有则停止
@@ -1455,7 +1470,7 @@ class DataManager:
                 last_runtime = 0
             if last_run_distance is None:
                 last_run_distance = 0
-            if time.time() % 10 < 1 and self.dump_draw_time==0:
+            if time.time() % 10 < 1 and self.dump_draw_time == 0:
                 # if os.path.exists(config.run_distance_time_path):
                 #     try:
                 #         with open(config.run_distance_time_path, 'r') as f:
@@ -1566,11 +1581,15 @@ class DataManager:
             if not config.home_debug and self.pi_main_obj.dump_energy is not None:
                 self.dump_energy_deque.append(self.pi_main_obj.dump_energy)
                 mqtt_send_status_data.update({'dump_energy': self.pi_main_obj.dump_energy})
+            if self.server_data_obj.mqtt_send_get_obj.b_record_point:
+                mqtt_send_status_data.update({'is_record': 1})
+            else:
+                mqtt_send_status_data.update({'is_record': 2})
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
                       qos=0)
             if time.time() % 10 < 1:
-                self.logger.info({'status_data_':mqtt_send_status_data})
+                self.logger.info({'status_data_': mqtt_send_status_data})
 
     # 配置更新
     def update_config(self):
@@ -1812,6 +1831,133 @@ class DataManager:
                       data=switch_data,
                       qos=0)
 
+    # 检查手动记录路径点
+    def send_record_point_data(self):
+        """
+        检查开关信息发送到mqtt
+        :return:
+        """
+        pre_record_lng_lat = [10.0, 10.0]  # 随便设置的初始值
+        while True:
+            if self.server_data_obj.mqtt_send_get_obj.b_record_point:
+                if self.gaode_lng_lat is None:
+                    time.sleep(3)
+                    continue
+                record_distance = lng_lat_calculate.distanceFromCoordinate(pre_record_lng_lat[0],
+                                                                           pre_record_lng_lat[1],
+                                                                           self.gaode_lng_lat[0],
+                                                                           self.gaode_lng_lat[1],
+                                                                           )
+                if record_distance > self.server_data_obj.mqtt_send_get_obj.record_distance:
+                    record_point_data = {
+                        "lng_lat": self.gaode_lng_lat
+                    }
+                    self.send(method='mqtt',
+                              topic='record_point_data_%s' % config.ship_code,
+                              data=record_point_data,
+                              qos=0)
+                    self.logger.info({"发送手动记录点存储": record_point_data})
+                    self.record_path.append(self.gaode_lng_lat)
+                    pre_record_lng_lat = self.gaode_lng_lat
+                    time.sleep(1)
+            else:
+                # 是否存在记录点
+                if len(self.record_path) > 0:
+                    # 湖泊轮廓id是否存在
+                    print('self.server_data_obj.mqtt_send_get_obj.pool_code',
+                          self.server_data_obj.mqtt_send_get_obj.pool_code)
+                    if self.server_data_obj.mqtt_send_get_obj.pool_code:
+                        send_record_path = {
+                            "deviceId": config.ship_code,
+                            "mapId": self.server_data_obj.mqtt_send_get_obj.pool_code,
+                            "route": json.dumps(self.record_path),
+                            "routeName": self.server_data_obj.mqtt_send_get_obj.record_name
+                        }
+                        try:
+                            print('send_record_path', send_record_path)
+                            self.send(method='http', data=send_record_path,
+                                      url=config.http_record_path,
+                                      http_type='POST')
+                        except Exception as e:
+                            self.data_save_logger.info({"发送手动记录点存储数据error": e})
+                        self.data_save_logger.info({"发送手动记录点存储数据": send_record_path})
+                        self.record_path = []
+                        pre_record_lng_lat = [10.0, 10.0]  # 随便设置的初始值
+                time.sleep(3)
+
+    def scan_cal(self):
+        scan_points = []
+        while True:
+            if self.server_data_obj.mqtt_send_get_obj.surrounded_points is not None and \
+                    len(self.server_data_obj.mqtt_send_get_obj.surrounded_points) > 0 and \
+                    self.server_data_obj.mqtt_send_get_obj.surrounded_distance:
+                scan_points = baidu_map.BaiduMap.scan_area(self.server_data_obj.mqtt_send_get_obj.surrounded_points,
+                                                           self.server_data_obj.mqtt_send_get_obj.surrounded_distance)
+                if scan_points:
+                    self.send(method='mqtt',
+                              topic='surrounded_path_%s' % config.ship_code,
+                              data={
+                                  "lng_lat": scan_points
+                              },
+                              qos=0)
+                print('scan_points', scan_points)
+                self.server_data_obj.mqtt_send_get_obj.surrounded_points = None
+            # 收到开始命令将路径点赋值到需要行驶路劲中
+            if self.server_data_obj.mqtt_send_get_obj.surrounded_start == 1 and len(scan_points) > 0:
+                # 对点进行排序
+                if self.gaode_lng_lat:
+                    dis_start = lng_lat_calculate.distanceFromCoordinate(
+                        self.gaode_lng_lat[0],
+                        self.gaode_lng_lat[1],
+                        scan_points[0][0],
+                        scan_points[0][1])
+                    dis_end = lng_lat_calculate.distanceFromCoordinate(
+                        self.gaode_lng_lat[0],
+                        self.gaode_lng_lat[1],
+                        scan_points[-1][0],
+                        scan_points[-1][1])
+                    if dis_start > dis_end:
+                        scan_points.reverse()
+                    self.server_data_obj.mqtt_send_get_obj.path_planning_points = scan_points
+                    self.server_data_obj.mqtt_send_get_obj.sampling_points = scan_points
+                    self.server_data_obj.mqtt_send_get_obj.sampling_points_status = [0] * len(scan_points)
+                    self.server_data_obj.mqtt_send_get_obj.surrounded_start = 0
+
+            else:
+                time.sleep(1)
+            # 判断是否需要请求轨迹
+            if self.server_data_obj.mqtt_send_get_obj.path_id:
+                return_data = self.send(method='http',
+                                        data='',
+                                        url=config.http_record_get + "?id=%s" % self.server_data_obj.mqtt_send_get_obj.path_id,
+                                        http_type='GET'
+                                        )
+                if len(return_data) > 0:
+                    print(return_data)
+                    self.server_data_obj.mqtt_send_get_obj.path_id = None
+                    # 解析返回到的路径id
+                    record_points = json.loads(return_data[0].get('route'))
+                    # 收到开始命令将路径点赋值到需要行驶路劲中
+                    if len(record_points) > 0:
+                        # 对点进行排序
+                        if self.gaode_lng_lat:
+                            dis_start = lng_lat_calculate.distanceFromCoordinate(
+                                self.gaode_lng_lat[0],
+                                self.gaode_lng_lat[1],
+                                record_points[0][0],
+                                record_points[0][1])
+                            dis_end = lng_lat_calculate.distanceFromCoordinate(
+                                self.gaode_lng_lat[0],
+                                self.gaode_lng_lat[1],
+                                record_points[-1][0],
+                                record_points[-1][1])
+                            if dis_start > dis_end:
+                                record_points.reverse()
+                            self.server_data_obj.mqtt_send_get_obj.path_planning_points = record_points
+                            self.server_data_obj.mqtt_send_get_obj.sampling_points = record_points
+                            self.server_data_obj.mqtt_send_get_obj.sampling_points_status = [0] * len(record_points)
+                    time.sleep(3)
+
     # 开机启动一次函数
     def start_once_func(self):
         http_get_time = True
@@ -1899,6 +2045,18 @@ class DataManager:
                     task_data = content_data.get("data")
                     if task_data:
                         self.logger.info({'mileage/getOne': task_data.get('items')})
+                        return task_data.get('items')
+                    return False
+                else:
+                    return False
+            elif http_type == 'GET' and r'device/getRoute' in url:
+                if return_data:
+                    content_data = json.loads(return_data.content)
+                    if not content_data["success"]:
+                        self.logger.error('device/getRoute GET请求失败')
+                    task_data = content_data.get("data")
+                    if task_data:
+                        self.logger.info({'device/getRoute': task_data.get('items')})
                         return task_data.get('items')
                     return False
                 else:

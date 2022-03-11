@@ -158,6 +158,12 @@ http_mileage_update = 'https://ship.xxlun.com/union/admin/xxl/mileage/upData'
 # http_mileage_get = 'http://192.168.199.186:8009/union/admin/xxl/mileage/getOne'
 # http_mileage_save = 'http://192.168.199.186:8009/union/admin/xxl/mileage/save'
 # http_mileage_update = 'http://192.168.199.186:8009/union/admin/xxl/mileage/upData'
+# 发送手动记录路劲数据
+http_record_path = "https://ship.xxlun.com/union/admin/xxl/device/saveRoute"
+# http_record_path = "http://192.168.8.26:8009/union/admin/xxl/device/saveRoute"
+# 获取手动记录轨迹
+http_record_get = "https://ship.xxlun.com/union/admin/xxl/device/getRoute/1/1"
+# http_record_get = "http://192.168.8.26:8009/union/admin/xxl/device/getRoute/1/1"
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884

@@ -4,7 +4,9 @@ import time
 import requests
 from storage import save_data
 import server_config
-
+"""
+通过萤石云设备序列号获取视频播放地址
+"""
 token_global_dict = {}  # {'设备序列号':[token ,过期时间]}
 
 
