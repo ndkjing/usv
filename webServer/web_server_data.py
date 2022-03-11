@@ -384,9 +384,12 @@ class MqttSendGet:
                     file = "%s.png" % distribution_map_data.get("deviceId")
                     print('发送数据到服务器')
                     try:
-                        save_name = upload_file.post_data(url=url_data, file=file)
                         # 发送数据到服务器
-                        self.need_send_distribution = 1
+                        save_name = upload_file.post_data(url=url_data, file=file,id=1)
+                        if save_name:
+                            self.need_send_distribution = 1
+                        else:
+                            self.need_send_distribution = 2
                     except Exception as e:
                         print('e', e)
                         self.need_send_distribution = 2

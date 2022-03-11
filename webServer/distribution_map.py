@@ -24,6 +24,7 @@ def save_geo_json_map(deviceId="XXLJC4LCGSCAHSD0DA000",
                       startTime="2019-03-01",
                       endTime="2022-03-01",
                       data_type="wt"):
+    print('data_type',data_type)
     url1 = "https://ship.xxlun.com/union/admin/xxl/data/getData"
     url1 = url1 + "?deviceId=%s&mapId=%s&startTime=%s&endTime=%s" % (deviceId, mapId, startTime, endTime)
     print('url1', url1)
@@ -278,7 +279,8 @@ def idw_clip():
 
 
 # OrdinaryKriging 方法
-def MyOrdinaryKriging(deviceId, date_type):
+def MyOrdinaryKriging(deviceId, data_type):
+    print('data_type', data_type)
     js = gpd.read_file(r"map_geojson.json")  # 读取geojson 文件
     js_box = js.geometry.total_bounds  # 获取包围框
     # 还是插入400*400的网格点  暂时使用100*100 网格大会比较清晰但是会导致内存不够和计算时间延长 根据电脑配置设置
@@ -303,13 +305,13 @@ def MyOrdinaryKriging(deviceId, date_type):
     df_grid = pd.DataFrame(dict(long=xgrid.flatten(), lat=ygrid.flatten()))
     df_grid.head()
     Krig_result = z1.data.flatten()
-    df_grid[date_type] = Krig_result
+    df_grid[data_type] = Krig_result
     df_grid_geo = gpd.GeoDataFrame(df_grid, geometry=gpd.points_from_xy(df_grid["long"], df_grid["lat"]),
                                    crs="EPSG:4326")
     js_Krig_gaussian_clip = gpd.clip(df_grid_geo, js)
     plotnine.options.figure_size = (5, 4.5)
     Krig_inter_no_grid = (ggplot() +
-                          geom_tile(js_Krig_gaussian_clip, aes(x='long', y='lat', fill=date_type), size=0.1) +
+                          geom_tile(js_Krig_gaussian_clip, aes(x='long', y='lat', fill=data_type), size=0.1) +
                           geom_map(js, fill='none', color='gray', size=0.3) +  # 绘制轮廓
                           # scale_fill_cmap(cmap_name='Spectral_r', name='Values',    # 设置对比颜色
                           #                 breaks=[30, 40, 60, 80]
@@ -332,8 +334,10 @@ def MyOrdinaryKriging(deviceId, date_type):
                               panel_grid_major_x=element_line(color="gray", size=.5),
                               panel_grid_major_y=element_line(color="gray", size=.5),
                           ))
-    os.remove(r"%s.png" % deviceId)
-    Krig_inter_no_grid.save(r"%s.png" % deviceId,
+    save_img_name = r"%s.png" % deviceId
+    if os.path.exists(save_img_name):
+        os.remove(save_img_name)
+    Krig_inter_no_grid.save(save_img_name,
                             width=5, height=4, dpi=900, kwargs={"bbox_inches": 'tight'})
 
 
