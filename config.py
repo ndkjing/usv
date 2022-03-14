@@ -168,8 +168,8 @@ http_record_get = "https://ship.xxlun.com/union/admin/xxl/device/getRoute/1/1"
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884
 # 调试的时候使用初始经纬度
-# ship_gaode_lng_lat = [114.524096, 30.506853]     # 九峰水库
-ship_gaode_lng_lat = [114.431419,30.524192]     # 喻家湖
+ship_gaode_lng_lat = [114.524096, 30.506853]     # 九峰水库
+# ship_gaode_lng_lat = [114.431419,30.524192]     # 喻家湖
 # pid三参数
 kp = 0.6
 ki = 0.2
