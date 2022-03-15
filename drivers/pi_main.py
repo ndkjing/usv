@@ -128,7 +128,7 @@ class PiMain:
         # 记录上一次收到有效lora遥控器数据时间
         self.lora_control_receive_time = None
         # 串口数据收发对象
-        print('config.b_com_stc',config.b_com_stc)
+        print('config.b_com_stc', config.b_com_stc)
         if config.b_com_stc:
             self.com_data_obj = self.get_com_obj(port=config.stc_port,
                                                  baud=config.stc_baud,
@@ -136,9 +136,9 @@ class PiMain:
                                                  )
         if config.is_contain_rtk:
             self.rtk_obj = com_data.ComData(config.rtk_port,
-                                                   config.rtk_baud,
-                                                   timeout=1,
-                                                   logger=logger)
+                                            config.rtk_baud,
+                                            timeout=1,
+                                            logger=logger)
         self.dump_energy = None
         self.last_dump_energy = None  # 用于判断记录日志用
         # gps中获取速度
@@ -347,23 +347,6 @@ class PiMain:
         :return:
         """
         self.target_draw_steer_pwm = deep_pwm
-        # 如果没有可调节深度舵机跳过调节
-        # if not config.b_control_deep:
-        #     return
-        # if b_slow:
-        #     delta_change = 10
-        #     while self.draw_steer_pwm != deep_pwm:
-        #         add_or_sub = 1 if deep_pwm - self.draw_steer_pwm > 0 else -1
-        #         self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
-        #         self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
-        #         time.sleep(0.06)
-        #         # if self.draw_steer_pwm < 1500:
-        #         #     time.sleep(0.07)
-        #         # else:
-        #         #     time.sleep(0.01)
-        # else:
-        #     self.pi.set_servo_pulsewidth(config.draw_steer, deep_pwm)
-        #     self.draw_steer_pwm = deep_pwm
 
     def loop_change_draw_steer(self, b_slow=True):
         delta_change = 10
@@ -869,6 +852,7 @@ class PiMain:
         if config.current_platform == config.CurrentPlatform.pi:
             # 记录上一次发送数据
             last_send_data = None
+            last_read_time = time.time()
             while True:
                 # 检查罗盘是否需要校准 # 开始校准
                 if int(config.calibration_compass) == 1:
@@ -895,6 +879,8 @@ class PiMain:
                     # print(time.time(),'theta_',theta_)
                     theta_ = self.compass_filter(theta_)
                     if theta_:
+                        # print('读取间隔时间', time.time() - last_read_time)
+                        # last_read_time = time.time()
                         self.theta = theta_
 
     # 读取gps数据
@@ -1138,7 +1124,7 @@ if __name__ == '__main__':
                     pi_main_obj.get_weite_compass_data(debug=False)
                 else:
                     theta = pi_main_obj.weite_compass_obj.read_weite_compass(send_data=None,
-                                                                             debug=False)
+                                                                             debug=True)
             elif key_input.startswith('x'):
                 while True:
                     try:

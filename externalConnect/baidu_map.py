@@ -708,6 +708,107 @@ class BaiduMap(object):
         self.scan_point_cnts = scan_points
         return self.scan_point_cnts
 
+    # 经纬度转像素
+    @staticmethod
+    def lng_lat_to_pix(lng_lat, left_up_x, left_up_y, scale_w, scale_h, pix_h):
+        """
+        :param lng_lat: 经纬度
+        :return:
+        """
+        int_lng_lat = [int(lng_lat[0] * 1000000), int(lng_lat[1] * 1000000)]
+        int_lng_lats_offset = [int_lng_lat[0] - left_up_x, int_lng_lat[1] - left_up_y]
+        # int_lng_lats_pix = [int(int_lng_lats_offset[0] / self.scale_w), int(int_lng_lats_offset[1] / self.scale_h)]
+        int_lng_lats_pix = [int(int_lng_lats_offset[0] / scale_w),
+                            pix_h - int(int_lng_lats_offset[1] / scale_h)]
+        # int_lng_lats_pix = [int(int_lng_lats_offset[0] / self.scale_w),
+        #                     config.pix_h - int(int_lng_lats_offset[1] / self.scale_h)]
+        return int_lng_lats_pix
+
+    # 像素转经纬度
+    @staticmethod
+    def pix_to_lng_lat(pix, left_up_x, left_up_y, scale_w, scale_h):
+        """
+        :param pix:像素位置 先w 后h
+        :return: 经纬度
+        """
+        lng = round((left_up_x + pix[0] * scale_w) / 1000000.0, 6)
+        lat = round((left_up_y + pix[1] * scale_h) / 1000000.0, 6)
+        return [lng, lat]
+
+    @staticmethod
+    def scan_area(lng_lat_list, meter_gap, b_show=False):
+        """
+        以指定间距扫描指定范围
+        :@param lng_lat_list
+        :@param meter_gap
+        @return:
+        """
+        int_lng_lats_list = [[int(i[0] * 1000000), int(i[1] * 1000000)]
+                             for i in lng_lat_list]
+        (left_up_x, left_up_y, w, h) = cv2.boundingRect(np.array(int_lng_lats_list))
+        # 计算左上角到
+        distance1 = lng_lat_calculate.distanceFromCoordinate(left_up_x / 1000000.0, left_up_y / 1000000.0,
+                                                             (left_up_x + w) / 1000000.0, left_up_y / 1000000.0)
+        distance2 = lng_lat_calculate.distanceFromCoordinate(left_up_x / 1000000.0, left_up_y / 1000000.0,
+                                                             left_up_x / 1000000.0, (left_up_y + h) / 1000000.0)
+        # self.left_up_x = left_up_x
+        # self.left_up_y = left_up_y
+        # 像素到单位缩放 等比拉伸
+        pix_w = 1000
+        if w >= h:
+            scale_w = float(w) / pix_w
+            scale_h = float(w) / pix_w
+        else:
+            scale_w = float(h) / pix_w
+            scale_h = float(h) / pix_w
+        # 经纬度转像素
+        # self.pix_cnts = [self.lng_lat_to_pix(i) for i in self.lng_lats_list]
+        pix_cnts = []
+        for i in lng_lat_list:
+            pix_x, pix_y = BaiduMap.lng_lat_to_pix(i, left_up_x, left_up_y, scale_w, scale_h, pix_w)
+            pix_cnts.append([pix_x, pix_w - pix_y])
+        # 循环生成点同时判断点是否在湖泊范围在则添加到列表中
+        scan_points_pix = []
+        pix_2_meter = max(distance1, distance2) / pix_w
+        pix_gap = int(meter_gap / pix_2_meter)
+        # 起始点
+        (x, y, w, h) = cv2.boundingRect(np.array(pix_cnts))
+        start_x, start_y = x, y + pix_gap
+        # 当前点
+        current_x, current_y = start_x, start_y
+        # 判断x轴是递增的加还是减 True 为加
+        b_add_or_sub = True
+        while current_y < (y + h):
+            while (x + w) >= current_x >= x:
+                point = (current_x, current_y)
+                in_cnt = cv2.pointPolygonTest(np.array(pix_cnts), point, True)
+                if in_cnt > 0:
+                    scan_points_pix.append(list(point))
+                if b_add_or_sub:
+                    current_x += pix_gap
+                else:
+                    current_x -= pix_gap
+            current_y += pix_gap
+            if b_add_or_sub:
+                current_x -= pix_gap
+                b_add_or_sub = False
+            else:
+                current_x += pix_gap
+                b_add_or_sub = True
+        if b_show:
+            show_img = np.zeros((pix_w, pix_w, 3))
+            for point in scan_points_pix:
+                cv2.circle(show_img, tuple(point), 5, (0, 255, 255), -1)
+            cv2.imshow('scan', show_img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+        print("scan_points_pix", scan_points_pix)
+        scan_points_lng_lat_list = []
+        for i in scan_points_pix:
+            scan_point = BaiduMap.pix_to_lng_lat(i, left_up_x, left_up_y, scale_w, scale_h)
+            scan_points_lng_lat_list.append(scan_point)
+        return scan_points_lng_lat_list
+
     def surround_pool(self, safe_distance=20, pool_center_distance=None, b_show=False):
         """
         环绕湖泊

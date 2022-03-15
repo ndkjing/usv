@@ -313,12 +313,18 @@ http_get_img_path = "https://ship.xxlun.com/union/admin/xxl/data/getPicUrl"
 # 上传异常情况接口
 http_send_abnormal = "https://ship.xxlun.com/union/admin/xxl/data/abnormal/save"
 # http_send_abnormal = "http://192.168.8.26:8009/union/admin/xxl/data/abnormal/save"
-
+# 发送手动记录路劲数据
+http_record_path = "https://ship.xxlun.com/union/admin/xxl/device/saveRoute"
+# http_record_path = "http://192.168.8.26:8009/union/admin/xxl/device/saveRoute"
+# 获取手动记录轨迹
+http_record_get = "https://ship.xxlun.com/union/admin/xxl/device/getRoute/1/1"
+# http_record_get = "http://192.168.8.26:8009/union/admin/xxl/device/getRoute/1/1"
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884
 # 调试的时候使用初始经纬度
-ship_gaode_lng_lat = [114.524096, 30.506853]
+ship_gaode_lng_lat = [114.524096, 30.506853]     # 九峰水库
+# ship_gaode_lng_lat = [114.431419,30.524192]     # 喻家湖
 # 电机前进分量
 motor_forward = 200
 # 电机转弯分量
@@ -917,7 +923,7 @@ laser_hz = 40
 left_pwm_pin = 6  # 左侧
 right_pwm_pin = 5  # 右侧电机
 # 软串口罗盘
-b_pin_compass = 1
+b_pin_compass = 0
 pin_compass_baud = 9600
 pin_compass_tx = 27
 pin_compass_rx = 22
@@ -957,9 +963,9 @@ sonar_tx = 20  # TX
 sonar_baud = 9600
 sonar_steer = 21  # 声呐舵机
 # 维特罗盘
-b_weite_compass = 0
-weite_compass_rx = 15  # RX
-weite_compass_tx = 14  # TX
+b_weite_compass = 1
+weite_compass_rx = 14  # RX
+weite_compass_tx = 15  # TX
 weite_compass_baud = 9600
 # 抽水
 b_draw = 1  # 是否有抽水泵

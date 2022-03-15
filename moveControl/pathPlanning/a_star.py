@@ -487,8 +487,8 @@ def get_path(baidu_map_obj,
     if baidu_map_obj.ship_gaode_lng_lat is None:
         return 'no ship gps'
 
-    search_safe_pix = int(config.path_search_safe_distance / baidu_map_obj.pix_2_meter)
-    print(config.path_search_safe_distance,baidu_map_obj.pix_2_meter)
+    search_safe_pix = int(server_config.path_search_safe_distance / baidu_map_obj.pix_2_meter)
+    print(server_config.path_search_safe_distance,baidu_map_obj.pix_2_meter)
     # 单点
     print('mode', mode)
     if mode == 1:

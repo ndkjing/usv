@@ -257,6 +257,15 @@ class MqttSendGet:
         # 计算距离岸边距离
         self.bank_distance = 0.0
         self.dock_position_data = None  # 船坞信息
+        # 是否开始手动记录点
+        self.b_record_point = 0
+        self.record_distance = 5  # 记录点距离
+        self.record_name = ""  # 记录轨迹名称
+        # 包围圈扫描
+        self.surrounded_points = None  # 包围圈内点
+        self.surrounded_distance = 10  # 包围圈间隔距离
+        self.surrounded_start = 0  # 包围圈内点开始行驶
+        self.path_id = None  # 手动记录路径点ID
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -373,35 +382,34 @@ class MqttSendGet:
             # 用户点击经纬度和图层 保存到指定路径
             elif topic == 'user_lng_lat_%s' % config.ship_code:
                 user_lng_lat_data = json.loads(msg.payload)
-                if user_lng_lat_data.get('lng_lat') is None:
-                    self.logger.error('user_lng_lat_用户点击经纬度数据没有经纬度字段')
-                    return
-                if user_lng_lat_data.get('zoom') is None:
-                    self.logger.error('user_lng_lat_用户点击经纬度数据没有zoom字段')
-                    return
-                if user_lng_lat_data.get('meter_pix') is None:
-                    self.logger.error('user_lng_lat_用户点击经纬度数据没有meter_pix字段')
-                if user_lng_lat_data.get('config') is None:
-                    self.logger.error('user_lng_lat_用户点击经纬度数据没有config字段')
+                if user_lng_lat_data.get('area_scan'):
+                    self.surrounded_start = 1
+                elif user_lng_lat_data.get('path_id'):
+                    self.path_id = user_lng_lat_data.get('path_id')
+                else:
+                    if user_lng_lat_data.get('lng_lat') is None:
+                        self.logger.error('user_lng_lat_用户点击经纬度数据没有经纬度字段')
+                        return
+                    if user_lng_lat_data.get('zoom') is None:
+                        self.logger.error('user_lng_lat_用户点击经纬度数据没有zoom字段')
+                        return
+                    if user_lng_lat_data.get('meter_pix') is None:
+                        self.logger.error('user_lng_lat_用户点击经纬度数据没有meter_pix字段')
+                    if user_lng_lat_data.get('config') is None:
+                        self.logger.error('user_lng_lat_用户点击经纬度数据没有config字段')
+                    # 添加新的点
+                    lng_lat = user_lng_lat_data.get('lng_lat')
+                    self.target_lng_lat = lng_lat
+                    self.target_lng_lat_status = [0] * len(lng_lat)
+                    zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
+                    self.zoom.append(zoom)
+                    self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
+                    if user_lng_lat_data.get('config').get('back_home') is not None:
+                        self.back_home = user_lng_lat_data.get('config').get('back_home')
 
-                # 添加新的点
-                lng_lat = user_lng_lat_data.get('lng_lat')
-                self.target_lng_lat = lng_lat
-                self.target_lng_lat_status = [0] * len(lng_lat)
-                zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
-                self.zoom.append(zoom)
-                self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
-                if user_lng_lat_data.get('config').get('back_home') is not None:
-                    self.back_home = user_lng_lat_data.get('config').get('back_home')
-
-                self.fix_point = user_lng_lat_data.get('config').get('fixpoint')
-
+                    self.fix_point = user_lng_lat_data.get('config').get('fixpoint')
                 self.logger.info({'topic': topic,
-                                  'target_lng_lat': self.target_lng_lat,
-                                  'zoom': zoom,
-                                  'meter_pix': user_lng_lat_data.get('meter_pix'),
-                                  'back_home': self.back_home,
-                                  'fix_point': self.fix_point,
+                                  'user_lng_lat_data': user_lng_lat_data,
                                   })
 
             # 用户设置自动求取检测点经纬度
@@ -588,15 +596,7 @@ class MqttSendGet:
                     info_type = int(refresh_data.get('info_type'))
                     self.refresh_info_type = info_type
 
-            # 距离岸边距离话题
-            elif topic == 'bank_distance_%s' % (config.ship_code):
-                # self.logger.info({'dock_position_': json.loads(msg.payload)})
-                bank_distance_data = json.loads(msg.payload)
-                if bank_distance_data.get("bank_distance") is None:
-                    self.logger.error('"refresh_"设置启动消息没有"bank_distance"字段')
-                    return
-                else:
-                    self.bank_distance = round(float(bank_distance_data.get('bank_distance')), 1)
+
 
             # 船坞位置话题
             elif topic == 'dock_position_%s' % config.ship_code:
@@ -662,6 +662,56 @@ class MqttSendGet:
                     poweroff_restart.restart()
                 elif poweroff_restart_type == 1:
                     poweroff_restart.poweroff()
+
+            # 距离岸边距离话题
+            elif topic == 'bank_distance_%s' % (config.ship_code):
+                # self.logger.info({'dock_position_': json.loads(msg.payload)})
+                bank_distance_data = json.loads(msg.payload)
+                if bank_distance_data.get("bank_distance") is None:
+                    self.logger.error('"refresh_"设置启动消息没有"bank_distance"字段')
+                    return
+                else:
+                    self.bank_distance = round(float(bank_distance_data.get('bank_distance')), 1)
+
+            # 处理手动记录点
+            elif topic == 'record_point_%s' % config.ship_code:
+                record_point_data = json.loads(msg.payload)
+                if record_point_data.get('start_end') is None:
+                    self.logger.error('record_point_data处理控制数据没有start_end')
+                    return
+                if int(record_point_data.get('start_end')) == 1:
+                    self.b_record_point = 1
+                else:
+                    self.b_record_point = 0
+                if record_point_data.get('record_name'):
+                    self.record_name = record_point_data.get('record_name')
+                self.logger.info({'topic': topic,
+                                  'start_end': record_point_data.get('start_end'),
+                                  })
+
+            # 处理手动记录路径id
+            elif topic == 'record_path_%s' % config.ship_code:
+                record_path_data = json.loads(msg.payload)
+                if record_path_data.get('start_end') is None:
+                    self.logger.error('record_path_data处理控制数据没有path_id')
+                    return
+                self.logger.info({'topic': topic,
+                                  'path_id': record_path_data.get('path_id'),
+                                  })
+
+            # 处理包围圈路径点和设置
+            elif topic == 'surrounded_%s' % config.ship_code:
+                surrounded_data = json.loads(msg.payload)
+                if surrounded_data.get('lng_lat') is None:
+                    self.logger.error('surrounded_处理没有lng_lat')
+                    return
+                self.surrounded_points = surrounded_data.get('lng_lat')
+                if surrounded_data.get('distance') is not None:
+                    self.surrounded_distance = int(surrounded_data.get('distance'))
+                self.logger.info({'topic': topic,
+                                  'surrounded_': surrounded_data,
+                                  })
+
 
         except Exception as e:
             self.logger.error({'error': e})
