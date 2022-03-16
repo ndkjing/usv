@@ -1064,7 +1064,7 @@ class DataManager:
                                                                 self.lng_lat[1],
                                                                 target_lng_lat_gps[0],
                                                                 target_lng_lat_gps[1])
-            theta_error = point_theta - self.current_theta
+            theta_error = point_theta - self.pi_main_obj.theta
             if abs(theta_error) > 180:
                 if theta_error > 0:
                     theta_error = theta_error - 360
@@ -1532,7 +1532,7 @@ class DataManager:
                     if b_arrive_sample:
                         print('b_arrive_sample', b_arrive_sample)
                         # 更新目标点提示消息
-                        self.b_arrive_point = 1  # 到点了用于通知抽水
+                        self.b_arrive_point = 0  # 1 到点了用于通知抽水  0 不通知抽水
                         self.point_arrive_start_time = None
                         self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] = 1
                         self.path_info = [index + 1, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
@@ -1582,7 +1582,6 @@ class DataManager:
                         self.pre_dock_lng_lat[0],
                         self.pre_dock_lng_lat[1])
                     print('pre_dock_distance', pre_dock_distance)
-                    print('dock_lng_lat', dock_lng_lat)
                     if pre_dock_distance > pre_dock_arrive_distance and not self.is_arriver_pre_dock:
                         b_arrive_sample = self.points_arrive_control(smooth_dock_point_lng_lat,
                                                                      smooth_dock_point_lng_lat,
@@ -2195,11 +2194,13 @@ class DataManager:
                         scan_points[-1][1])
                     if dis_start > dis_end:
                         scan_points.reverse()
+                    print('scan_points',scan_points)
                     self.server_data_obj.mqtt_send_get_obj.path_planning_points = scan_points
                     self.server_data_obj.mqtt_send_get_obj.sampling_points = scan_points
                     self.server_data_obj.mqtt_send_get_obj.sampling_points_status = [0] * len(scan_points)
                     self.server_data_obj.mqtt_send_get_obj.surrounded_start = 0
-
+                    self.server_data_obj.mqtt_send_get_obj.keep_point=1
+                    print('start scan')
             else:
                 time.sleep(1)
             # 判断是否需要请求轨迹
