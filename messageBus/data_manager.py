@@ -200,6 +200,14 @@ class DataManager:
         self.last_read_time_debug = None  # 调试用计算速度
         self.dump_draw_time = 0  # 剩余抽水时间
         self.record_path = []  # 记录手动轨迹点
+        self.is_wait = 1  # 船只是否空闲
+        # 调试模拟避障数据
+        self.send_obstacle = True
+        # 距离矩阵
+        self.distance_dict = {}
+        self.cell_size = int(config.field_of_view / config.view_cell)
+        self.obstacle_list = [0] * self.cell_size  # 自动避障列表
+        self.control_obstacle_list = [0] * self.cell_size  # 手动避障障碍物列表
 
     def connect_mqtt_server(self):
         while True:
@@ -895,7 +903,7 @@ class DataManager:
             point = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                 self.lng_lat[1],
                                                                 angle,
-                                                                config.min_steer_distance / 5)
+                                                                config.min_steer_distance / 30)
             self.lng_lat = point
             if random.random() > 0.5:
                 self.current_theta += 0.1
@@ -906,7 +914,7 @@ class DataManager:
             point = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                 self.lng_lat[1],
                                                                 angle,
-                                                                config.min_steer_distance / 5)
+                                                                config.min_steer_distance / 30)
             self.lng_lat = point
             if random.random() > 0.5:
                 self.current_theta += 0.1
@@ -922,7 +930,7 @@ class DataManager:
     def get_avoid_obstacle_point(self, path_planning_point_gps=None):
         """
         根据障碍物地图获取下一个运动点
-        :return: 下一个目标点，是否需要紧急停止
+        :return: 下一个目标点，是否需要紧急停止【True为需要停止，False为不需要停止】
         """
         next_point_lng_lat = copy.deepcopy(path_planning_point_gps)
         if config.b_millimeter_wave:
@@ -932,50 +940,175 @@ class DataManager:
                 return path_planning_point_gps, False
             # 避障停止
             elif config.obstacle_avoid_type == 1:
+                # 船头角度左右3个扇区有障碍物
                 if 1 in self.pi_main_obj.obstacle_list[
                         int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                    if self.server_data_obj.mqtt_send_get_obj.bank_distance > -100 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
-                        return next_point_lng_lat, True
+                    return path_planning_point_gps, False
+                    # 下面为避免传感器误差只有看到障碍物且船到岸边距离小于最小转弯距离才停止
+                    # if -100 < self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                    #     return path_planning_point_gps, True
                 else:
                     return path_planning_point_gps, False
             # 避障绕行，根据障碍物计算下一个目标点
             elif config.obstacle_avoid_type in [2, 3]:
                 angle = vfh.vfh_func(9, self.pi_main_obj.obstacle_list)
-                print('angle', angle)
+                print('避障角度：', angle)
                 if angle == -1:  # 没有可通行区域
                     # 如果是离岸边太近就直接认为到达
                     if 1 in self.pi_main_obj.obstacle_list[
                             int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                        if self.server_data_obj.mqtt_send_get_obj.bank_distance > -100 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                        # 不够转弯距离返回停止  够转弯距离返回新的目标点
+                        if -100 < self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
                             return next_point_lng_lat, True
-                    else:
-                        abs_angle = (self.pi_main_obj.theta + 180) % 360
-                        next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-                                                                                         self.lng_lat[1],
-                                                                                         abs_angle,
-                                                                                         config.min_steer_distance)
-                        print('abs_angle', abs_angle)
-                        return next_point_lng_lat, False
-                elif angle == 0:
-                    if config.obstacle_avoid_type == 3:
+                        else:
+                            abs_angle = (self.pi_main_obj.theta + 180) % 360
+                            next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                             self.lng_lat[1],
+                                                                                             abs_angle,
+                                                                                             config.min_steer_distance)
+                            print('新方向角度：', abs_angle)
+                            return next_point_lng_lat, False
+                elif angle == 0:  # 当前船头角度可通行
+                    if config.obstacle_avoid_type == 3:  # 避障方式为3是对河内避障对岸边停止
                         if 1 in self.pi_main_obj.obstacle_list[
                                 int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                            if self.server_data_obj.mqtt_send_get_obj.bank_distance > -100 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                            if -100 < self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
                                 return next_point_lng_lat, True
                     # 为0表示原始路径可以通行此时不跳过
                     return next_point_lng_lat, False
-                else:
-                    if config.obstacle_avoid_type == 3:
+                else:  # 船头角度不能通过但是传感器检测其他角度可以通过
+                    if config.obstacle_avoid_type == 3:  # 避障方式为3是对河内避障对岸边停止
                         if 1 in self.pi_main_obj.obstacle_list[
                                 int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                            if self.server_data_obj.mqtt_send_get_obj.bank_distance > -100 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                            if -100 < self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
                                 return next_point_lng_lat, True
                     abs_angle = (self.pi_main_obj.theta + angle) % 360
                     next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                                      self.lng_lat[1],
                                                                                      abs_angle,
                                                                                      config.min_steer_distance)
-                    print('abs_angle', abs_angle)
+                    print('绕行角度:', abs_angle)
+                    return next_point_lng_lat, False
+        else:
+            return path_planning_point_gps, False
+
+    # 构建模拟避障数据
+    def build_obstacle_data(self):
+        # 角度限制
+        while True:
+            # 计算船到每个障碍物的距离和角度
+            for index, point in enumerate(config.obstacle_points):
+                if not self.gaode_lng_lat:
+                    continue
+                distance = lng_lat_calculate.distanceFromCoordinate(self.gaode_lng_lat[0],
+                                                                    self.gaode_lng_lat[1],
+                                                                    point[0],
+                                                                    point[1]
+                                                                    )
+                angle = lng_lat_calculate.angleFromCoordinate(self.gaode_lng_lat[0],
+                                                              self.gaode_lng_lat[1],
+                                                              point[0],
+                                                              point[1])
+                ori_angle=angle-self.current_theta
+                if ori_angle<0:
+                    ori_angle=360+ori_angle
+                self.distance_dict.update({index: [distance, ori_angle]})
+            # print('self.distance_dict', self.distance_dict)
+            self.obstacle_list = [0] * self.cell_size  # 自动避障列表
+            self.control_obstacle_list = [0] * self.cell_size  # 手动避障障碍物列表
+            for obj_id in self.distance_dict:
+                distance_average = self.distance_dict.get(obj_id)[0]
+                angle_average = self.distance_dict.get(obj_id)[1]
+                if config.field_of_view / 2 <= angle_average < 360 - config.field_of_view / 2:
+                    b_obstacle = 0
+                else:
+                    if angle_average >= 360 - config.field_of_view / 2:
+                        angle_average = angle_average -(360 - config.field_of_view / 2)
+                        obstacle_index = int(angle_average // config.view_cell + self.cell_size // 2)
+                    else:
+                        angle_average = - angle_average
+                        obstacle_index = int(angle_average // config.view_cell + self.cell_size // 2)
+                        # print('obstacle_index', obstacle_index)
+                    if distance_average > config.min_steer_distance or abs(angle_average) >= (config.field_of_view / 2):
+                        b_obstacle = 0
+                    else:
+                        # print('self.distance_dict', self.distance_dict)
+                        b_obstacle = 1
+                    try:
+                        self.obstacle_list[obstacle_index] = b_obstacle
+                    except Exception as e:
+                        print('#######################obstacle_index',obstacle_index)
+                    if distance_average > config.control_obstacle_distance:
+                        b_control_obstacle = 0
+                    else:
+                        b_control_obstacle = 1
+                    self.control_obstacle_list[obstacle_index] = b_control_obstacle
+            print(time.time(), 'self.obstacle_list', self.obstacle_list)
+            time.sleep(0.1)
+
+    # 计算障碍物下目标点
+    def get_avoid_obstacle_point_debug(self, path_planning_point_gps=None):
+        """
+        调试用根据障碍物地图获取下一个运动点
+        :return: 下一个目标点，是否需要紧急停止【True为需要停止，False为不需要停止】
+        """
+        next_point_lng_lat = copy.deepcopy(path_planning_point_gps)
+        ceil_size = 4
+        if config.b_millimeter_wave:
+            # print('config.obstacle_avoid_type', config.obstacle_avoid_type)
+            # 不避障
+            if config.obstacle_avoid_type == 0:
+                return path_planning_point_gps, False
+            # 避障停止
+            elif config.obstacle_avoid_type == 1:
+                # 船头角度左右3个扇区有障碍物
+                if 1 in self.obstacle_list[
+                        int(self.cell_size / 2) - ceil_size:int(self.cell_size / 2) + ceil_size]:
+                    return path_planning_point_gps, False
+                    # 下面为避免传感器误差只有看到障碍物且船到岸边距离小于最小转弯距离才停止
+                    # if -100 < self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                    #     return path_planning_point_gps, True
+                else:
+                    return path_planning_point_gps, False
+            # 避障绕行，根据障碍物计算下一个目标点
+            elif config.obstacle_avoid_type in [2, 3]:
+                angle = vfh.vfh_func(9, self.obstacle_list)
+                print('避障角度：', angle)
+                if angle == -1:  # 没有可通行区域
+                    # 如果是离岸边太近就直接认为到达
+                    if 1 in self.obstacle_list[
+                            int(self.cell_size / 2) - ceil_size:int(self.cell_size / 2) + ceil_size]:
+                        # 不够转弯距离返回停止  够转弯距离返回新的目标点
+                        if -100 < self.server_data_obj.mqtt_send_get_obj.bank_distance < 6:
+                            return next_point_lng_lat, True
+                        else:
+                            abs_angle = (self.current_theta + 180) % 360
+                            next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                             self.lng_lat[1],
+                                                                                             abs_angle,
+                                                                                             config.min_steer_distance/10)
+                            print('新方向角度：', abs_angle)
+                            return next_point_lng_lat, False
+                elif angle == 0:  # 当前船头角度可通行
+                    if config.obstacle_avoid_type == 3:  # 避障方式为3是对河内避障对岸边停止
+                        if 1 in self.obstacle_list[
+                                int(self.cell_size / 2) - ceil_size:int(self.cell_size / 2) + ceil_size]:
+                            if -100 < self.server_data_obj.mqtt_send_get_obj.bank_distance < 6:
+                                return next_point_lng_lat, True
+                    # 为0表示原始路径可以通行此时不跳过
+                    return next_point_lng_lat, False
+                else:  # 船头角度不能通过但是传感器检测其他角度可以通过
+                    if config.obstacle_avoid_type == 3:  # 避障方式为3是对河内避障对岸边停止
+                        if 1 in self.obstacle_list[
+                                int(self.cell_size / 2) - ceil_size:int(self.cell_size / 2) + ceil_size]:
+                            if -100 < self.server_data_obj.mqtt_send_get_obj.bank_distance < 6:
+                                return next_point_lng_lat, True
+                    abs_angle = (self.current_theta + angle) % 360
+                    next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                     self.lng_lat[1],
+                                                                                     abs_angle,
+                                                                                     config.min_steer_distance)
+                    print('绕行角度:', abs_angle)
                     return next_point_lng_lat, False
         else:
             return path_planning_point_gps, False
@@ -1002,8 +1135,8 @@ class DataManager:
             self.point_arrive_start_time = time.time()
         elif self.point_arrive_start_time and time.time() - self.point_arrive_start_time > 60:
             return True
-
         while distance >= config.arrive_distance:
+            # 超时不到则跳过 达到30米且60秒不到则跳过
             if distance < 30 and self.point_arrive_start_time is None:
                 self.point_arrive_start_time = time.time()
             elif self.point_arrive_start_time and time.time() - self.point_arrive_start_time > 60:
@@ -1020,6 +1153,10 @@ class DataManager:
             b_stop = False
             if not config.home_debug:
                 target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point(target_lng_lat_gps)
+            else:
+                target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point_debug(target_lng_lat_gps)
+            if b_stop:
+                print('避障停止', b_stop)
             all_distance = lng_lat_calculate.distanceFromCoordinate(
                 self.lng_lat[0], self.lng_lat[1], target_lng_lat_gps[0],
                 target_lng_lat_gps[1])
@@ -1068,7 +1205,7 @@ class DataManager:
                 right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
                 steer_power = left_delta_pwm - right_delta_pwm
                 forward_power = left_delta_pwm + right_delta_pwm
-                delta_distance = forward_power * 0.002
+                delta_distance = forward_power * 0.001
                 delta_theta = steer_power * 0.08
                 if self.last_lng_lat:
                     ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
@@ -1126,6 +1263,13 @@ class DataManager:
                 ShipStatus.at_home: '在返航点',
                 ShipStatus.idle: '等待',
             }
+            self.direction = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
+            # 判断船是否能给用户点击再次运动
+            if self.ship_status in [ShipStatus.idle, ShipStatus.remote_control, ShipStatus.computer_control,
+                                    ShipStatus.at_home]:
+                self.is_wait = 1  # 是空闲
+            else:
+                self.is_wait = 2  # 非空闲
             self.control_info = ''
             if self.ship_status in control_info_dict:
                 self.control_info += control_info_dict[self.ship_status]
@@ -1585,6 +1729,8 @@ class DataManager:
                 mqtt_send_status_data.update({'is_record': 1})
             else:
                 mqtt_send_status_data.update({'is_record': 2})
+            # 更新船是否能运动状态
+            mqtt_send_status_data.update({'is_wait': self.is_wait})
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=mqtt_send_status_data,
                       qos=0)
@@ -1737,6 +1883,7 @@ class DataManager:
                 save_data.set_data(save_plan_path_data, config.save_plan_path)
                 if self.server_data_obj.mqtt_send_get_obj.refresh_info_type == 1:
                     save_plan_path_data.update({"info_type": 2})
+                    self.send_obstacle = True
                     self.send(method='mqtt',
                               topic='refresh_%s' % config.ship_code,
                               data=save_plan_path_data,
@@ -1762,25 +1909,37 @@ class DataManager:
     # 发送障碍物信息线程
     def send_distacne(self):
         while True:
-            time.sleep(1.35)
+            time.sleep(1.1)
             if not self.server_data_obj.mqtt_send_get_obj.is_connected:
                 continue
             # 调试情况下
             if config.home_debug:
-                direction = int(random.random() * 360)
-                distance_info_data = {
-                    # 船头角度  以北为0度 ，逆时针方向为正
-                    "direction": direction,
-                    # 距离信息 内部为列表，列中中元素为字典，distance为距离单位米  angle为角度单位度，以船头角度为0度 左正右负
-                    "distance_info": [{"distance": 4.5, "angle": 20},
-                                      {"distance": 7.5, "angle": -20},
-                                      {"distance": 6, "angle": 0}],
-                }
-                distance_info_data.update({'deviceId': config.ship_code})
-                self.send(method='mqtt',
-                          topic='distance_info_%s' % config.ship_code,
-                          data=distance_info_data,
-                          qos=0)
+                distance_info_data = {}
+                if len(self.distance_dict) > 0:
+                    distance_info_data.update({'deviceId': config.ship_code})
+                    distance_info_data.update({'distance_info': []})
+                    for k in self.distance_dict.copy():
+                        distance_info_data['distance_info'].append(
+                            {'distance': self.distance_dict[k][0],
+                             'angle': self.distance_dict[k][1]})
+                    if self.current_theta:
+                        distance_info_data.update({'direction': round(self.current_theta)})
+                    else:
+                        distance_info_data.update({'direction': 0})
+                    # distance_info_data = {
+                    #     # 船头角度  以北为0度 ，逆时针方向为正
+                    #     "direction": self.current_theta,
+                    #     # 距离信息 内部为列表，列中中元素为字典，distance为距离单位米  angle为角度单位度，以船头角度为0度 左正右负
+                    #     "distance_info": [{"distance": 4.5, "angle": 20},
+                    #                       {"distance": 7.5, "angle": -20},
+                    #                       {"distance": 6, "angle": 0}],
+                    # }
+                    distance_info_data.update({'deviceId': config.ship_code})
+                    self.send(method='mqtt',
+                              topic='distance_info_%s' % config.ship_code,
+                              data=distance_info_data,
+                              qos=0)
+                    print('distance_info_data', distance_info_data)
             # 真实情况
             else:
                 distance_info_data = {}
@@ -1997,6 +2156,16 @@ class DataManager:
                                   http_type='POST',
                                   )
                 http_get_time = False
+            # 发送模拟障碍物
+            if self.send_obstacle:
+                obstacle_points = {"lng_lat": config.obstacle_points}
+                self.send(method='mqtt',
+                          data=obstacle_points,
+                          topic='obstacle_points_%s' % config.ship_code,
+                          qos=0
+                          )
+                self.logger.info({"obstacle_points": obstacle_points})
+                self.send_obstacle = False
             time.sleep(3)
 
     # 发送数据

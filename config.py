@@ -168,7 +168,7 @@ http_record_get = "https://ship.xxlun.com/union/admin/xxl/device/getRoute/1/1"
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884
 # 调试的时候使用初始经纬度
-ship_gaode_lng_lat = [114.524096, 30.506853]     # 九峰水库
+ship_gaode_lng_lat = [114.524096, 30.506853]  # 九峰水库
 # ship_gaode_lng_lat = [114.431419,30.524192]     # 喻家湖
 # pid三参数
 kp = 0.6
@@ -208,7 +208,7 @@ forward_see_distance = 9
 # 舵机最大扫描角度单侧 左边为正右边为负
 steer_max_angle = 30
 # 最小转向距离
-min_steer_distance = 10  # 自动模式下避障距离 单位m
+min_steer_distance = 20  # 自动模式下避障距离 单位m
 # 测试在家调试也发送数据
 debug_send_detect_data = 0
 # 转向速度
@@ -437,8 +437,8 @@ channel_3_pin = 6  # 垂直是2通道
 channel_remote_pin = 11  # 开启遥控器输入pin口
 # 毫米波雷达 millimeter wave radar
 b_millimeter_wave = 1
-field_of_view = 90
-view_cell = 5
+field_of_view = 120  # 视场角
+view_cell = 5   # 量化角度单元格
 ceil_max = 3  # 可以通过扇区阈值
 millimeter_wave_tx = 16
 millimeter_wave_rx = 20
@@ -453,7 +453,7 @@ sonar_steer = 21  # 声呐舵机
 
 # 抽水
 b_draw = 1  # 是否有抽水泵
-b_control_deep = 0  # 是否可调深度
+b_control_deep = 1  # 是否可调深度
 draw_steer = 13  # 舵机接口
 
 # 排水
@@ -478,6 +478,18 @@ max_draw_capacity = 5000  # 单个瓶子最大抽水容量
 draw_speed = 2000  # 抽水速度 毫升/分钟
 number_of_bottles = 4  # 总共包含抽水瓶数
 max_draw_time = int(60 * max_draw_capacity / draw_speed)
+
+# 障碍物点
+obstacle_points = [[114.523433, 30.506193],
+                   [114.523519, 30.506526],
+                   [114.523943, 30.506466],
+                   [114.524066, 30.506517],
+                   [114.524254, 30.506378],
+                   [114.523696, 30.506378],
+                   [114.5239, 30.506369],
+                   [114.524055, 30.506378],
+                   [114.524334, 30.506304]
+                   ]
 
 if __name__ == '__main__':
     write_setting(True, True, True, True)

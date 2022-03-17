@@ -47,7 +47,7 @@ def vfh_func(index, obstacle_list):
             how.append(howtemp)
         ft = how.index(min(how))
         kb = value_list[int(ft)]
-        print('kb', kb,'value_list',value_list)
+        # print('kb', kb,'value_list',value_list)
         angle = int(kb * view_cell - field_of_view / 2)
         # 该角度为相对船头角度不是相对于北方角度
         if angle < 0:

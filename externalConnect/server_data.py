@@ -567,7 +567,7 @@ class MqttSendGet:
                     return
                 else:
                     self.bank_distance = round(float(bank_distance_data.get('bank_distance')), 1)
-
+                self.logger.info({"bank_distance_data":bank_distance_data})
             # 处理手动记录点
             elif topic == 'record_point_%s' % config.ship_code:
                 record_point_data = json.loads(msg.payload)

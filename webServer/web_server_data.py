@@ -354,6 +354,7 @@ class MqttSendGet:
                 return
             else:
                 self.current_lng_lat = status_data.get('current_lng_lat')
+                self.update_safe_distance = True  # 接受到经纬度后开始计算离岸边距离
             if status_data.get("home_lng_lat") is None:
                 pass
             else:

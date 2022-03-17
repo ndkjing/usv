@@ -85,9 +85,7 @@ class PiMain:
         self.compass_notice_info = ''
         # 距离矩阵
         self.distance_dict = {}
-        self.field_of_view = config.field_of_view  # 视场角
-        self.view_cell = config.view_cell  # 量化角度单元格
-        self.cell_size = int(self.field_of_view / self.view_cell)
+        self.cell_size = int(config.field_of_view / config.view_cell)
         self.obstacle_list = [0] * self.cell_size  # 自动避障列表
         self.control_obstacle_list = [0] * self.cell_size  #
         # 设置为GPIO输出模式 输出高低电平
@@ -384,6 +382,7 @@ class PiMain:
                 add_or_sub = 1 if self.target_draw_steer_pwm - self.draw_steer_pwm > 0 else -1
                 self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
                 self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
+                print('setpwm', config.draw_steer, self.draw_steer_pwm)
                 time.sleep(0.05)
             else:
                 time.sleep(0.1)
@@ -622,7 +621,7 @@ class PiMain:
                     angle_average = int(sum(average_angle_dict.get(obj_id)) / len(average_angle_dict.get(obj_id)))
                     distance_average = sum(average_distance_dict.get(obj_id)) / len(average_distance_dict.get(obj_id))
                     # 丢弃大于视场角范围的数据
-                    if abs(angle_average) >= (self.field_of_view / 2):
+                    if abs(angle_average) >= (config.field_of_view / 2):
                         continue
                     angle_key = int(angle_average - angle_average % 2)
                     self.distance_dict.update({obj_id: [distance_average, angle_key]})
@@ -655,7 +654,7 @@ class PiMain:
             for obj_id in self.distance_dict:
                 distance_average = self.distance_dict.get(obj_id)[0]
                 angle_average = self.distance_dict.get(obj_id)[1]
-                obstacle_index = angle_average // self.view_cell + 9
+                obstacle_index = angle_average // config.view_cell + 9
                 if distance_average > config.min_steer_distance:
                     b_obstacle = 0
                 else:
@@ -667,7 +666,7 @@ class PiMain:
                     b_control_obstacle = 1
                 self.control_obstacle_list[obstacle_index] = b_control_obstacle
             if count == max_count - 1:
-                self.obstacle_list = [0] * int(self.field_of_view / self.view_cell)
+                self.obstacle_list = [0] * int(config.field_of_view / config.view_cell)
             if debug:
                 print('data_dict', data_dict)
                 print('self.distance_dict', self.distance_dict)
