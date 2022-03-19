@@ -161,8 +161,6 @@ class MqttSendGet:
         # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　-1为停止  -2 为不为平台控制
         self.control_move_direction = -2
         self.last_control_move_direction = -2
-        # 测量控制位　0为不采样　1为采样
-        self.b_sampling = 0
         # 抽水控制位  0为不抽水　1为抽水
         self.b_draw = 0
         # 前大灯 1 打开前大灯 没有该键表示不打开
@@ -248,6 +246,7 @@ class MqttSendGet:
             # 处理控制数据
             if topic == 'control_data_%s' % config.ship_code:
                 self.b_receive_mqtt = True
+                send_info = None
                 control_data = json.loads(msg.payload)
                 if control_data.get('move_direction') is None:
                     self.logger.error('control_data_处理控制数据没有move_direction')
@@ -270,9 +269,34 @@ class MqttSendGet:
                 }
                 if control_data.get('mode'):
                     if int(control_data.get('mode')) == 1:
-                        pass
+                        if self.control_move_direction == -1:
+                            send_info = '停止'
+                        if self.control_move_direction == 0:
+                            send_info = '前进'
+                        if self.control_move_direction == 90:
+                            send_info = '左转'
+                        if self.control_move_direction == 180:
+                            send_info = '后退'
+                        if self.control_move_direction == 270:
+                            send_info = '右转'
                     elif int(control_data.get('mode')) == 2:
                         self.control_move_direction = nwse_dict[self.control_move_direction]
+                        if self.control_move_direction == -1:
+                            send_info = '停止'
+                        if self.control_move_direction == 0:
+                            send_info = '向北'
+                        if self.control_move_direction == 190:
+                            send_info = '向西'
+                        if self.control_move_direction == 1180:
+                            send_info = '向南'
+                        if self.control_move_direction == 1270:
+                            send_info = '向东'
+                if self.send_log and send_info is not None:
+                    send_log_data = {
+                        "deviceId": config.ship_code,
+                        "operation": send_info
+                    }
+                    send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
                 self.logger.info({'topic': topic,
                                   'control_move_direction': self.control_move_direction,
                                   'mode': control_data.get('mode')
@@ -284,24 +308,26 @@ class MqttSendGet:
                 switch_data = json.loads(msg.payload)
                 if switch_data.get('info_type') != 1:
                     return
-                # 改变了暂时没用
-                if switch_data.get('b_sampling') is not None:
-                    self.b_sampling = int(switch_data.get('b_sampling'))
+                send_info = None  # 需要发送消息
                 if switch_data.get('b_draw') is not None:
                     self.b_draw = int(switch_data.get('b_draw'))
+                    send_info = "点击采样"
                 # 前大灯 1 打开前大灯 没有该键表示不打开
                 if switch_data.get('headlight') is not None:
                     self.headlight = int(switch_data.get('headlight'))
+                    send_info = "改变大灯"
                 # 声光报警器 1 打开声光报警器 没有该键表示不打开
                 if switch_data.get('audio_light') is not None:
                     self.audio_light = int(switch_data.get('audio_light'))
+                    send_info = "改变声光报警器"
                 # 舷灯 1 允许打开舷灯 没有该键表示不打开
                 if switch_data.get('side_light') is not None:
                     self.side_light = int(switch_data.get('side_light'))
-                if self.send_log:
+                    send_info = "改变舷灯"
+                if self.send_log and send_info is not None:
                     send_log_data = {
                         "deviceId": config.ship_code,
-                        "operation": "点击开关"
+                        "operation": send_info
                     }
                     send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
                 self.logger.info({'topic': topic,
@@ -400,6 +426,13 @@ class MqttSendGet:
                 self.sampling_points_status = [0] * len(self.sampling_points)
                 self.path_planning_points = path_planning_data.get('path_points')
                 self.keep_point = 1
+                send_info="自动行驶"
+                if self.send_log :
+                    send_log_data = {
+                        "deviceId": config.ship_code,
+                        "operation": send_info
+                    }
+                    send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
                 self.logger.info({'topic': topic,
                                   'sampling_points': path_planning_data.get('sampling_points'),
                                   'path_points': path_planning_data.get('path_points'),
@@ -567,7 +600,7 @@ class MqttSendGet:
                     return
                 else:
                     self.bank_distance = round(float(bank_distance_data.get('bank_distance')), 1)
-                self.logger.info({"bank_distance_data":bank_distance_data})
+                self.logger.info({"bank_distance_data": bank_distance_data})
             # 处理手动记录点
             elif topic == 'record_point_%s' % config.ship_code:
                 record_point_data = json.loads(msg.payload)
