@@ -122,6 +122,7 @@ class MqttSendGet:
         self.mqtt_client.username_pw_set(self.mqtt_user, password=self.mqtt_passwd)
         self.mqtt_client.on_connect = self.on_connect_callback
         self.mqtt_client.on_publish = self.on_publish_callback
+        self.mqtt_client.on_disconnect = self.on_disconnect_callback  # mqtt断开回调
         # self.mqtt_client.on_subscribe = self.on_message_come
         self.mqtt_client.on_message = self.on_message_callback
         # 湖泊初始点击点信息
@@ -218,19 +219,26 @@ class MqttSendGet:
                 self.mqtt_client.connect(self.mqtt_host, self.mqtt_port, 30)
                 # 开启接收循环，直到程序终止
                 self.mqtt_client.loop_start()
-                self.is_connected = 1
-                # 启动后自动订阅话题
-                for topic_, qos_ in self.topics:
-                    self.subscribe_topic(topic=topic_, qos=qos_)
             except TimeoutError:
                 return
             except Exception as e:
                 print('mqtt_connect error', e)
                 return
 
+    # 断开MQTt回调
+    def on_disconnect_callback(self, client, userdata, rc):
+        self.logger.info('disconnected with result code:  ' + str(rc), )
+        print('on_disconnect_callback self.is_connected', self.is_connected)
+        self.is_connected = 0
+
     # 建立连接时候回调
     def on_connect_callback(self, client, userdata, flags, rc):
         self.logger.info('Connected with result code:  ' + str(rc))
+        self.is_connected = 1
+        # 启动后自动订阅话题
+        for topic_, qos_ in self.topics:
+            self.subscribe_topic(topic=topic_, qos=qos_)
+        print('on_connect_callback self.is_connected', self.is_connected)
 
     # 发布消息回调
     def on_publish_callback(self, client, userdata, mid):
@@ -426,8 +434,8 @@ class MqttSendGet:
                 self.sampling_points_status = [0] * len(self.sampling_points)
                 self.path_planning_points = path_planning_data.get('path_points')
                 self.keep_point = 1
-                send_info="自动行驶"
-                if self.send_log :
+                send_info = "自动行驶"
+                if self.send_log:
                     send_log_data = {
                         "deviceId": config.ship_code,
                         "operation": send_info

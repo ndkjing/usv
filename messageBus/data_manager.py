@@ -1043,7 +1043,7 @@ class DataManager:
                     else:
                         b_control_obstacle = 1
                     self.control_obstacle_list[obstacle_index] = b_control_obstacle
-            print(time.time(), 'self.obstacle_list', self.obstacle_list)
+            # print(time.time(), 'self.obstacle_list', self.obstacle_list)
             time.sleep(0.1)
 
     # 计算障碍物下目标点

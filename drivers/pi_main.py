@@ -1141,7 +1141,7 @@ if __name__ == '__main__':
                 pi_main_obj.init_motor()
             elif key_input[0] in ['A', 'B', 'C', 'D', 'E']:
                 print('len(key_input)', len(key_input))
-                if len(key_input) == 2 and key_input[1] in ['0', '1', '2', '3', '4']:
+                if len(key_input) == 2 and key_input[1] in ['0', '1', '2', '3', '4','5']:
                     send_data = key_input + 'Z'
                     print('send_data', send_data)
                     if config.b_com_stc:
