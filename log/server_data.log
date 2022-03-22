@@ -725,3 +725,32 @@
 2021-12-20 09:41:31,855 server_data.py[line:307] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -2, 'mode': None}
 2021-12-20 09:41:32,515 server_data.py[line:307] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -1, 'mode': None}
 2021-12-20 09:41:32,996 server_data.py[line:307] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -1, 'mode': None}
+2022-03-22 16:44:20,714 server_data.py[line:706] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:20,729 server_data.py[line:256] INFO Connected with result code:  0
+2022-03-22 16:44:20,850 server_data.py[line:706] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:20,896 server_data.py[line:706] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:20,911 server_data.py[line:706] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:20,941 server_data.py[line:706] INFO {'topic': 'start_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:20,957 server_data.py[line:706] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:20,987 server_data.py[line:706] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,047 server_data.py[line:706] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,077 server_data.py[line:706] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,122 server_data.py[line:706] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,242 server_data.py[line:706] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,257 server_data.py[line:706] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,287 server_data.py[line:706] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,347 server_data.py[line:706] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,394 server_data.py[line:706] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,440 server_data.py[line:706] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,516 server_data.py[line:706] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,547 server_data.py[line:706] INFO {'topic': 'task_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,562 server_data.py[line:706] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:21,593 server_data.py[line:706] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-22 16:44:41,091 server_data.py[line:544] INFO {'refresh_setting ': {'info_type': 1}}
+2022-03-22 16:44:41,166 server_data.py[line:482] INFO {'base_setting ': {'info_type': 1}}
+2022-03-22 16:44:42,314 server_data.py[line:482] INFO {'base_setting ': {'speed_grade': '5', 'arrive_range': '3', 'info_type': 3}}
+2022-03-22 16:44:44,247 server_data.py[line:364] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'lng_lat': [114.523762, 30.505815], 'zoom': 16.74}
+2022-03-22 16:44:45,061 server_data.py[line:468] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'mapId': '1472131549474172929'}
+2022-03-22 16:44:51,052 server_data.py[line:393] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'target_lng_lat': [[114.523927, 30.506245]], 'back_home': 0, 'fix_point': None}
+2022-03-22 16:44:51,476 server_data.py[line:432] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'sampling_points': [[114.523927, 30.506245]], 'path_points': [[114.523923, 30.506245]]}
+2022-03-22 16:45:03,415 server_data.py[line:307] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -2, 'mode': None}

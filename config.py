@@ -156,7 +156,7 @@ http_mileage_update = 'https://ship.xxlun.com/union/admin/xxl/mileage/upData'
 
 # 测深接口
 # http_deep_data = 'http://ship.xxlun.com/union//admin/xxl/data/mapping/save'
-http_deep_data = 'https://192.168.8.26:8009//union//admin/xxl/data/mapping/save'
+http_deep_data = 'https://192.168.8.26:8009/union//admin/xxl/data/mapping/save'
 
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
@@ -477,7 +477,7 @@ draw_speed = 2000  # 抽水速度 毫升/分钟
 number_of_bottles = 4  # 总共包含抽水瓶数
 max_draw_time = int(60 * max_draw_capacity / draw_speed)
 
-b_deep_detect = 0  # 当前是否含有深度检测功能
+b_deep_detect = 1  # 当前是否含有深度检测功能
 
 if __name__ == '__main__':
     write_setting(True, True, True, True)
