@@ -776,3 +776,82 @@
 2022-03-23 11:45:34,481 server_data.py[line:725] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
 2022-03-23 11:45:34,496 server_data.py[line:725] INFO {'topic': 'start_detect_deep_XXLJC4LCGSCSD1DA007', 'qos': 0}
 2022-03-23 11:45:34,512 server_data.py[line:725] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,826 server_data.py[line:725] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,827 server_data.py[line:725] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,827 server_data.py[line:725] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,828 server_data.py[line:725] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,828 server_data.py[line:725] INFO {'topic': 'start_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,829 server_data.py[line:725] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,829 server_data.py[line:725] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,830 server_data.py[line:725] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,830 server_data.py[line:725] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,831 server_data.py[line:725] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,831 server_data.py[line:725] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,832 server_data.py[line:725] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,832 server_data.py[line:725] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,833 server_data.py[line:725] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,833 server_data.py[line:725] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,834 server_data.py[line:725] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,834 server_data.py[line:725] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,835 server_data.py[line:725] INFO {'topic': 'task_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,835 server_data.py[line:725] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,836 server_data.py[line:725] INFO {'topic': 'start_detect_deep_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,836 server_data.py[line:725] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
+2022-03-23 14:10:34,847 server_data.py[line:260] INFO Connected with result code:  0
+2022-03-23 14:13:09,764 server_data.py[line:549] INFO {'refresh_setting ': {'info_type': 1}}
+2022-03-23 14:13:09,765 server_data.py[line:487] INFO {'base_setting ': {'info_type': 1}}
+2022-03-23 14:13:10,024 server_data.py[line:487] INFO {'base_setting ': {'speed_grade': '5', 'arrive_range': '3', 'info_type': 3}}
+2022-03-23 14:13:16,325 server_data.py[line:368] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'lng_lat': [114.524326, 30.5054], 'zoom': 16.59}
+2022-03-23 14:13:17,071 server_data.py[line:473] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'mapId': '1472131549474172929'}
+2022-03-23 14:13:41,235 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 180, 'mode': 1}
+2022-03-23 14:13:48,489 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 90, 'mode': 1}
+2022-03-23 14:13:51,920 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 0, 'mode': 1}
+2022-03-23 14:13:57,676 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -1, 'mode': None}
+2022-03-23 14:14:00,712 server_data.py[line:697] ERROR {'server data error': TypeError("int() argument must be a string, a bytes-like object or a number, not 'NoneType'")}
+2022-03-23 14:14:00,788 server_data.py[line:687] ERROR deep_data消息没有start_end字段
+2022-03-23 14:14:00,788 server_data.py[line:697] ERROR {'server data error': TypeError("int() argument must be a string, a bytes-like object or a number, not 'NoneType'")}
+2022-03-23 14:22:25,093 server_data.py[line:549] INFO {'refresh_setting ': {'info_type': 1}}
+2022-03-23 14:22:25,094 server_data.py[line:487] INFO {'base_setting ': {'info_type': 1}}
+2022-03-23 14:22:25,154 server_data.py[line:487] INFO {'base_setting ': {'speed_grade': '5', 'arrive_range': '3', 'info_type': 3}}
+2022-03-23 14:22:25,947 server_data.py[line:549] INFO {'refresh_setting ': {'mapId': '1472131549474172929', 'sampling_points': [], 'path_points': [], 'draw_points': [], 'info_type': 2}}
+2022-03-23 14:22:39,852 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 270, 'mode': 1}
+2022-03-23 14:22:46,487 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 0, 'mode': 1}
+2022-03-23 14:22:54,606 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 180, 'mode': 1}
+2022-03-23 14:22:58,831 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 270, 'mode': 1}
+2022-03-23 14:23:02,680 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 0, 'mode': 1}
+2022-03-23 14:23:07,643 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -1, 'mode': None}
+2022-03-23 14:23:27,106 server_data.py[line:697] ERROR {'server data error': TypeError("int() argument must be a string, a bytes-like object or a number, not 'NoneType'")}
+2022-03-23 14:23:27,186 server_data.py[line:687] ERROR deep_data消息没有start_end字段
+2022-03-23 14:23:27,186 server_data.py[line:697] ERROR {'server data error': TypeError("int() argument must be a string, a bytes-like object or a number, not 'NoneType'")}
+2022-03-23 14:24:01,725 server_data.py[line:549] INFO {'refresh_setting ': {'info_type': 1}}
+2022-03-23 14:24:01,726 server_data.py[line:487] INFO {'base_setting ': {'info_type': 1}}
+2022-03-23 14:24:02,144 server_data.py[line:549] INFO {'refresh_setting ': {'mapId': '1472131549474172929', 'sampling_points': [], 'path_points': [], 'draw_points': [], 'info_type': 2}}
+2022-03-23 14:24:02,382 server_data.py[line:487] INFO {'base_setting ': {'speed_grade': '5', 'arrive_range': '3', 'info_type': 3}}
+2022-03-23 14:24:09,536 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 90, 'mode': 1}
+2022-03-23 14:24:13,513 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 0, 'mode': 1}
+2022-03-23 14:24:20,224 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 90, 'mode': 1}
+2022-03-23 14:24:23,293 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 0, 'mode': 1}
+2022-03-23 14:24:27,987 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 90, 'mode': 1}
+2022-03-23 14:24:30,957 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 0, 'mode': 1}
+2022-03-23 14:24:39,748 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 90, 'mode': 1}
+2022-03-23 14:24:43,696 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 0, 'mode': 1}
+2022-03-23 14:24:49,838 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -1, 'mode': None}
+2022-03-23 14:24:53,786 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -1, 'mode': None}
+2022-03-23 14:24:59,830 server_data.py[line:549] INFO {'refresh_setting ': {'info_type': 1}}
+2022-03-23 14:24:59,831 server_data.py[line:487] INFO {'base_setting ': {'info_type': 1}}
+2022-03-23 14:24:59,862 server_data.py[line:487] INFO {'base_setting ': {'speed_grade': '5', 'arrive_range': '3', 'info_type': 3}}
+2022-03-23 14:25:00,234 server_data.py[line:549] INFO {'refresh_setting ': {'mapId': '1472131549474172929', 'sampling_points': [], 'path_points': [], 'draw_points': [], 'info_type': 2}}
+2022-03-23 14:25:21,021 server_data.py[line:549] INFO {'refresh_setting ': {'info_type': 1}}
+2022-03-23 14:25:21,022 server_data.py[line:487] INFO {'base_setting ': {'info_type': 1}}
+2022-03-23 14:25:21,422 server_data.py[line:549] INFO {'refresh_setting ': {'mapId': '1472131549474172929', 'sampling_points': [], 'path_points': [], 'draw_points': [], 'info_type': 2}}
+2022-03-23 14:25:22,064 server_data.py[line:487] INFO {'base_setting ': {'speed_grade': '5', 'arrive_range': '3', 'info_type': 3}}
+2022-03-23 14:25:25,653 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': 90, 'mode': 1}
+2022-03-23 14:25:29,981 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -1, 'mode': None}
+2022-03-23 14:25:39,909 server_data.py[line:397] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'target_lng_lat': [[114.524946, 30.505524]], 'back_home': 0, 'fix_point': None}
+2022-03-23 14:25:41,023 server_data.py[line:437] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'sampling_points': [[114.524946, 30.505524]], 'path_points': [[114.524943, 30.505525]]}
+2022-03-23 14:26:02,068 server_data.py[line:397] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'target_lng_lat': [[114.523992, 30.505789]], 'back_home': 0, 'fix_point': None}
+2022-03-23 14:26:03,169 server_data.py[line:437] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'sampling_points': [[114.523992, 30.505789]], 'path_points': [[114.523988, 30.505793]]}
+2022-03-23 14:26:18,521 server_data.py[line:311] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'control_move_direction': -1, 'mode': None}
+2022-03-23 14:26:26,544 server_data.py[line:697] ERROR {'server data error': TypeError("int() argument must be a string, a bytes-like object or a number, not 'NoneType'")}
+2022-03-23 14:26:26,611 server_data.py[line:687] ERROR deep_data消息没有start_end字段
+2022-03-23 14:26:26,611 server_data.py[line:697] ERROR {'server data error': TypeError("int() argument must be a string, a bytes-like object or a number, not 'NoneType'")}
