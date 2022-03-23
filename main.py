@@ -145,6 +145,7 @@ def main():
                     pi_thread_list[index_pi_thread] = threading.Thread(target=pi_func_list[index_pi_thread])
                     pi_thread_list[index_pi_thread].start()
             time.sleep(thread_restart_time)
+        time.sleep(thread_restart_time)
 
 
 if __name__ == '__main__':

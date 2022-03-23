@@ -215,6 +215,7 @@ class DataManager:
         self.http_save_id = ''  # http记录保存id
         self.dump_draw_time = 0  # 剩余抽水时间
         self.dump_draw_list = [0, 0]  # 用于前端显示抽水剩余时间
+        self.record_deep_data = {'deep': [], 'gaode_lng_lat': [], 'lng_lat': []}  # 记录测深数据经纬度和深度数据
 
     # 连接mqtt服务器
     def connect_mqtt_server(self):
@@ -1556,10 +1557,29 @@ class DataManager:
             if time.time() % 10 < 1:
                 self.logger.info({'status_data_': json.dumps(mqtt_send_status_data)})
 
+    @staticmethod
+    def gen_send_deep_data(lng_lat, y_list):
+        """
+        对测深数据深度计算索引排序，将经纬度转换为x轴数据
+        @param lng_lat:经纬度数组
+        @param y_list:深度数组
+        @return:x轴数据  y轴数据
+        """
+        x_List = [i + 1 for i in range(len(lng_lat))]
+        sorted_id = sorted(range(len(y_list)), key=lambda k: y_list[k], reverse=False)
+        # print('元素索引序列：', sorted_id)
+        sorted_id2 = sorted(range(len(sorted_id)), key=lambda k: sorted_id[k], reverse=False)
+        # print('元素索引序列2：', sorted_id2)
+        return x_List, sorted_id2,
+
     # 测深数据上传
     def send_deep(self):
         pre_record_lng_lat = [10.0, 10.0]  # 随便设置的初始值
+        index = 1
         while True:
+            if not config.b_deep_detect:
+                time.sleep(3)
+                continue
             if self.server_data_obj.mqtt_send_get_obj.b_record_point:
                 if self.gaode_lng_lat is None:
                     time.sleep(3)
@@ -1569,38 +1589,34 @@ class DataManager:
                                                                            self.gaode_lng_lat[0],
                                                                            self.gaode_lng_lat[1],
                                                                            )
+                # 当前距离大于检测距离
                 if record_distance > self.server_data_obj.mqtt_send_get_obj.record_distance:
-                    record_point_data = {
-                        "lng_lat": self.gaode_lng_lat
-                    }
-                    self.send(method='mqtt',
-                              topic='record_point_data_%s' % config.ship_code,
-                              data=record_point_data,
-                              qos=0)
-                    self.logger.info({"发送手动记录点存储": record_point_data})
-                    self.record_path.append(self.gaode_lng_lat)
+                    deep = round(random.randint(1, 50) / 10.0, 1)
+                    self.record_deep_data['deep'].append(deep)
+                    self.record_deep_data['gaode_lng_lat'].append(self.gaode_lng_lat)
+                    self.record_deep_data['lng_lat'].append(self.gaode_lng_lat)
                     pre_record_lng_lat = self.gaode_lng_lat
                     time.sleep(1)
             else:
                 # 是否存在记录点
-                if len(self.record_path) > 0:
+                if len(self.record_deep_data['deep']) > 0:
                     # 湖泊轮廓id是否存在
                     print('self.server_data_obj.mqtt_send_get_obj.pool_code',
                           self.server_data_obj.mqtt_send_get_obj.pool_code)
                     if self.server_data_obj.mqtt_send_get_obj.pool_code:
-                        send_record_path = {
-                            "deviceId": config.ship_code,
-                            "mapId": self.server_data_obj.mqtt_send_get_obj.pool_code,
-                            "route": json.dumps(self.record_path),
-                            "routeName": self.server_data_obj.mqtt_send_get_obj.record_name
-                        }
-                        if not config.b_deep_detect:
-                            continue
+                        # 使用经纬度计算x轴坐标  对深度数据计算索引排序
+                        x_list, sorted_id2 = DataManager.gen_send_deep_data(self.record_deep_data['lng_lat'],
+                                                                            self.record_deep_data['deep'])
                         deep_data = {
-                            "deep": "2.7",
-                            "deviceId": "XXLJC4LCGSCSD1DA002",
-                            "jwd": "[114.524098, 30.506853]",
-                            "mapId": "1434770242236428290"
+                            "deep": json.dumps(self.record_deep_data['deep']),
+                            "coordinate": json.dumps(sorted_id2),
+                            "xaxis": json.dumps(x_list),
+                            "name": self.server_data_obj.mqtt_send_get_obj.record_name,
+                            "deviceId": config.ship_code,
+                            "jwd": json.dumps(self.record_deep_data['lng_lat']),
+                            "gjwd": json.dumps(self.record_deep_data['lng_lat']),
+                            "mapId": self.server_data_obj.mqtt_send_get_obj.pool_code,
+                            "type": "2"
                         }
                         try:
                             self.send(method='http', data=deep_data,
@@ -1608,19 +1624,15 @@ class DataManager:
                                       http_type='POST')
                         except Exception as e:
                             self.data_save_logger.info({"发送测深error": e})
-                        try:
-                            print('send_record_path', send_record_path)
-                            self.send(method='http', data=send_record_path,
-                                      url=config.http_record_path,
-                                      http_type='POST')
-                        except Exception as e:
-                            self.data_save_logger.info({"发送手动记录点存储数据error": e})
-                        self.data_save_logger.info({"发送手动记录点存储数据": send_record_path})
-                        self.record_path = []
+                        self.send(method='mqtt', topic='start_detect_deep_%s' % config.ship_code,
+                                  data={"is_send":1},
+                                  qos=0)
+                        self.data_save_logger.info({"发送手动记录点存储数据": deep_data})
+                        self.record_deep_data['deep'] = []
+                        self.record_deep_data['gaode_lng_lat'] = []
+                        self.record_deep_data['lng_lat'] = []
                         pre_record_lng_lat = [10.0, 10.0]  # 随便设置的初始值
                 time.sleep(3)
-
-
 
     def send_high_f_status_data(self):
         high_f_status_data = {}

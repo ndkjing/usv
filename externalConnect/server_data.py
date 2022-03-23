@@ -37,20 +37,20 @@ class ServerData:
                 if parm_type == 1:
                     dump_json_data = json.dumps(data)
                     return_data = requests.post(
-                        url=url, data=dump_json_data, headers=payload_header,timeout=8)
+                        url=url, data=dump_json_data, headers=payload_header, timeout=8)
                 else:
                     if isinstance(data, dict):
                         dump_json_data = data
                     else:
                         dump_json_data = json.dumps(data)
                     return_data = requests.post(
-                        url=url, params=dump_json_data, headers=payload_header,timeout=8)
+                        url=url, params=dump_json_data, headers=payload_header, timeout=8)
             else:
                 if data:
                     dump_json_data = json.dumps(data)
-                    return_data = requests.get(url=url, params=dump_json_data,timeout=8)
+                    return_data = requests.get(url=url, params=dump_json_data, timeout=8)
                 else:
-                    return_data = requests.get(url=url,timeout=8)
+                    return_data = requests.get(url=url, timeout=8)
             return return_data
         except Exception as e:
             return None
@@ -70,24 +70,25 @@ def send_http_log(request_type, data, url, parm_type=1):
             if parm_type == 1:
                 dump_json_data = json.dumps(data)
                 return_data = requests.post(
-                    url=url, data=dump_json_data, headers=payload_header,timeout=5)
-                print('return_data',return_data)
+                    url=url, data=dump_json_data, headers=payload_header, timeout=5)
+                print('return_data', return_data)
             else:
                 if isinstance(data, dict):
                     dump_json_data = data
                 else:
                     dump_json_data = json.dumps(data)
                 return_data = requests.post(
-                    url=url, params=dump_json_data, headers=payload_header,timeout=5)
+                    url=url, params=dump_json_data, headers=payload_header, timeout=5)
         else:
             if data:
                 dump_json_data = json.dumps(data)
-                return_data = requests.get(url=url, params=dump_json_data,timeout=5)
+                return_data = requests.get(url=url, params=dump_json_data, timeout=5)
             else:
-                return_data = requests.get(url=url,timeout=5)
+                return_data = requests.get(url=url, timeout=5)
         return return_data
     except Exception as e:
         return None
+
 
 # class HttpSendGet:
 #     """
@@ -233,6 +234,9 @@ class MqttSendGet:
         self.task_id = ''  # 任务id
         self.cancel_task = 0  # 取消任务
         self.send_log = 1
+        self.b_record_point = 0  # 记录点
+        self.record_distance = 1  # 检测间隔单位米
+        self.record_name = ""  # 检测轨迹名称
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -248,7 +252,7 @@ class MqttSendGet:
             except TimeoutError:
                 return
             except Exception as e:
-                print('mqtt_connect error',e)
+                print('mqtt_connect error', e)
                 return
 
     # 建立连接时候回调
@@ -426,7 +430,8 @@ class MqttSendGet:
                 self.sampling_points_status = [0] * len(self.sampling_points)
                 self.path_planning_points = path_planning_data.get('path_points')
                 self.keep_point = 1
-                print('self.sampling_points_status',self.sampling_points_status,'self.sampling_points',self.sampling_points)
+                print('self.sampling_points_status', self.sampling_points_status, 'self.sampling_points',
+                      self.sampling_points)
                 self.logger.info({'topic': topic,
                                   'sampling_points': path_planning_data.get('sampling_points'),
                                   'path_points': path_planning_data.get('path_points'),
@@ -529,7 +534,7 @@ class MqttSendGet:
                             self.height_setting_data.update(height_setting_data)
                             json.dump(self.height_setting_data, f)
                         config.update_height_setting()
-                        print(config.left_motor_cw,config.right_motor_cw,config.kp,config.ki,config.kd)
+                        print(config.left_motor_cw, config.right_motor_cw, config.kp, config.ki, config.kd)
                     # 恢复默认配置
                     elif info_type == 4:
                         with open(config.height_setting_path, 'w') as f:
@@ -674,6 +679,20 @@ class MqttSendGet:
                             "operation": "设置抽水瓶"
                         }
                         send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
+
+            # adcp测深数据
+            elif topic == 'start_detect_deep_%s' % config.ship_code:
+                deep_data = json.loads(msg.payload)
+                if deep_data.get("start_end") is None:
+                    self.logger.error('deep_data消息没有start_end字段')
+                if deep_data.get("start_end") == 1:
+                    self.b_record_point = 1
+                else:
+                    self.b_record_point = 0
+                self.record_distance = int(deep_data.get("record_distance"))
+                if deep_data.get("record_name") is not None:
+                    self.record_name = deep_data.get("record_name")
+
         except Exception as e:
             self.logger.error({'server data error': e})
 
