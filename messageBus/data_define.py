@@ -250,6 +250,7 @@ class DataDefine:
             ('task_%s' % config.ship_code, 0),
             ('bottle_setting_%s' % config.ship_code, 0),
             ('start_detect_deep_%s' % config.ship_code, 0),
+            ('adcp_setting_%s' % config.ship_code, 0),
             ('path_planning_confirm_%s' % config.ship_code, 0))
 
         self.pool_code = ''

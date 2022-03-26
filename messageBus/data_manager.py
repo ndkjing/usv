@@ -1019,8 +1019,8 @@ class DataManager:
             if config.home_debug:
                 if self.current_theta is not None:
                     theta_error = point_theta - self.current_theta
-                    print(time.time(), "theta_error", theta_error, "point_theta", point_theta, 'self.current_theta',
-                          self.current_theta)
+                    # print(time.time(), "theta_error", theta_error, "point_theta", point_theta, 'self.current_theta',
+                    #       self.current_theta)
                 else:
                     theta_error = 0
             else:
@@ -1557,20 +1557,21 @@ class DataManager:
             if time.time() % 10 < 1:
                 self.logger.info({'status_data_': json.dumps(mqtt_send_status_data)})
 
-    @staticmethod
-    def gen_send_deep_data(lng_lat, y_list):
+    def gen_send_deep_data(self, lng_lat, y_list):
         """
         对测深数据深度计算索引排序，将经纬度转换为x轴数据
         @param lng_lat:经纬度数组
         @param y_list:深度数组
         @return:x轴数据  y轴数据
         """
-        x_List = [i + 1 for i in range(len(lng_lat))]
+        x_List = [round(i * self.server_data_obj.mqtt_send_get_obj.record_distance,1) for i in range(len(lng_lat))]
         sorted_id = sorted(range(len(y_list)), key=lambda k: y_list[k], reverse=False)
         # print('元素索引序列：', sorted_id)
         sorted_id2 = sorted(range(len(sorted_id)), key=lambda k: sorted_id[k], reverse=False)
         # print('元素索引序列2：', sorted_id2)
-        return x_List, sorted_id2,
+        dx = 1
+        sum_area = round(float(np.sum(np.asarray(y_list) * dx)),2)
+        return x_List, sorted_id2, sum_area
 
     # 测深数据上传
     def send_deep(self):
@@ -1605,8 +1606,9 @@ class DataManager:
                           self.server_data_obj.mqtt_send_get_obj.pool_code)
                     if self.server_data_obj.mqtt_send_get_obj.pool_code:
                         # 使用经纬度计算x轴坐标  对深度数据计算索引排序
-                        x_list, sorted_id2 = DataManager.gen_send_deep_data(self.record_deep_data['lng_lat'],
-                                                                            self.record_deep_data['deep'])
+                        x_list, sorted_id2, sum_area = self.gen_send_deep_data(self.record_deep_data['lng_lat'],
+                                                                               self.record_deep_data['deep'])
+
                         deep_data = {
                             "deep": json.dumps(self.record_deep_data['deep']),
                             "coordinate": json.dumps(sorted_id2),
@@ -1616,24 +1618,41 @@ class DataManager:
                             "jwd": json.dumps(self.record_deep_data['lng_lat']),
                             "gjwd": json.dumps(self.record_deep_data['lng_lat']),
                             "mapId": self.server_data_obj.mqtt_send_get_obj.pool_code,
+                            "area": sum_area,
                             "type": "2"
                         }
                         try:
-                            self.send(method='http', data=deep_data,
-                                      url=config.http_deep_data,
-                                      http_type='POST')
+                            is_success = self.send(method='http', data=deep_data,
+                                                   url=config.http_deep_data,
+                                                   http_type='POST')
                         except Exception as e:
+                            is_success = False
                             self.data_save_logger.info({"发送测深error": e})
-                        self.send(method='mqtt', topic='start_detect_deep_%s' % config.ship_code,
-                                  data={"is_send":1},
-                                  qos=0)
-                        self.data_save_logger.info({"发送手动记录点存储数据": deep_data})
-                        self.record_deep_data['deep'] = []
-                        self.record_deep_data['gaode_lng_lat'] = []
-                        self.record_deep_data['lng_lat'] = []
-                        pre_record_lng_lat = [10.0, 10.0]  # 随便设置的初始值
+                            self.server_data_obj.mqtt_send_get_obj.b_record_point = 0  # 失败也清空发送
+                            self.record_deep_data['deep'] = []
+                            self.record_deep_data['gaode_lng_lat'] = []
+                            self.record_deep_data['lng_lat'] = []
+                        # 判断发送数据是否成功
+                        if is_success:
+                            self.server_data_obj.mqtt_send_get_obj.b_record_point = 0
+                            self.send(method='mqtt', topic='start_detect_deep_%s' % config.ship_code,
+                                      data={"is_send": 1},
+                                      qos=0)
+                            self.data_save_logger.info({"发送测深点存储数据": deep_data})
+                            self.record_deep_data['deep'] = []
+                            self.record_deep_data['gaode_lng_lat'] = []
+                            self.record_deep_data['lng_lat'] = []
+                            pre_record_lng_lat = [10.0, 10.0]  # 随便设置的初始值
+                        else:
+                            self.send(method='mqtt', topic='start_detect_deep_%s' % config.ship_code,
+                                      data={"is_send": 2},
+                                      qos=0)
+                            self.data_save_logger.info({"发送测深点存储数据": deep_data})
+                            self.server_data_obj.mqtt_send_get_obj.b_record_point = 0
+                            self.data_save_logger.error({"发送测深数据失败": is_success})
                 time.sleep(3)
 
+    # 高频率消息
     def send_high_f_status_data(self):
         high_f_status_data = {}
         while 1:
@@ -1897,7 +1916,6 @@ class DataManager:
                     'sampling_points': self.server_data_obj.mqtt_send_get_obj.sampling_points,
                     'path_points': self.server_data_obj.mqtt_send_get_obj.path_planning_points,
                     "draw_points": self.draw_points_list,
-
                 }
                 if self.server_data_obj.mqtt_send_get_obj.draw_bottle_id \
                         and self.server_data_obj.mqtt_send_get_obj.draw_deep and \
@@ -1912,6 +1930,14 @@ class DataManager:
                               topic='refresh_%s' % config.ship_code,
                               data=save_plan_path_data,
                               qos=0)
+            # 发送深度设置消息
+            if self.server_data_obj.mqtt_send_get_obj.refresh_info_type == 1:
+                self.send(method='mqtt',
+                          topic='adcp_setting_%s' % config.ship_code,
+                          data={"info_type": 2,
+                                "record_distance": self.server_data_obj.mqtt_send_get_obj.record_distance
+                                },
+                          qos=0)
             # 调试时更新角度后不能重复刷新
             self.server_data_obj.mqtt_send_get_obj.refresh_info_type = 0
 
@@ -2131,7 +2157,7 @@ class DataManager:
                 # 如果是GET请求，返回所有数据的列表
                 content_data = json.loads(return_data.content)
                 if not content_data["success"]:
-                    self.logger.error('GET请求失败')
+                    self.logger.error('请求失败')
                 else:
                     return True
         elif method == 'mqtt':

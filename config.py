@@ -155,8 +155,8 @@ http_mileage_save = 'https://ship.xxlun.com/union/admin/xxl/mileage/save'
 http_mileage_update = 'https://ship.xxlun.com/union/admin/xxl/mileage/upData'
 
 # 测深接口
-# http_deep_data = 'http://ship.xxlun.com/union//admin/xxl/data/mapping/save'
-http_deep_data = 'https://192.168.8.26:8009/union//admin/xxl/data/mapping/save'
+http_deep_data = 'https://ship.xxlun.com/union/admin/xxl/data/mapping/save'
+# http_deep_data = 'http://192.168.8.26:8009/union/admin/xxl/data/mapping/save'
 
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'

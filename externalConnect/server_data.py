@@ -689,9 +689,15 @@ class MqttSendGet:
                     self.b_record_point = 1
                 else:
                     self.b_record_point = 0
-                self.record_distance = int(deep_data.get("record_distance"))
                 if deep_data.get("record_name") is not None:
                     self.record_name = deep_data.get("record_name")
+
+            # adcp设置数据
+            elif topic == 'adcp_setting_%s' % config.ship_code:
+                adcp_setting_data = json.loads(msg.payload)
+                if adcp_setting_data.get("info_type") == 1:
+                    if adcp_setting_data.get("record_distance") is not None:
+                        self.record_distance = round(float(adcp_setting_data.get("record_distance")), 1)
 
         except Exception as e:
             self.logger.error({'server data error': e})
