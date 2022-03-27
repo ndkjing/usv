@@ -475,6 +475,6 @@ draw_speed = 2000  # 抽水速度 毫升/分钟
 number_of_bottles = 4  # 总共包含抽水瓶数
 max_draw_time = int(60*max_draw_capacity/draw_speed)
 
-
+# 分割到不同文件
 if __name__ == '__main__':
     write_setting(True, True, True, True)
