@@ -224,7 +224,7 @@ class MqttSendGet:
         # 是否接受到电脑端点击过任何按键
         self.b_receive_mqtt = False
         self.bank_distance = -500 # 计算距离岸边距离
-        self.send_log = 1      # 是否发送日志
+        self.send_log = 0      # 是否发送日志
         self.task_list = []  # 获取存储的任务  经纬度，采样深度，采样量数据样式([lng,lat],[bottle_id,deep,capacity],[bottle_id,deep,capacity])
         self.draw_bottle_id = None  # 前端设置抽水瓶号id
         self.draw_deep = None  # 前端设置抽水深度

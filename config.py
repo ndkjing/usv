@@ -473,7 +473,7 @@ else:
 min_deep_steer_pwm = 800  # 最下面
 max_deep_steer_pwm = 2400  # 最上面
 # 是否含有外置rtk  1
-is_contain_rtk = 1
+is_contain_rtk = 0
 if os.path.exists('/dev/ttyUSB0'):
     rtk_port = '/dev/ttyUSB0'
 elif os.path.exists('/dev/ttyUSB1'):
@@ -495,8 +495,8 @@ class WaterType(enum.Enum):
 
 draw_deep = 0.5  # 抽水深度
 draw_capacity = 1000  # 需要抽水容量
-max_draw_capacity = 5000  # 单个瓶子最大抽水容量
-draw_speed = 2000  # 抽水速度 毫升/分钟
+max_draw_capacity = 1000  # 单个瓶子最大抽水容量
+draw_speed = 1600  # 抽水速度 毫升/分钟
 number_of_bottles = 4  # 总共包含抽水瓶数
 max_draw_time = int(60 * max_draw_capacity / draw_speed)
 

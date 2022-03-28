@@ -161,7 +161,7 @@ class PiSoftuart(object):
 
                     str_data = str(data3)
                     res = re.findall(r'Y[!aw\d][aw\d]:(.*?)\\', str_data)
-                    print('compass res', res)
+                    # print('compass res', res)
                     if len(res) > 0:
                         theta = float(res[0]) + 180
                     else:

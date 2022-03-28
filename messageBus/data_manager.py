@@ -1822,6 +1822,12 @@ class DataManager:
                 self.dump_energy_deque.append(self.pi_main_obj.dump_energy)
                 mqtt_send_status_data.update({'dump_energy': self.pi_main_obj.dump_energy})
             # 向mqtt发送数据
+            mqtt_send_status_data.update({"is_wait": 1})
+            # 当前是否正在记录数据 1 正在记录  2 没有记录
+            if self.server_data_obj.mqtt_send_get_obj.b_record_point:
+                mqtt_send_status_data.update({"is_record": 1})
+            else:
+                mqtt_send_status_data.update({"is_record": 2})
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=json.dumps(mqtt_send_status_data),
                       qos=0)
             if time.time() % 10 < 1:

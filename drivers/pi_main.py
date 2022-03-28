@@ -901,13 +901,13 @@ class PiMain:
                     print('time', time.time(), self.theta, self.angular_velocity)
 
     # 读取维特罗盘数据
-    def get_weite_compass_data(self, debug=False):
+    def get_weite_compass_data(self, debug=True):
         if config.current_platform == config.CurrentPlatform.pi:
             # 记录上一次发送数据
             last_send_data = None
             last_read_time = time.time()
             while True:
-                print('config.calibration_compass',config.calibration_compass)
+                # print('config.calibration_compass',config.calibration_compass)
                 # 检查罗盘是否需要校准 # 开始校准
                 if int(config.calibration_compass) == 1:
                     if last_send_data != "AT+CALI=1\r\n":
@@ -930,7 +930,7 @@ class PiMain:
                         config.write_setting(b_height=True)
                 else:
                     theta_ = self.weite_compass_obj.read_weite_compass(send_data=None, debug=debug)
-                    print(time.time(), 'theta_', theta_)
+                    # print(time.time(), 'theta_', theta_)
                     theta_ = self.compass_filter(theta_)
                     if theta_:
                         # print('读取间隔时间', time.time() - last_read_time)
