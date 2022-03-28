@@ -5,7 +5,7 @@ import sys
 from collections import deque
 import binascii
 import threading
-
+import re
 import config
 
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -109,33 +109,71 @@ class PiSoftuart(object):
                 print({'error read_compass': e})
                 return None
 
+    # def read_weite_compass(self, send_data=None, len_data=None, debug=False):
+    #     if len_data is None:
+    #         len_data = 4
+    #         try:
+    #             if send_data:
+    #                 print('send_data', send_data)
+    #                 self.write_data(send_data)
+    #             time.sleep(self._thread_ts)
+    #             time.sleep(0.1)
+    #             count, data1 = self._pi.bb_serial_read(self._rx_pin)
+    #             time.sleep(0.1)
+    #             count, data2 = self._pi.bb_serial_read(self._rx_pin)
+    #             time.sleep(0.1)
+    #             count, data3 = self._pi.bb_serial_read(self._rx_pin)
+    #             if debug:
+    #                 print('send_data', send_data)
+    #                 print('self._rx_pin', self._rx_pin, self.baud)
+    #                 print(time.time(), 'count', count, 'data', data1, 'data2', data2, 'data3', data3)
+    #             if count > len_data:
+    #                 str_data = data1.decode('utf-8')[2:-1]
+    #                 theta = float(str_data)
+    #                 return 360 - theta
+    #             # time.sleep(self._thread_ts)
+    #         except Exception as e:
+    #             print({'error read_compass': e})
+    #             return None
     def read_weite_compass(self, send_data=None, len_data=None, debug=False):
         if len_data is None:
-            len_data = 4
+            len_data = 20
             try:
                 if send_data:
+                    send_data = send_data.encode('utf-8')
                     print('send_data', send_data)
-                    self.write_data(send_data)
+                    self.write_data(send_data, b_weite=True)
+                    time.sleep(self._thread_ts)
+                    count, data = self._pi.bb_serial_read(self._rx_pin)
+                    time.sleep(self._thread_ts * 2)
+                    count, data1 = self._pi.bb_serial_read(self._rx_pin)
+                    time.sleep(self._thread_ts * 3)
+                    count, data2 = self._pi.bb_serial_read(self._rx_pin)
+                    if debug:
+                        print('cel data######################################', time.time(), count, data, data1, data2)
                 time.sleep(self._thread_ts)
-                time.sleep(0.1)
-                count, data1 = self._pi.bb_serial_read(self._rx_pin)
-                time.sleep(0.1)
-                count, data2 = self._pi.bb_serial_read(self._rx_pin)
-                time.sleep(0.1)
                 count, data3 = self._pi.bb_serial_read(self._rx_pin)
                 if debug:
-                    print('send_data', send_data)
-                    print('self._rx_pin', self._rx_pin, self.baud)
-                    print(time.time(), 'count', count, 'data', data1, 'data2', data2, 'data3', data3)
+                    print(time.time(), count, data3)
                 if count > len_data:
-                    str_data = data1.decode('utf-8')[2:-1]
-                    theta = float(str_data)
-                    return 360 - theta
-                # time.sleep(self._thread_ts)
+                    # str_data = str(data3)[15:-5]
+                    # res = re.findall(r'Y[!aw\d][aw\d]:(.*?)\\', str_data)
+
+                    str_data = str(data3)
+                    res = re.findall(r'Y[!aw\d][aw\d]:(.*?)\\', str_data)
+                    print('compass res', res)
+                    if len(res) > 0:
+                        theta = float(res[0]) + 180
+                    else:
+                        theta = None
+                    if debug:
+                        print(time.time(), 'float res', theta)
+                        print(time.time(), type(str_data), '############data3    str_data', data3, str_data)
+                    return theta
+                    # time.sleep(self._thread_ts)
             except Exception as e:
                 print({'error read_compass': e})
                 return None
-
     def read_gps(self, len_data=None, debug=False):
         if len_data is None:
             len_data = 4
@@ -462,21 +500,40 @@ class PiSoftuart(object):
                 print({'error read_remote_control': e})
                 return None
 
-    def write_data(self, msg, baud=None, debug=False):
+    # def write_data(self, msg, baud=None, debug=False):
+    #     if debug:
+    #         pass
+    #         # print('send data', msg)
+    #     self._pi.wave_clear()
+    #     if baud:
+    #         self._pi.wave_add_serial(self._tx_pin, baud, bytes.fromhex(msg))
+    #     else:
+    #         self._pi.wave_add_serial(self._tx_pin, 9600, bytes.fromhex(msg))
+    #     data = self._pi.wave_create()
+    #     self._pi.wave_send_once(data)
+    #     if self._pi.wave_tx_busy():
+    #         pass
+    #     self._pi.wave_delete(data)
+    def write_data(self, msg, baud=None, debug=False, b_weite=False):
         if debug:
             pass
             # print('send data', msg)
         self._pi.wave_clear()
-        if baud:
-            self._pi.wave_add_serial(self._tx_pin, baud, bytes.fromhex(msg))
+        if b_weite:
+            if baud:
+                self._pi.wave_add_serial(self._tx_pin, baud, msg)
+            else:
+                self._pi.wave_add_serial(self._tx_pin, 9600, msg)
         else:
-            self._pi.wave_add_serial(self._tx_pin, 9600, bytes.fromhex(msg))
+            if baud:
+                self._pi.wave_add_serial(self._tx_pin, baud, bytes.fromhex(msg))
+            else:
+                self._pi.wave_add_serial(self._tx_pin, 9600, bytes.fromhex(msg))
         data = self._pi.wave_create()
         self._pi.wave_send_once(data)
         if self._pi.wave_tx_busy():
             pass
         self._pi.wave_delete(data)
-
     def set_thread_ts(self, thread_ts):
         self._thread_ts = thread_ts
 

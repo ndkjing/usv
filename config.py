@@ -78,6 +78,7 @@ tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
 speed_grade = 3
 arrive_distance = 2.5
 
+
 def update_base_setting():
     global speed_grade
     global arrive_distance
@@ -109,6 +110,7 @@ def update_base_setting():
                     print({'error': e})
         except Exception as e:
             print({'error': e})
+
 
 # 单片机发送给树莓派等待时间
 stc2pi_timeout = 1
@@ -214,6 +216,8 @@ debug_send_detect_data = 0
 angular_velocity = 90
 
 motor_init_time = 1
+
+
 def update_height_setting():
     global kp
     global ki
@@ -279,7 +283,7 @@ def update_height_setting():
                     print({'error': e})
             if height_setting_data.get('left_motor_cw') is not None:
                 try:
-                    print('height_setting_data.getleft_motor_cw',height_setting_data.get('left_motor_cw'))
+                    print('height_setting_data.getleft_motor_cw', height_setting_data.get('left_motor_cw'))
                     left_motor_cw = int(height_setting_data.get('left_motor_cw'))
                 except Exception as e:
                     print({'error': e})
@@ -394,6 +398,7 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
                        },
                       hdf)
 
+
 # 树莓派GPIO端口相关设置 均使用BCM编码端口
 # 水下摄像头云台水平和俯仰
 # 激光雷达
@@ -406,7 +411,7 @@ laser_hz = 40
 left_pwm_pin = 6  # 左侧
 right_pwm_pin = 5  # 右侧电机
 # 软串口罗盘
-b_pin_compass = 1
+b_pin_compass = 0
 pin_compass_baud = 9600
 pin_compass_tx = 27
 pin_compass_rx = 22
@@ -419,8 +424,8 @@ pin_gps_rx = 24
 b_lora_remote_control = 1
 lora_tx = 25
 lora_rx = 8
-lora_baud = 115200
-b_lora_com = 1 # lora是否使用TTL转串口模块
+lora_baud = 9600
+b_lora_com = 0  # lora是否使用TTL转串口模块
 # 单片机串口
 b_pin_stc = 1
 stc_tx = 3
@@ -446,7 +451,13 @@ sonar_rx = 16  # RX
 sonar_tx = 20  # TX
 sonar_baud = 9600
 sonar_steer = 21  # 声呐舵机
-
+# 维特罗盘
+b_weite_compass = 1
+# weite_compass_rx = 14  # RX
+# weite_compass_tx = 15  # TX
+weite_compass_rx = 22  # RX
+weite_compass_tx = 27  # TX
+weite_compass_baud = 9600
 # 抽水
 b_draw = 1  # 是否有抽水泵
 b_control_deep = 1  # 是否可调深度
@@ -454,10 +465,24 @@ draw_steer = 13  # 舵机接口
 
 # 排水
 b_drain = 0  # 是否有排水泵
-
+# 使用角度  1 使用罗盘1角度   3 使用经纬度移动计算角度
+if home_debug:
+    use_shape_theta_type = 3
+else:
+    use_shape_theta_type = 1
 min_deep_steer_pwm = 800  # 最下面
 max_deep_steer_pwm = 2400  # 最上面
-
+# 是否含有外置rtk  1
+is_contain_rtk = 1
+if os.path.exists('/dev/ttyUSB0'):
+    rtk_port = '/dev/ttyUSB0'
+elif os.path.exists('/dev/ttyUSB1'):
+    rtk_port = '/dev/ttyUSB1'
+elif os.path.exists('/dev/ttyUSB2'):
+    rtk_port = '/dev/ttyUSB2'
+else:
+    is_contain_rtk = 0
+rtk_baud = 38400
 
 class WaterType(enum.Enum):
     wt = 0
@@ -473,7 +498,7 @@ draw_capacity = 1000  # 需要抽水容量
 max_draw_capacity = 5000  # 单个瓶子最大抽水容量
 draw_speed = 2000  # 抽水速度 毫升/分钟
 number_of_bottles = 4  # 总共包含抽水瓶数
-max_draw_time = int(60*max_draw_capacity/draw_speed)
+max_draw_time = int(60 * max_draw_capacity / draw_speed)
 
 # 分割到不同文件
 if __name__ == '__main__':

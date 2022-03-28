@@ -60,6 +60,8 @@ class ShipStatus(enum.Enum):
     backhome_low_energy = 7
     backhome_network = 8
     at_home = 9
+    back_dock = 10
+    at_dock = 11
 
 
 class LightStatus(enum.Enum):
@@ -216,6 +218,8 @@ class DataManager:
         self.http_save_id = ''  # http记录保存id
         self.dump_draw_time = 0  # 剩余抽水时间
         self.dump_draw_list = [0, 0]  # 用于前端显示抽水剩余时间
+        self.record_path = []  # 记录手动轨迹点
+        self.is_wait = 1  # 船只是否空闲
 
     # 连接mqtt服务器
     def connect_mqtt_server(self):

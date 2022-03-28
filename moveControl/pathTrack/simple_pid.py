@@ -21,6 +21,7 @@ class SimplePid:
         # 调节p数组
         self.adjust_p_size = 6
         self.adjust_p_list = deque(maxlen=self.adjust_p_size)
+        self.pre_time = time.time()  # 计算时间增量用于微分
 
     def update_steer_pid_1(self, theta_error):
         # 统计累计误差
@@ -33,9 +34,14 @@ class SimplePid:
             error_sum = -max_error_sum
         control = config.kp * theta_error + config.ki * error_sum + \
                   config.kd * (theta_error - self.previousError)
+        # 计算时间增量
+        # dt = time.time()-self.pre_time
+        # control = config.kp * theta_error + config.ki * error_sum + \
+        #           config.kd * (theta_error - self.previousError)/dt
         # print(time.time(), 'theta_error', theta_error, 'error_sum', error_sum, 'delta_error',
         #       theta_error - self.previousError)
         self.previousError = theta_error
+        self.pre_time = time.time()
         return control
 
     def update_p(self):
