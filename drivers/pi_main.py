@@ -136,10 +136,10 @@ class PiMain:
         self.bottle_status_code = [1, 1, 1, 1]  # 瓶子状态1 -- 100 比例
         self.current_remote_dump_energy = 0  # 剩余电量
         self.pre_remote_dump_energy = 0
-        self.current_remote_draw_deep = 0  # 抽水深度
-        self.pre_remote_draw_deep = 0
-        self.current_draw_capacity = 0  # 抽水量
-        self.pre_draw_capacity = 0
+        self.current_remote_draw_deep = 0.5  # 抽水深度
+        self.pre_remote_draw_deep = 0.5
+        self.current_draw_capacity = 1000  # 抽水量
+        self.pre_draw_capacity = 1000
         self.draw_deep_change_count = 0  # 记录抽水跳变次数
 
     # 获取串口对象
@@ -999,17 +999,18 @@ class PiMain:
             if self.speed:
                 send_speed = self.speed
             # print('self.ship_status_code',self.ship_status_code,'self.pi_main_obj.bottle_status_code',self.bottle_status_code)
-            send_remote_data = 'G%f,%f,%.1f,%.1f,%d,%d,%d,%d,%dZ\r\n' % (
-                send_lng_lat[0],
-                send_lng_lat[1],
-                send_dump_energy,
-                send_speed,
-                self.ship_status_code,
-                self.bottle_status_code[0],
-                self.bottle_status_code[1],
-                self.bottle_status_code[2],
-                self.bottle_status_code[3],
-            )
+            # send_remote_data = 'G%f,%f,%.1f,%.1f,%d,%d,%d,%d,%dZ\r\n' % (
+            #     send_lng_lat[0],
+            #     send_lng_lat[1],
+            #     send_dump_energy,
+            #     send_speed,
+            #     self.ship_status_code,
+            #     self.bottle_status_code[0],
+            #     self.bottle_status_code[1],
+            #     self.bottle_status_code[2],
+            #     self.bottle_status_code[3],
+            # )
+            send_remote_data = 'S9Z\r\n'
             return_remote_data = self.remote_control_obj.read_remote_control(debug=debug, send_data=send_remote_data)
             if return_remote_data and len(return_remote_data) >= 13:
                 if debug:
@@ -1042,7 +1043,6 @@ class PiMain:
                     else:
                         self.remote_draw_status = 0
                     # 判断收起舵机  展开舵机
-
                     if self.remote_control_data[10] == 1:
                         if self.pre_remote_target_draw_steer == 0:
                             self.remote_target_draw_steer = 0
@@ -1055,7 +1055,6 @@ class PiMain:
                         elif self.pre_remote_target_draw_steer == 1:
                             self.remote_target_draw_steer = 1
                         self.pre_remote_target_draw_steer = self.remote_control_data[10]
-
                     # 判断打开舷灯  关闭舷灯
                     if int(self.remote_control_data[6]) == 10:
                         self.remote_side_light_status = 1
@@ -1096,16 +1095,17 @@ class PiMain:
                     else:
                         if self.pre_draw_capacity in [200, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]:
                             self.current_draw_capacity = self.pre_draw_capacity
-                    # print(
-                    #     'self.remote_draw_status,self.remote_draw_status_0_1,self.remote_draw_status_2_3,self.current_remote_draw_deep,self.current_draw_capacity',
-                    #     self.remote_draw_status,
-                    #     self.remote_draw_status_0_1,
-                    #     self.remote_draw_status_2_3,
-                    #     self.current_remote_draw_deep,
-                    #     self.current_draw_capacity
-                    # )
+                    print(
+                        'self.remote_draw_status,self.remote_draw_status_0_1,self.remote_draw_status_2_3,self.current_remote_draw_deep,self.current_draw_capacity',
+                        self.remote_draw_status,
+                        self.remote_draw_status_0_1,
+                        self.remote_draw_status_2_3,
+                        self.current_remote_draw_deep,
+                        self.current_draw_capacity
+                    )
             else:
-                if self.lora_control_receive_time and time.time() - self.lora_control_receive_time > 20:
+                # 超过指定时间没收到遥控器数据就让遥控器使能断开
+                if self.lora_control_receive_time and time.time() - self.lora_control_receive_time > 6:
                     self.b_start_remote = 0
 
 

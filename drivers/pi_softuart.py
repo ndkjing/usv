@@ -174,6 +174,7 @@ class PiSoftuart(object):
             except Exception as e:
                 print({'error read_compass': e})
                 return None
+
     def read_gps(self, len_data=None, debug=False):
         if len_data is None:
             len_data = 4
