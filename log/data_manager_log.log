@@ -26,3 +26,20 @@
 2022-03-28 20:34:20,097 data_manager.py[line:1870] INFO {'notice_info_': {'distance': '0', 'path_info': '当前:0 总共:0 离岸:24.0 ', 'bank_distance': 24.0, 'progress': 0, 'control_info': '手动 停止', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 2.74, 'mapId': '1458632338594308097', 'b_start_remote': '0'}}
 2022-03-28 20:34:21,484 data_manager.py[line:2187] INFO {'请求 url': 'https://ship.xxlun.com/union/admin/xxl/mileage/upData', 'status_code': 200}
 2022-03-28 20:34:21,484 data_manager.py[line:1651] INFO {'更新里程和时间成功': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'id': '1462588021130919938', 'total': '35583', 'totalTime': '4347356'}}
+2022-03-29 10:46:13,067 data_manager.py[line:2223] INFO {'请求 url': 'https://ship.xxlun.com/union/admin/xxl/mileage/getOne?deviceId=XXLJC4LCGSCSD1DA004', 'status_code': 200}
+2022-03-29 10:46:13,081 data_manager.py[line:2252] INFO {'mileage/getOne': {'id': '1462588021130919938', 'deviceId': 'XXLJC4LCGSCSD1DA004', 'total': '35583', 'totalTime': '4347356', 'gmtCreate': '2021-11-22 09:05:32', 'gmtModified': '2022-03-28 20:34:21'}}
+2022-03-29 10:46:13,291 data_manager.py[line:2203] INFO {'obstacle_points': {'lng_lat': [[114.523433, 30.506193], [114.523519, 30.506526], [114.523943, 30.506466], [114.524066, 30.506517], [114.524254, 30.506378], [114.523696, 30.506378], [114.5239, 30.506369], [114.524055, 30.506378], [114.524334, 30.506304]]}}
+2022-03-29 10:46:20,746 data_manager.py[line:1803] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': '1', 'info_type': 3}}
+2022-03-29 10:46:20,986 data_manager.py[line:1906] INFO {'notice_info_': {'distance': '0', 'path_info': '当前:0 总共:0 离岸:-500.0 ', 'bank_distance': -500, 'progress': 0, 'control_info': '等待', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'mapId': '', 'b_start_remote': '0'}}
+2022-03-29 10:46:21,303 data_manager.py[line:2223] INFO {'请求 url': 'https://ship.xxlun.com/union/admin/xxl/mileage/upData', 'status_code': 200}
+2022-03-29 10:46:21,331 data_manager.py[line:1687] INFO {'更新里程和时间成功': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'id': '1462588021130919938', 'total': '35583', 'totalTime': '4347364'}}
+2022-03-29 10:46:26,761 data_manager.py[line:2203] INFO {'obstacle_points': {'lng_lat': [[114.523433, 30.506193], [114.523519, 30.506526], [114.523943, 30.506466], [114.524066, 30.506517], [114.524254, 30.506378], [114.523696, 30.506378], [114.5239, 30.506369], [114.524055, 30.506378], [114.524334, 30.506304]]}}
+2022-03-29 10:46:26,836 data_manager.py[line:520] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2022-03-29 10:46:26,956 data_manager.py[line:1391] INFO {'点击地点': [[114.524019, 30.506122]]}
+2022-03-29 10:46:26,986 data_manager.py[line:1416] INFO {'全部距离': 81.61754054814655}
+2022-03-29 10:46:30,721 data_manager.py[line:1906] INFO {'notice_info_': {'distance': '81.78', 'path_info': '当前:0 总共:21 离岸:18.0 ', 'bank_distance': 18.0, 'progress': 0, 'control_info': '自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 117.74, 'mapId': '1458632338594308097', 'b_start_remote': '0'}}
+2022-03-29 10:46:31,279 data_manager.py[line:2223] INFO {'请求 url': 'https://ship.xxlun.com/union/admin/xxl/mileage/upData', 'status_code': 200}
+2022-03-29 10:46:31,306 data_manager.py[line:1687] INFO {'更新里程和时间成功': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'id': '1462588021130919938', 'total': '35587', 'totalTime': '4347374'}}
+2022-03-29 10:46:40,936 data_manager.py[line:1906] INFO {'notice_info_': {'distance': '53.83', 'path_info': '当前:9 总共:21 离岸:27.5 ', 'bank_distance': 27.5, 'progress': 42, 'control_info': '自动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': -5.39, 'mapId': '1458632338594308097', 'b_start_remote': '0'}}
+2022-03-29 10:46:41,147 data_manager.py[line:2223] INFO {'请求 url': 'https://ship.xxlun.com/union/admin/xxl/mileage/upData', 'status_code': 200}
+2022-03-29 10:46:41,176 data_manager.py[line:1687] INFO {'更新里程和时间成功': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'id': '1462588021130919938', 'total': '35614', 'totalTime': '4347384'}}

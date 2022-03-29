@@ -1,6 +1,7 @@
 """
 管理数据收发
 """
+import math
 import time
 import json
 import copy
@@ -1172,7 +1173,7 @@ class DataManager:
                                                                 self.lng_lat[1],
                                                                 target_lng_lat_gps[0],
                                                                 target_lng_lat_gps[1])
-            # 计算偏差角度
+            # 计算偏差角度  目标在左侧为正在右侧为负
             if config.home_debug:
                 if self.current_theta is not None:
                     theta_error = point_theta - self.current_theta
@@ -1189,7 +1190,7 @@ class DataManager:
                 else:
                     theta_error = 360 + theta_error
             self.theta_error = theta_error
-            method = 1  # 测试新的控制方式
+            method = 3  # 测试新的控制方式
             if method == 2:
                 # 分为起步阶段  中间恒速阶段  到点减速阶段/避障减速
                 # 起步阶段用偏差角度小于指定阈值判断
@@ -1206,6 +1207,14 @@ class DataManager:
                 else:
                     self.want_v = max(70, 25 * distance_sample)
                 left_pwm, right_pwm = self.path_track_obj.pid_pwm_3(distance=self.want_v,
+                                                                    theta_error=theta_error)
+            elif method == 3:
+                # 计算距离余弦值
+                if abs(theta_error) <= 90:
+                    distance_cos = all_distance * math.cos(math.radians(abs(theta_error)))
+                else:
+                    distance_cos=0
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm_4(distance=all_distance,
                                                                     theta_error=theta_error)
             else:
                 left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,

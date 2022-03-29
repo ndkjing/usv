@@ -124,6 +124,27 @@ class SimplePid:
         right_pwm = config.stop_pwm + int(forward_pwm) + int(steer_pwm)
         return left_pwm, right_pwm
 
+    def pid_pwm_4(self, distance, theta_error):
+        """
+        距离余弦值和角度计算，距离控制速度  角度控制转向
+        :param distance:
+        :param theta_error:
+        :return:
+        """
+        # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
+        steer_control = self.update_steer_pid_1(theta_error)
+        steer_pwm = (1.0 / (1.0 + e ** (-0.02 * steer_control)) - 0.5) * 1000
+        forward_pwm = (1.0 / (1.0 + e ** (-0.2 * distance)) - 0.5) * 1000
+        # 缩放到指定最大值范围内
+        max_control = config.max_pwm - config.stop_pwm
+        if forward_pwm + abs(steer_pwm) > max_control:
+            temp_forward_pwm = forward_pwm
+            forward_pwm = max_control * (temp_forward_pwm) / (temp_forward_pwm + abs(steer_pwm))
+            steer_pwm = max_control * (steer_pwm / (temp_forward_pwm + abs(steer_pwm)))
+        left_pwm = config.stop_pwm + int(forward_pwm) - int(steer_pwm)
+        right_pwm = config.stop_pwm + int(forward_pwm) + int(steer_pwm)
+        return left_pwm, right_pwm
+
     def pid_turn_pwm(self, angular_velocity_error):
         steer_control = self.update_steer_pid_1(angular_velocity_error)
         steer_pwm = (1.0 / (1.0 + e ** (-0.02 * steer_control)) - 0.5) * 1000
