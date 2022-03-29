@@ -901,7 +901,7 @@ class PiMain:
                     print('time', time.time(), self.theta, self.angular_velocity)
 
     # 读取维特罗盘数据
-    def get_weite_compass_data(self, debug=True):
+    def get_weite_compass_data(self, debug=False):
         if config.current_platform == config.CurrentPlatform.pi:
             # 记录上一次发送数据
             last_send_data = None
@@ -981,7 +981,7 @@ class PiMain:
                         self.speed = gps_data_read[3]
 
     # 读取lora遥控器数据
-    def get_remote_control_data(self, debug=False):
+    def get_remote_control_data(self, debug=True):
         """
         读取lora遥控器数据
         :param debug:打印调试数据
@@ -1039,7 +1039,7 @@ class PiMain:
                         self.remote_draw_status_2_3 = 0  # 2号抽水杆没有工作
                     # 当有一个需要抽水时就抽水
                     if self.remote_draw_status_0_1 or self.remote_draw_status_2_3:
-                        self.remote_draw_status = 1
+                        self.remote_draw_status = 1  # TODO 临时修改为 0 应该设置为 1
                     else:
                         self.remote_draw_status = 0
                     # 判断收起舵机  展开舵机
