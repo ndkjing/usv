@@ -999,17 +999,19 @@ class PiMain:
             if self.speed:
                 send_speed = self.speed
             # print('self.ship_status_code',self.ship_status_code,'self.pi_main_obj.bottle_status_code',self.bottle_status_code)
-            send_remote_data = 'G%f,%f,%.1f,%.1f,%d,%d,%d,%d,%dZ\r\n' % (
-                send_lng_lat[0],
-                send_lng_lat[1],
-                send_dump_energy,
-                send_speed,
-                self.ship_status_code,
-                self.bottle_status_code[0],
-                self.bottle_status_code[1],
-                self.bottle_status_code[2],
-                self.bottle_status_code[3],
-            )
+            # 发送给遥控器数据
+            # send_remote_data = 'G%f,%f,%.1f,%.1f,%d,%d,%d,%d,%dZ\r\n' % (
+            #     send_lng_lat[0],
+            #     send_lng_lat[1],
+            #     send_dump_energy,
+            #     send_speed,
+            #     self.ship_status_code,
+            #     self.bottle_status_code[0],
+            #     self.bottle_status_code[1],
+            #     self.bottle_status_code[2],
+            #     self.bottle_status_code[3],
+            # )
+            send_remote_data = 'S9Z\r\n'  # 临时修改数据
             return_remote_data = self.remote_control_obj.read_remote_control(debug=debug, send_data=send_remote_data)
             if return_remote_data and len(return_remote_data) >= 13:
                 if debug:
@@ -1042,7 +1044,6 @@ class PiMain:
                     else:
                         self.remote_draw_status = 0
                     # 判断收起舵机  展开舵机
-
                     if self.remote_control_data[10] == 1:
                         if self.pre_remote_target_draw_steer == 0:
                             self.remote_target_draw_steer = 0
