@@ -1220,9 +1220,16 @@ class DataManager:
         :param b_back_home 是否是正在返航
         :return:
         """
+        if not config.home_debug and \
+                self.pi_main_obj.lng_lat and \
+                self.pi_main_obj.lng_lat[0] > 1 and \
+                self.pi_main_obj.lng_lat[1] > 1:
+            cal_lng_lat = copy.deepcopy(self.pi_main_obj.lng_lat)
+        else:
+            cal_lng_lat= copy.deepcopy(self.lng_lat)
         distance = lng_lat_calculate.distanceFromCoordinate(
-            self.lng_lat[0],
-            self.lng_lat[1],
+            cal_lng_lat[0],
+            cal_lng_lat[1],
             sample_lng_lat_gps[0],
             sample_lng_lat_gps[1])
         self.distance_p = distance
@@ -1239,8 +1246,8 @@ class DataManager:
             elif self.point_arrive_start_time and time.time() - self.point_arrive_start_time > 60:
                 return True
             distance_sample = lng_lat_calculate.distanceFromCoordinate(
-                self.lng_lat[0],
-                self.lng_lat[1],
+                cal_lng_lat[0],
+                cal_lng_lat[1],
                 sample_lng_lat_gps[0],
                 sample_lng_lat_gps[1])
             self.distance_p = distance_sample
@@ -1251,11 +1258,11 @@ class DataManager:
             if not config.home_debug:
                 target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point(target_lng_lat_gps)
             all_distance = lng_lat_calculate.distanceFromCoordinate(
-                self.lng_lat[0], self.lng_lat[1], target_lng_lat_gps[0],
+                cal_lng_lat[0], cal_lng_lat[1], target_lng_lat_gps[0],
                 target_lng_lat_gps[1])
             # 当前点到目标点角度
-            point_theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
-                                                                self.lng_lat[1],
+            point_theta = lng_lat_calculate.angleFromCoordinate(cal_lng_lat[0],
+                                                                cal_lng_lat[1],
                                                                 target_lng_lat_gps[0],
                                                                 target_lng_lat_gps[1])
             if config.home_debug:
@@ -1288,8 +1295,8 @@ class DataManager:
                 if self.last_lng_lat:
                     speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
                                                                               self.last_lng_lat[1],
-                                                                              self.lng_lat[0],
-                                                                              self.lng_lat[1])
+                                                                              cal_lng_lat[0],
+                                                                              cal_lng_lat[1])
                     self.run_distance += speed_distance
                 left_delta_pwm = int(self.last_left_pwm + left_pwm) / 2 - config.stop_pwm
                 right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
@@ -1300,8 +1307,8 @@ class DataManager:
                 if self.last_lng_lat:
                     ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
                                                                        self.last_lng_lat[1],
-                                                                       self.lng_lat[0],
-                                                                       self.lng_lat[1])
+                                                                       cal_lng_lat[0],
+                                                                       cal_lng_lat[1])
                 else:
                     ship_theta = 0
                 # 船头角度

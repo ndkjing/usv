@@ -453,10 +453,10 @@ sonar_baud = 9600
 sonar_steer = 21  # 声呐舵机
 # 维特罗盘
 b_weite_compass = 1
-# weite_compass_rx = 14  # RX
-# weite_compass_tx = 15  # TX
-weite_compass_rx = 22  # RX
-weite_compass_tx = 27  # TX
+weite_compass_rx = 14  # RX
+weite_compass_tx = 15  # TX
+# weite_compass_rx = 22  # RX
+# weite_compass_tx = 27  # TX
 weite_compass_baud = 9600
 # 抽水
 b_draw = 1  # 是否有抽水泵

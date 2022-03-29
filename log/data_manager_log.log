@@ -4110,3 +4110,21 @@
 2022-03-28 21:51:01,186 data_manager.py[line:2397] INFO {'请求 url': 'https://ship.xxlun.com/union/admin/xxl/mileage/upData', 'status_code': 200}
 2022-03-28 21:51:01,186 data_manager.py[line:1775] INFO {'更新里程和时间成功': {'deviceId': 'XXLJC4LCGSCSD1DA002', 'id': '1461938087956373505', 'total': '79216', 'totalTime': '1300130'}}
 2022-03-28 21:51:08,247 data_manager.py[line:2017] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': '1', 'info_type': 3}}
+2022-03-29 20:08:14,168 data_manager.py[line:2404] INFO {'请求 url': 'https://ship.xxlun.com/union/admin/xxl/mileage/getOne?deviceId=XXLJC4LCGSCSD1DA002', 'status_code': 200}
+2022-03-29 20:08:14,211 data_manager.py[line:2466] INFO {'mileage/getOne': {'id': '1461938087956373505', 'deviceId': 'XXLJC4LCGSCSD1DA002', 'total': '79216', 'totalTime': '1300130', 'gmtCreate': '2021-11-20 14:02:56', 'gmtModified': '2022-03-28 21:51:01'}}
+2022-03-29 20:08:20,886 data_manager.py[line:2104] INFO {'notice_info_': {'distance': '0', 'path_info': '当前:0 总共:0', 'progress': 0, 'control_info': '等待', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'bank_distance': -500, 'mapId': '', 'b_start_remote': '0', 'low_dump_energy_warnning': 0}}
+2022-03-29 20:08:21,338 data_manager.py[line:2404] INFO {'请求 url': 'https://ship.xxlun.com/union/admin/xxl/mileage/upData', 'status_code': 200}
+2022-03-29 20:08:21,441 data_manager.py[line:1782] INFO {'更新里程和时间成功': {'deviceId': 'XXLJC4LCGSCSD1DA002', 'id': '1461938087956373505', 'total': '79216', 'totalTime': '1300137'}}
+2022-03-29 20:08:24,921 data_manager.py[line:2024] INFO {'base_setting': {'speed_grade': '5', 'arrive_range': '1', 'info_type': 3}}
+2022-03-29 20:08:30,546 data_manager.py[line:2104] INFO {'notice_info_': {'distance': '0', 'path_info': '当前:0 总共:0', 'progress': 0, 'control_info': '等待', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'bank_distance': 18.0, 'mapId': '1434770242236428290', 'b_start_remote': '0', 'low_dump_energy_warnning': 0}}
+2022-03-29 20:08:31,492 data_manager.py[line:2404] INFO {'请求 url': 'https://ship.xxlun.com/union/admin/xxl/mileage/upData', 'status_code': 200}
+2022-03-29 20:08:31,551 data_manager.py[line:1782] INFO {'更新里程和时间成功': {'deviceId': 'XXLJC4LCGSCSD1DA002', 'id': '1461938087956373505', 'total': '79216', 'totalTime': '1300147'}}
+2022-03-29 20:08:34,371 data_manager.py[line:696] INFO {'status change': (<ShipStatus.idle: 1>, <ShipStatus.computer_auto: 4>)}
+2022-03-29 20:08:34,431 data_manager.py[line:1465] INFO {'点击地点': [[114.523836, 30.50583]]}
+2022-03-29 20:08:34,446 data_manager.py[line:1491] INFO {'全部距离': 116.44763712113874}
+2022-03-29 20:08:46,311 data_manager.py[line:696] INFO {'status change': (<ShipStatus.computer_auto: 4>, <ShipStatus.computer_control: 3>)}
+2022-03-29 20:08:46,401 data_manager.py[line:636] INFO 清除自动状态数据
+2022-03-29 20:08:50,046 data_manager.py[line:2104] INFO {'notice_info_': {'distance': '0', 'path_info': '当前:0 总共:0', 'progress': 0, 'control_info': '手动', 'draw_info': 0, 'audio_light_info': 0, 'headlight_info': 0, 'side_light_info': 1, 'theta_error': 0, 'bank_distance': 29.6, 'mapId': '1434770242236428290', 'b_start_remote': '0', 'low_dump_energy_warnning': 0}}
+2022-03-29 20:08:50,827 data_manager.py[line:2404] INFO {'请求 url': 'https://ship.xxlun.com/union/admin/xxl/mileage/upData', 'status_code': 200}
+2022-03-29 20:08:50,841 data_manager.py[line:1782] INFO {'更新里程和时间成功': {'deviceId': 'XXLJC4LCGSCSD1DA002', 'id': '1461938087956373505', 'total': '79248', 'totalTime': '1300165'}}
+2022-03-29 20:08:50,901 data_manager.py[line:1848] INFO {'status_data_': '{"dump_energy": 99.7, "current_lng_lat": [114.524031, 30.50659], "direction": 169.1, "speed": null, "ship_code": "XXLJC4LCGSCSD1DA002", "totle_time": 1300165, "runtime": 37, "totle_distance": 79248, "run_distance": 32.8, "mapId": "1434770242236428290", "ping": 20.2, "draw_time": [0, 0], "home_lng_lat": [114.524096, 30.506853], "is_wait": 1, "is_record": 2}'}
