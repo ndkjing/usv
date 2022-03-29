@@ -202,7 +202,7 @@ calibration_compass = 0
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
 # 平滑路径最小单位 m
-smooth_path_ceil_size = 5
+smooth_path_ceil_size = 4
 # 前视觉距离
 forward_see_distance = 9
 # 舵机最大扫描角度单侧 左边为正右边为负

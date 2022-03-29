@@ -208,6 +208,12 @@ class DataManager:
         self.cell_size = int(config.field_of_view / config.view_cell)
         self.obstacle_list = [0] * self.cell_size  # 自动避障列表
         self.control_obstacle_list = [0] * self.cell_size  # 手动避障障碍物列表
+        # 测试新的运动控制方式
+        self.kp_v = self.server_data_obj.mqtt_send_get_obj.kp_v
+        self.is_start_step = 1  # 是否是起步阶段
+        self.want_v = 0  # 期望速度
+        self.current_v = 0  # 当前速度
+        self.pre_v = 0  # 之前速度
 
     def connect_mqtt_server(self):
         while True:
@@ -840,6 +846,7 @@ class DataManager:
         distance_list = []
         start_index = self.smooth_path_lng_lat_index[index_]
         # print('self.smooth_path_lng_lat, index_,', self.smooth_path_lng_lat_index, index_)
+        # 限制后面路径点寻找时候不能找到之前采样点路径上
         if index_ == 0:
             self.search_list = copy.deepcopy(self.smooth_path_lng_lat[:start_index])
         else:
@@ -1009,9 +1016,9 @@ class DataManager:
                                                               self.gaode_lng_lat[1],
                                                               point[0],
                                                               point[1])
-                ori_angle=angle-self.current_theta
-                if ori_angle<0:
-                    ori_angle=360+ori_angle
+                ori_angle = angle - self.current_theta
+                if ori_angle < 0:
+                    ori_angle = 360 + ori_angle
                 self.distance_dict.update({index: [distance, ori_angle]})
             # print('self.distance_dict', self.distance_dict)
             self.obstacle_list = [0] * self.cell_size  # 自动避障列表
@@ -1023,7 +1030,7 @@ class DataManager:
                     b_obstacle = 0
                 else:
                     if angle_average >= 360 - config.field_of_view / 2:
-                        angle_average = angle_average -(360 - config.field_of_view / 2)
+                        angle_average = angle_average - (360 - config.field_of_view / 2)
                         obstacle_index = int(angle_average // config.view_cell + self.cell_size // 2)
                     else:
                         angle_average = - angle_average
@@ -1037,7 +1044,7 @@ class DataManager:
                     try:
                         self.obstacle_list[obstacle_index] = b_obstacle
                     except Exception as e:
-                        print('#######################obstacle_index',obstacle_index)
+                        print('#######################obstacle_index', obstacle_index)
                     if distance_average > config.control_obstacle_distance:
                         b_control_obstacle = 0
                     else:
@@ -1086,7 +1093,7 @@ class DataManager:
                             next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                                              self.lng_lat[1],
                                                                                              abs_angle,
-                                                                                             config.min_steer_distance/10)
+                                                                                             config.min_steer_distance / 10)
                             print('新方向角度：', abs_angle)
                             return next_point_lng_lat, False
                 elif angle == 0:  # 当前船头角度可通行
@@ -1150,13 +1157,13 @@ class DataManager:
             if distance_sample < config.arrive_distance:
                 return True
             # 避障判断下一个点
-            b_stop = False
             if not config.home_debug:
                 target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point(target_lng_lat_gps)
             else:
                 target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point_debug(target_lng_lat_gps)
-            if b_stop:
+            if b_stop:  # 避障判断是否需要停止
                 print('避障停止', b_stop)
+            # 计算偏差距离
             all_distance = lng_lat_calculate.distanceFromCoordinate(
                 self.lng_lat[0], self.lng_lat[1], target_lng_lat_gps[0],
                 target_lng_lat_gps[1])
@@ -1165,6 +1172,7 @@ class DataManager:
                                                                 self.lng_lat[1],
                                                                 target_lng_lat_gps[0],
                                                                 target_lng_lat_gps[1])
+            # 计算偏差角度
             if config.home_debug:
                 if self.current_theta is not None:
                     theta_error = point_theta - self.current_theta
@@ -1181,8 +1189,27 @@ class DataManager:
                 else:
                     theta_error = 360 + theta_error
             self.theta_error = theta_error
-            left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
-                                                                theta_error=theta_error)
+            method = 1  # 测试新的控制方式
+            if method == 2:
+                # 分为起步阶段  中间恒速阶段  到点减速阶段/避障减速
+                # 起步阶段用偏差角度小于指定阈值判断
+                if self.is_start_step:
+                    if abs(theta_error) >= 60:
+                        self.want_v = 180 - abs(theta_error)
+                    else:
+                        self.want_v = 180 - abs(theta_error)
+                        self.is_start_step = 0
+                # 恒速阶段用距离和偏差角度计算
+                if distance_sample >= 10:
+                    self.want_v = max(100, 250 - 2 * abs(theta_error))
+                # 到点减速阶段用距离计算期望速度
+                else:
+                    self.want_v = max(70, 25 * distance_sample)
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm_3(distance=self.want_v,
+                                                                    theta_error=theta_error)
+            else:
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
+                                                                    theta_error=theta_error)
             self.last_left_pwm = left_pwm
             self.last_right_pwm = right_pwm
             # 在家调试模式下预测目标经纬度
@@ -1415,7 +1442,7 @@ class DataManager:
                     # 计算下一个目标点经纬度
                     if config.path_plan_type:
                         next_lng_lat = self.calc_target_lng_lat(index)
-                        # 如果当前点靠近采样点指定范围就停止并采样
+                        # 如果当前点靠近采样点距离小于指定距离就开启强制到达模式否者只是尽量到达
                         sample_distance = lng_lat_calculate.distanceFromCoordinate(
                             next_lng_lat[0],
                             next_lng_lat[1],

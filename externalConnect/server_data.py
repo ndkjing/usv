@@ -201,7 +201,7 @@ class MqttSendGet:
         self.b_receive_mqtt = False
         # 计算距离岸边距离
         self.bank_distance = -500
-        self.send_log = 1  # 是否发送操作日志
+        self.send_log = 0  # 是否发送操作日志 不能在接收mqtt回调中发送http请求，会阻塞函数执行
         # 是否开始手动记录点
         self.b_record_point = 0
         self.record_distance = 5  # 记录点距离
@@ -211,6 +211,7 @@ class MqttSendGet:
         self.surrounded_distance = 10  # 包围圈间隔距离
         self.surrounded_start = 0  # 包围圈内点开始行驶
         self.path_id = None  # 手动记录路径点ID
+        self.kp_v=0.5
 
     # 连接MQTT服务器
     def mqtt_connect(self):
