@@ -960,7 +960,7 @@ class DataManager:
             # 避障绕行，根据障碍物计算下一个目标点
             elif config.obstacle_avoid_type in [2, 3]:
                 angle = vfh.vfh_func(9, self.pi_main_obj.obstacle_list)
-                print('避障角度：', angle)
+                # print('避障角度：', angle)
                 if angle == -1:  # 没有可通行区域
                     # 如果是离岸边太近就直接认为到达
                     if 1 in self.pi_main_obj.obstacle_list[
@@ -1210,12 +1210,17 @@ class DataManager:
                                                                     theta_error=theta_error)
             elif method == 3:
                 # 计算距离余弦值
+
                 if abs(theta_error) <= 90:
                     distance_cos = all_distance * math.cos(math.radians(abs(theta_error)))
                 else:
-                    distance_cos=0
-                left_pwm, right_pwm = self.path_track_obj.pid_pwm_4(distance=all_distance,
+                    distance_cos = 0
+                print('point_theta,self.current_theta', point_theta,self.current_theta)
+                print('theta_error', theta_error)
+                print('distance_cos', distance_cos)
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm_4(distance=distance_cos,
                                                                     theta_error=theta_error)
+                print('left_pwm, right_pwm ', left_pwm, right_pwm)
             else:
                 left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
                                                                     theta_error=theta_error)
@@ -1242,19 +1247,26 @@ class DataManager:
                 steer_power = left_delta_pwm - right_delta_pwm
                 forward_power = left_delta_pwm + right_delta_pwm
                 delta_distance = forward_power * 0.001
-                delta_theta = steer_power * 0.08
+                delta_theta = steer_power * 0.01
+                print('delta_theta', delta_theta,)
                 if self.last_lng_lat:
                     ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
                                                                        self.last_lng_lat[1],
                                                                        self.lng_lat[0],
                                                                        self.lng_lat[1])
+                elif forward_power < 50:
+                    if self.current_theta is None:
+                        ship_theta = 0
+                    else:
+                        ship_theta = self.current_theta
                 else:
                     ship_theta = 0
                 # 船头角度
                 self.current_theta = ship_theta
                 if self.current_theta is not None:
-                    self.current_theta = (self.current_theta - delta_theta / 2) % 360
+                    self.current_theta = (self.current_theta + delta_theta / 2) % 360
                     self.current_theta += 0.1
+                print('self.current_theta', self.current_theta)
                 self.last_lng_lat = copy.deepcopy(self.lng_lat)
                 self.last_read_time_debug = time.time()
                 self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
