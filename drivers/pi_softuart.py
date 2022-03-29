@@ -161,7 +161,7 @@ class PiSoftuart(object):
 
                     str_data = str(data3)
                     res = re.findall(r'Y[!aw\d][aw\d]:(.*?)\\', str_data)
-                    print('compass res', res)
+                    # print('compass res', res)
                     if len(res) > 0:
                         theta = float(res[0]) + 180
                     else:
@@ -174,6 +174,7 @@ class PiSoftuart(object):
             except Exception as e:
                 print({'error read_compass': e})
                 return None
+
     def read_gps(self, len_data=None, debug=False):
         if len_data is None:
             len_data = 4

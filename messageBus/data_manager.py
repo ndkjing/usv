@@ -1339,7 +1339,7 @@ class DataManager:
     def move_control(self):
         b_log_points = 1  # 防止寻点模式下等待用户点击开始前一直记录日志
         while True:
-            time.sleep(0.1)
+            time.sleep(0.02)
             control_info_dict = {
                 ShipStatus.computer_control: '手动',
                 ShipStatus.remote_control: '遥控',
@@ -1350,6 +1350,13 @@ class DataManager:
                 ShipStatus.at_home: '在返航点',
                 ShipStatus.idle: '等待',
             }
+            # self.direction = int(self.server_data_obj.mqtt_send_get_obj.control_move_direction)
+            # 判断船是否能给用户点击再次运动
+            if self.ship_status in [ShipStatus.idle, ShipStatus.remote_control, ShipStatus.computer_control,
+                                    ShipStatus.at_home]:
+                self.is_wait = 1  # 是空闲
+            else:
+                self.is_wait=2  # 非空闲
             self.control_info = ''
             # 修改提示消息
             if self.ship_status in control_info_dict:
@@ -1821,7 +1828,13 @@ class DataManager:
             if not config.home_debug and self.pi_main_obj.dump_energy is not None:
                 self.dump_energy_deque.append(self.pi_main_obj.dump_energy)
                 mqtt_send_status_data.update({'dump_energy': self.pi_main_obj.dump_energy})
-            # 向mqtt发送数据
+            # 向mqtt发送数据  当前船只是否空闲
+            mqtt_send_status_data.update({"is_wait": self.is_wait})
+            # 当前是否正在记录数据 1 正在记录  2 没有记录
+            if self.server_data_obj.mqtt_send_get_obj.b_record_point:
+                mqtt_send_status_data.update({"is_record": 1})
+            else:
+                mqtt_send_status_data.update({"is_record": 2})
             self.send(method='mqtt', topic='status_data_%s' % config.ship_code, data=json.dumps(mqtt_send_status_data),
                       qos=0)
             if time.time() % 10 < 1:
@@ -2253,6 +2266,7 @@ class DataManager:
                         self.record_path = []
                         pre_record_lng_lat = [10.0, 10.0]  # 随便设置的初始值
                 time.sleep(3)
+
     def scan_cal(self):
         scan_points = []
         while True:
@@ -2297,7 +2311,7 @@ class DataManager:
                                         url=config.http_record_get + "?id=%s" % self.server_data_obj.mqtt_send_get_obj.path_id,
                                         http_type='GET'
                                         )
-                if len(return_data) > 0:
+                if return_data and len(return_data) > 0:
                     print(return_data)
                     self.server_data_obj.mqtt_send_get_obj.path_id = None
                     # 解析返回到的路径id
@@ -2443,6 +2457,18 @@ class DataManager:
                     task_data = content_data.get("data")
                     if task_data:
                         self.logger.info({'mileage/getOne': task_data.get('items')})
+                        return task_data.get('items')
+                    return False
+                else:
+                    return False
+            elif http_type == 'GET' and r'device/getRoute' in url:
+                if return_data:
+                    content_data = json.loads(return_data.content)
+                    if not content_data["success"]:
+                        self.logger.error('device/getRoute GET请求失败')
+                    task_data = content_data.get("data")
+                    if task_data:
+                        self.logger.info({'device/getRoute': task_data.get('items')})
                         return task_data.get('items')
                     return False
                 else:
