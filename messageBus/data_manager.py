@@ -934,7 +934,7 @@ class DataManager:
                             abs(self.pi_main_obj.remote_control_data[2] - 50) < 30:
                         if deubg_status:
                             print('遥控器控制-->返航 return_ship_status', return_ship_status)
-                        self.change_status_info(target_status=return_ship_status)
+                        # self.change_status_info(target_status=return_ship_status)
                 # 切换到空闲状态
                 elif not config.home_debug and self.pi_main_obj.b_start_remote == 0:
                     if deubg_status:
