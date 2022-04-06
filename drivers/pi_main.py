@@ -58,8 +58,14 @@ class PiMain:
         self.b_start_remote = 0
         if config.current_platform == config.CurrentPlatform.pi:
             self.gps_obj = self.get_gps_obj()
-            self.compass_obj = self.get_compass_obj()
-            self.weite_compass_obj = self.get_weite_compass_obj()
+            if config.b_pin_compass:
+                self.compass_obj = self.get_compass_obj()
+            else:
+                self.compass_obj =None
+            if config.b_weite_compass:
+                self.weite_compass_obj = self.get_weite_compass_obj()
+            else:
+                self.weite_compass_obj =None
             if config.b_pin_stc:
                 self.stc_obj = self.get_stc_obj()
             if config.b_laser:
@@ -170,8 +176,10 @@ class PiMain:
         遥控器lora串口
         :return:
         """
+        # return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
+        #                               baud=config.lora_baud, time_out=0.16)
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
-                                      baud=config.lora_baud, time_out=0.16)
+                                      baud=config.lora_baud, time_out=0.05)
 
     def get_gps_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.pin_gps_rx, tx_pin=config.pin_gps_tx,
@@ -182,7 +190,7 @@ class PiMain:
 
     def get_sonar_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.sonar_rx, tx_pin=config.sonar_tx,
-                                      baud=config.sonar_baud, time_out=0.01)
+                                      baud=config.sonar_baud, time_out=3)
 
     def get_stc_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.stc_rx, tx_pin=config.stc_tx,
@@ -848,7 +856,7 @@ class PiMain:
                     print('time', time.time(), self.theta, self.angular_velocity)
 
     # 读取维特罗盘数据
-    def get_weite_compass_data(self, debug=False):
+    def get_weite_compass_data(self, debug=True):
         if config.current_platform == config.CurrentPlatform.pi:
             # 记录上一次发送数据
             last_send_data = None
@@ -867,7 +875,7 @@ class PiMain:
                 elif int(config.calibration_compass) == 2:
                     if last_send_data != "AT+CALI=0\r\n":
                         self.compass_notice_info = ''
-                        info_data = self.compass_obj.read_weite_compass(send_data="AT+CALI=0\r\n")
+                        info_data = self.weite_compass_obj.read_weite_compass(send_data="AT+CALI=0\r\n")
                         time.sleep(0.05)
                         self.compass_notice_info = info_data
                         last_send_data = "AT+CALI=0\r\n"
@@ -876,7 +884,7 @@ class PiMain:
                         config.write_setting(b_height=True)
                 else:
                     theta_ = self.weite_compass_obj.read_weite_compass(send_data=None, debug=debug)
-                    # print(time.time(),'theta_',theta_)
+                    print(time.time(),'theta_',theta_)
                     theta_ = self.compass_filter(theta_)
                     if theta_:
                         # print('读取间隔时间', time.time() - last_read_time)
@@ -975,6 +983,65 @@ class PiMain:
                     self.b_start_remote = 0
             time.sleep(0.01)
 
+    # 新版本读取lora遥控器数据
+    def get_remote_control_data1(self, debug=False):
+        """
+        读取lora遥控器数据
+        :param debug:打印数据
+        :return:
+        """
+        while True:
+
+            return_remote_data = self.remote_control_obj.read_remote_control1(debug=debug)
+            # 判断是否使能
+            if return_remote_data and len(return_remote_data) >= 13:
+                if debug:
+                    print("######################", time.time(), 'return_remote_data', return_remote_data)
+                self.remote_control_data = return_remote_data
+                self.lora_control_receive_time = time.time()
+                # 判断遥控器使能
+                if int(self.remote_control_data[12]) == 1:
+                    self.b_start_remote = 1
+                else:
+                    self.b_start_remote = 0
+                if self.b_start_remote:
+                    # 判断开始抽水  结束抽水
+                    if int(self.remote_control_data[5]) == 10:
+                        self.remote_draw_status = 1
+                    elif int(self.remote_control_data[5]) == 1:
+                        self.remote_draw_status = 0
+                    elif int(self.remote_control_data[5]) == 0:
+                        self.remote_draw_status = 0
+                    # 判断开始排水  结束排水
+                    if int(self.remote_control_data[7]) == 10:
+                        self.remote_drain_status = 1
+                    elif int(self.remote_control_data[7]) == 1:
+                        self.remote_drain_status = 0
+                    elif int(self.remote_control_data[7]) == 0:
+                        self.remote_drain_status = 0
+                    # 判断收起舵机  展开舵机
+                    if int(self.remote_control_data[10]) == 1:
+                        self.remote_draw_steer = config.min_deep_steer_pwm
+                    else:
+                        self.remote_draw_steer = config.max_deep_steer_pwm
+                    # 判断打开舷灯  关闭舷灯
+                    if int(self.remote_control_data[6]) == 10:
+                        self.remote_side_light_status = 1
+                    elif int(self.remote_control_data[6]) == 1:
+                        self.remote_side_light_status = 0
+                    else:
+                        self.remote_side_light_status = 2
+                    # 判断打开大灯  关闭大灯
+                    if int(self.remote_control_data[8]) == 10:
+                        self.remote_head_light_status = 1
+                    elif int(self.remote_control_data[8]) == 1:
+                        self.remote_head_light_status = 0
+                    else:
+                        self.remote_head_light_status = 2
+            else:
+                if self.lora_control_receive_time and time.time() - self.lora_control_receive_time > 20:
+                    self.b_start_remote = 0
+            time.sleep(0.01)
 
 if __name__ == '__main__':
     pi_main_obj = PiMain()
@@ -1009,6 +1076,7 @@ if __name__ == '__main__':
                   'C0 C1  关闭和开启前面大灯\n'
                   'D0 D1  关闭和开启声光报警器\n'
                   'E0 E1 E2 E3 E4  状态灯\n'
+                  'F 读取声呐数据 \n'
                   )
             key_input = input('please input:')
             # 前 后 左 右 停止  右侧电机是反桨叶 左侧电机是正桨叶
@@ -1062,10 +1130,10 @@ if __name__ == '__main__':
                 pi_main_obj.init_motor()
             elif key_input.startswith('R'):
                 if len(key_input) > 1 and key_input[1] == '1':
-                    pi_main_obj.get_remote_control_data(debug=True)
+                    pi_main_obj.get_remote_control_data1(debug=True)
                     pi_main_obj.check_remote_pwm()
                 else:
-                    pi_main_obj.remote_control_obj.read_remote_control(debug=True)
+                    pi_main_obj.remote_control_obj.read_remote_control1(debug=True)
             elif key_input.startswith('t'):
                 if len(key_input) > 1:
                     try:
@@ -1156,7 +1224,8 @@ if __name__ == '__main__':
                         print('row_com_data_read', row_com_data_read)
                     elif config.b_pin_stc:
                         pi_main_obj.stc_obj.send_stc_data(send_data)
-
+            elif key_input.startswith('F'):
+                pi_main_obj.sonar_obj.read_sonar()
             # TODO
             # 角度控制
             # 到达目标点控制

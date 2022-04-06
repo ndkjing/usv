@@ -6,6 +6,7 @@ from collections import deque
 import binascii
 import re
 import config
+import crcmod.predefined
 
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root_dir)
@@ -39,6 +40,9 @@ class PiSoftuart(object):
         self.last_send = None
         self.last_lora_data = None  # 数据一次没有收完等待下次数据用于拼接
         self.dump_energy_queue = deque(maxlen=25)
+
+        self.joy_data = []  # 摇杆数据
+        self.key_data = [0, 0, 0, 0, 0, 0, 0, 0]  # 按键数据
 
     def flushInput(self):
         pigpio.exceptions = False  # fatal exceptions off (so that closing an unopened gpio doesn't error)
@@ -86,6 +90,7 @@ class PiSoftuart(object):
                 return None
 
     def read_compass(self, send_data='31', len_data=None, debug=False):
+        print('###################read_compass 521')
         theta = None
         if len_data is None:
             len_data = 4
@@ -112,31 +117,34 @@ class PiSoftuart(object):
                 if send_data:
                     send_data = send_data.encode('utf-8')
                     print('send_data', send_data)
-                    self.write_data(send_data,b_weite=True)
+                    self.write_data(send_data, b_weite=True)
                     time.sleep(self._thread_ts)
                     count, data = self._pi.bb_serial_read(self._rx_pin)
-                    time.sleep(self._thread_ts*2)
+                    time.sleep(self._thread_ts * 2)
                     count, data1 = self._pi.bb_serial_read(self._rx_pin)
-                    time.sleep(self._thread_ts*3)
+                    time.sleep(self._thread_ts * 3)
                     count, data2 = self._pi.bb_serial_read(self._rx_pin)
                     if debug:
-                        print('cel data######################################',time.time(), count, data,data1,data2)
+                        print('cel data######################################', time.time(), count, data, data1, data2)
                 time.sleep(self._thread_ts)
                 count, data3 = self._pi.bb_serial_read(self._rx_pin)
                 if debug:
-                    print(time.time(), count,data3)
+                    print(time.time(), count, data3)
                 if count > len_data:
-                    str_data = str(data3)[15:-5]
+                    # str_data = str(data3)[15:-5]
+                    # res = re.findall(r'Y[!aw\d][aw\d]:(.*?)\\', str_data)
+                    str_data = str(data3)
                     res = re.findall(r'Y[!aw\d][aw\d]:(.*?)\\', str_data)
+                    print('compass res', res)
                     if len(res) > 0:
-                        theta = float(res[0])+180
+                        theta = float(res[0]) + 180
                     else:
-                        theta=None
+                        theta = None
                     if debug:
-                        print(time.time(),'float res', theta)
+                        print(time.time(), 'float res', theta)
                         print(time.time(), type(str_data), '############data3    str_data', data3, str_data)
                     return theta
-                # time.sleep(self._thread_ts)
+                    # time.sleep(self._thread_ts)
             except Exception as e:
                 print({'error read_compass': e})
                 return None
@@ -210,7 +218,7 @@ class PiSoftuart(object):
                     except Exception as convert_magnetic_declination_error:
                         if debug:
                             print({
-                                      'error read_gps convert_magnetic_declination_error': convert_magnetic_declination_error})
+                                'error read_gps convert_magnetic_declination_error': convert_magnetic_declination_error})
             return [lng, lat, lng_lat_error, speed, course, magnetic_declination]
 
     def read_laser(self, send_data=None):
@@ -240,12 +248,14 @@ class PiSoftuart(object):
             print({'error read_laser': e})
             return 0
 
+    # 读取测深声呐数据
     def read_sonar(self):
-        len_data = 10
+        len_data = 8
+        time.sleep(self._thread_ts)
         try:
-            time.sleep(self._thread_ts / 2)
+            # print('self._tx_pin,self._rx_pin',self._tx_pin,self._rx_pin)
             count, data = self._pi.bb_serial_read(self._rx_pin)
-            print(time.time(), 'count', count, 'data', data)
+            print(time.time(), 'sonar count', count, 'data', data)
             if count == len_data:
                 str_data = str(binascii.b2a_hex(data))[2:-1]
                 distance = int(str_data[2:-2], 16) / 1000
@@ -255,24 +265,23 @@ class PiSoftuart(object):
                     return -1
                 else:
                     return distance
-            elif count > len_data:
+            elif count >= len_data:
                 str_data = str(binascii.b2a_hex(data))[2:-1]
-                # print('str_data', str_data)
-                print(r'str_data.split', str_data.split('ff'))
+                print('read_sonar str_data', str_data)
+                # print(r'str_data.split', str_data.split('aa'))
                 # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
                 distance = 0
-                for i in str_data.split('ff'):
-                    if i:
-                        distance = int(i[:4], 16) / 1000
+                for i in str_data.split('aa'):
+                    if len(i) == 8:
+                        distance = int(str_data[4:8], 16) / 1000
+                        print('深度:', distance)
                 # print(str_data.split('ff')[0][:4])
                 if distance <= 0.25:
                     return -1
                 else:
                     return distance
-            time.sleep(self._thread_ts)
         except Exception as e:
             print({'error': e})
-            time.sleep(self._thread_ts / 2)
             return None
 
     def pin_stc_read(self, debug=False):
@@ -400,6 +409,134 @@ class PiSoftuart(object):
                 print({'error read_remote_control': e})
                 return None
 
+    def split_lora_data1(self, str_data, data_type=1):
+        """
+        新分隔lora数据
+        :@param str_data 需要处理数据
+        :@param data_type 数据类型 按键数据还是摇杆数据   1：摇杆数据   2 按键数据
+        @return:
+        """
+        if data_type == 1:
+            self.joy_data = [int(i) for i in str_data.split(',')]
+        elif data_type == 2:
+            # 处理按键
+            binary_data0 = bin(int(str_data[0], 16))[2:]
+            binary_data1 = bin(int(str_data[1], 16))[2:]
+            binary_data2 = bin(int(str_data[2], 16))[2:]
+            if len(binary_data0)<4:
+                binary_data0 = '0'*(4-len(binary_data0))+binary_data0
+            if len(binary_data1)<4:
+                binary_data1 = '0'*(4-len(binary_data1))+binary_data1
+            if len(binary_data2)<4:
+                binary_data2 = '0'*(4-len(binary_data2))+binary_data2
+            print('binary_data0,binary_data1,binary_data2',binary_data0,binary_data1,binary_data2)
+            print('binary_data0,binary_data1,binary_data2',len(binary_data0),len(binary_data1),len(binary_data2))
+            binary_data0 = "%04s" % binary_data0
+            # binary_data1 = "%04s" % binary_data1
+            # binary_data2 = "%04s" % binary_data2
+            if binary_data0[0] == '0':
+                self.key_data[0] = 0
+            else:
+                self.key_data[0] = 1
+            if binary_data0[1] == '0':
+                self.key_data[1] = 0
+            else:
+                self.key_data[1] = 1
+            if binary_data0[2] == '0':
+                self.key_data[2] = 0
+            else:
+                self.key_data[2] = 1
+            if binary_data0[3] == '0':
+                self.key_data[3] = 0
+            else:
+                self.key_data[3] = 1
+            # 处理拨杆
+            self.key_data[4] = int(binary_data1[0:2])
+            self.key_data[5] = int(binary_data1[2:4])
+            self.key_data[6] = int(binary_data2[0:2])
+            self.key_data[7] = int(binary_data1[2:4])
+        elif data_type == 3:
+            self.key_data[0] = 0
+            self.key_data[1] = 0
+            self.key_data[2] = 0
+            self.key_data[3] = 0
+            self.key_data[4] = 0
+            self.key_data[5] = 0
+            self.key_data[6] = 0
+            self.key_data[7] = 0
+        return_list = [50,
+                       50,
+                       self.joy_data[0],
+                       self.joy_data[1],
+                       50,
+                       self.key_data[4],
+                       self.key_data[5],
+                       self.key_data[6],
+                       self.key_data[7],
+                       self.key_data[0],
+                       self.key_data[1],
+                       self.key_data[2],
+                       self.key_data[3],
+                       ]
+        return return_list
+
+    def read_remote_control1(self, len_data=None, debug=False):
+        """
+        测试修改协议版本读取数据
+        读取自己做的lora遥控器数据
+        :param len_data:限制接受数据最短长度
+        :param debug:是否是调试  调试则print打印输出数据
+        :return:
+        """
+        if len_data is None:
+            # try:
+            time.sleep(self._thread_ts)
+            return_list = None
+            # 发送数据让遥控器接受变为绿灯
+            s = 'S9'
+            str_16 = str(binascii.b2a_hex(s.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
+            # str_16 = '41305a'
+            if self.last_send is None:
+                self.write_data(str_16, baud=self.baud, debug=debug)
+                self.last_send = time.time()
+            else:
+                if time.time() - self.last_send > 0.5:
+                    self.write_data(str_16, baud=self.baud, debug=debug)
+                    self.last_send = time.time()
+            count, data = self._pi.bb_serial_read(self._rx_pin)
+            if debug:
+                print(time.time(), 'count', count, 'data', data)
+            if count >= 7:
+                # 转换数据然后按照换行符分隔
+                str_data = str(data, encoding="utf8")
+                data_list = str_data.split('\r\n')
+                if debug:
+                    print(time.time(), 'str_data', str_data, 'data_list', data_list)
+                for item in data_list:
+                    temp_data = item.strip()
+                    if len(temp_data) < 2:
+                        continue
+                    # 开头结尾都存在是完整的一帧数据
+                    if temp_data[0] == 'A' and temp_data[-1] == 'Z':
+                        # print(time.time(),'接收到摇杆数据', temp_data)
+                        return_list = self.split_lora_data1(temp_data[1:-1])
+                    elif temp_data[0] == 'H' and temp_data[-1] == 'Z':
+                        if len(temp_data) == 7:  # 有按键按下情况
+                            crc8 = crcmod.predefined.Crc('crc-8')
+                            crc8.update(bytes().fromhex('0' + temp_data[1:4]))
+                            # print(crc8.crcValue,int(temp_data[4:6],16))
+                            if crc8.crcValue == int(temp_data[4:6], 16):
+                                print(time.time(), '接收到按键数据', temp_data)
+                                return_list = self.split_lora_data1(temp_data[1:4], data_type=2)
+                        elif len(temp_data) == 5:  # 无按键按下情况
+                            print(time.time(), '接收到按键数据', temp_data)
+                            return_list = self.split_lora_data1(temp_data[1:4], data_type=3)
+                return return_list
+            # except Exception as e:
+            #     time.sleep(self._thread_ts)
+            #     print({'error read_remote_control': e})
+            #     return None
+
     def write_data(self, msg, baud=None, debug=False, b_weite=False):
         if debug:
             pass
@@ -459,8 +596,8 @@ class PiSoftuart(object):
                             speed = 0.05 * (int(i[14:16], 16) * 256 + int(i[16:18], 16)) - 35
                             data_dict.update({index: [distance, angle, speed]})
                             if debug:
-                                print('data',i)
-                                print('index:{}distance:{},angle:{},speed:{}'.format(index,distance, angle, speed))
+                                print('data', i)
+                                print('index:{}distance:{},angle:{},speed:{}'.format(index, distance, angle, speed))
                         except Exception as read_millimeter_wave_e:
                             if debug:
                                 print({'read_millimeter_wave nomal data': read_millimeter_wave_e})
@@ -491,9 +628,9 @@ class PiSoftuart(object):
                                 speed = 0.05 * (int(data[14:16], 16) * 256 + int(data[16:18], 16)) - 35
                                 data_dict.update({index: [distance, angle, speed]})
                                 if debug:
-                                    print('data',data)
+                                    print('data', data)
                                     print('##################拼接毫米波数据')
-                                    print('index:{}distance:{},angle:{},speed:{}'.format(index,distance, angle, speed))
+                                    print('index:{}distance:{},angle:{},speed:{}'.format(index, distance, angle, speed))
                             except Exception as read_millimeter_wave_e:
                                 if debug:
                                     print({'read_millimeter_wave nomal data': read_millimeter_wave_e})

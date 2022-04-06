@@ -4,6 +4,8 @@ import logging
 import math
 import os
 import random
+import time
+
 import cv2
 import numpy as np
 import requests
@@ -880,15 +882,19 @@ class BaiduMap(object):
 
 
 if __name__ == '__main__':
-    src_point = [114.4314, 30.523558]  # 喻家湖  等级用15
-    # src_point = [114.431400, 30.523558]
-    obj = BaiduMap(src_point, zoom=17,
+    # src_point = [114.4314, 30.523558]  # 喻家湖  等级用15
+    # src_point = [114.384327,30.484632]   # 南湖
+    src_point = [114.170754,30.522358]   # 江汉大学  三角湖
+    obj = BaiduMap(src_point, zoom=14,
                    scale=1, map_type=MapType.gaode)
     # print(obj.get_pool_name())
     # print(obj.get_area_code(src_point))
     pool_cnts, (pool_cx, pool_cy) = obj.get_pool_pix(b_show=True)
     # scan_cnts = obj.scan_pool(meter_gap=50, safe_meter_distance=10, b_show=False)
-    # return_gps, return_gps_list = obj.pix_to_gps(scan_cnts)
+    return_gps, return_gps_list = obj.pix_to_gps(pool_cnts)
+    print(len(return_gps_list))
+    print(return_gps, return_gps_list)
+    time.sleep(1000)
     # return_gps1, return_gps_list1 = obj.pix_to_gps([obj.center_cnt])
     # print(return_gps, return_gps_list)
     # print(return_gps1, return_gps_list1)

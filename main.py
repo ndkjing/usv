@@ -90,6 +90,7 @@ def main():
                         data_manager_obj.send_high_f_status_data,
                         data_manager_obj.send_record_point_data,
                         data_manager_obj.scan_cal,
+                        data_manager_obj.read_sonar,
                         ]
     common_thread_list = []
     # 树莓派对象数据处理
@@ -105,13 +106,14 @@ def main():
                         data_manager_obj.pi_main_obj.get_distance_dict,
                         data_manager_obj.pi_main_obj.get_distance_dict_millimeter,
                         data_manager_obj.pi_main_obj.get_stc_data,
-                        data_manager_obj.pi_main_obj.get_remote_control_data,
+                        data_manager_obj.pi_main_obj.get_remote_control_data1,
                         data_manager_obj.pi_main_obj.loop_change_draw_steer,
                         ]
         if config.is_contain_rtk:
             pi_func_list[1] = data_manager_obj.pi_main_obj.get_rtk_data
         pi_func_flag.append(True)
         pi_func_flag.append(True)
+        print('##################config.b_pin_compass',config.b_pin_compass)
         pi_func_flag.append(True if config.b_pin_compass else False)
         pi_func_flag.append(True if config.b_weite_compass else False)
         pi_func_flag.append(True if config.b_com_stc else False)

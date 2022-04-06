@@ -266,7 +266,7 @@ class MqttSendGet:
         self.surrounded_distance = 10  # 包围圈间隔距离
         self.surrounded_start = 0  # 包围圈内点开始行驶
         self.path_id = None  # 手动记录路径点ID
-
+        self.kp_v = 0.5
     # 连接MQTT服务器
     def mqtt_connect(self):
         if not self.is_connected:

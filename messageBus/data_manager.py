@@ -214,6 +214,14 @@ class DataManager:
         self.dump_draw_list = [0, 0]  # 用于前端显示抽水剩余时间
         self.record_path = []  # 记录手动轨迹点
         self.is_wait = 1  # 船只是否空闲
+        self.sonar_deep = -1.99  # 深度数据
+        # 测试新的运动控制方式
+        self.kp_v = self.server_data_obj.mqtt_send_get_obj.kp_v
+        self.is_start_step = 1  # 是否是起步阶段
+        self.want_v = 0  # 期望速度
+        self.current_v = 0  # 当前速度
+        self.pre_v = 0  # 之前速度
+        self.current_lng_lat_list = []
 
     # 测试发送障碍物数据 调试时使用
     def send_test_distance(self):
@@ -1056,28 +1064,68 @@ class DataManager:
             b_stop = False
             if not config.home_debug:
                 target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point(target_lng_lat_gps)
-            all_distance = lng_lat_calculate.distanceFromCoordinate(
-                self.lng_lat[0], self.lng_lat[1], target_lng_lat_gps[0],
-                target_lng_lat_gps[1])
-            # 当前点到目标点角度
-            point_theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
-                                                                self.lng_lat[1],
-                                                                target_lng_lat_gps[0],
-                                                                target_lng_lat_gps[1])
-            theta_error = point_theta - self.pi_main_obj.theta
-            if abs(theta_error) > 180:
-                if theta_error > 0:
-                    theta_error = theta_error - 360
+                # 计算偏差距离
+                all_distance = lng_lat_calculate.distanceFromCoordinate(
+                    self.lng_lat[0], self.lng_lat[1], target_lng_lat_gps[0],
+                    target_lng_lat_gps[1])
+                # 当前点到目标点角度
+                point_theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
+                                                                    self.lng_lat[1],
+                                                                    target_lng_lat_gps[0],
+                                                                    target_lng_lat_gps[1])
+                # 计算偏差角度  目标在左侧为正在右侧为负
+                if config.home_debug:
+                    if self.current_theta is not None:
+                        theta_error = point_theta - self.current_theta
+                    else:
+                        theta_error = 0
                 else:
-                    theta_error = 360 + theta_error
-            self.theta_error = theta_error
-            left_pwm, right_pwm = self.path_track_obj.pid_pwm_forawrd(distance=all_distance,
-                                                                      theta_error=theta_error)
-            # 判断两次修改值间隔
-            print('修改pwm间隔时间', time.time() - self.last_change_pwm_time)
-            self.last_change_pwm_time = time.time()
-            self.last_left_pwm = left_pwm
-            self.last_right_pwm = right_pwm
+                    if self.pi_main_obj.theta is not None:
+                        theta_error = point_theta - self.pi_main_obj.theta
+                    else:
+                        theta_error = 0
+                if abs(theta_error) > 180:
+                    if theta_error > 0:
+                        theta_error = theta_error - 360
+                    else:
+                        theta_error = 360 + theta_error
+                self.theta_error = theta_error
+                method = 2  # 测试新的控制方式
+                if method == 2:
+                    # 分为起步阶段  中间恒速阶段  到点减速阶段/避障减速
+                    # 起步阶段用偏差角度小于指定阈值判断
+                    if self.is_start_step:
+                        if abs(theta_error) >= 60:
+                            self.want_v = 180 - abs(theta_error)
+                        else:
+                            self.want_v = 180 - abs(theta_error)
+                            self.is_start_step = 0
+                    # 恒速阶段用距离和偏差角度计算
+                    if distance_sample >= 10:
+                        self.want_v = max(100, 250 - 2 * abs(theta_error))
+                    # 到点减速阶段用距离计算期望速度
+                    else:
+                        self.want_v = max(70, 25 * distance_sample)
+                    # print('self.want_v',self.want_v)
+                    left_pwm, right_pwm = self.path_track_obj.pid_pwm_3(distance=self.want_v,
+                                                                        theta_error=theta_error)
+                elif method == 3:
+                    # 计算距离余弦值
+                    if abs(theta_error) <= 90:
+                        distance_cos = all_distance * math.cos(math.radians(abs(theta_error)))
+                    else:
+                        distance_cos = 0
+                    print('point_theta,self.current_theta', point_theta, self.current_theta)
+                    print('theta_error', theta_error)
+                    print('distance_cos', distance_cos)
+                    left_pwm, right_pwm = self.path_track_obj.pid_pwm_4(distance=distance_cos,
+                                                                        theta_error=theta_error)
+                    print('left_pwm, right_pwm ', left_pwm, right_pwm)
+                else:
+                    left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
+                                                                        theta_error=theta_error)
+                self.last_left_pwm = left_pwm
+                self.last_right_pwm = right_pwm
             # 在家调试模式下预测目标经纬度
             if config.home_debug:
                 time.sleep(0.1)
@@ -1562,7 +1610,7 @@ class DataManager:
                             float(self.server_data_obj.mqtt_send_get_obj.dock_position_data.get("dock_direction")), 1)
                         self.pre_dock_lng_lat = lng_lat_calculate.one_point_diatance_to_end(dock_lng_lat[0],
                                                                                             dock_lng_lat[1],
-                                                                                            360-dock_direction, 10)
+                                                                                            360 - dock_direction, 10)
                         self.dock_lng_lat = dock_lng_lat
                     # 平滑路径并计算下一个目标点经纬度
                     is_smooth_dock = 0
@@ -1602,7 +1650,7 @@ class DataManager:
                                                                      self.dock_lng_lat,
                                                                      arrive_distance=1,
                                                                      b_force_arrive=False)
-                        if b_arrive_sample and  not config.home_debug:  # 距离太近了就停止认为到达了目标点
+                        if b_arrive_sample and not config.home_debug:  # 距离太近了就停止认为到达了目标点
                             self.pi_main_obj.stop()
 
     # 更新经纬度为高德经纬度
@@ -1732,14 +1780,14 @@ class DataManager:
             status_data.update({'current_lng_lat': self.gaode_lng_lat})
             status_data.update({"draw_time": [0, 1]})
             status_data.update({"dock_lng_lat": self.lng_lat})
-            if config.b_sonar:
-                self.lng_lat_list.append(self.gaode_lng_lat)
-                deep_ = self.pi_main_obj.get_sonar_data()
-                deep = deep_ if deep_ else 0
-                self.deep_list.append(deep)
-                assert len(self.deep_list) == len(self.lng_lat_list)
-                if len(self.deep_list) % 20 == 0:
-                    utils.generate_geojson(self.lng_lat_list, self.deep_list, b_save_data=True)
+            # if config.b_sonar:
+            #     self.lng_lat_list.append(self.gaode_lng_lat)
+            #     deep_ = self.pi_main_obj.get_sonar_data()
+            #     deep = deep_ if deep_ else 0
+            #     self.deep_list.append(deep)
+            #     assert len(self.deep_list) == len(self.lng_lat_list)
+            #     if len(self.deep_list) % 20 == 0:
+            #         utils.generate_geojson(self.lng_lat_list, self.deep_list, b_save_data=True)
             # 更新返航点
             if self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat:
                 status_data.update({'home_lng_lat': self.server_data_obj.mqtt_send_get_obj.set_home_gaode_lng_lat})
@@ -1866,6 +1914,7 @@ class DataManager:
         high_f_status_data = {}
         while 1:
             time.sleep(0.16)
+
             if config.home_debug and self.current_theta is None:
                 self.current_theta = 1
             if config.home_debug and self.current_theta is not None:
@@ -1875,6 +1924,14 @@ class DataManager:
             high_f_status_data.update({"theta_error": round(self.theta_error, 1)})
             self.send(method='mqtt', topic='high_f_status_data_%s' % config.ship_code, data=high_f_status_data,
                       qos=0)
+
+    def read_sonar(self):
+        while True:
+            if config.b_sonar and not config.home_debug:
+                deep_ = self.pi_main_obj.sonar_obj.read_sonar()
+                if deep_ and deep_ > 0:
+                    print('读取到深度为:', deep_)
+                    self.sonar_deep = deep_
 
     # 外围设备控制线程函数
     def control_peripherals(self):
@@ -1983,10 +2040,11 @@ class DataManager:
                 progress = int((float(self.path_info[0]) / float(self.path_info[1])) * 100)
             notice_info_data = {
                 "distance": str(round(self.distance_p, 2)),
-                # // 路径规划提示消息
+                # // 路径规划提示消息  TODO 暂时借用离岸距离显示深度
                 "path_info": '当前:%d 总共:%d 离岸:%.1f ' % (
                     int(self.path_info[0]), int(self.path_info[1]),
                     self.server_data_obj.mqtt_send_get_obj.bank_distance),
+                "bank_distance": self.sonar_deep,
                 "progress": progress,
                 # 船执行手动控制信息
                 "control_info": self.control_info,
@@ -2196,12 +2254,12 @@ class DataManager:
                         scan_points[-1][1])
                     if dis_start > dis_end:
                         scan_points.reverse()
-                    print('scan_points',scan_points)
+                    print('scan_points', scan_points)
                     self.server_data_obj.mqtt_send_get_obj.path_planning_points = scan_points
                     self.server_data_obj.mqtt_send_get_obj.sampling_points = scan_points
                     self.server_data_obj.mqtt_send_get_obj.sampling_points_status = [0] * len(scan_points)
                     self.server_data_obj.mqtt_send_get_obj.surrounded_start = 0
-                    self.server_data_obj.mqtt_send_get_obj.keep_point=1
+                    self.server_data_obj.mqtt_send_get_obj.keep_point = 1
                     print('start scan')
             else:
                 time.sleep(1)

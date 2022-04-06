@@ -107,6 +107,50 @@ class SimplePid:
         right_pwm = config.stop_pwm + int(forward_pwm) + int(steer_pwm)
         return left_pwm, right_pwm
 
+    def pid_pwm_3(self, distance, theta_error):
+        """
+        使用距离和角度计算横向偏差，横向偏差与速度和角度一起计算需要的转向调节值输入到pid中，
+        使用速度期望控制前进速度，起步 阶段增大  中间阶段恒定  避障和快要到达时减小
+        :param distance:
+        :param theta_error:
+        :param v_exp 期望速度使用【-500，500】pwm值调节范围表示
+        :return:
+        """
+        # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
+        forward_pwm = int(distance)
+        steer_control = self.update_steer_pid_1(theta_error)
+        steer_pwm = (0.6 / (1.0 + e ** (-0.01 * steer_control)) - 0.3) * 1000
+        # 缩放到指定最大值范围内
+        max_control = config.max_pwm - config.stop_pwm
+        if forward_pwm + abs(steer_pwm) > max_control:
+            temp_forward_pwm = forward_pwm
+            forward_pwm = max_control * (temp_forward_pwm) / (temp_forward_pwm + abs(steer_pwm))
+            steer_pwm = max_control * (steer_pwm / (temp_forward_pwm + abs(steer_pwm)))
+        left_pwm = config.stop_pwm + int(forward_pwm) - int(steer_pwm)
+        right_pwm = config.stop_pwm + int(forward_pwm) + int(steer_pwm)
+        return left_pwm, right_pwm
+
+    def pid_pwm_4(self, distance, theta_error):
+        """
+        距离余弦值和角度计算，距离控制速度  角度控制转向
+        :param distance:
+        :param theta_error:
+        :return:
+        """
+        # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
+        steer_control = self.update_steer_pid_1(theta_error)
+        steer_pwm = (0.6 / (1.0 + e ** (-0.015 * steer_control)) - 0.3) * 1000
+        forward_pwm = (1.0 / (1.0 + e ** (-0.3 * distance)) - 0.5) * 1000
+        # 缩放到指定最大值范围内
+        max_control = config.max_pwm - config.stop_pwm
+        if forward_pwm + abs(steer_pwm) > max_control:
+            temp_forward_pwm = forward_pwm
+            forward_pwm = max_control * (temp_forward_pwm) / (temp_forward_pwm + abs(steer_pwm))
+            steer_pwm = max_control * (steer_pwm / (temp_forward_pwm + abs(steer_pwm)))
+        left_pwm = config.stop_pwm + int(forward_pwm) - int(steer_pwm)
+        right_pwm = config.stop_pwm + int(forward_pwm) + int(steer_pwm)
+        return left_pwm, right_pwm
+
     def pid_turn_pwm(self, angular_velocity_error):
         steer_control = self.update_steer_pid_1(angular_velocity_error)
         steer_pwm = (1.0 / (1.0 + e ** (-0.02 * steer_control)) - 0.5) * 1000
