@@ -104,7 +104,7 @@ class ComData:
 
     # 发数据
     def send_data(self, data, b_hex=False):
-        print('com send_data',data)
+        print('com send_data', data)
         if b_hex:
             self.uart.write(bytes.fromhex(data))
         else:
@@ -248,7 +248,6 @@ class ComData:
         else:
             return []
 
-
     def read_remote_control(self, debug=False, send_data='z00'):
         self.send_data('G1')
         lora_data = self.readline()
@@ -263,15 +262,37 @@ class ComData:
             # print('return_list',return_list)
             return return_list
 
+    def read_deep(self):
+        data = self.readline()
+        print(time.time(), 'sonar count', data)
+        str_data = str(binascii.b2a_hex(data))[2:-1]
+        print('read_sonar str_data', str_data)
+        # print(r'str_data.split', str_data.split('aa'))
+        # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
+        distance = 0
+        for i in str_data.split('aa'):
+            if len(i) == 8:
+                distance = int(str_data[4:8], 16) / 1000
+                if distance == 0.275:
+                    continue
+                print('深度:', distance)
+        # print(str_data.split('ff')[0][:4])
+        if distance <= 0.25:
+            return -1
+        else:
+            return distance
+
 
 if __name__ == '__main__':
     import config
+
     b_ultrasonic = 0
     b_com_data = 0
     b_gps = 0
     b_laser = 0
     b_lora = 0
-    check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  5 laser 6 lora>')
+    b_deep = 0
+    check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  5 laser 6 lora 7 sonar deep>>')
     if int(check_type) == 1:
         b_compass = 1
     elif int(check_type) == 2:
@@ -284,6 +305,8 @@ if __name__ == '__main__':
         b_laser = 1
     elif int(check_type) == 6:
         b_lora = 1
+    elif int(check_type) == 7:
+        b_deep = 1
     if b_com_data:
         serial_obj = ComData(config.stc_port,
                              config.stc_baud,
@@ -303,6 +326,16 @@ if __name__ == '__main__':
                     serial_obj.send_data('A0Z')
             except Exception as e:
                 print({'error': e})
+    elif b_deep:
+        serial_obj = ComData(config.stc_port,
+                             9600,
+                             timeout=1,
+                             logger=logger)
+        while True:
+            print(serial_obj.read_deep())
+        # print(serial_obj.read_deep())
+        # print(serial_obj.readline())
+        # print(serial_obj.readline())
     elif b_ultrasonic:
         serial_obj = ComData('com3',
                              '9600',
@@ -322,40 +355,40 @@ if __name__ == '__main__':
         lora_serial_obj.read_remote_control()
 
     elif b_gps:
-            serial_obj1 = ComData('com4',
-                                  115200,
-                                  timeout=1,
-                                  logger=logger)
-            serial_obj2 = ComData('com7',
-                                  9600,
-                                  timeout=1,
-                                  logger=logger)
-            while True:
-                data1 = serial_obj1.readline()
-                str_data1 = bytes(data1).decode('ascii')
-                if str_data1.startswith('$GNGGA'):
-                    data_list1 = str_data1.split(',')
-                    print(data_list1)
-                    lng1, lat1 = float(data_list1[4][:3]) + float(data_list1[4][3:]) / 60, float(data_list1[2][:2]) + float(
-                        data_list1[2][2:]) / 60
-                    print('经纬度1', lng1, lat1)
-                    print('误差1', data_list1[8])
-                time.sleep(0.2)
-                data2 = serial_obj2.readline()
-                str_data2 = bytes(data2).decode('ascii')
-                if str_data2.startswith('$GNGGA') or str_data2.startswith('$GPGGA'):
-                    data_list2 = str_data2.split(',')
-                    print(data_list2)
-                    lng2, lat2 = float(data_list2[4][:3]) + float(data_list2[4][3:]) / 60, float(data_list2[2][:2]) + float(
-                        data_list2[2][2:]) / 60
-                    print('经纬度2', lng2, lat2)
-                    print('误差2', data_list2[8])
-                time.sleep(0.2)
+        serial_obj1 = ComData('com4',
+                              115200,
+                              timeout=1,
+                              logger=logger)
+        serial_obj2 = ComData('com7',
+                              9600,
+                              timeout=1,
+                              logger=logger)
+        while True:
+            data1 = serial_obj1.readline()
+            str_data1 = bytes(data1).decode('ascii')
+            if str_data1.startswith('$GNGGA'):
+                data_list1 = str_data1.split(',')
+                print(data_list1)
+                lng1, lat1 = float(data_list1[4][:3]) + float(data_list1[4][3:]) / 60, float(data_list1[2][:2]) + float(
+                    data_list1[2][2:]) / 60
+                print('经纬度1', lng1, lat1)
+                print('误差1', data_list1[8])
+            time.sleep(0.2)
+            data2 = serial_obj2.readline()
+            str_data2 = bytes(data2).decode('ascii')
+            if str_data2.startswith('$GNGGA') or str_data2.startswith('$GPGGA'):
+                data_list2 = str_data2.split(',')
+                print(data_list2)
+                lng2, lat2 = float(data_list2[4][:3]) + float(data_list2[4][3:]) / 60, float(data_list2[2][:2]) + float(
+                    data_list2[2][2:]) / 60
+                print('经纬度2', lng2, lat2)
+                print('误差2', data_list2[8])
+            time.sleep(0.2)
     elif b_laser:
         serial_obj_laser = ComData('com9',
-                             '115200',
-                             timeout=0.3,
-                             logger=logger)
+                                   '115200',
+                                   timeout=0.3,
+                                   logger=logger)
         while True:
             # 控制到位置1 2 3 4 5获取距离
             distance1 = serial_obj_laser.get_laser_data()
@@ -363,7 +396,7 @@ if __name__ == '__main__':
             distance3 = serial_obj_laser.get_laser_data()
             distance4 = serial_obj_laser.get_laser_data()
             distance5 = serial_obj_laser.get_laser_data()
-            print('距离矩阵',distance1,distance2,distance3,distance4,distance5)
+            print('距离矩阵', distance1, distance2, distance3, distance4, distance5)
     # str_data = data.decode('ascii')[:-3]
     # # print('str_data',str_data,type(str_data))
     # if len(str_data)<2:

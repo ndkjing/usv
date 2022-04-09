@@ -89,7 +89,7 @@ class SimplePid:
         """
         # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
         steer_control = self.update_steer_pid_1(theta_error)
-        steer_pwm = (1.0 / (1.0 + e ** (-0.02 * steer_control)) - 0.5) * 1000
+        steer_pwm = (0.6 / (1.0 + e ** (-0.015 * steer_control)) - 0.3) * 1000
         forward_pwm = (1.0 / (1.0 + e ** (-0.2 * distance)) - 0.5) * 1000
         # 缩放到指定最大值范围内
         max_control = config.max_pwm - config.stop_pwm
@@ -111,7 +111,7 @@ class SimplePid:
         :return:
         """
         # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
-        forward_pwm=int(distance)
+        forward_pwm = int(distance)
         steer_control = self.update_steer_pid_1(theta_error)
         steer_pwm = (0.6 / (1.0 + e ** (-0.01 * steer_control)) - 0.3) * 1000
         # 缩放到指定最大值范围内

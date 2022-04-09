@@ -1,12 +1,11 @@
 """
 实现vfh算法
 """
+import config
 
-
-def vfh_func(index, obstacle_list):
+def vfh_func(obstacle_list):
     """
     返回是否有可以通过区域 正常返回相对船头角度，返回-1表示没有可以通过区域
-    :param index:
     :param obstacle_list:
     :return:
     """
@@ -19,13 +18,13 @@ def vfh_func(index, obstacle_list):
     # else:
     #     angle_point_temp = angle_point
     # point_angle_index = angle_point_temp // self.pi_main_obj.view_cell + 9
-    point_angle_index = 9
     index_i = 0
     value_list = []
     cell_size = len(obstacle_list)
-    ceil_max = 3
-    view_cell = 5
-    field_of_view = 90
+    point_angle_index = cell_size//2
+    ceil_max = config.ceil_max  # 量化角度单元格
+    view_cell = config.view_cell  # 可以通过扇区阈值
+    field_of_view = config.field_of_view
     while index_i < cell_size:
         kr = index_i
         index_j = index_i
@@ -58,6 +57,7 @@ def vfh_func(index, obstacle_list):
 if __name__ == '__main__':
     import random
 
-    obstacle_list = [0 if random.random() > 0.2 else 1 for i in range(18)]
+    obstacle_list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # obstacle_list = [0 if random.random() > 0.2 else 1 for i in range(18)]
     print(obstacle_list)
-    print(vfh_func(9, obstacle_list))
+    print(vfh_func(obstacle_list))

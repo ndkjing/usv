@@ -462,15 +462,9 @@ class WebServer:
                             time.sleep(1)
                             continue
                         scan_point_cnts = self.baidu_map_obj_dict.get(ship_code).scan_pool(
-                            meter_gap=int(
-                                self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.get(
-                                    'row')),
-                            col_meter_gap=int(
-                                self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.get(
-                                    'col')),
-                            safe_meter_distance=int(
-                                self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.base_setting_data.get(
-                                    'secure_distance')),
+                            meter_gap=int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.row_gap),
+                            col_meter_gap=int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.row_gap),
+                            safe_meter_distance=int(self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.safe_gap),
                             b_show=False)
                         _, scan_point_gaode_list = self.baidu_map_obj_dict.get(ship_code).pix_to_gps(scan_point_cnts)
                         self.path_planning(target_lng_lats=scan_point_gaode_list, ship_code=ship_code)

@@ -4,7 +4,7 @@ import os
 import sys
 from collections import deque
 import binascii
-
+import crcmod
 import config
 
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,6 +41,8 @@ class PiSoftuart(object):
         self.dump_energy_queue = deque(maxlen=25)
         self._value_lock = value_lock
 
+        self.joy_data = [50,50]  # 摇杆数据
+        self.key_data = [0, 0, 0, 0, 0, 0, 0, 0]  # 按键数据
     def flushInput(self):
         pigpio.exceptions = False  # fatal exceptions off (so that closing an unopened gpio doesn't error)
         self._pi.bb_serial_read_close(self._rx_pin)
@@ -397,6 +399,134 @@ class PiSoftuart(object):
                 time.sleep(self._thread_ts)
                 print({'error read_remote_control': e})
                 return None
+
+    def split_lora_data1(self, str_data, data_type=1):
+        """
+        新分隔lora数据
+        :@param str_data 需要处理数据
+        :@param data_type 数据类型 按键数据还是摇杆数据   1：摇杆数据   2 按键数据
+        @return:
+        """
+        if data_type == 1:
+            self.joy_data = [int(i) for i in str_data.split(',')]
+        elif data_type == 2:
+            # 处理按键
+            binary_data0 = bin(int(str_data[0], 16))[2:]
+            binary_data1 = bin(int(str_data[1], 16))[2:]
+            binary_data2 = bin(int(str_data[2], 16))[2:]
+            if len(binary_data0)<4:
+                binary_data0 = '0'*(4-len(binary_data0))+binary_data0
+            if len(binary_data1)<4:
+                binary_data1 = '0'*(4-len(binary_data1))+binary_data1
+            if len(binary_data2)<4:
+                binary_data2 = '0'*(4-len(binary_data2))+binary_data2
+            # print('binary_data0,binary_data1,binary_data2',binary_data0,binary_data1,binary_data2)
+            # print('binary_data0,binary_data1,binary_data2',len(binary_data0),len(binary_data1),len(binary_data2))
+            binary_data0 = "%04s" % binary_data0
+            # binary_data1 = "%04s" % binary_data1
+            # binary_data2 = "%04s" % binary_data2
+            if binary_data0[0] == '0':
+                self.key_data[0] = 0
+            else:
+                self.key_data[0] = 1
+            if binary_data0[1] == '0':
+                self.key_data[1] = 0
+            else:
+                self.key_data[1] = 1
+            if binary_data0[2] == '0':
+                self.key_data[2] = 0
+            else:
+                self.key_data[2] = 1
+            if binary_data0[3] == '0':
+                self.key_data[3] = 0
+            else:
+                self.key_data[3] = 1
+            # 处理拨杆
+            self.key_data[4] = int(binary_data1[0:2])
+            self.key_data[5] = int(binary_data1[2:4])
+            self.key_data[6] = int(binary_data2[0:2])
+            self.key_data[7] = int(binary_data2[2:4])
+        elif data_type == 3:
+            self.key_data[0] = 0
+            self.key_data[1] = 0
+            self.key_data[2] = 0
+            self.key_data[3] = 0
+            self.key_data[4] = 0
+            self.key_data[5] = 0
+            self.key_data[6] = 0
+            self.key_data[7] = 0
+        return_list = [50,
+                       50,
+                       self.joy_data[0],
+                       self.joy_data[1],
+                       50,
+                       self.key_data[4],
+                       self.key_data[5],
+                       self.key_data[6],
+                       self.key_data[7],
+                       self.key_data[0],
+                       self.key_data[1],
+                       self.key_data[2],
+                       self.key_data[3],
+                       ]
+        return return_list
+
+    def read_remote_control1(self, len_data=None, debug=False):
+        """
+        测试修改协议版本读取数据
+        读取自己做的lora遥控器数据
+        :param len_data:限制接受数据最短长度
+        :param debug:是否是调试  调试则print打印输出数据
+        :return:
+        """
+        if len_data is None:
+            # try:
+            time.sleep(self._thread_ts)
+            return_list = None
+            # 发送数据让遥控器接受变为绿灯
+            s = 'S9'
+            str_16 = str(binascii.b2a_hex(s.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
+            # str_16 = '41305a'
+            if self.last_send is None:
+                self.write_data(str_16, baud=self.baud, debug=debug)
+                self.last_send = time.time()
+            else:
+                if time.time() - self.last_send > 0.5:
+                    # self.write_data(str_16, baud=self.baud, debug=debug)
+                    self.last_send = time.time()
+            count, data = self._pi.bb_serial_read(self._rx_pin)
+            if debug:
+                print(time.time(), 'count', count, 'data', data)
+            if count >= 7:
+                # 转换数据然后按照换行符分隔
+                str_data = str(data, encoding="utf8")
+                data_list = str_data.split('\r\n')
+                if debug:
+                    print(time.time(), 'str_data', str_data, 'data_list', data_list)
+                for item in data_list:
+                    temp_data = item.strip()
+                    if len(temp_data) < 2:
+                        continue
+                    # 开头结尾都存在是完整的一帧数据
+                    if temp_data[0] == 'A' and temp_data[-1] == 'Z':
+                        # print(time.time(),'接收到摇杆数据', temp_data)
+                        return_list = self.split_lora_data1(temp_data[1:-1])
+                    elif temp_data[0] == 'H' and temp_data[-1] == 'Z':
+                        if len(temp_data) == 7:  # 有按键按下情况
+                            crc8 = crcmod.predefined.Crc('crc-8')
+                            crc8.update(bytes().fromhex('0' + temp_data[1:4]))
+                            # print(crc8.crcValue,int(temp_data[4:6],16))
+                            if crc8.crcValue == int(temp_data[4:6], 16):
+                                print(time.time(), '接收到按键数据', temp_data)
+                                return_list = self.split_lora_data1(temp_data[1:4], data_type=2)
+                        elif len(temp_data) == 5:  # 无按键按下情况
+                            print(time.time(), '接收到按键数据', temp_data)
+                            return_list = self.split_lora_data1(temp_data[1:4], data_type=3)
+                return return_list
+            # except Exception as e:
+            #     time.sleep(self._thread_ts)
+            #     print({'error read_remote_control': e})
+            #     return None
 
     def write_data(self, msg, baud=None, debug=False):
         if debug:

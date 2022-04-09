@@ -83,7 +83,7 @@ def get_run_distance(totle_distance):
 # 湖号
 pool_code = ''
 # 电量
-init_dump_energy = 100
+init_dump_energy = 95
 # 初始时间
 init_time = time.time()
 # 经纬度

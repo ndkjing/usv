@@ -208,7 +208,7 @@ class MqttSendGet:
         self.record_name = ""  # 记录轨迹名称
         # 包围圈扫描
         self.surrounded_points = None  # 包围圈内点
-        self.surrounded_distance = 10  # 包围圈间隔距离
+        self.surrounded_distance = 40  # 包围圈间隔距离
         self.surrounded_start = 0  # 包围圈内点开始行驶
         self.path_id = None  # 手动记录路径点ID
         self.kp_v=0.5
@@ -403,7 +403,7 @@ class MqttSendGet:
                                   })
 
             # 用户设置自动求取检测点经纬度
-            elif topic == 'auto_lng_lat_%s' % (config.ship_code):
+            elif topic == 'auto_lng_lat_%s' % config.ship_code:
                 auto_lng_lat_data = json.loads(msg.payload)
                 if auto_lng_lat_data.get('config') is None:
                     self.logger.error('auto_lng_lat_用户设置自动求取检测点经纬度没有config字段')
@@ -416,7 +416,7 @@ class MqttSendGet:
                                   'row_gap': self.row_gap})
 
             # 返回路径规划点
-            elif topic == 'path_planning_%s' % (config.ship_code):
+            elif topic == 'path_planning_%s' % config.ship_code:
                 path_planning_data = json.loads(msg.payload)
                 if path_planning_data.get('path_points') is None:
                     self.logger.error('path_planning_用户确认轨迹 没有path_points字段')
@@ -448,7 +448,7 @@ class MqttSendGet:
                                   })
 
             # 用户确认轨迹
-            elif topic == 'path_planning_confirm_%s' % (config.ship_code):
+            elif topic == 'path_planning_confirm_%s' % config.ship_code:
                 path_planning_confirm_data = json.loads(msg.payload)
                 if not path_planning_confirm_data.get('path_id'):
                     self.logger.error('path_planning_confirm_用户确认轨迹 没有path_id字段')

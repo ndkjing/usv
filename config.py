@@ -169,6 +169,8 @@ mqtt_host = '47.97.183.24'
 mqtt_port = 1884
 # 调试的时候使用初始经纬度
 ship_gaode_lng_lat = [114.524096, 30.506853]  # 九峰水库
+# ship_gaode_lng_lat = [114.384327,30.484632]   # 南湖
+# ship_gaode_lng_lat = [114.170754,30.522358]   # 三角湖
 # ship_gaode_lng_lat = [114.431419,30.524192]     # 喻家湖
 # pid三参数
 kp = 0.6
@@ -202,13 +204,13 @@ calibration_compass = 0
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
 # 平滑路径最小单位 m
-smooth_path_ceil_size = 4
+smooth_path_ceil_size = 5
 # 前视觉距离
 forward_see_distance = 9
 # 舵机最大扫描角度单侧 左边为正右边为负
 steer_max_angle = 30
 # 最小转向距离
-min_steer_distance = 20  # 自动模式下避障距离 单位m
+min_steer_distance = 10  # 自动模式下避障距离 单位m
 # 测试在家调试也发送数据
 debug_send_detect_data = 0
 # 转向速度
@@ -490,6 +492,8 @@ obstacle_points = [[114.523433, 30.506193],
                    [114.524055, 30.506378],
                    [114.524334, 30.506304]
                    ]
+
+remote_control_outtime=2  # 接受不到遥控器消息后断开遥控器使能时间单位秒
 
 if __name__ == '__main__':
     write_setting(True, True, True, True)

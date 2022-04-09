@@ -38,24 +38,24 @@ def save_geo_json_map(deviceId="XXLJC4LCGSCAHSD0DA000",
     know_lat = []
     know_z_pH = []
     know_z_doDO = []
-    know_z_cod = []
+    know_z_td = []
     know_z_ec = []
     know_z_wt = []
     # 判断是否有数据
     if content_data1.get("success") and content_data1.get("data") and content_data1.get("data").get("data") and len(
             content_data1.get("data").get("data").get("water")) > 0:
         for i in content_data1.get("data").get("data").get("water"):
-            pH = float(i.get('ph'))
-            doDO = float(i.get('doDo'))
-            cod = float(i.get('cod'))
-            ec = float(i.get('ec'))
-            wt = float(i.get('wt'))
+            pH = round(float(i.get('ph')),1)
+            doDO = round(float(i.get('doDo')),1)
+            td = round(float(i.get('td')),1)
+            ec = round(float(i.get('ec')),1)
+            wt = round(float(i.get('wt')),1)
             gjwd = json.loads(i.get('gjwd'))
             know_lon.append(gjwd[0])
             know_lat.append(gjwd[1])
             know_z_pH.append(pH)
             know_z_doDO.append(doDO)
-            know_z_cod.append(cod)
+            know_z_td.append(td)
             know_z_ec.append(ec)
             know_z_wt.append(wt)
         draw_data['know_lon'] = know_lon
@@ -64,12 +64,13 @@ def save_geo_json_map(deviceId="XXLJC4LCGSCAHSD0DA000",
             draw_data['know_z'] = know_z_pH
         elif data_type == "doDo":
             draw_data['know_z'] = know_z_doDO
-        elif data_type == "cod":
-            draw_data['know_z'] = know_z_cod
+        elif data_type == "td":
+            draw_data['know_z'] = know_z_td
         elif data_type == "ec":
             draw_data['know_z'] = know_z_ec
         else:
             draw_data['know_z'] = know_z_wt
+        print('draw_dataknow_z',draw_data['know_z'])
     else:
         # 告诉用户没有数据
         return [2, height_width]

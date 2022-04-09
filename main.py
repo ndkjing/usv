@@ -100,7 +100,7 @@ def main():
                         data_manager_obj.pi_main_obj.get_distance_dict_millimeter,
                         data_manager_obj.send_distacne,
                         data_manager_obj.pi_main_obj.get_stc_data,
-                        data_manager_obj.pi_main_obj.get_remote_control_data,
+                        data_manager_obj.pi_main_obj.get_remote_control_data1,
                         data_manager_obj.pi_main_obj.loop_change_draw_steer,
                         ]
         pi_func_flag.append(True)

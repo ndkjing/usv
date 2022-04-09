@@ -14,7 +14,6 @@ from storage import save_data
 from drivers import pi_softuart, com_data
 import config
 from moveControl.pathTrack import simple_pid
-
 logger = log.LogHandler('pi_log')
 
 
@@ -454,16 +453,16 @@ class PiMain:
             set_right_pwm = config.min_pwm
 
         # 如果有反桨叶反转电机pwm值 改为固定值
-        # if config.left_motor_cw == 1:
-        #     set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
-        # if config.right_motor_cw == 1:
-        #     set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
-        left_motor_cw = 1
-        right_motor_cw = 0
-        if left_motor_cw == 1:
+        if config.left_motor_cw == 1:
             set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
-        if right_motor_cw == 1:
+        if config.right_motor_cw == 1:
             set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
+        # left_motor_cw = 1
+        # right_motor_cw = 0
+        # if left_motor_cw == 1:
+        #     set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
+        # if right_motor_cw == 1:
+        #     set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
         self.target_left_pwm = int(set_left_pwm / (20000 / self.pice) / (50 / self.hz))
         self.target_right_pwm = int(set_right_pwm / (20000 / self.pice) / (50 / self.hz))
 
@@ -972,6 +971,65 @@ class PiMain:
                         self.remote_head_light_status = 2
             else:
                 if self.lora_control_receive_time and time.time() - self.lora_control_receive_time > 20:
+                    self.b_start_remote = 0
+            time.sleep(0.01)
+
+    # 新版本读取lora遥控器数据
+    def get_remote_control_data1(self, debug=True):
+        """
+        读取lora遥控器数据W
+        :param debug:打印数据
+        :return:
+        """
+        while True:
+            return_remote_data = self.remote_control_obj.read_remote_control1(debug=debug)
+            # 判断是否使能
+            if return_remote_data and len(return_remote_data) >= 13:
+                if debug:
+                    print("######################", time.time(), 'return_remote_data', return_remote_data)
+                self.remote_control_data = return_remote_data
+                self.lora_control_receive_time = time.time()
+                # 判断遥控器使能
+                if int(self.remote_control_data[12]) == 1:
+                    self.b_start_remote = 1
+                else:
+                    self.b_start_remote = 0
+                if self.b_start_remote:
+                    # 判断开始抽水  结束抽水
+                    if int(self.remote_control_data[5]) == 10:
+                        self.remote_draw_status = 1
+                    elif int(self.remote_control_data[5]) == 1:
+                        self.remote_draw_status = 0
+                    elif int(self.remote_control_data[5]) == 0:
+                        self.remote_draw_status = 0
+                    # 判断开始排水  结束排水
+                    if int(self.remote_control_data[7]) == 10:
+                        self.remote_drain_status = 1
+                    elif int(self.remote_control_data[7]) == 1:
+                        self.remote_drain_status = 0
+                    elif int(self.remote_control_data[7]) == 0:
+                        self.remote_drain_status = 0
+                    # 判断收起舵机  展开舵机
+                    if int(self.remote_control_data[10]) == 1:
+                        self.target_draw_steer_pwm = config.min_deep_steer_pwm
+                    else:
+                        self.target_draw_steer_pwm = config.max_deep_steer_pwm
+                    # 判断打开舷灯  关闭舷灯
+                    if int(self.remote_control_data[6]) == 10:
+                        self.remote_side_light_status = 1
+                    elif int(self.remote_control_data[6]) == 1:
+                        self.remote_side_light_status = 0
+                    else:
+                        self.remote_side_light_status = 2
+                    # 判断打开大灯  关闭大灯
+                    if int(self.remote_control_data[8]) == 10:
+                        self.remote_head_light_status = 1
+                    elif int(self.remote_control_data[8]) == 1:
+                        self.remote_head_light_status = 0
+                    else:
+                        self.remote_head_light_status = 2
+            else:
+                if self.lora_control_receive_time and time.time() - self.lora_control_receive_time > config.remote_control_outtime:
                     self.b_start_remote = 0
             time.sleep(0.01)
 
