@@ -172,9 +172,9 @@ mqtt_port = 1884
 ship_gaode_lng_lat = [114.524096, 30.506853]
 # ship_gaode_lng_lat = None
 # pid三参数
-kp = 2.0
-ki = 0.3
-kd = 1.0
+kp = 0.4
+ki = 0.01
+kd = 2.0
 # 最大pwm值
 max_pwm = 1800
 # 最小pwm值
@@ -496,10 +496,23 @@ class WaterType(enum.Enum):
 draw_deep = 0.5  # 抽水深度
 draw_capacity = 1000  # 需要抽水容量
 max_draw_capacity = 1000  # 单个瓶子最大抽水容量
-draw_speed = 1600  # 抽水速度 毫升/分钟
+draw_speed = 2000  # 抽水速度 毫升/分钟
 number_of_bottles = 4  # 总共包含抽水瓶数
 max_draw_time = int(60 * max_draw_capacity / draw_speed)
 
+# 障碍物点
+obstacle_points = [[114.523433, 30.506193],
+                   [114.523519, 30.506526],
+                   [114.523943, 30.506466],
+                   [114.524066, 30.506517],
+                   [114.524254, 30.506378],
+                   [114.523696, 30.506378],
+                   [114.5239, 30.506369],
+                   [114.524055, 30.506378],
+                   [114.524334, 30.506304]
+                   ]
+
+remote_control_outtime=2  # 接受不到遥控器消息后断开遥控器使能时间单位秒
 # 分割到不同文件
 if __name__ == '__main__':
     write_setting(True, True, True, True)

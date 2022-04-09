@@ -215,11 +215,25 @@ class DataManager:
         self.arrive_all_task = 0  # 是否完成所有任务
         self.http_save_distance = None  # http 记录保存距离
         self.http_save_time = None  # http记录保存时间
+        self.last_read_time_debug = None  # 调试用计算速度
         self.http_save_id = ''  # http记录保存id
         self.dump_draw_time = 0  # 剩余抽水时间
         self.dump_draw_list = [0, 0]  # 用于前端显示抽水剩余时间
         self.record_path = []  # 记录手动轨迹点
         self.is_wait = 1  # 船只是否空闲
+        # 调试模拟避障数据
+        self.send_obstacle = True
+        # 距离矩阵
+        self.distance_dict = {}
+        self.cell_size = int(config.field_of_view / config.view_cell)
+        self.obstacle_list = [0] * self.cell_size  # 自动避障列表
+        self.control_obstacle_list = [0] * self.cell_size  # 手动避障障碍物列表
+        # 测试新的运动控制方式
+        self.kp_v = self.server_data_obj.mqtt_send_get_obj.kp_v
+        self.is_start_step = 1  # 是否是起步阶段
+        self.want_v = 0  # 期望速度
+        self.current_v = 0  # 当前速度
+        self.pre_v = 0  # 之前速度
 
     # 连接mqtt服务器
     def connect_mqtt_server(self):
@@ -594,7 +608,7 @@ class DataManager:
         time.sleep(0.1)
         self.send_stc_data(send_stc_data)
         self.last_status_light = self.server_data_obj.mqtt_send_get_obj.status_light
-        if random.random() > 0.98:
+        if random.random() > 0.99:
             self.last_status_light = 1
 
     # 外围设备控制线程函数
@@ -651,7 +665,7 @@ class DataManager:
         self.sort_task_done_list = []  # 总共有多少个点抽水完成存储0/1  单个长度等于任务点数量[[0,0],[0,0,0,0]
         self.current_arriver_index = None  # 当前到达预存储任务点索引
         self.theta_error = 0
-
+        self.b_stop_path_track = False
     # 当模式改变是改变保存的状态消息
     def change_status_info(self, target_status, b_clear_status=False):
         """
@@ -939,6 +953,7 @@ class DataManager:
                 elif not config.home_debug and self.pi_main_obj.b_start_remote == 0:
                     if deubg_status:
                         print('遥控器控制-->空闲 self.pi_main_obj.b_start_remote', self.pi_main_obj.b_start_remote)
+                    self.pi_main_obj.stop()  # 遥控器不使能是先停止一下，防止遥控器推着摇杆关机
                     self.change_status_info(target_status=ShipStatus.idle)
                 # 切换到任务模式
                 elif not config.home_debug and self.pi_main_obj.remote_draw_status == 1:
@@ -1157,7 +1172,7 @@ class DataManager:
         """
         next_point_lng_lat = copy.deepcopy(path_planning_point_gps)
         if config.b_millimeter_wave:
-            print('config.obstacle_avoid_type', config.obstacle_avoid_type)
+            # print('config.obstacle_avoid_type', config.obstacle_avoid_type)
             # 不避障
             if config.obstacle_avoid_type == 0:
                 return path_planning_point_gps, False
@@ -1165,19 +1180,20 @@ class DataManager:
             elif config.obstacle_avoid_type == 1:
                 if 1 in self.pi_main_obj.obstacle_list[
                         int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                    if self.server_data_obj.mqtt_send_get_obj.bank_distance > 0 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
-                        return next_point_lng_lat, True
+                    return next_point_lng_lat, True
+                    # if self.server_data_obj.mqtt_send_get_obj.bank_distance > 0 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                    #     return next_point_lng_lat, True
                 else:
                     return path_planning_point_gps, False
             # 避障绕行，根据障碍物计算下一个目标点
             elif config.obstacle_avoid_type in [2, 3]:
-                angle = vfh.vfh_func(9, self.pi_main_obj.obstacle_list)
-                print('angle', angle)
+                angle = vfh.vfh_func(self.pi_main_obj.obstacle_list)
+                # print('angle', angle)
                 if angle == -1:  # 没有可通行区域
                     # 如果是离岸边太近就直接认为到达
                     if 1 in self.pi_main_obj.obstacle_list[
                             int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                        if self.server_data_obj.mqtt_send_get_obj.bank_distance > -100 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                        if -10 < self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
                             return next_point_lng_lat, True
                     else:
                         abs_angle = (self.pi_main_obj.theta + 180) % 360
@@ -1185,28 +1201,150 @@ class DataManager:
                                                                                          self.lng_lat[1],
                                                                                          abs_angle,
                                                                                          config.min_steer_distance)
-                        print('abs_angle', abs_angle)
                         return next_point_lng_lat, False
                 elif angle == 0:
                     if config.obstacle_avoid_type == 3:
                         if 1 in self.pi_main_obj.obstacle_list[
                                 int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                            if self.server_data_obj.mqtt_send_get_obj.bank_distance > -100 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                            if -10 < self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
                                 return next_point_lng_lat, True
                     # 为0表示原始路径可以通行此时不跳过
                     return next_point_lng_lat, False
-                else:
+                else:  # 船头角度不能通过但是传感器检测其他角度可以通过
                     if config.obstacle_avoid_type == 3:
                         if 1 in self.pi_main_obj.obstacle_list[
                                 int(self.pi_main_obj.cell_size / 2) - 3:int(self.pi_main_obj.cell_size / 2) + 3]:
-                            if self.server_data_obj.mqtt_send_get_obj.bank_distance > -100 and self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                            if -10 < self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
                                 return next_point_lng_lat, True
                     abs_angle = (self.pi_main_obj.theta + angle) % 360
                     next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
                                                                                      self.lng_lat[1],
                                                                                      abs_angle,
                                                                                      config.min_steer_distance)
-                    print('abs_angle', abs_angle)
+                    return next_point_lng_lat, False
+        else:
+            return path_planning_point_gps, False
+
+    # 构建模拟避障数据
+    def build_obstacle_data(self):
+        # 角度限制
+        while True:
+            # 计算船到每个障碍物的距离和角度
+            for index, point in enumerate(config.obstacle_points):
+                if not self.gaode_lng_lat or not self.current_theta:
+                    continue
+                distance = lng_lat_calculate.distanceFromCoordinate(self.gaode_lng_lat[0],
+                                                                    self.gaode_lng_lat[1],
+                                                                    point[0],
+                                                                    point[1]
+                                                                    )
+                angle = lng_lat_calculate.angleFromCoordinate(self.gaode_lng_lat[0],
+                                                              self.gaode_lng_lat[1],
+                                                              point[0],
+                                                              point[1])
+                ori_angle = angle - self.current_theta
+                if ori_angle < 0:
+                    ori_angle = 360 + ori_angle
+                self.distance_dict.update({index: [distance, ori_angle]})
+            # print('self.distance_dict', self.distance_dict)
+            self.obstacle_list = [0] * self.cell_size  # 自动避障列表
+            self.control_obstacle_list = [0] * self.cell_size  # 手动避障障碍物列表
+            for obj_id in self.distance_dict:
+                distance_average = self.distance_dict.get(obj_id)[0]
+                angle_average = self.distance_dict.get(obj_id)[1]
+                if config.field_of_view / 2 <= angle_average < 360 - config.field_of_view / 2:
+                    b_obstacle = 0
+                else:
+                    if angle_average >= 360 - config.field_of_view / 2:
+                        angle_average = angle_average - (360 - config.field_of_view / 2)
+                        obstacle_index = int(angle_average // config.view_cell + self.cell_size // 2)
+                    else:
+                        angle_average = - angle_average
+                        obstacle_index = int(angle_average // config.view_cell + self.cell_size // 2)
+                        # print('obstacle_index', obstacle_index)
+                    if distance_average > config.min_steer_distance or abs(angle_average) >= (
+                            config.field_of_view / 2):
+                        b_obstacle = 0
+                    else:
+                        # print('self.distance_dict', self.distance_dict)
+                        b_obstacle = 1
+                    try:
+                        self.obstacle_list[obstacle_index] = b_obstacle
+                    except Exception as e:
+                        print('#######################obstacle_index', obstacle_index)
+                    if distance_average > config.control_obstacle_distance:
+                        b_control_obstacle = 0
+                    else:
+                        b_control_obstacle = 1
+                    self.control_obstacle_list[obstacle_index] = b_control_obstacle
+            # print(time.time(), 'self.obstacle_list', self.obstacle_list)
+            time.sleep(0.1)
+
+        # 计算障碍物下目标点
+
+    def get_avoid_obstacle_point_debug(self, path_planning_point_gps=None):
+        """
+        调试用根据障碍物地图获取下一个运动点
+        :return: 下一个目标点，是否需要紧急停止【True为需要停止，False为不需要停止】
+        """
+        next_point_lng_lat = copy.deepcopy(path_planning_point_gps)
+        ceil_size = 4
+        if config.b_millimeter_wave:
+            # print('config.obstacle_avoid_type', config.obstacle_avoid_type)
+            # print('self.obstacle_list', self.obstacle_list)
+            # 不避障
+            if config.obstacle_avoid_type == 0:
+                return path_planning_point_gps, False
+            # 避障停止
+            elif config.obstacle_avoid_type == 1:
+                # 船头角度左右3个扇区有障碍物
+                if 1 in self.obstacle_list[
+                        int(self.cell_size / 2) - ceil_size:int(self.cell_size / 2) + ceil_size]:
+                    return path_planning_point_gps, False
+                    # 下面为避免传感器误差只有看到障碍物且船到岸边距离小于最小转弯距离才停止
+                    # if -100 < self.server_data_obj.mqtt_send_get_obj.bank_distance < config.min_steer_distance:
+                    #     return path_planning_point_gps, True
+                else:
+                    return path_planning_point_gps, False
+            # 避障绕行，根据障碍物计算下一个目标点
+            elif config.obstacle_avoid_type in [2, 3]:
+                angle = vfh.vfh_func(self.obstacle_list)
+                # print('angle', angle)
+                if angle == -1:  # 没有可通行区域
+                    # 如果是离岸边太近就直接认为到达
+                    if 1 in self.obstacle_list[
+                            int(self.cell_size / 2) - ceil_size:int(self.cell_size / 2) + ceil_size]:
+                        # 不够转弯距离返回停止  够转弯距离返回新的目标点
+                        if -100 < self.server_data_obj.mqtt_send_get_obj.bank_distance < 6:
+                            return next_point_lng_lat, True
+                        else:
+                            abs_angle = (self.current_theta + 180) % 360
+                            next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                             self.lng_lat[1],
+                                                                                             abs_angle,
+                                                                                             config.min_steer_distance / 10)
+                            print('新方向角度：', abs_angle)
+                            return next_point_lng_lat, False
+                elif angle == 0:  # 当前船头角度可通行
+                    if config.obstacle_avoid_type == 3:  # 避障方式为3是对河内避障对岸边停止
+                        if 1 in self.obstacle_list[
+                                int(self.cell_size / 2) - ceil_size:int(self.cell_size / 2) + ceil_size]:
+                            if -100 < self.server_data_obj.mqtt_send_get_obj.bank_distance < 6:
+                                return next_point_lng_lat, True
+                    # 为0表示原始路径可以通行此时不跳过
+                    return next_point_lng_lat, False
+                else:  # 船头角度不能通过但是传感器检测其他角度可以通过
+                    if config.obstacle_avoid_type == 3:  # 避障方式为3是对河内避障对岸边停止
+                        if 1 in self.obstacle_list[
+                                int(self.cell_size / 2) - ceil_size:int(self.cell_size / 2) + ceil_size]:
+                            if -100 < self.server_data_obj.mqtt_send_get_obj.bank_distance < 6:
+                                return next_point_lng_lat, True
+                    abs_angle = (self.current_theta + angle) % 360
+                    next_point_lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                                     self.lng_lat[1],
+                                                                                     abs_angle,
+                                                                                     config.min_steer_distance)
+                    print('绕行角度:', abs_angle)
                     return next_point_lng_lat, False
         else:
             return path_planning_point_gps, False
@@ -1226,7 +1364,7 @@ class DataManager:
                 self.pi_main_obj.lng_lat[1] > 1:
             cal_lng_lat = copy.deepcopy(self.pi_main_obj.lng_lat)
         else:
-            cal_lng_lat= copy.deepcopy(self.lng_lat)
+            cal_lng_lat = copy.deepcopy(self.lng_lat)
         distance = lng_lat_calculate.distanceFromCoordinate(
             cal_lng_lat[0],
             cal_lng_lat[1],
@@ -1257,6 +1395,10 @@ class DataManager:
             b_stop = False
             if not config.home_debug:
                 target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point(target_lng_lat_gps)
+            else:
+                target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point_debug(target_lng_lat_gps)
+            if b_stop:  # 避障判断是否需要停止
+                print('避障停止', b_stop)
             all_distance = lng_lat_calculate.distanceFromCoordinate(
                 cal_lng_lat[0], cal_lng_lat[1], target_lng_lat_gps[0],
                 target_lng_lat_gps[1])
@@ -1268,8 +1410,8 @@ class DataManager:
             if config.home_debug:
                 if self.current_theta is not None:
                     theta_error = point_theta - self.current_theta
-                    print(time.time(), "theta_error", theta_error, "point_theta", point_theta, 'self.current_theta',
-                          self.current_theta)
+                    # print(time.time(), "theta_error", theta_error, "point_theta", point_theta, 'self.current_theta',
+                    #       self.current_theta)
                 else:
                     theta_error = 0
             else:
@@ -1284,42 +1426,107 @@ class DataManager:
                 else:
                     theta_error = 360 + theta_error
             self.theta_error = theta_error
-            left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
-                                                                theta_error=theta_error)
+            method = 3  # 测试新的控制方式
+            if method == 2:
+                # 分为起步阶段  中间恒速阶段  到点减速阶段/避障减速
+                # 起步阶段用偏差角度小于指定阈值判断
+                if self.is_start_step:
+                    if abs(theta_error) >= 60:
+                        self.want_v = 180 - abs(theta_error)
+                    else:
+                        self.want_v = 180 - abs(theta_error)
+                        self.is_start_step = 0
+
+                # 恒速阶段用距离和偏差角度计算
+                if distance_sample >= 10:
+                    self.want_v = max(100, 250 - 2 * abs(theta_error))
+                # 到点减速阶段用距离计算期望速度
+                else:
+                    self.want_v = max(70, 25 * distance_sample)
+                # print('self.want_v',self.want_v)
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm_3(distance=self.want_v,
+                                                                    theta_error=theta_error)
+            elif method == 3:
+                # 计算距离余弦值
+                if abs(theta_error) <= 90:
+                    distance_cos = all_distance * math.cos(math.radians(abs(theta_error)))
+                else:
+                    distance_cos = 0
+                # print('point_theta,self.current_theta', point_theta, self.current_theta)
+                # print('theta_error', theta_error)
+                # print('distance_cos', distance_cos)
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm_4(distance=distance_cos,
+                                                                    theta_error=theta_error)
+                # print('left_pwm, right_pwm ', left_pwm, right_pwm)
+            else:
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
+                                                                    theta_error=theta_error)
             self.last_left_pwm = left_pwm
             self.last_right_pwm = right_pwm
             # 在家调试模式下预测目标经纬度
             if config.home_debug:
                 time.sleep(0.1)
+                if not self.last_read_time_debug:
+                    self.last_read_time_debug = time.time()
                 # 计算当前行驶里程
                 if self.last_lng_lat:
                     speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
                                                                               self.last_lng_lat[1],
-                                                                              cal_lng_lat[0],
-                                                                              cal_lng_lat[1])
+                                                                              self.lng_lat[0],
+                                                                              self.lng_lat[1])
+                    try:
+                        self.speed = round(speed_distance / (time.time() - self.last_read_time_debug), 1)
+                    except Exception as e:
+                        print('error', e)
                     self.run_distance += speed_distance
-                left_delta_pwm = int(self.last_left_pwm + left_pwm) / 2 - config.stop_pwm
-                right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
-                steer_power = left_delta_pwm - right_delta_pwm
-                forward_power = left_delta_pwm + right_delta_pwm
-                delta_distance = forward_power * 0.002
-                delta_theta = steer_power * 0.08
-                if self.last_lng_lat:
-                    ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
-                                                                       self.last_lng_lat[1],
-                                                                       cal_lng_lat[0],
-                                                                       cal_lng_lat[1])
+                if method == 3:
+                    left_delta_pwm = int(self.last_left_pwm + left_pwm) / 2 - config.stop_pwm
+                    right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
+                    steer_power = left_delta_pwm - right_delta_pwm
+                    forward_power = left_delta_pwm + right_delta_pwm
+                    delta_distance = forward_power * 0.0006
+                    delta_theta = steer_power * 0.04
+                    # print('delta_theta', delta_theta, )
+                    if self.current_theta is not None:
+                        self.current_theta = (self.current_theta - delta_theta / 2) % 360
+                        self.current_theta += 0.1
+                    self.last_lng_lat = copy.deepcopy(self.lng_lat)
+                    self.last_read_time_debug = time.time()
+                    self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                               self.lng_lat[1],
+                                                                               self.current_theta,
+                                                                               delta_distance)
                 else:
-                    ship_theta = 0
-                # 船头角度
-                self.current_theta = ship_theta
-                if self.current_theta is not None:
-                    self.current_theta = (self.current_theta - delta_theta / 2) % 360
-                self.last_lng_lat = copy.deepcopy(self.lng_lat)
-                self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-                                                                           self.lng_lat[1],
-                                                                           self.current_theta,
-                                                                           delta_distance)
+                    # 计算当前行驶里程
+                    if self.last_lng_lat:
+                        speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
+                                                                                  self.last_lng_lat[1],
+                                                                                  cal_lng_lat[0],
+                                                                                  cal_lng_lat[1])
+                        self.run_distance += speed_distance
+                    left_delta_pwm = int(self.last_left_pwm + left_pwm) / 2 - config.stop_pwm
+                    right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
+                    steer_power = left_delta_pwm - right_delta_pwm
+                    forward_power = left_delta_pwm + right_delta_pwm
+                    delta_distance = forward_power * 0.01
+                    delta_theta = steer_power * 0.09
+                    print('delta_theta', delta_theta)
+                    # if self.last_lng_lat:
+                    #     ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
+                    #                                                        self.last_lng_lat[1],
+                    #                                                        cal_lng_lat[0],
+                    #                                                        cal_lng_lat[1])
+                    # else:
+                    #     ship_theta = 0
+                    # 船头角度
+                    # self.current_theta = ship_theta
+                    if self.current_theta is not None:
+                        self.current_theta = (self.current_theta - delta_theta / 2) % 360
+                    self.last_lng_lat = copy.deepcopy(self.lng_lat)
+                    self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                               self.lng_lat[1],
+                                                                               self.current_theta,
+                                                                               delta_distance)
             else:
                 # 判断是否需要避障处理
                 print('b_stop', b_stop)
@@ -1363,7 +1570,7 @@ class DataManager:
                                     ShipStatus.at_home]:
                 self.is_wait = 1  # 是空闲
             else:
-                self.is_wait=2  # 非空闲
+                self.is_wait = 2  # 非空闲
             self.control_info = ''
             # 修改提示消息
             if self.ship_status in control_info_dict:
@@ -2344,6 +2551,7 @@ class DataManager:
                             self.server_data_obj.mqtt_send_get_obj.sampling_points_status = [0] * len(record_points)
                     time.sleep(3)
             time.sleep(1)
+
     # 开机启动一次函数
     def start_once_func(self):
         http_get_time = True

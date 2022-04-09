@@ -1039,7 +1039,7 @@ class PiMain:
                         self.remote_draw_status_2_3 = 0  # 2号抽水杆没有工作
                     # 当有一个需要抽水时就抽水
                     if self.remote_draw_status_0_1 or self.remote_draw_status_2_3:
-                        self.remote_draw_status = 1  # TODO 临时修改为 0 应该设置为 1
+                        self.remote_draw_status = 1  #
                     else:
                         self.remote_draw_status = 0
                     # 判断收起舵机  展开舵机
@@ -1105,7 +1105,7 @@ class PiMain:
                     )
             else:
                 # 超过指定时间没收到遥控器数据就让遥控器使能断开
-                if self.lora_control_receive_time and time.time() - self.lora_control_receive_time > 6:
+                if self.lora_control_receive_time and time.time() - self.lora_control_receive_time > config.remote_control_outtime:
                     self.b_start_remote = 0
 
 
