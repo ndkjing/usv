@@ -438,10 +438,9 @@ class DataManager:
         if self.b_network_backhome:
             self.server_data_obj.mqtt_send_get_obj.status_light = 1
         send_stc_data = 'E%sZ' % (str(self.server_data_obj.mqtt_send_get_obj.status_light))
-        time.sleep(0.1)
         self.send_stc_data(send_stc_data)
         self.last_status_light = self.server_data_obj.mqtt_send_get_obj.status_light
-        if random.random() > 0.98:
+        if random.random() > 0.99:
             self.last_status_light = 1
 
     # 外围设备控制线程函数
@@ -454,7 +453,7 @@ class DataManager:
     # 抽水排水控制
     def control_draw_thread(self):
         while True:
-            time.sleep(1)
+            time.sleep(0.2)
             # 当状态不是遥控器控制,不在执行任务状态且不在抽水过程中收回抽水杆子
             self.draw()
 

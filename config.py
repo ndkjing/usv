@@ -288,7 +288,7 @@ def update_height_setting():
                     left_motor_cw = int(height_setting_data.get('left_motor_cw'))
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('left_motor_cw') is not None:
+            if height_setting_data.get('right_motor_cw') is not None:
                 try:
                     right_motor_cw = int(height_setting_data.get('right_motor_cw'))
                 except Exception as e:
