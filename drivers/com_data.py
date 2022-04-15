@@ -216,6 +216,23 @@ class ComData:
                 distance = int(i[6:12], 16) / 1000
                 return distance
 
+    def read_deep(self):
+        data = self.readline()
+        print(time.time(), 'sonar count',data)
+        str_data = str(binascii.b2a_hex(data))[2:-1]
+        print('read_sonar str_data', str_data)
+        # print(r'str_data.split', str_data.split('aa'))
+        # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
+        distance = 0
+        for i in str_data.split('aa'):
+            if len(i) == 8:
+                distance = int(str_data[4:8], 16) / 1000
+                print('深度:', distance)
+        # print(str_data.split('ff')[0][:4])
+        if distance <= 0.25:
+            return -1
+        else:
+            return distance
 
 if __name__ == '__main__':
     import config
@@ -224,9 +241,10 @@ if __name__ == '__main__':
     b_com_data = 0
     b_gps = 0
     b_laser = 0
+    b_deep = 0
     while True:
         try:
-            check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  5 laser >')
+            check_type = input('check_type: 1 compass  2 ultrasonic  3 com_data  4 gps  5 laser 7 sonar deep>')
             if int(check_type) == 1:
                 b_compass = 1
             elif int(check_type) == 2:
@@ -237,6 +255,8 @@ if __name__ == '__main__':
                 b_gps = 1
             elif int(check_type) == 5:
                 b_laser = 1
+            elif int(check_type) == 7:
+                b_deep = 1
             if b_com_data:
                 serial_obj = ComData(config.stc_port,
                                      config.stc_baud,
@@ -256,6 +276,16 @@ if __name__ == '__main__':
                             serial_obj.send_data('A0Z')
                     except Exception as e:
                         print({'error': e})
+            elif b_deep:
+                serial_obj = ComData(config.stc_port,
+                                     9600,
+                                     timeout=1,
+                                     logger=logger)
+                while True:
+                    print(serial_obj.read_deep())
+                # print(serial_obj.read_deep())
+                # print(serial_obj.readline())
+                # print(serial_obj.readline())
             elif b_ultrasonic:
                 serial_obj = ComData('com3',
                                      '9600',

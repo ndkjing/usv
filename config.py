@@ -434,6 +434,7 @@ def update_height_setting():
         try:
             with open(height_setting_path, 'r') as f:
                 height_setting_data = json.load(f)
+                # print('height_setting_data',height_setting_data)
             # 读取配置
             if height_setting_data.get('motor_forward'):
                 try:
@@ -533,17 +534,17 @@ def update_height_setting():
                 except Exception as e:
                     stop_pwm = 1500
                     print({'error': e})
-            if height_setting_data.get('left_motor_cw'):
+            if height_setting_data.get('left_motor_cw') is not None:
                 try:
                     left_motor_cw = int(height_setting_data.get('left_motor_cw'))
                 except Exception as e:
-                    left_motor_cw = 0
+                    # left_motor_cw = 0
                     print({'error': e})
-            if height_setting_data.get('right_motor_cw'):
+            if height_setting_data.get('right_motor_cw') is not None:
                 try:
                     right_motor_cw = int(height_setting_data.get('right_motor_cw'))
                 except Exception as e:
-                    right_motor_cw = 0
+                    # right_motor_cw = 0
                     print({'error': e})
             if height_setting_data.get('draw_time'):
                 try:

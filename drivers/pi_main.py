@@ -436,16 +436,17 @@ class PiMain:
         if set_right_pwm <= config.min_pwm:
             set_right_pwm = config.min_pwm
         # 如果有反桨叶反转电机pwm值 设置为固定值
-        # if config.left_motor_cw == 1:
-        #     set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
-        # if config.right_motor_cw == 1:
-        #     set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
-        left_motor_cw = 1
-        right_motor_cw = 0
-        if left_motor_cw == 1:
+        print('config.left_motor_cw config.right_motor_cw',config.left_motor_cw,config.right_motor_cw)
+        if config.left_motor_cw == 1:
             set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
-        if right_motor_cw == 1:
+        if config.right_motor_cw == 1:
             set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
+        # left_motor_cw = 1
+        # right_motor_cw = 0
+        # if left_motor_cw == 1:
+        #     set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
+        # if right_motor_cw == 1:
+        #     set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
         self.target_left_pwm = int(set_left_pwm / (20000 / self.pice) / (50 / self.hz))
         self.target_right_pwm = int(set_right_pwm / (20000 / self.pice) / (50 / self.hz))
 
@@ -856,7 +857,7 @@ class PiMain:
                     print('time', time.time(), self.theta, self.angular_velocity)
 
     # 读取维特罗盘数据
-    def get_weite_compass_data(self, debug=True):
+    def get_weite_compass_data(self, debug=False):
         if config.current_platform == config.CurrentPlatform.pi:
             # 记录上一次发送数据
             last_send_data = None
@@ -984,14 +985,13 @@ class PiMain:
             time.sleep(0.01)
 
     # 新版本读取lora遥控器数据
-    def get_remote_control_data1(self, debug=False):
+    def get_remote_control_data1(self, debug=True):
         """
         读取lora遥控器数据
         :param debug:打印数据
         :return:
         """
         while True:
-
             return_remote_data = self.remote_control_obj.read_remote_control1(debug=debug)
             # 判断是否使能
             if return_remote_data and len(return_remote_data) >= 13:

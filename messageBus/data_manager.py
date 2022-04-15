@@ -207,6 +207,7 @@ class DataManager:
         self.pre_dock_lng_lat = None  # 船舶预停泊经纬度
         self.is_arriver_pre_dock = False  # 船已经到达预停泊经纬度
         self.is_at_dock = False  # 船已经到达预停泊经纬度
+        self.last_read_time_debug = None  # 调试用计算速度
         self.http_save_distance = None  # http 记录保存距离
         self.http_save_time = None  # http记录保存时间
         self.http_save_id = ''  # http记录保存id
@@ -463,7 +464,8 @@ class DataManager:
         self.server_data_obj.mqtt_send_get_obj.keep_point = 0
         self.point_arrive_start_time = None  # 清楚记录长期不到时间
         self.theta_error = 0
-
+        self.smooth_dock_path_lng_lat = None
+        self.smooth_dock_path_lng_lat_index = []
     # 当模式改变是改变保存的状态消息
 
     def change_status_info(self, target_status, b_clear_status=False):
@@ -1032,6 +1034,13 @@ class DataManager:
         @param arrive_distance: 指定到达范围
         :return:
         """
+        if not config.home_debug and \
+                self.pi_main_obj.lng_lat and \
+                self.pi_main_obj.lng_lat[0] > 1 and \
+                self.pi_main_obj.lng_lat[1] > 1:
+            cal_lng_lat = copy.deepcopy(self.pi_main_obj.lng_lat)
+        else:
+            cal_lng_lat = copy.deepcopy(self.lng_lat)
         if arrive_distance is None:
             arrive_distance = config.arrive_distance
         distance = lng_lat_calculate.distanceFromCoordinate(
@@ -1042,6 +1051,7 @@ class DataManager:
         self.distance_p = distance
         if distance < arrive_distance:
             return True
+        print('distance',distance,'arrive_distance',arrive_distance)
         # 超时不到则跳过 达到30米且60秒不到则跳过
         if distance < 30 and self.point_arrive_start_time is None:
             self.point_arrive_start_time = time.time()
@@ -1064,91 +1074,132 @@ class DataManager:
             b_stop = False
             if not config.home_debug:
                 target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point(target_lng_lat_gps)
-                # 计算偏差距离
-                all_distance = lng_lat_calculate.distanceFromCoordinate(
-                    self.lng_lat[0], self.lng_lat[1], target_lng_lat_gps[0],
-                    target_lng_lat_gps[1])
-                # 当前点到目标点角度
-                point_theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
-                                                                    self.lng_lat[1],
-                                                                    target_lng_lat_gps[0],
-                                                                    target_lng_lat_gps[1])
-                # 计算偏差角度  目标在左侧为正在右侧为负
-                if config.home_debug:
-                    if self.current_theta is not None:
-                        theta_error = point_theta - self.current_theta
-                    else:
-                        theta_error = 0
+            # 计算偏差距离
+            all_distance = lng_lat_calculate.distanceFromCoordinate(
+                self.lng_lat[0], self.lng_lat[1], target_lng_lat_gps[0],
+                target_lng_lat_gps[1])
+            # 当前点到目标点角度
+            point_theta = lng_lat_calculate.angleFromCoordinate(self.lng_lat[0],
+                                                                self.lng_lat[1],
+                                                                target_lng_lat_gps[0],
+                                                                target_lng_lat_gps[1])
+            # 计算偏差角度  目标在左侧为正在右侧为负
+            if config.home_debug:
+                if self.current_theta is not None:
+                    theta_error = point_theta - self.current_theta
                 else:
-                    if self.pi_main_obj.theta is not None:
-                        theta_error = point_theta - self.pi_main_obj.theta
-                    else:
-                        theta_error = 0
-                if abs(theta_error) > 180:
-                    if theta_error > 0:
-                        theta_error = theta_error - 360
-                    else:
-                        theta_error = 360 + theta_error
-                self.theta_error = theta_error
-                method = 2  # 测试新的控制方式
-                if method == 2:
-                    # 分为起步阶段  中间恒速阶段  到点减速阶段/避障减速
-                    # 起步阶段用偏差角度小于指定阈值判断
-                    if self.is_start_step:
-                        if abs(theta_error) >= 60:
-                            self.want_v = 180 - abs(theta_error)
-                        else:
-                            self.want_v = 180 - abs(theta_error)
-                            self.is_start_step = 0
-                    # 恒速阶段用距离和偏差角度计算
-                    if distance_sample >= 10:
-                        self.want_v = max(100, 250 - 2 * abs(theta_error))
-                    # 到点减速阶段用距离计算期望速度
-                    else:
-                        self.want_v = max(70, 25 * distance_sample)
-                    # print('self.want_v',self.want_v)
-                    left_pwm, right_pwm = self.path_track_obj.pid_pwm_3(distance=self.want_v,
-                                                                        theta_error=theta_error)
-                elif method == 3:
-                    # 计算距离余弦值
-                    if abs(theta_error) <= 90:
-                        distance_cos = all_distance * math.cos(math.radians(abs(theta_error)))
-                    else:
-                        distance_cos = 0
-                    print('point_theta,self.current_theta', point_theta, self.current_theta)
-                    print('theta_error', theta_error)
-                    print('distance_cos', distance_cos)
-                    left_pwm, right_pwm = self.path_track_obj.pid_pwm_4(distance=distance_cos,
-                                                                        theta_error=theta_error)
-                    print('left_pwm, right_pwm ', left_pwm, right_pwm)
+                    theta_error = 0
+            else:
+                if self.pi_main_obj.theta is not None:
+                    theta_error = point_theta - self.pi_main_obj.theta
                 else:
-                    left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
-                                                                        theta_error=theta_error)
-                self.last_left_pwm = left_pwm
-                self.last_right_pwm = right_pwm
+                    theta_error = 0
+            if abs(theta_error) > 180:
+                if theta_error > 0:
+                    theta_error = theta_error - 360
+                else:
+                    theta_error = 360 + theta_error
+            self.theta_error = theta_error
+            method = 2  # 测试新的控制方式
+            if method == 2:
+                # 分为起步阶段  中间恒速阶段  到点减速阶段/避障减速
+                # 起步阶段用偏差角度小于指定阈值判断
+                if self.is_start_step:
+                    if abs(theta_error) >= 60:
+                        self.want_v = 180 - abs(theta_error)
+                    else:
+                        self.want_v = 180 - abs(theta_error)
+                        self.is_start_step = 0
+                # 恒速阶段用距离和偏差角度计算
+                if distance_sample >= 10:
+                    self.want_v = max(100, 250 - 2 * abs(theta_error))
+                # 到点减速阶段用距离计算期望速度
+                else:
+                    self.want_v = max(70, 50 * distance_sample)
+                # print('self.want_v',self.want_v)
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm_3(distance=self.want_v,
+                                                                    theta_error=theta_error)
+            elif method == 3:
+                # 计算距离余弦值
+                if abs(theta_error) <= 90:
+                    distance_cos = all_distance * math.cos(math.radians(abs(theta_error)))
+                else:
+                    distance_cos = 0
+                print('point_theta,self.current_theta', point_theta, self.current_theta)
+                print('theta_error', theta_error)
+                print('distance_cos', distance_cos)
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm_4(distance=distance_cos,
+                                                                    theta_error=theta_error)
+                print('left_pwm, right_pwm ', left_pwm, right_pwm)
+            else:
+                left_pwm, right_pwm = self.path_track_obj.pid_pwm_2(distance=all_distance,
+                                                                    theta_error=theta_error)
+            self.last_left_pwm = left_pwm
+            self.last_right_pwm = right_pwm
             # 在家调试模式下预测目标经纬度
             if config.home_debug:
                 time.sleep(0.1)
+                if not self.last_read_time_debug:
+                    self.last_read_time_debug = time.time()
                 # 计算当前行驶里程
                 if self.last_lng_lat:
                     speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
                                                                               self.last_lng_lat[1],
                                                                               self.lng_lat[0],
                                                                               self.lng_lat[1])
+                    try:
+                        self.speed = round(speed_distance / (time.time() - self.last_read_time_debug), 1)
+                    except Exception as e:
+                        print('error', e)
                     self.run_distance += speed_distance
-                left_delta_pwm = int(self.last_left_pwm + left_pwm) / 2 - config.stop_pwm
-                right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
-                steer_power = left_delta_pwm - right_delta_pwm
-                forward_power = left_delta_pwm + right_delta_pwm
-                delta_distance = forward_power * 0.002
-                delta_theta = steer_power * 0.08
-                self.last_lng_lat = copy.deepcopy(self.lng_lat)
-                if self.current_theta is not None:
-                    self.current_theta = (self.current_theta - delta_theta / 2) % 360
-                self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-                                                                           self.lng_lat[1],
-                                                                           self.current_theta,
-                                                                           delta_distance)
+                if method == 3:
+                    left_delta_pwm = int(self.last_left_pwm + left_pwm) / 2 - config.stop_pwm
+                    right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
+                    steer_power = left_delta_pwm - right_delta_pwm
+                    forward_power = left_delta_pwm + right_delta_pwm
+                    delta_distance = forward_power * 0.0006
+                    delta_theta = steer_power * 0.04
+                    print('delta_theta', delta_theta, )
+                    if self.current_theta is not None:
+                        self.current_theta = (self.current_theta - delta_theta / 2) % 360
+                        self.current_theta += 0.1
+                    self.last_lng_lat = copy.deepcopy(self.lng_lat)
+                    self.last_read_time_debug = time.time()
+                    self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                               self.lng_lat[1],
+                                                                               self.current_theta,
+                                                                               delta_distance)
+                else:
+                    # 计算当前行驶里程
+                    if self.last_lng_lat:
+                        speed_distance = lng_lat_calculate.distanceFromCoordinate(self.last_lng_lat[0],
+                                                                                  self.last_lng_lat[1],
+                                                                                  cal_lng_lat[0],
+                                                                                  cal_lng_lat[1])
+                        self.run_distance += speed_distance
+                    left_delta_pwm = int(self.last_left_pwm + left_pwm) / 2 - config.stop_pwm
+                    right_delta_pwm = int(self.last_right_pwm + right_pwm) / 2 - config.stop_pwm
+                    steer_power = left_delta_pwm - right_delta_pwm
+                    forward_power = left_delta_pwm + right_delta_pwm
+                    delta_distance = forward_power * 0.01
+                    delta_theta = steer_power * 0.09
+                    print('delta_theta', delta_theta)
+                    # if self.last_lng_lat:
+                    #     ship_theta = lng_lat_calculate.angleFromCoordinate(self.last_lng_lat[0],
+                    #                                                        self.last_lng_lat[1],
+                    #                                                        cal_lng_lat[0],
+                    #                                                        cal_lng_lat[1])
+                    # else:
+                    #     ship_theta = 0
+                    # 船头角度
+                    # self.current_theta = ship_theta
+                    if self.current_theta is not None:
+                        self.current_theta = (self.current_theta - delta_theta / 2) % 360
+                    self.last_lng_lat = copy.deepcopy(self.lng_lat)
+                    self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
+                                                                               self.lng_lat[1],
+                                                                               self.current_theta,
+                                                                               delta_distance)
             else:
                 # 判断是否需要避障处理
                 print('b_stop', b_stop)
@@ -1160,7 +1211,6 @@ class DataManager:
                     return False
                 else:
                     self.obstacle_info = '0'
-
                     self.pi_main_obj.set_pwm(left_pwm, right_pwm)
             if self.ship_status != ShipStatus.computer_auto:
                 self.b_stop_path_track = True
@@ -1600,7 +1650,8 @@ class DataManager:
                         self.pi_main_obj.stop()
             # 返回船坞充电
             elif self.ship_status == ShipStatus.back_dock:
-                # config.max_pwm = 1800
+                print('dock dirction', round(
+                            float(self.server_data_obj.mqtt_send_get_obj.dock_position_data.get("dock_direction")), 1))
                 if self.server_data_obj.mqtt_send_get_obj.dock_position_data:
                     dock_lng_lat = self.server_data_obj.mqtt_send_get_obj.dock_position_data.get(
                         "dock_lng_lat")
@@ -1610,45 +1661,59 @@ class DataManager:
                             float(self.server_data_obj.mqtt_send_get_obj.dock_position_data.get("dock_direction")), 1)
                         self.pre_dock_lng_lat = lng_lat_calculate.one_point_diatance_to_end(dock_lng_lat[0],
                                                                                             dock_lng_lat[1],
-                                                                                            360 - dock_direction, 10)
+                                                                                            360 - dock_direction, 1)
                         self.dock_lng_lat = dock_lng_lat
+
                     # 平滑路径并计算下一个目标点经纬度
                     is_smooth_dock = 0
-                    dock_smooth_ceil = 3
-                    pre_dock_arrive_distance = 3  # 到达船坞前预停泊点距离
+                    dock_smooth_ceil = 1
+                    pre_dock_arrive_distance = 1 # 到达船坞前预停泊点距离
                     dock_arrive_distance = 0.2  # 到达船坞距离
-                    # 平滑路径 计算当前后退最优跟踪点
-                    if is_smooth_dock:
-                        points_gps = [self.dock_lng_lat]
-                        smooth_dock_point_lng_lat = self.calc_dock_lng_lat(points_gps, dock_smooth_ceil)
-                        print('smooth dock', smooth_dock_point_lng_lat, len(self.smooth_dock_path_lng_lat))
-                    else:
-                        smooth_dock_point_lng_lat = self.pre_dock_lng_lat
-                    if self.is_arriver_pre_dock:
 
-                        pre_dock_distance = lng_lat_calculate.distanceFromCoordinate(
-                            self.lng_lat[0],
-                            self.lng_lat[1],
-                            self.pre_dock_lng_lat[0],
-                            self.pre_dock_lng_lat[1])
+                    if not self.is_arriver_pre_dock:  # 还没到达船坞前预定义到达点
+                        if config.home_debug:
+                            pre_dock_distance = lng_lat_calculate.distanceFromCoordinate(
+                                self.lng_lat[0],
+                                self.lng_lat[1],
+                                self.pre_dock_lng_lat[0],
+                                self.pre_dock_lng_lat[1])
+                        else:
+                            pre_dock_distance = lng_lat_calculate.distanceFromCoordinate(
+                                self.pi_main_obj.lng_lat[0],
+                                self.pi_main_obj.lng_lat[1],
+                                self.pre_dock_lng_lat[0],
+                                self.pre_dock_lng_lat[1])
                         print('pre_dock_distance', pre_dock_distance)
-                        if pre_dock_distance > pre_dock_arrive_distance and not self.is_arriver_pre_dock:
-                            b_arrive_sample = self.points_arrive_control(smooth_dock_point_lng_lat,
-                                                                         smooth_dock_point_lng_lat,
-                                                                         arrive_distance=pre_dock_arrive_distance,
+                        if pre_dock_distance > dock_arrive_distance and not self.is_arriver_pre_dock:
+                            b_arrive_sample = self.points_arrive_control(self.pre_dock_lng_lat,
+                                                                         self.pre_dock_lng_lat,
+                                                                         arrive_distance=dock_arrive_distance,
                                                                          b_force_arrive=False)
+                            # b_arrive_sample = self.points_arrive_control(self.dock_lng_lat,
+                            #                                              self.dock_lng_lat,
+                            #                                              arrive_distance=dock_arrive_distance,
+                            #                                              b_force_arrive=False)
                             if b_arrive_sample:
                                 print('到达船坞预定义点', b_arrive_sample)
                                 self.is_arriver_pre_dock = True
+                        else:
+                            self.is_arriver_pre_dock = True
                     # 到达船坞前预停泊点
                     else:
                         # 靠近船坞后减小速度
                         # config.max_pwm = 1700
                         if not config.home_debug:
                             self.pi_main_obj.remote_control_obj.send_stc_data("M1Z")
-                        b_arrive_sample = self.points_arrive_control(self.dock_lng_lat,
-                                                                     self.dock_lng_lat,
-                                                                     arrive_distance=1,
+                        # 平滑路径 计算当前后退最优跟踪点
+                        if is_smooth_dock:
+                            points_gps = [self.dock_lng_lat]
+                            smooth_dock_point_lng_lat = self.calc_dock_lng_lat(points_gps, dock_smooth_ceil)
+                            print('smooth dock', smooth_dock_point_lng_lat, len(self.smooth_dock_path_lng_lat))
+                        else:
+                            smooth_dock_point_lng_lat = self.dock_lng_lat
+                        b_arrive_sample = self.points_arrive_control(smooth_dock_point_lng_lat,
+                                                                     smooth_dock_point_lng_lat,
+                                                                     arrive_distance=dock_arrive_distance,
                                                                      b_force_arrive=False)
                         if b_arrive_sample and not config.home_debug:  # 距离太近了就停止认为到达了目标点
                             self.pi_main_obj.stop()
@@ -1914,7 +1979,6 @@ class DataManager:
         high_f_status_data = {}
         while 1:
             time.sleep(0.16)
-
             if config.home_debug and self.current_theta is None:
                 self.current_theta = 1
             if config.home_debug and self.current_theta is not None:
@@ -2009,13 +2073,13 @@ class DataManager:
             else:
                 ship_theta = 0
             # 船头角度
-            if config.use_shape_theta_type == 1:
-                if config.b_pin_compass:
-                    self.current_theta = self.pi_main_obj.theta
-                else:
-                    self.current_theta = self.theta
-            else:
-                self.current_theta = ship_theta
+            # if config.use_shape_theta_type == 1:
+            #     if config.b_pin_compass:
+            #         self.current_theta = self.pi_main_obj.theta
+            #     else:
+            #         self.current_theta = self.theta
+            # else:
+            #     self.current_theta = ship_theta
             # 检查电量 如果连续20次检测电量平均值低于电量阈值就报警
             if config.energy_backhome:
                 try:

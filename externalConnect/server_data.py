@@ -426,8 +426,9 @@ class MqttSendGet:
                                   'row_gap': self.row_gap})
 
             # 返回路径规划点
-            elif topic == 'path_planning_%s' % (config.ship_code):
+            elif topic == 'path_planning_%s' % config.ship_code:
                 path_planning_data = json.loads(msg.payload)
+                print('##########################path_planning_')
                 if path_planning_data.get('path_points') is None:
                     self.logger.error('path_planning_用户确认轨迹 没有path_points字段')
                     return
@@ -445,6 +446,7 @@ class MqttSendGet:
                 self.sampling_points_status = [0] * len(self.sampling_points)
                 self.path_planning_points = path_planning_data.get('path_points')
                 self.keep_point = 1
+
                 self.logger.info({'topic': topic,
                                   'sampling_points': path_planning_data.get('sampling_points'),
                                   'path_points': path_planning_data.get('path_points'),

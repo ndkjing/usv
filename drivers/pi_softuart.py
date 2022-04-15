@@ -41,7 +41,7 @@ class PiSoftuart(object):
         self.last_lora_data = None  # 数据一次没有收完等待下次数据用于拼接
         self.dump_energy_queue = deque(maxlen=25)
 
-        self.joy_data = []  # 摇杆数据
+        self.joy_data = [50,50]  # 摇杆数据
         self.key_data = [0, 0, 0, 0, 0, 0, 0, 0]  # 按键数据
 
     def flushInput(self):
@@ -135,7 +135,7 @@ class PiSoftuart(object):
                     # res = re.findall(r'Y[!aw\d][aw\d]:(.*?)\\', str_data)
                     str_data = str(data3)
                     res = re.findall(r'Y[!aw\d][aw\d]:(.*?)\\', str_data)
-                    print('compass res', res)
+                    # print('compass res', res)
                     if len(res) > 0:
                         theta = float(res[0]) + 180
                     else:
@@ -423,14 +423,14 @@ class PiSoftuart(object):
             binary_data0 = bin(int(str_data[0], 16))[2:]
             binary_data1 = bin(int(str_data[1], 16))[2:]
             binary_data2 = bin(int(str_data[2], 16))[2:]
-            if len(binary_data0)<4:
-                binary_data0 = '0'*(4-len(binary_data0))+binary_data0
-            if len(binary_data1)<4:
-                binary_data1 = '0'*(4-len(binary_data1))+binary_data1
-            if len(binary_data2)<4:
-                binary_data2 = '0'*(4-len(binary_data2))+binary_data2
-            print('binary_data0,binary_data1,binary_data2',binary_data0,binary_data1,binary_data2)
-            print('binary_data0,binary_data1,binary_data2',len(binary_data0),len(binary_data1),len(binary_data2))
+            if len(binary_data0) < 4:
+                binary_data0 = '0' * (4 - len(binary_data0)) + binary_data0
+            if len(binary_data1) < 4:
+                binary_data1 = '0' * (4 - len(binary_data1)) + binary_data1
+            if len(binary_data2) < 4:
+                binary_data2 = '0' * (4 - len(binary_data2)) + binary_data2
+            print('binary_data0,binary_data1,binary_data2', binary_data0, binary_data1, binary_data2)
+            print('binary_data0,binary_data1,binary_data2', len(binary_data0), len(binary_data1), len(binary_data2))
             binary_data0 = "%04s" % binary_data0
             # binary_data1 = "%04s" % binary_data1
             # binary_data2 = "%04s" % binary_data2
@@ -454,7 +454,7 @@ class PiSoftuart(object):
             self.key_data[4] = int(binary_data1[0:2])
             self.key_data[5] = int(binary_data1[2:4])
             self.key_data[6] = int(binary_data2[0:2])
-            self.key_data[7] = int(binary_data1[2:4])
+            self.key_data[7] = int(binary_data2[2:4])
         elif data_type == 3:
             self.key_data[0] = 0
             self.key_data[1] = 0

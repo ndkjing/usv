@@ -140,7 +140,7 @@ class SimplePid:
         # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
         steer_control = self.update_steer_pid_1(theta_error)
         steer_pwm = (0.6 / (1.0 + e ** (-0.015 * steer_control)) - 0.3) * 1000
-        forward_pwm = (1.0 / (1.0 + e ** (-0.3 * distance)) - 0.5) * 1000
+        forward_pwm = (1.0 / (1.0 + e ** (-0.5 * distance)) - 0.5) * 1000
         # 缩放到指定最大值范围内
         max_control = config.max_pwm - config.stop_pwm
         if forward_pwm + abs(steer_pwm) > max_control:
