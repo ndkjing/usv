@@ -520,7 +520,7 @@ class MqttSendGet:
                         config.update_base_setting()
 
             # 高级配置
-            elif topic == 'height_setting_%s' % (config.ship_code):
+            elif topic == 'height_setting_%s' % config.ship_code:
                 height_setting_data = json.loads(msg.payload)
                 # print('height_setting_data',height_setting_data)
                 if height_setting_data.get("info_type") is None:
@@ -551,7 +551,7 @@ class MqttSendGet:
                         config.update_height_setting()
 
             # 刷新后请求数据消息
-            elif topic == 'refresh_%s' % (config.ship_code):
+            elif topic == 'refresh_%s' % config.ship_code:
                 self.logger.info({'refresh_setting ': json.loads(msg.payload)})
                 refresh_data = json.loads(msg.payload)
                 if refresh_data.get("info_type") is None:
@@ -562,7 +562,7 @@ class MqttSendGet:
                     self.refresh_info_type = info_type
 
             # 处理重置
-            elif topic == 'reset_pool_%s' % (config.ship_code):
+            elif topic == 'reset_pool_%s' % config.ship_code:
                 reset_pool_data = json.loads(msg.payload)
                 if reset_pool_data.get('reset_pool') is None:
                     self.logger.error('reset_pool_处理控制数据没有reset_pool')
@@ -573,7 +573,7 @@ class MqttSendGet:
                                   })
 
             # 处理设置返航点
-            elif topic == 'set_home_%s' % (config.ship_code):
+            elif topic == 'set_home_%s' % config.ship_code:
                 set_home_data = json.loads(msg.payload)
                 if set_home_data.get('lng_lat') is None:
                     self.logger.error('set_home_处理控制数据没有lng_lat')
@@ -632,11 +632,13 @@ class MqttSendGet:
                 self.get_task = int(task_data.get("get_task"))
                 # 发送 取消任务等于按暂停按键
                 if self.get_task == 2:
-                    self.control_move_direction = 0
+                    self.control_move_direction = -1
                     self.cancel_task = 1
                     self.task_id = task_data.get("task_id")
-                if self.get_task == 1 and not self.task_id:
+                # if self.get_task == 1 and not self.task_id:
+                if self.get_task == 1:
                     self.task_id = task_data.get("task_id")
+                print('###################self.task_id self.get_task',self.task_id,self.get_task)
                 self.logger.info(task_data)
                 if self.send_log:
                     send_log_data = {

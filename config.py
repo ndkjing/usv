@@ -203,9 +203,9 @@ calibration_compass = 0
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
 # 平滑路径最小单位 m
-smooth_path_ceil_size = 5
+smooth_path_ceil_size = 3
 # 前视觉距离
-forward_see_distance = 9
+forward_see_distance = 5
 # 舵机最大扫描角度单侧 左边为正右边为负
 steer_max_angle = 30
 # 最小转向距离
@@ -287,7 +287,7 @@ def update_height_setting():
                     left_motor_cw = int(height_setting_data.get('left_motor_cw'))
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('left_motor_cw') is not None:
+            if height_setting_data.get('right_motor_cw') is not None:
                 try:
                     right_motor_cw = int(height_setting_data.get('right_motor_cw'))
                 except Exception as e:

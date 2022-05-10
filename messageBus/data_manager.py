@@ -605,7 +605,6 @@ class DataManager:
         if self.b_network_backhome:
             self.server_data_obj.mqtt_send_get_obj.status_light = 1
         send_stc_data = 'E%sZ' % (str(self.server_data_obj.mqtt_send_get_obj.status_light))
-        time.sleep(0.1)
         self.send_stc_data(send_stc_data)
         self.last_status_light = self.server_data_obj.mqtt_send_get_obj.status_light
         if random.random() > 0.99:
@@ -666,6 +665,7 @@ class DataManager:
         self.current_arriver_index = None  # 当前到达预存储任务点索引
         self.theta_error = 0
         self.b_stop_path_track = False
+
     # 当模式改变是改变保存的状态消息
     def change_status_info(self, target_status, b_clear_status=False):
         """
@@ -1103,6 +1103,7 @@ class DataManager:
                                                                             lng_lat[0],
                                                                             lng_lat[1])
             index += 1
+        # print('索引经纬度距离 索引 全部点', index_point_distance, index, len(self.search_list))
         # 超过第一个点后需要累积之前计数
         if index_ > 0:
             self.path_info = [self.smooth_path_lng_lat_index[index_ - 1] + index, len(self.smooth_path_lng_lat)]
@@ -1379,6 +1380,13 @@ class DataManager:
         elif self.point_arrive_start_time and time.time() - self.point_arrive_start_time > 60:
             return True
         while distance >= config.arrive_distance:
+            if not config.home_debug and \
+                    self.pi_main_obj.lng_lat and \
+                    self.pi_main_obj.lng_lat[0] > 1 and \
+                    self.pi_main_obj.lng_lat[1] > 1:
+                cal_lng_lat = copy.deepcopy(self.pi_main_obj.lng_lat)
+            else:
+                cal_lng_lat = copy.deepcopy(self.lng_lat)
             if distance < 30 and self.point_arrive_start_time is None:
                 self.point_arrive_start_time = time.time()
             elif self.point_arrive_start_time and time.time() - self.point_arrive_start_time > 60:
@@ -1391,8 +1399,8 @@ class DataManager:
             self.distance_p = distance_sample
             if distance_sample < config.arrive_distance:
                 return True
+            # print('到采样点距离',distance_sample)
             # 避障判断下一个点
-            b_stop = False
             if not config.home_debug:
                 target_lng_lat_gps, b_stop = self.get_avoid_obstacle_point(target_lng_lat_gps)
             else:
@@ -1400,11 +1408,10 @@ class DataManager:
             if b_stop:  # 避障判断是否需要停止
                 print('避障停止', b_stop)
             all_distance = lng_lat_calculate.distanceFromCoordinate(
-                cal_lng_lat[0], cal_lng_lat[1], target_lng_lat_gps[0],
+                self.lng_lat[0], self.lng_lat[1],target_lng_lat_gps[0],
                 target_lng_lat_gps[1])
             # 当前点到目标点角度
-            point_theta = lng_lat_calculate.angleFromCoordinate(cal_lng_lat[0],
-                                                                cal_lng_lat[1],
+            point_theta = lng_lat_calculate.angleFromCoordinate(cal_lng_lat[0], cal_lng_lat[1],
                                                                 target_lng_lat_gps[0],
                                                                 target_lng_lat_gps[1])
             if config.home_debug:
@@ -1455,6 +1462,7 @@ class DataManager:
                 # print('point_theta,self.current_theta', point_theta, self.current_theta)
                 # print('theta_error', theta_error)
                 # print('distance_cos', distance_cos)
+                # print('到下一点距离', all_distance)
                 left_pwm, right_pwm = self.path_track_obj.pid_pwm_4(distance=distance_cos,
                                                                     theta_error=theta_error)
                 # print('left_pwm, right_pwm ', left_pwm, right_pwm)
@@ -1492,8 +1500,8 @@ class DataManager:
                         self.current_theta += 0.1
                     self.last_lng_lat = copy.deepcopy(self.lng_lat)
                     self.last_read_time_debug = time.time()
-                    self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-                                                                               self.lng_lat[1],
+                    self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(cal_lng_lat[0],
+                                                                               cal_lng_lat[1],
                                                                                self.current_theta,
                                                                                delta_distance)
                 else:
@@ -1523,8 +1531,8 @@ class DataManager:
                     if self.current_theta is not None:
                         self.current_theta = (self.current_theta - delta_theta / 2) % 360
                     self.last_lng_lat = copy.deepcopy(self.lng_lat)
-                    self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(self.lng_lat[0],
-                                                                               self.lng_lat[1],
+                    self.lng_lat = lng_lat_calculate.one_point_diatance_to_end(cal_lng_lat[0],
+                                                                               cal_lng_lat[1],
                                                                                self.current_theta,
                                                                                delta_distance)
             else:
@@ -1677,7 +1685,6 @@ class DataManager:
                 #         time.sleep(0.5)
                 #         self.logger.info('等待点击开始寻点')
                 #         continue
-
                 # 计算总里程 和其他需要在巡航开始前计算数据
                 if self.totle_distance == 0:
                     for index, gaode_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points):
@@ -1737,7 +1744,12 @@ class DataManager:
                             next_lng_lat[1],
                             sampling_point_gps[0],
                             sampling_point_gps[1])
-                        if sample_distance < config.forward_see_distance:
+                        arrive_sample_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+                                                                            self.lng_lat[1],
+                                                                            sampling_point_gps[0],
+                                                                            sampling_point_gps[1])
+                        # print('索引点到采样点距离 船到采样点距离',sample_distance,arrive_sample_distance)
+                        if arrive_sample_distance < config.forward_see_distance:
                             b_arrive_sample = self.points_arrive_control(sampling_point_gps, sampling_point_gps,
                                                                          b_force_arrive=True)
                         else:
@@ -2137,6 +2149,7 @@ class DataManager:
                           topic='user_lng_lat_%s' % config.ship_code,
                           data=user_lng_lat_data,
                           qos=0)
+                print('mqtt任务经纬度数据',user_lng_lat_data)
                 self.has_task = 1
                 # self.server_data_obj.mqtt_send_get_obj.task_list = []
             # elif len(self.task_list) > 0 and config.ship_gaode_lng_lat is None:

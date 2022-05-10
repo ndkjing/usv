@@ -535,6 +535,7 @@ class PiSoftuart(object):
         if self._pi.wave_tx_busy():
             pass
         self._pi.wave_delete(data)
+
     def set_thread_ts(self, thread_ts):
         self._thread_ts = thread_ts
 

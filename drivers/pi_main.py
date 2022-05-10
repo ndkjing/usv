@@ -480,16 +480,16 @@ class PiMain:
             set_right_pwm = config.min_pwm
         # print('config.left_motor_cw,config.right_motor_cw',config.left_motor_cw,config.right_motor_cw)
         # 如果有反桨叶反转电机pwm值
-        # if config.left_motor_cw == 1:
-        #     set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
-        # if config.right_motor_cw == 1:
-        #     set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
-        left_motor_cw = 1
-        right_motor_cw = 0
-        if left_motor_cw == 1:
+        if config.left_motor_cw == 1:
             set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
-        if right_motor_cw == 1:
+        if config.right_motor_cw == 1:
             set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
+        # left_motor_cw = 1
+        # right_motor_cw = 0
+        # if left_motor_cw == 1:
+        #     set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
+        # if right_motor_cw == 1:
+        #     set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
         self.target_left_pwm = int(set_left_pwm / (20000 / self.pice) / (50 / self.hz))
         self.target_right_pwm = int(set_right_pwm / (20000 / self.pice) / (50 / self.hz))
 
