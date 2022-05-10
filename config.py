@@ -173,9 +173,9 @@ ship_gaode_lng_lat = [114.524096, 30.506853]  # 九峰水库
 # ship_gaode_lng_lat = [114.170754,30.522358]   # 三角湖
 # ship_gaode_lng_lat = [114.431419,30.524192]     # 喻家湖
 # pid三参数
-kp = 0.6
+kp = 0.7
 ki = 0.2
-kd = 2.0
+kd = 0.1
 # 最大pwm值
 max_pwm = 1800
 # 最小pwm值
@@ -416,6 +416,13 @@ b_pin_compass = 1
 pin_compass_baud = 9600
 pin_compass_tx = 27
 pin_compass_rx = 22
+# 维特罗盘
+b_weite_compass = 0
+weite_compass_rx = 14  # RX
+weite_compass_tx = 15  # TX
+# weite_compass_rx = 22  # RX
+# weite_compass_tx = 27  # TX
+weite_compass_baud = 9600
 # 软串口gps
 b_pin_gps = 1
 pin_gps_baud = 9600

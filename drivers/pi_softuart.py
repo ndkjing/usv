@@ -6,7 +6,7 @@ from collections import deque
 import binascii
 import crcmod
 import config
-
+import re
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root_dir)
 
@@ -107,27 +107,40 @@ class PiSoftuart(object):
 
     def read_weite_compass(self, send_data=None, len_data=None, debug=False):
         if len_data is None:
-            len_data = 4
+            len_data = 20
             try:
                 if send_data:
+                    send_data = send_data.encode('utf-8')
                     print('send_data', send_data)
-                    self.write_data(send_data)
+                    self.write_data(send_data, b_weite=True)
+                    time.sleep(self._thread_ts)
+                    count, data = self._pi.bb_serial_read(self._rx_pin)
+                    time.sleep(self._thread_ts * 2)
+                    count, data1 = self._pi.bb_serial_read(self._rx_pin)
+                    time.sleep(self._thread_ts * 3)
+                    count, data2 = self._pi.bb_serial_read(self._rx_pin)
+                    if debug:
+                        print('cel data######################################', time.time(), count, data, data1, data2)
                 time.sleep(self._thread_ts)
-                time.sleep(0.1)
-                count, data1 = self._pi.bb_serial_read(self._rx_pin)
-                time.sleep(0.1)
-                count, data2 = self._pi.bb_serial_read(self._rx_pin)
-                time.sleep(0.1)
                 count, data3 = self._pi.bb_serial_read(self._rx_pin)
                 if debug:
-                    print('send_data', send_data)
-                    print('self._rx_pin', self._rx_pin, self.baud)
-                    print(time.time(), 'count', count, 'data', data1, 'data2', data2, 'data3', data3)
+                    print(time.time(), count, data3)
                 if count > len_data:
-                    str_data = data1.decode('utf-8')[2:-1]
-                    theta = float(str_data)
-                    return 360 - theta
-                # time.sleep(self._thread_ts)
+                    # str_data = str(data3)[15:-5]
+                    # res = re.findall(r'Y[!aw\d][aw\d]:(.*?)\\', str_data)
+
+                    str_data = str(data3)
+                    res = re.findall(r'Y[!aw\d][aw\d]:(.*?)\\', str_data)
+                    # print('compass res', res)
+                    if len(res) > 0:
+                        theta = float(res[0]) + 180
+                    else:
+                        theta = None
+                    if debug:
+                        print(time.time(), 'float res', theta)
+                        print(time.time(), type(str_data), '############data3    str_data', data3, str_data)
+                    return theta
+                    # time.sleep(self._thread_ts)
             except Exception as e:
                 print({'error read_compass': e})
                 return None
@@ -480,62 +493,69 @@ class PiSoftuart(object):
         :return:
         """
         if len_data is None:
-            # try:
-            time.sleep(self._thread_ts)
-            return_list = None
-            # 发送数据让遥控器接受变为绿灯
-            s = 'S9'
-            str_16 = str(binascii.b2a_hex(s.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
-            # str_16 = '41305a'
-            if self.last_send is None:
-                self.write_data(str_16, baud=self.baud, debug=debug)
-                self.last_send = time.time()
-            else:
-                if time.time() - self.last_send > 0.5:
-                    # self.write_data(str_16, baud=self.baud, debug=debug)
+            try:
+                time.sleep(self._thread_ts)
+                return_list = None
+                # 发送数据让遥控器接受变为绿灯
+                s = 'S9'
+                str_16 = str(binascii.b2a_hex(s.encode('utf-8')))[2:-1]  # 字符串转16进制字符串
+                # str_16 = '41305a'
+                if self.last_send is None:
+                    self.write_data(str_16, baud=self.baud, debug=debug)
                     self.last_send = time.time()
-            count, data = self._pi.bb_serial_read(self._rx_pin)
-            if debug:
-                print(time.time(), 'count', count, 'data', data)
-            if count >= 7:
-                # 转换数据然后按照换行符分隔
-                str_data = str(data, encoding="utf8")
-                data_list = str_data.split('\r\n')
+                else:
+                    if time.time() - self.last_send > 0.5:
+                        # self.write_data(str_16, baud=self.baud, debug=debug)
+                        self.last_send = time.time()
+                count, data = self._pi.bb_serial_read(self._rx_pin)
                 if debug:
-                    print(time.time(), 'str_data', str_data, 'data_list', data_list)
-                for item in data_list:
-                    temp_data = item.strip()
-                    if len(temp_data) < 2:
-                        continue
-                    # 开头结尾都存在是完整的一帧数据
-                    if temp_data[0] == 'A' and temp_data[-1] == 'Z':
-                        # print(time.time(),'接收到摇杆数据', temp_data)
-                        return_list = self.split_lora_data1(temp_data[1:-1])
-                    elif temp_data[0] == 'H' and temp_data[-1] == 'Z':
-                        if len(temp_data) == 7:  # 有按键按下情况
-                            crc8 = crcmod.predefined.Crc('crc-8')
-                            crc8.update(bytes().fromhex('0' + temp_data[1:4]))
-                            # print(crc8.crcValue,int(temp_data[4:6],16))
-                            if crc8.crcValue == int(temp_data[4:6], 16):
+                    print(time.time(), 'count', count, 'data', data)
+                if count >= 7:
+                    # 转换数据然后按照换行符分隔
+                    str_data = str(data, encoding="utf8")
+                    data_list = str_data.split('\r\n')
+                    if debug:
+                        print(time.time(), 'str_data', str_data, 'data_list', data_list)
+                    for item in data_list:
+                        temp_data = item.strip()
+                        if len(temp_data) < 2:
+                            continue
+                        # 开头结尾都存在是完整的一帧数据
+                        if temp_data[0] == 'A' and temp_data[-1] == 'Z':
+                            # print(time.time(),'接收到摇杆数据', temp_data)
+                            return_list = self.split_lora_data1(temp_data[1:-1])
+                        elif temp_data[0] == 'H' and temp_data[-1] == 'Z':
+                            if len(temp_data) == 7:  # 有按键按下情况
+                                crc8 = crcmod.predefined.Crc('crc-8')
+                                crc8.update(bytes().fromhex('0' + temp_data[1:4]))
+                                # print(crc8.crcValue,int(temp_data[4:6],16))
+                                if crc8.crcValue == int(temp_data[4:6], 16):
+                                    print(time.time(), '接收到按键数据', temp_data)
+                                    return_list = self.split_lora_data1(temp_data[1:4], data_type=2)
+                            elif len(temp_data) == 5:  # 无按键按下情况
                                 print(time.time(), '接收到按键数据', temp_data)
-                                return_list = self.split_lora_data1(temp_data[1:4], data_type=2)
-                        elif len(temp_data) == 5:  # 无按键按下情况
-                            print(time.time(), '接收到按键数据', temp_data)
-                            return_list = self.split_lora_data1(temp_data[1:4], data_type=3)
-                return return_list
-            # except Exception as e:
-            #     time.sleep(self._thread_ts)
-            #     print({'error read_remote_control': e})
-            #     return None
+                                return_list = self.split_lora_data1(temp_data[1:4], data_type=3)
+                    return return_list
+            except Exception as e:
+                time.sleep(self._thread_ts)
+                print({'error read_remote_control1': e})
+                return None
 
-    def write_data(self, msg, baud=None, debug=False):
+    def write_data(self, msg, baud=None, debug=False, b_weite=False):
         if debug:
-            print('send data', msg)
+            pass
+            # print('send data', msg)
         self._pi.wave_clear()
-        if baud:
-            self._pi.wave_add_serial(self._tx_pin, baud, bytes.fromhex(msg))
+        if b_weite:
+            if baud:
+                self._pi.wave_add_serial(self._tx_pin, baud, msg)
+            else:
+                self._pi.wave_add_serial(self._tx_pin, 9600, msg)
         else:
-            self._pi.wave_add_serial(self._tx_pin, 9600, bytes.fromhex(msg))
+            if baud:
+                self._pi.wave_add_serial(self._tx_pin, baud, bytes.fromhex(msg))
+            else:
+                self._pi.wave_add_serial(self._tx_pin, 9600, bytes.fromhex(msg))
         data = self._pi.wave_create()
         self._pi.wave_send_once(data)
         if self._pi.wave_tx_busy():
