@@ -362,11 +362,14 @@ class BaiduMap(object):
     def get_area_code(lng_lat):
         address_url = 'https://restapi.amap.com/v3/geocode/regeo?output=json&location={position}&key={key}&radius=1000&extensions=all&poitype=湖泊'.format(
             position='%f,%f' % (lng_lat[0], lng_lat[1]), key=config.gaode_key)
-        response = requests.get(address_url)
-        address_response_data = json.loads(response.content)
-        if int(address_response_data.get('status')) == 1:
-            adcode = address_response_data.get('regeocode').get('addressComponent').get('adcode')
-            return adcode
+        try:
+            response = requests.get(address_url)
+            address_response_data = json.loads(response.content)
+            if int(address_response_data.get('status')) == 1:
+                adcode = address_response_data.get('regeocode').get('addressComponent').get('adcode')
+                return adcode
+        except Exception as e:
+            print('请求高德地图经纬度对应城市编码失败',e)
 
     # 按照经纬度url获取静态图
     def draw_image(self, ):

@@ -487,6 +487,7 @@ class DataManager:
         self.theta_error = 0
         self.b_stop_path_track = False
         self.obstacle_avoid_time_distance = []
+        self.b_at_home =0
 
     # 处理状态切换
     def change_status(self):
@@ -524,6 +525,7 @@ class DataManager:
                     self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
                     self.last_ship_status = ShipStatus.computer_control
                     self.ship_status = ShipStatus.tasking
+
             # 判断电脑手动状态切换到其他状态
             if self.ship_status == ShipStatus.computer_control:
                 # 切换到遥控器控制
@@ -548,6 +550,7 @@ class DataManager:
                 elif return_ship_status is not None:
                     self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
                     self.ship_status = return_ship_status
+                    self.last_ship_status = ShipStatus.computer_control
 
             # 判断电脑自动切换到其他状态情况
             if self.ship_status == ShipStatus.computer_auto:
@@ -561,6 +564,7 @@ class DataManager:
                 elif return_ship_status is not None:
                     self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
                     self.ship_status = return_ship_status
+                    self.last_ship_status = ShipStatus.computer_auto
                 # 取消自动模式
                 elif self.server_data_obj.mqtt_send_get_obj.control_move_direction == -1:
                     self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
@@ -622,6 +626,9 @@ class DataManager:
                 # 切换到电脑手动控制
                 if self.server_data_obj.mqtt_send_get_obj.control_move_direction == -1:
                     self.ship_status = ShipStatus.computer_control
+                # 返航途中发现不满足返航条件 时退出返航状态
+                if not return_ship_status:
+                    self.ship_status = self.last_ship_status
 
             # 返航到家状态切换到其他状态
             if self.ship_status == ShipStatus.at_home:
@@ -1356,9 +1363,8 @@ class DataManager:
             # 返航 断网返航 低电量返航
             elif self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
                 # 有返航点下情况下返回返航点，没有则停止
-                print('back home')
                 if self.home_lng_lat:
-                    back_home_flag = self.points_arrive_control(self.home_lng_lat, self.home_lng_lat, True, True)
+                    back_home_flag = self.points_arrive_control(self.home_lng_lat, self.home_lng_lat, False, False)
                     if back_home_flag:
                         self.b_at_home = 1
                 else:
@@ -1755,6 +1761,7 @@ class DataManager:
             time.sleep(5)
             if not self.server_data_obj.mqtt_send_get_obj.is_connected:
                 continue
+            print('config.network_backhome',config.network_backhome)
             if config.network_backhome:
                 ping = check_network.get_ping_delay()
                 if ping:
@@ -2009,9 +2016,10 @@ class DataManager:
                 self.is_init_motor = 1
             if not self.b_check_get_water_data and self.gaode_lng_lat is not None:
                 adcode = baidu_map.BaiduMap.get_area_code(self.gaode_lng_lat)
-                self.area_id = data_valid.adcode_2_area_id(adcode)
-                data_valid.get_current_water_data(area_id=self.area_id)
-                self.b_check_get_water_data = 1
+                if adcode:
+                    self.area_id = data_valid.adcode_2_area_id(adcode)
+                    data_valid.get_current_water_data(area_id=self.area_id)
+                    self.b_check_get_water_data = 1
             # 发送模拟障碍物
             if self.send_obstacle:
                 obstacle_points = {"lng_lat": config.obstacle_points}
@@ -2408,16 +2416,20 @@ class DataManager:
         :return:返回None为不需要返航，返回低电量返航或者断网返航
         """
         return_ship_status = None
-        if config.network_backhome and self.server_data_obj.mqtt_send_get_obj.is_connected:
+        if config.network_backhome:
+            #
             if int(config.network_backhome) > 600:
-                network_backhome_time = int(config.network_backhome)
-            else:
                 network_backhome_time = 600
+            else:
+                network_backhome_time = int(config.network_backhome)
             # 使用过电脑端按键操作过才能进行断网返航
             if self.server_data_obj.mqtt_send_get_obj.b_receive_mqtt:
                 if time.time() - self.server_data_obj.mqtt_send_get_obj.last_command_time > network_backhome_time:
                     return_ship_status = ShipStatus.backhome_network
+                    # print('return_ship_status',return_ship_status)
         if self.low_dump_energy_warnning:
             # 记录是因为按了低电量判断为返航
             return_ship_status = ShipStatus.backhome_low_energy
+        if return_ship_status is not None and self.ship_status not in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
+            self.logger.info({"正在返航":return_ship_status})
         return return_ship_status

@@ -255,7 +255,9 @@ class DataDefine:
             ('action_%s' % config.ship_code, 0),
             ('jump_point_%s' % config.ship_code, 0),
             ('pause_continue_%s' % config.ship_code, 0),
-            ('path_planning_confirm_%s' % config.ship_code, 0))
+            ('path_planning_confirm_%s' % config.ship_code, 0),
+            ('notice_info_%s' % config.ship_code, 0)
+        )
 
         self.pool_code = ''
         self.water = self.water_data()

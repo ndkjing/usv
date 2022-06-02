@@ -262,7 +262,7 @@ class MqttSendGet:
         try:
             # 回调更新控制数据
             topic = msg.topic
-            self.last_command_time = time.time()
+
 
             # 处理控制数据
             if topic == 'control_data_%s' % config.ship_code:
@@ -710,7 +710,7 @@ class MqttSendGet:
                 self.logger.info({'topic': topic,
                                   'action_data': action_data,
                                   })
-
+            # 暂停开始消息
             elif topic == 'pause_continue_%s' % config.ship_code:
                 pause_continue_data = json.loads(msg.payload)
                 if pause_continue_data.get("data") is None:
@@ -720,6 +720,11 @@ class MqttSendGet:
                 self.logger.info({'topic': topic,
                                   'action_data': pause_continue_data,
                                   })
+
+            # 监听提示消息判断是否断开网络连接需要返航
+            elif topic == 'notice_info_%s' % config.ship_code:
+                self.last_command_time=time.time()
+
         except Exception as e:
             self.logger.error({'error': e})
 
