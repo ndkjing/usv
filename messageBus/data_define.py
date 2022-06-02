@@ -250,6 +250,11 @@ class DataDefine:
             ('record_point_%s' % config.ship_code, 0),
             ('record_path_%s' % config.ship_code, 0),
             ('surrounded_%s' % config.ship_code, 0),
+            ('token_%s' % config.ship_code, 0),
+            ('task_%s' % config.ship_code, 0),
+            ('action_%s' % config.ship_code, 0),
+            ('jump_point_%s' % config.ship_code, 0),
+            ('pause_continue_%s' % config.ship_code, 0),
             ('path_planning_confirm_%s' % config.ship_code, 0))
 
         self.pool_code = ''

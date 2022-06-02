@@ -69,7 +69,6 @@ def main():
     common_func_list = [data_manager_obj.move_control,
                         data_manager_obj.check_status,
                         data_manager_obj.send_mqtt_status_data,
-                        data_manager_obj.send_mqtt_detect_data,
                         data_manager_obj.update_ship_gaode_lng_lat,
                         data_manager_obj.update_lng_lat,
                         data_manager_obj.update_config,
@@ -81,10 +80,12 @@ def main():
                         data_manager_obj.start_once_func,
                         data_manager_obj.control_draw_thread,
                         data_manager_obj.send_distacne,
+                        data_manager_obj.loop_check_task,
                         data_manager_obj.send_high_f_status_data,
                         data_manager_obj.send_record_point_data,
                         data_manager_obj.scan_cal,
-                        # data_manager_obj.build_obstacle_data,
+                        data_manager_obj.loop_send_http,
+                        data_manager_obj.build_obstacle_data,
                         ]
     common_thread_list = []
     # 树莓派对象数据处理
@@ -97,7 +98,6 @@ def main():
                         data_manager_obj.pi_main_obj.get_compass_data,
                         data_manager_obj.pi_main_obj.get_weite_compass_data,
                         data_manager_obj.pi_main_obj.get_com_data,
-                        data_manager_obj.pi_main_obj.get_distance_dict,
                         data_manager_obj.pi_main_obj.get_distance_dict_millimeter,
                         data_manager_obj.pi_main_obj.get_stc_data,
                         data_manager_obj.pi_main_obj.get_remote_control_data1,
@@ -109,9 +109,8 @@ def main():
         pi_func_flag.append(True if config.b_pin_compass else False)
         pi_func_flag.append(True if config.b_weite_compass else False)
         pi_func_flag.append(True if config.b_com_stc else False)
-        pi_func_flag.append(True if config.b_laser else False)
         pi_func_flag.append(True if config.b_millimeter_wave else False)
-        pi_func_flag.append(True if config.b_laser or config.b_millimeter_wave else False)
+        # pi_func_flag.append(True if config.b_laser or config.b_millimeter_wave else False)
         pi_func_flag.append(True if config.b_pin_stc else False)
         pi_func_flag.append(True if config.b_lora_remote_control else False)
         pi_func_flag.append(True if config.b_control_deep else False)

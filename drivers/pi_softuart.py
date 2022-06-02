@@ -40,9 +40,9 @@ class PiSoftuart(object):
         self.last_lora_data = None  # 数据一次没有收完等待下次数据用于拼接
         self.dump_energy_queue = deque(maxlen=25)
         self._value_lock = value_lock
-
         self.joy_data = [50,50]  # 摇杆数据
         self.key_data = [0, 0, 0, 0, 0, 0, 0, 0]  # 按键数据
+
     def flushInput(self):
         pigpio.exceptions = False  # fatal exceptions off (so that closing an unopened gpio doesn't error)
         self._pi.bb_serial_read_close(self._rx_pin)
@@ -530,7 +530,7 @@ class PiSoftuart(object):
                                 crc8.update(bytes().fromhex('0' + temp_data[1:4]))
                                 # print(crc8.crcValue,int(temp_data[4:6],16))
                                 if crc8.crcValue == int(temp_data[4:6], 16):
-                                    print(time.time(), '接收到按键数据', temp_data)
+                                    # print(time.time(), '接收到按键数据', temp_data)
                                     return_list = self.split_lora_data1(temp_data[1:4], data_type=2)
                             elif len(temp_data) == 5:  # 无按键按下情况
                                 print(time.time(), '接收到按键数据', temp_data)

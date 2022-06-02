@@ -76,49 +76,15 @@ gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
 # 腾讯地图key
 tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
 
-draw_time = 20
+draw_time = 10
 
 # 速度等级 1到5级 速度从低到高，仅能控制手动模式下速度   1 级表示1600 5 2000
 speed_grade = 3
-arrive_distance = 2.5
-
+arrive_distance = 2.5  # 到达范围   ==》改为给设置区域扫描间隔使用
+scan_gap = 10  # 扫描间隔
 
 # 多点和寻点模式下查找连接点数量
 # keep_point = 0
-
-
-def update_base_setting():
-    global speed_grade
-    global arrive_distance
-    global find_points_num
-    if os.path.exists(base_setting_path):
-        try:
-            with open(base_setting_path, 'r') as f:
-                base_setting_data = json.load(f)
-            # 读取配置
-            if base_setting_data.get('speed_grade'):
-                try:
-                    s_speed_grade = int(base_setting_data.get('speed_grade'))
-                    if s_speed_grade >= 5:
-                        s_speed_grade = 5
-                    elif s_speed_grade <= 1:
-                        s_speed_grade = 1
-                    speed_grade = s_speed_grade
-                except Exception as e:
-                    print({'error': e})
-            if base_setting_data.get('arrive_range'):
-                try:
-                    s_arrive_distance = float(base_setting_data.get('arrive_range'))
-                    if s_arrive_distance < 2:
-                        s_arrive_distance = 2.0
-                    elif s_arrive_distance > 10:
-                        s_arrive_distance = 10.0
-                    arrive_distance = s_arrive_distance
-                except Exception as e:
-                    print({'error': e})
-        except Exception as e:
-            print({'error': e})
-
 
 # 单片机发送给树莓派等待时间
 stc2pi_timeout = 1
@@ -129,41 +95,38 @@ b_use_com_stc = 0  # 是否使用单片机硬件转接串口
 stc_port = '/dev/ttyUSB0'  # '/dev/ttyAMA0'
 stc_baud = 115200
 b_com_stc = os.path.exists(stc_port) and b_use_com_stc  # 判断是否存在以及是否使用
+local_http = False
+if local_http:
+    http_domin = 'peri.xxlun.com'
+else:
+    http_domin = '192.168.8.26:8008'
+
 # http 接口
-# 查询船是否注册  wuhanligong.xxlun.com/union
-http_binding = 'https://ship.xxlun.com/union/admin/xxl/device/binding/%s' % ship_code
-# 注册新的湖泊ID
-http_save = 'https://ship.xxlun.com/union/admin/xxl/map/save'
-# http_save = 'http://192.168.199.186:8009/union/admin/xxl/map/save'
-# 更新湖泊轮廓
-http_update_map = 'https://ship.xxlun.com/union/admin/xxl/map/upData'
-# http_update_map = 'http://192.168.199.186:8009/union/admin/xxl/map/upData'
 # 发送检测数据
-http_data_save = 'https://ship.xxlun.com/union/admin/xxl/data/save'
-# http_data_save = 'http://192.168.199.186:8009/union/admin/xxl/data/save'
+http_data_save = "http://%s/union/water/save" % http_domin
 # 发送抽水瓶号数据
-http_draw_save = 'https://ship.xxlun.com/union/admin/xxl/data/sampling/save'
-# http_draw_save = 'http://192.168.199.186:8009/union/admin/xxl/data/sampling/save'
+http_draw_save = 'http://%s/union/admin/xxl/data/sampling/save' % http_domin
 # 获取存储的任务数据
-http_get_task = 'https://ship.xxlun.com/union/admin/xxl/task/getOne'
-http_update_task = 'http://ship.xxlun.com/union/admin/xxl/task/upDataTask'
-http_delete_task = 'http://ship.xxlun.com/union/admin/xxl/task/delTask'
+http_get_task = 'http://%s/union/task/list/1/1' % http_domin
+http_update_task = 'http://%s/union/upDataTask' % http_domin
+http_delete_task = 'http://%s/union/task/delTask' % http_domin
 # 上传日志接口
-http_log = 'https://ship.xxlun.com/union/admin/xxl/log/save'
-# http_log = 'http://192.168.199.186:8009/union/admin/xxl/log/save'
+http_log = 'https://%s/union/admin/xxl/log/save' % http_domin
 # 里程接口
-http_mileage_get = 'https://ship.xxlun.com/union/admin/xxl/mileage/getOne'
-http_mileage_save = 'https://ship.xxlun.com/union/admin/xxl/mileage/save'
-http_mileage_update = 'https://ship.xxlun.com/union/admin/xxl/mileage/upData'
-# http_mileage_get = 'http://192.168.199.186:8009/union/admin/xxl/mileage/getOne'
-# http_mileage_save = 'http://192.168.199.186:8009/union/admin/xxl/mileage/save'
-# http_mileage_update = 'http://192.168.199.186:8009/union/admin/xxl/mileage/upData'
+http_mileage_get = 'http://%s/union/mileage/get' % http_domin
+http_mileage_save = 'http://%s/union/mileage/save' % http_domin
+http_mileage_update = 'http://%s/union/mileage/update' % http_domin
 # 发送手动记录路劲数据
-http_record_path = "https://ship.xxlun.com/union/admin/xxl/device/saveRoute"
-# http_record_path = "http://192.168.8.26:8009/union/admin/xxl/device/saveRoute"
+http_record_path = "http://%s/union/route/save" % http_domin
 # 获取手动记录轨迹
-http_record_get = "https://ship.xxlun.com/union/admin/xxl/device/getRoute/1/1"
-# http_record_get = "http://192.168.8.26:8009/union/admin/xxl/device/getRoute/1/1"
+http_record_get = "http://%s/union/route/list/1/1" % http_domin
+# 获取行动id数据
+http_action_get = "http://%s/union/plan/save" % http_domin
+# 更新任务
+http_plan_update = "http://%s/union/task/update" % http_domin
+# 获取token
+http_get_token = "http://%s/union/device/login" % http_domin
+
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884
@@ -204,9 +167,9 @@ calibration_compass = 0
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
 # 平滑路径最小单位 m
-smooth_path_ceil_size = 5
+smooth_path_ceil_size = 3
 # 前视觉距离
-forward_see_distance = 9
+forward_see_distance = 5
 # 舵机最大扫描角度单侧 左边为正右边为负
 steer_max_angle = 30
 # 最小转向距离
@@ -217,6 +180,40 @@ debug_send_detect_data = 0
 angular_velocity = 90
 
 motor_init_time = 1
+
+
+def update_base_setting():
+    global speed_grade
+    global arrive_distance
+    global find_points_num
+    global scan_gap
+    if os.path.exists(base_setting_path):
+        try:
+            with open(base_setting_path, 'r') as f:
+                base_setting_data = json.load(f)
+            # 读取配置
+            if base_setting_data.get('speed_grade') is not None:
+                try:
+                    s_speed_grade = int(base_setting_data.get('speed_grade'))
+                    if s_speed_grade >= 5:
+                        s_speed_grade = 5
+                    elif s_speed_grade <= 1:
+                        s_speed_grade = 1
+                    speed_grade = s_speed_grade
+                except Exception as e:
+                    print({'error': e})
+            if base_setting_data.get('arrive_range') is not None:
+                try:
+                    s_scan_gap = float(base_setting_data.get('arrive_range'))
+                    if s_scan_gap < 5:
+                        s_scan_gap = 5
+                    elif s_scan_gap > 100:
+                        s_scan_gap = 100
+                    scan_gap = s_scan_gap
+                except Exception as e:
+                    print({'error': e})
+        except Exception as e:
+            print({'error': e})
 
 
 def update_height_setting():
@@ -240,25 +237,25 @@ def update_height_setting():
             with open(height_setting_path, 'r') as f:
                 height_setting_data = json.load(f)
             # 读取配置
-            if height_setting_data.get('kp'):
+            if height_setting_data.get('kp') is not None:
                 try:
                     s_kp = float(height_setting_data.get('kp'))
                     kp = s_kp
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('ki'):
+            if height_setting_data.get('ki') is not None:
                 try:
                     s_ki = float(height_setting_data.get('ki'))
                     ki = s_ki
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('kd'):
+            if height_setting_data.get('kd') is not None:
                 try:
                     s_kd = float(height_setting_data.get('kd'))
                     kd = s_kd
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('max_pwm'):
+            if height_setting_data.get('max_pwm') is not None:
                 try:
                     s_max_pwm = int(height_setting_data.get('max_pwm'))
                     if s_max_pwm >= 2000:
@@ -266,7 +263,7 @@ def update_height_setting():
                     max_pwm = s_max_pwm
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('min_pwm'):
+            if height_setting_data.get('min_pwm') is not None:
                 try:
                     s_min_pwm = int(height_setting_data.get('min_pwm'))
                     if s_min_pwm <= 1000:
@@ -274,7 +271,7 @@ def update_height_setting():
                     min_pwm = s_min_pwm
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('stop_pwm'):
+            if height_setting_data.get('stop_pwm') is not None:
                 try:
                     s_stop_pwm = int(height_setting_data.get('stop_pwm'))
                     if s_stop_pwm <= min_pwm or s_stop_pwm > max_pwm:
@@ -293,7 +290,7 @@ def update_height_setting():
                     right_motor_cw = int(height_setting_data.get('right_motor_cw'))
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('network_backhome'):
+            if height_setting_data.get('network_backhome') is not None:
                 try:
                     s_network_backhome = int(height_setting_data.get('network_backhome'))
                     if s_network_backhome <= 0:
@@ -301,7 +298,7 @@ def update_height_setting():
                     network_backhome = s_network_backhome
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('energy_backhome'):
+            if height_setting_data.get('energy_backhome') is not None:
                 try:
                     s_energy_backhome = int(height_setting_data.get('energy_backhome'))
                     if s_energy_backhome <= 0:
@@ -312,9 +309,10 @@ def update_height_setting():
                     energy_backhome = s_energy_backhome
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('obstacle_avoid_type'):
+            if height_setting_data.get('obstacle_avoid_type') is not None:
                 try:
                     s_obstacle_avoid_type = int(height_setting_data.get('obstacle_avoid_type'))
+                    print('s_obstacle_avoid_type', s_obstacle_avoid_type)
                     if s_obstacle_avoid_type in [0, 1, 2, 3, 4]:
                         pass
                     else:
@@ -322,7 +320,7 @@ def update_height_setting():
                     obstacle_avoid_type = s_obstacle_avoid_type
                 except Exception as e:
                     print({'error': e})
-            if height_setting_data.get('calibration_compass'):
+            if height_setting_data.get('calibration_compass') is not None:
                 try:
                     s_calibration_compass = int(height_setting_data.get('calibration_compass'))
                     if s_calibration_compass in [0, 1, 2]:
@@ -446,8 +444,8 @@ channel_3_pin = 6  # 垂直是2通道
 channel_remote_pin = 11  # 开启遥控器输入pin口
 # 毫米波雷达 millimeter wave radar
 b_millimeter_wave = 1
-field_of_view = 120  # 视场角
-view_cell = 5   # 量化角度单元格
+field_of_view = 100  # 视场角
+view_cell = 5  # 量化角度单元格
 ceil_max = 3  # 可以通过扇区阈值
 millimeter_wave_tx = 16
 millimeter_wave_rx = 20
@@ -500,7 +498,7 @@ obstacle_points = [[114.523433, 30.506193],
                    [114.524334, 30.506304]
                    ]
 
-remote_control_outtime=2  # 接受不到遥控器消息后断开遥控器使能时间单位秒
+remote_control_outtime = 2  # 接受不到遥控器消息后断开遥控器使能时间单位秒
 
 if __name__ == '__main__':
     write_setting(True, True, True, True)

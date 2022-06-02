@@ -18,7 +18,7 @@ class ServerData:
         self.mqtt_send_get_obj = MqttSendGet(self.logger, topics=topics)
 
     # 发送数据到服务器http
-    def send_server_http_data(self, request_type, data, url, parm_type=1):
+    def send_server_http_data(self, request_type, data, url, parm_type=1, token=None):
         """
         @param request_type:
         @param data:
@@ -31,28 +31,32 @@ class ServerData:
             payload_header = {
                 'Content-Type': 'application/json',
             }
+            if token:
+                payload_header.update({"token": token})
             assert request_type in ['POST', 'GET']
-            # self.logger.info(url)
+            self.logger.info(url)
             if request_type == 'POST':
                 if parm_type == 1:
                     dump_json_data = json.dumps(data)
                     return_data = requests.post(
-                        url=url, data=dump_json_data, headers=payload_header, timeout=8)
+                        url=url, data=dump_json_data, headers=payload_header, timeout=20)
                 else:
                     if isinstance(data, dict):
                         dump_json_data = data
                     else:
                         dump_json_data = json.dumps(data)
                     return_data = requests.post(
-                        url=url, params=dump_json_data, headers=payload_header, timeout=8)
+                        url=url, params=dump_json_data, headers=payload_header, timeout=20)
             else:
                 if data:
                     dump_json_data = json.dumps(data)
-                    return_data = requests.get(url=url, params=dump_json_data, timeout=8)
+                    return_data = requests.get(url=url, headers=payload_header, params=dump_json_data, timeout=20)
                 else:
-                    return_data = requests.get(url=url, timeout=8)
+                    return_data = requests.get(url=url, headers=payload_header, timeout=20)
+                print('http返回数据', return_data)
             return return_data
         except Exception as e:
+            self.logger.error({'http请求报错': e})
             return None
 
     # 发送数据到服务器mqtt
@@ -200,7 +204,7 @@ class MqttSendGet:
         # 是否接受到电脑端点击过任何按键
         self.b_receive_mqtt = False
         # 计算距离岸边距离
-        self.bank_distance = -500
+        self.bank_distance = -1
         self.send_log = 0  # 是否发送操作日志 不能在接收mqtt回调中发送http请求，会阻塞函数执行
         # 是否开始手动记录点
         self.b_record_point = 0
@@ -208,10 +212,18 @@ class MqttSendGet:
         self.record_name = ""  # 记录轨迹名称
         # 包围圈扫描
         self.surrounded_points = None  # 包围圈内点
-        self.surrounded_distance = 40  # 包围圈间隔距离
+        self.surrounded_distance = 10  # 包围圈间隔距离
         self.surrounded_start = 0  # 包围圈内点开始行驶
         self.path_id = None  # 手动记录路径点ID
-        self.kp_v=0.5
+        self.kp_v = 0.5
+        self.token = None  # 用于发送数据验证
+        self.get_task = 0  # 是否需要获取任务
+        self.task_id = ''  # 任务id
+        self.cancel_task = 0  # 取消任务
+        self.action_type = 2  # 1:开始行动   2:结束行动
+        self.action_name = ""
+        self.cancel_action = 0  # 取消行动
+        self.pause_continue_data_type = 2  # 暂停继续控制 1：暂停自动  2：继续自动
 
     # 连接MQTT服务器
     def mqtt_connect(self):
@@ -250,8 +262,8 @@ class MqttSendGet:
         try:
             # 回调更新控制数据
             topic = msg.topic
-
             self.last_command_time = time.time()
+
             # 处理控制数据
             if topic == 'control_data_%s' % config.ship_code:
                 self.b_receive_mqtt = True
@@ -270,6 +282,8 @@ class MqttSendGet:
                         self.row_gap = 0
                 self.last_control_move_direction = self.control_move_direction
                 self.control_move_direction = int(control_data.get('move_direction'))
+                if self.control_move_direction == -1:  # 电机停止时设置取消暂停
+                    self.pause_continue_data_type = 2
                 nwse_dict = {
                     0: 10,
                     90: 190,
@@ -524,7 +538,7 @@ class MqttSendGet:
                         config.update_base_setting()
 
             # 高级配置
-            elif topic == 'height_setting_%s' % (config.ship_code):
+            elif topic == 'height_setting_%s' % config.ship_code:
                 self.logger.info({'height_setting_data': json.loads(msg.payload)})
                 height_setting_data = json.loads(msg.payload)
                 if height_setting_data.get("info_type") is None:
@@ -537,11 +551,11 @@ class MqttSendGet:
                         with open(config.height_setting_path, 'r') as f:
                             self.height_setting_data = json.load(f)
                     elif info_type == 2:
-                        with open(config.height_setting_path, 'r') as f:
-                            self.height_setting_data = json.load(f)
-                        with open(config.height_setting_path, 'w') as f:
+                        with open(config.height_setting_path, 'r') as f1:
+                            self.height_setting_data = json.load(f1)
+                        with open(config.height_setting_path, 'w') as f2:
                             self.height_setting_data.update(height_setting_data)
-                            json.dump(self.height_setting_data, f)
+                            json.dump(self.height_setting_data, f2)
                         config.update_height_setting()
                     # 恢复默认配置
                     elif info_type == 4:
@@ -554,7 +568,7 @@ class MqttSendGet:
 
             # 刷新后请求数据消息
             elif topic == 'refresh_%s' % (config.ship_code):
-                self.logger.info({'refresh_setting ': json.loads(msg.payload)})
+                self.logger.info({'refresh_': json.loads(msg.payload)})
                 refresh_data = json.loads(msg.payload)
                 if refresh_data.get("info_type") is None:
                     self.logger.error('"refresh_"设置启动消息没有"info_type"字段')
@@ -609,7 +623,8 @@ class MqttSendGet:
                     return
                 else:
                     self.bank_distance = round(float(bank_distance_data.get('bank_distance')), 1)
-                self.logger.info({"bank_distance_data": bank_distance_data})
+                # self.logger.info({"bank_distance_data": bank_distance_data})
+
             # 处理手动记录点
             elif topic == 'record_point_%s' % config.ship_code:
                 record_point_data = json.loads(msg.payload)
@@ -647,6 +662,63 @@ class MqttSendGet:
                     self.surrounded_distance = int(surrounded_data.get('distance'))
                 self.logger.info({'topic': topic,
                                   'surrounded_': surrounded_data,
+                                  })
+                # 处理包围圈路径点和设置
+
+            # token获取
+            elif topic == 'token_%s' % config.ship_code:
+                token_data = json.loads(msg.payload)
+                if token_data.get('type') and token_data.get('type') == 2:
+                    self.token = token_data.get('token')
+                self.logger.info({'topic': topic,
+                                  'token_data': token_data,
+                                  })
+
+            # 前端发送获取任务
+            elif topic == 'task_%s' % config.ship_code:
+                task_data = json.loads(msg.payload)
+                if task_data.get("info_type") is None:
+                    self.logger.error('"get_task_"设置启动消息没有"task"字段')
+                    return
+                if task_data.get("info_type") != 1:
+                    return
+                self.get_task = int(task_data.get("get_task"))
+                # 发送 取消任务等于按暂停按键
+                if self.get_task == 2:
+                    self.control_move_direction = -1
+                    self.cancel_task = 1
+                    self.task_id = task_data.get("task_id")
+                if self.get_task == 1:
+                    self.task_id = task_data.get("task_id")
+                self.logger.info(task_data)
+                if self.send_log:
+                    send_log_data = {
+                        "deviceId": config.ship_code,
+                        "operation": "发送任务"
+                    }
+                    send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
+
+            elif topic == 'action_%s' % config.ship_code:
+                action_data = json.loads(msg.payload)
+                if action_data.get("action_type") is None:
+                    self.logger.error('"action_data"设置启动消息没有"action_type"字段')
+                    return
+                self.action_type = action_data.get('action_type')
+                self.action_name = action_data.get('action_name')
+                if self.action_type == 2:
+                    self.cancel_action = 1
+                self.logger.info({'topic': topic,
+                                  'action_data': action_data,
+                                  })
+
+            elif topic == 'pause_continue_%s' % config.ship_code:
+                pause_continue_data = json.loads(msg.payload)
+                if pause_continue_data.get("data") is None:
+                    self.logger.error('"pause_continue_data"设置启动消息没有"data"字段')
+                    return
+                self.pause_continue_data_type = pause_continue_data.get('data')
+                self.logger.info({'topic': topic,
+                                  'action_data': pause_continue_data,
                                   })
         except Exception as e:
             self.logger.error({'error': e})

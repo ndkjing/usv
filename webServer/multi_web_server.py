@@ -308,6 +308,7 @@ class WebServer:
                                                       "传入id": self.server_data_obj_dict.get(
                                                           ship_code).mqtt_send_get_obj.update_map_id})
                                     try:
+                                        #print('111',send_data)
                                         pool_id = self.send(
                                             method='http',
                                             data=send_data,
@@ -333,6 +334,7 @@ class WebServer:
                         # 不存在获取新的id
                         else:
                             try:
+                                print('请求湖泊id数据',send_data)
                                 pool_id = self.send(
                                     method='http',
                                     data=send_data,

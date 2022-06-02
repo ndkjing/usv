@@ -1,0 +1,28 @@
+2022-05-16 10:17:56,884 server_baidu_map.py[line:373] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.383928,30.483517&zoom=14&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2022-05-16 10:17:58,580 server_baidu_map.py[line:388] INFO {'save_img_path': 'F:\\pythonProject\\usvDetect\\statics\\imgs\\gaode_114.383928_30.483517_14_1.png'}
+2022-05-16 10:17:58,614 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 1051}
+2022-05-16 10:17:58,638 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 1}
+2022-05-16 10:19:44,563 server_baidu_map.py[line:373] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.384727,30.485879&zoom=14&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2022-05-16 10:19:45,828 server_baidu_map.py[line:388] INFO {'save_img_path': 'F:\\pythonProject\\usvDetect\\statics\\imgs\\gaode_114.384727_30.485879_14_1.png'}
+2022-05-16 10:19:45,853 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 1055}
+2022-05-16 10:19:45,877 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 1}
+2022-05-16 10:21:04,319 server_baidu_map.py[line:373] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.384396,30.485044&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2022-05-16 10:21:05,127 server_baidu_map.py[line:388] INFO {'save_img_path': 'F:\\pythonProject\\usvDetect\\statics\\imgs\\gaode_114.384396_30.485044_15_1.png'}
+2022-05-16 10:21:05,156 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 2122}
+2022-05-16 10:21:05,197 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 1}
+2022-05-16 10:22:31,671 server_baidu_map.py[line:373] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.382829,30.483820&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2022-05-16 10:22:32,372 server_baidu_map.py[line:388] INFO {'save_img_path': 'F:\\pythonProject\\usvDetect\\statics\\imgs\\gaode_114.382829_30.483820_15_1.png'}
+2022-05-16 10:22:32,405 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 2122}
+2022-05-16 10:22:32,527 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 1}
+2022-05-16 10:23:21,233 server_baidu_map.py[line:373] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.383448,30.484071&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2022-05-16 10:23:22,252 server_baidu_map.py[line:388] INFO {'save_img_path': 'F:\\pythonProject\\usvDetect\\statics\\imgs\\gaode_114.383448_30.484071_15_1.png'}
+2022-05-16 10:23:22,282 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 2122}
+2022-05-16 10:23:22,308 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 1}
+2022-05-16 10:23:27,989 server_baidu_map.py[line:373] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.523931,30.505577&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2022-05-16 10:23:28,784 server_baidu_map.py[line:388] INFO {'save_img_path': 'F:\\pythonProject\\usvDetect\\statics\\imgs\\gaode_114.523931_30.505577_15_1.png'}
+2022-05-16 10:23:28,812 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 876}
+2022-05-16 10:23:28,838 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 1}
+2022-05-16 11:49:25,115 server_baidu_map.py[line:373] INFO {'png_url': 'https://restapi.amap.com/v3/staticmap?location=114.214901,30.392922&zoom=15&size=1024*1024&scale=1&key=8177df6428097c5e23d3280ffdc5a13a'}
+2022-05-16 11:49:25,745 server_baidu_map.py[line:388] INFO {'save_img_path': 'F:\\pythonProject\\usvDetect\\statics\\imgs\\gaode_114.214901_30.392922_15_1.png'}
+2022-05-16 11:49:25,775 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 2553}
+2022-05-16 11:49:25,807 server_baidu_map.py[line:509] DEBUG {'pix_to_gps len(cnts)': 1}

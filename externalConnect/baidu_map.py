@@ -444,12 +444,15 @@ class BaiduMap(object):
         :param lng_lat: 真实gps 列表，[经度，纬度]
         :return:高德经纬度 列表，[经度，纬度]
         """
-        url = 'https://restapi.amap.com/v3/assistant/coordinate/convert?locations={lng_lat}&coordsys=gps&key={key}'.format(
-            lng_lat="%f,%f" % (lng_lat[0], lng_lat[1]), key=config.gaode_key)
-        response = requests.get(url=url)
-        response = json.loads(response.content)
-        gaode_lng_lat = [float(i) for i in response['locations'].split(',')]
-        return gaode_lng_lat
+        try:
+            url = 'https://restapi.amap.com/v3/assistant/coordinate/convert?locations={lng_lat}&coordsys=gps&key={key}'.format(
+                lng_lat="%f,%f" % (lng_lat[0], lng_lat[1]), key=config.gaode_key)
+            response = requests.get(url=url)
+            response = json.loads(response.content)
+            gaode_lng_lat = [float(i) for i in response['locations'].split(',')]
+            return gaode_lng_lat
+        except Exception as e:
+            print({'经纬度转换为高德经纬度报错':e})
 
     def gaode_lng_lat_to_pix(self, gaode_lng_lat):
         """

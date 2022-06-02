@@ -14,6 +14,7 @@ from storage import save_data
 from drivers import pi_softuart, com_data
 import config
 from moveControl.pathTrack import simple_pid
+
 logger = log.LogHandler('pi_log')
 
 
@@ -88,14 +89,7 @@ class PiMain:
         self.obstacle_list = [0] * self.cell_size  # 自动避障列表
         self.control_obstacle_list = [0] * self.cell_size  #
         # 设置为GPIO输出模式 输出高低电平
-        """
-        self.pi.set_mode(config.side_left_gpio_pin, pigpio.OUTPUT)
-        self.pi.set_mode(config.side_right_gpio_pin, pigpio.OUTPUT)
-        self.pi.set_mode(config.headlight_gpio_pin, pigpio.OUTPUT)
-        self.pi.set_mode(config.audio_light_alarm_gpio_pin, pigpio.OUTPUT)
-        self.pi.set_mode(config.draw_left_gpio_pin, pigpio.OUTPUT)
-        self.pi.set_mode(config.draw_right_gpio_pin, pigpio.OUTPUT)
-        """
+        # self.pi.set_mode(config.side_left_gpio_pin, pigpio.OUTPUT)
         # 抽水泵舵机
         self.draw_steer_pwm = config.max_deep_steer_pwm - 100
         # 目标舵机位置
@@ -129,7 +123,9 @@ class PiMain:
                                                  )
         self.dump_energy = None
         self.last_dump_energy = None  # 用于判断记录日志用
-        self.speed = None
+        self.speed = None  # gps中获取船速
+        self.throttle = 1  # 检测到障碍物时按障碍物距离减少油门大小  [0,油门最大值]   对应[1,最小避障距离]
+        self.ceil_go_throw = 1  # 避障列表中多少个0才能通行
 
     # 获取串口对象
     @staticmethod
@@ -381,7 +377,7 @@ class PiMain:
                 add_or_sub = 1 if self.target_draw_steer_pwm - self.draw_steer_pwm > 0 else -1
                 self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
                 self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
-                print('setpwm', config.draw_steer, self.draw_steer_pwm)
+                # print('setpwm', config.draw_steer, self.draw_steer_pwm)
                 time.sleep(0.05)
             else:
                 time.sleep(0.1)
@@ -498,9 +494,8 @@ class PiMain:
                 else:
                     time.sleep(sleep_time)
 
-
     def set_steer_engine(self, angle):
-            self.pi.set_PWM_dutycycle(26, angle)
+        self.pi.set_PWM_dutycycle(26, angle)
 
     # 记录罗盘数据
     def save_compass_data(self, theta_):
@@ -531,147 +526,72 @@ class PiMain:
                 save_data.set_data(temp_data_dict, save_compass_data_path)
             self.compass_data_list.clear()
 
-    # 获取舵机＋激光雷达数据距离字典
-    def get_distance_dict(self):
-        if config.b_laser:
-            self.laser_obj = self.get_laser_obj()
-        b_add = 1
-        # 角度限制
-        steer_max_angle = config.steer_max_angle
-        min_i = 100 - int(steer_max_angle * 1000 / 900)
-        max_i = 100 + int(steer_max_angle * 1000 / 900)
-        i = min_i
-        start_time = time.time()
-        while True:
-            # if b_add == 1:
-            angle_pwm = 500 + i * 10
-            if config.b_laser:
-                self.set_steer_engine(angle_pwm)
-            # else:
-            #     angle_pwm = 2500 - i * 10
-            #     self.set_steer_engine(angle_pwm)
-            # 更新位置矩阵 连续五次检查不到将该位置置位0表示该位置没有距离信息
-            laser_distance = 0
-            for j in range(5):
-                if config.b_laser:
-                    laser_distance = self.laser_obj.read_laser()
-                    print('laser_distance', laser_distance)
-                if laser_distance:
-                    break
-                else:
-                    laser_distance = 0
-                    time.sleep(0.05)
-            # 角度左正右负
-            angle = (i - 100) * 0.9
-            print(i, angle)
-            self.distance_dict.update({angle: laser_distance})
-            # 将21个角度归结无五个方向 0 1 2 3 4 ，右 右前 前 左前 左
-            if -steer_max_angle <= angle < -steer_max_angle * 3 / 5:
-                obstacle_index = 0
-            elif -steer_max_angle * 3 / 5 <= angle < -steer_max_angle * 1 / 5:
-                obstacle_index = 1
-            elif -steer_max_angle * 1 / 5 <= angle < steer_max_angle * 1 / 5:
-                obstacle_index = 2
-            elif steer_max_angle * 1 / 5 <= angle < steer_max_angle * 3 / 5:
-                obstacle_index = 3
-            else:
-                obstacle_index = 4
-            if laser_distance == 0 or laser_distance > config.min_steer_distance:
-                b_obstacle = 0
-            else:
-                b_obstacle = 1
-            self.obstacle_list[obstacle_index] = b_obstacle
-            if time.time() - start_time >= 5:
-                print('self.distance_dict', self.distance_dict)
-                print('self.obstacle_list', self.obstacle_list)
-                start_time = time.time()
-            i += 1 * b_add
-            if i >= max_i or i <= min_i:
-                b_add = -1 if b_add == 1 else 1
-            time.sleep(0.02)
-
-    # 获取毫米波雷达数据距离字典
-    def get_distance_dict_millimeter(self, debug=False):
-        # 角度限制
-        count = 0
-        max_count = 40
-        average_angle_dict = {}
-        average_distance_dict = {}
+    def get_distance_dict_millimeter(self, debug=True):
+        max_count = 2
+        id_count_dict = {}
         while True:
             data_dict = self.millimeter_wave_obj.read_millimeter_wave()
             if data_dict:
                 for obj_id in data_dict:
-                    distance_row = data_dict[obj_id][0]
-                    angle_row = data_dict[obj_id][1]
-                    # 将该对象次的平均值作为角度值
-                    if obj_id in average_angle_dict:
-                        if len(average_angle_dict.get(obj_id)) >= max_count:
-                            average_angle_dict.get(obj_id).pop(0)
-                        average_angle_dict.get(obj_id).append(angle_row)
-                    else:
-                        average_angle_dict.update({obj_id: [angle_row]})
-                    # 将该对象平均值作为距离值
-                    if obj_id in average_distance_dict:
-                        if len(average_distance_dict.get(obj_id)) >= max_count:
-                            average_distance_dict.get(obj_id).pop(0)
-                        average_distance_dict.get(obj_id).append(distance_row)
-                    else:
-                        average_distance_dict.update({obj_id: [distance_row]})
-                    angle_average = int(sum(average_angle_dict.get(obj_id)) / len(average_angle_dict.get(obj_id)))
-                    distance_average = sum(average_distance_dict.get(obj_id)) / len(average_distance_dict.get(obj_id))
+                    distance_row = data_dict[obj_id][0]  # 距离
+                    angle_row = -1 * data_dict[obj_id][1]  # 角度 将左正右负转化为左负右正
                     # 丢弃大于视场角范围的数据
-                    if abs(angle_average) >= (config.field_of_view / 2):
+                    if abs(angle_row) >= (config.field_of_view / 2) or distance_row<0.3:
                         continue
-                    angle_key = int(angle_average - angle_average % 2)
-                    self.distance_dict.update({obj_id: [distance_average, angle_key]})
+                    self.distance_dict.update({obj_id: [distance_row, angle_row]})
+                    id_count_dict.update({obj_id: max_count})
             # 没有检测到目标处理方式
             else:
                 for obj_id in self.distance_dict.copy():
-                    # print('average_distance_dict,average_angle_dict',average_distance_dict,average_angle_dict)
-                    if obj_id in average_distance_dict and obj_id in average_angle_dict:
-                        if len(average_distance_dict.get(obj_id)) >= max_count:
-                            average_distance_dict.get(obj_id).pop(0)
-                        average_distance_dict.get(obj_id).append(0)
-                        distance_average = sum(average_distance_dict.get(obj_id)) / len(
-                            average_distance_dict.get(obj_id))
-                        # 连续多次不出现该id的目标时平均距离会=0小于0.5时删除该目标
-                        if distance_average < 0.5:
+                    if obj_id not in data_dict:
+                        # 连续多次不出现该id的目标时删除该目标
+                        id_count = id_count_dict.get(obj_id)
+                        id_count -= 1
+                        id_count_dict.update({obj_id: id_count})
+                        if id_count < 0:
                             self.distance_dict.pop(obj_id)
-                            average_angle_dict.pop(obj_id)
-                            average_distance_dict.pop(obj_id)
-                            continue
-                        angle_key = self.distance_dict.get(obj_id)[1]
-                        self.distance_dict.update({obj_id: [distance_average, angle_key]})
-                    elif obj_id in average_distance_dict and obj_id not in average_angle_dict:
-                        self.distance_dict.pop(obj_id)
-                        average_distance_dict.pop(obj_id)
-                        continue
-                    elif obj_id in average_angle_dict and obj_id not in average_distance_dict:
-                        self.distance_dict.pop(obj_id)
-                        average_angle_dict.pop(obj_id)
-                        continue
+                            id_count_dict.pop(obj_id)
+            self.obstacle_list = [0] * int(config.field_of_view // config.view_cell)
+            min_distance = 0  # 存储能检测到的障碍物中最近障碍物距离
+            self.ceil_go_throw = 1  # 能通过障碍列表中最少多少个连续0
             for obj_id in self.distance_dict:
                 distance_average = self.distance_dict.get(obj_id)[0]
+                # 计算最近障碍物距离
+                if min_distance == 0:
+                    min_distance = distance_average
+                elif distance_average < min_distance:
+                    min_distance = distance_average
                 angle_average = self.distance_dict.get(obj_id)[1]
-                obstacle_index = angle_average // config.view_cell + 9
+                # 返回角度左正  右负  需要转为左负右正才能将角度很好地映射到障碍物列表中 如 [左  中间  右]
+                # angle_average = -1 * angle_average
+                obstacle_index = angle_average // config.view_cell + (config.field_of_view // config.view_cell) // 2
                 if distance_average > config.min_steer_distance:
                     b_obstacle = 0
                 else:
                     b_obstacle = 1
+                    self.throttle = max(min(0.6 * distance_average / config.min_steer_distance, 1), 0)  # 按照障碍物距离等比例减少油门
+                    # if 0.04 <self.throttle<0.2:
+                    #     self.throttle*=1.3
                 self.obstacle_list[obstacle_index] = b_obstacle
                 if distance_average > config.control_obstacle_distance:
                     b_control_obstacle = 0
                 else:
                     b_control_obstacle = 1
                 self.control_obstacle_list[obstacle_index] = b_control_obstacle
-            if count == max_count - 1:
-                self.obstacle_list = [0] * int(config.field_of_view / config.view_cell)
-            if debug:
+            # 计算前视野范围可通行区域  障碍物距离不同可通行单元格不同  障碍物距离按检测到最近的障碍物计算
+            # 设定船宽度为0.7米
+            ship_width = 0.8
+            for i in range(1, config.field_of_view // config.view_cell):
+                angle = i * config.view_cell
+                if min_distance * math.sin(math.radians(angle)) < ship_width:
+                    self.ceil_go_throw = i
+            if not self.distance_dict:
+                self.throttle = 1
+            if debug and 1 in self.obstacle_list:
                 print('data_dict', data_dict)
                 print('self.distance_dict', self.distance_dict)
                 print('self.obstacle_list', self.obstacle_list)
-            count += 1
-            count %= max_count
+                print('self.throttle', self.throttle)
             time.sleep(0.001)
 
     @staticmethod
@@ -848,15 +768,12 @@ class PiMain:
                     if last_send_data != 'C0':
                         info_data = self.compass_obj.read_compass(send_data='C0')
                         time.sleep(0.05)
-                        self.compass_notice_info = info_data
                         last_send_data = 'C0'
                 # 结束校准
                 elif int(config.calibration_compass) == 2:
                     if last_send_data != 'C1':
-                        self.compass_notice_info = ''
                         info_data = self.compass_obj.read_compass(send_data='C1')
                         time.sleep(0.05)
-                        self.compass_notice_info = info_data
                         last_send_data = 'C1'
                         # 发送完结束校准命令后将配置改为 0
                         config.calibration_compass = 0
@@ -888,15 +805,12 @@ class PiMain:
                         time.sleep(0.2)
                         info_data = self.weite_compass_obj.read_weite_compass(send_data="AT+CALI=1\r\n")
                         time.sleep(0.05)
-                        self.compass_notice_info = info_data
                         last_send_data = "AT+CALI=1\r\n"
                 # 结束校准
                 elif int(config.calibration_compass) == 2:
                     if last_send_data != "AT+CALI=0\r\n":
-                        self.compass_notice_info = ''
                         info_data = self.weite_compass_obj.read_weite_compass(send_data="AT+CALI=0\r\n")
                         time.sleep(0.05)
-                        self.compass_notice_info = info_data
                         last_send_data = "AT+CALI=0\r\n"
                         # 发送完结束校准命令后将配置改为 0
                         config.calibration_compass = 0
@@ -1208,7 +1122,7 @@ if __name__ == '__main__':
                 pi_main_obj.init_motor()
             elif key_input[0] in ['A', 'B', 'C', 'D', 'E']:
                 print('len(key_input)', len(key_input))
-                if len(key_input) == 2 and key_input[1] in ['0', '1', '2', '3', '4','5']:
+                if len(key_input) == 2 and key_input[1] in ['0', '1', '2', '3', '4', '5']:
                     send_data = key_input + 'Z'
                     print('send_data', send_data)
                     if config.b_com_stc:
