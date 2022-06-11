@@ -1,1 +1,1 @@
-{"speed_grade": "3", "arrive_range": "5", "keep_point": 5, "secure_distance": 15, "row": "10", "col": "10", "pool_name": "\u6881\u5b50\u6e56", "video_url": "https://open.ys7.com/v3/openlive/F77671789_1_2.m3u8?expire=1656031904&id=329906774170845184&t=edf269f932bc49f1bd29178401a3285d5e53fd311953fda4a00fd402ffcf0fbb&ev=100", "info_type": 2}
+{"speed_grade": 3, "arrive_range": 10, "keep_point": 5}
