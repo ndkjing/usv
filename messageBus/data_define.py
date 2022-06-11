@@ -256,7 +256,8 @@ class DataDefine:
             ('jump_point_%s' % config.ship_code, 0),
             ('pause_continue_%s' % config.ship_code, 0),
             ('path_planning_confirm_%s' % config.ship_code, 0),
-            ('notice_info_%s' % config.ship_code, 0)
+            ('notice_info_%s' % config.ship_code, 0),
+            ('bottle_setting_%s' % config.ship_code, 0)
         )
 
         self.pool_code = ''

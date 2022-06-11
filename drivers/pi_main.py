@@ -27,6 +27,8 @@ class PiMain:
         self.water_data_dict = {}
         # 遥控器控制外设标志位
         self.remote_draw_status = 0  # 遥控器控制抽水状态 0 未抽水 1抽水
+        self.remote_draw_status_0_1 = 0  # 遥控器控制抽水状态控制0和1 水泵 0 未抽水 1抽水
+        self.remote_draw_status_2_3 = 0  # 遥控器控制抽水状态控制2和3 0 未排水 1排水
         self.remote_drain_status = 0  # 遥控器控制排水状态 0 未排水 1排水
         self.remote_side_light_status = 2  # 遥控器控制舷灯状态 0 关闭 1 打开  2不管
         self.remote_head_light_status = 2  # 遥控器控制大灯状态 0 关闭 1 打开   2 不管
@@ -126,6 +128,15 @@ class PiMain:
         self.speed = None  # gps中获取船速
         self.throttle = 1  # 检测到障碍物时按障碍物距离减少油门大小  [0,油门最大值]   对应[1,最小避障距离]
         self.ceil_go_throw = 1  # 避障列表中多少个0才能通行
+        self.ship_status_code = 1  # 船状态 1等待 2 遥控 3 基站  4自动   5 采样 6 返航
+        self.bottle_status_code = [1, 1, 1, 1]  # 瓶子状态1 -- 100 比例
+        self.current_remote_dump_energy = 0  # 剩余电量
+        self.pre_remote_dump_energy = 0
+        self.current_remote_draw_deep = 0.5  # 抽水深度
+        self.pre_remote_draw_deep = 0.5
+        self.current_draw_capacity = config.max_draw_capacity  # 抽水量
+        self.pre_draw_capacity = 1000
+        self.draw_deep_change_count = 0  # 记录抽水跳变次数
 
     # 获取串口对象
     @staticmethod
@@ -348,24 +359,11 @@ class PiMain:
         :param deep_pwm:电机目标深度
         :return:
         """
+        if deep_pwm < config.min_deep_steer_pwm:
+            deep_pwm = config.min_deep_steer_pwm
+        if deep_pwm > config.max_deep_steer_pwm:
+            deep_pwm = config.max_deep_steer_pwm
         self.target_draw_steer_pwm = deep_pwm
-        # 如果没有可调节深度舵机跳过调节
-        # if not config.b_control_deep:
-        #     return
-        # if b_slow:
-        #     delta_change = 10
-        #     while self.draw_steer_pwm != deep_pwm:
-        #         add_or_sub = 1 if deep_pwm - self.draw_steer_pwm > 0 else -1
-        #         self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
-        #         self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
-        #         time.sleep(0.06)
-        #         # if self.draw_steer_pwm < 1500:
-        #         #     time.sleep(0.07)
-        #         # else:
-        #         #     time.sleep(0.01)
-        # else:
-        #     self.pi.set_servo_pulsewidth(config.draw_steer, deep_pwm)
-        #     self.draw_steer_pwm = deep_pwm
 
     def loop_change_draw_steer(self, b_slow=True):
         delta_change = 5
@@ -374,48 +372,18 @@ class PiMain:
                 time.sleep(1)
                 continue
             if self.draw_steer_pwm != self.target_draw_steer_pwm:
-                add_or_sub = 1 if self.target_draw_steer_pwm - self.draw_steer_pwm > 0 else -1
-                self.draw_steer_pwm = self.draw_steer_pwm + delta_change * add_or_sub
+                if self.target_draw_steer_pwm - self.draw_steer_pwm > 0:
+                    add_or_sub =1
+                elif self.target_draw_steer_pwm - self.draw_steer_pwm < 0:
+                    add_or_sub = -1
+                else:
+                    add_or_sub = 0
+                self.draw_steer_pwm +=delta_change * add_or_sub
                 self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
-                # print('setpwm', config.draw_steer, self.draw_steer_pwm)
-                time.sleep(0.05)
+                print('setpwm11', config.draw_steer, self.draw_steer_pwm,self.target_draw_steer_pwm)
+                time.sleep(0.04)
             else:
                 time.sleep(0.1)
-
-    # 固定速度转向
-    def turn_angular_velocity(self, is_left=1, debug=False):
-        """
-        固定速度转向 config.angular_velocity
-        :param is_left 是否是左转  1 是左转   0 右转
-        :param debug 是否输出调试信息
-        :return:
-        """
-        while True:
-            if self.angular_velocity:
-                if is_left:
-                    angular_velocity_error = self.angular_velocity - config.angular_velocity
-                else:
-                    angular_velocity_error = self.angular_velocity - (-1 * config.angular_velocity)
-                left_pwm, right_pwm = self.pid_obj.pid_turn_pwm(angular_velocity_error)
-            else:
-                if is_left:
-                    left_pwm, right_pwm = 1700, 1300
-                else:
-                    left_pwm, right_pwm = 1300, 1700
-            if debug:
-                print('self.angular_velocity', self.angular_velocity)
-            self.set_pwm(left_pwm, right_pwm)
-            time.sleep(0.2)
-
-    def turn_angle(self, angle):
-        """
-        旋转到指定角度
-        :param angle: 0 --360 逆时针为正
-        :return:
-        """
-        angle_error = self.theta - angle
-        left_pwm, right_pwm = self.pid_obj.pid_turn_pwm(angle_error)
-        self.set_pwm(left_pwm, right_pwm)
 
     def stop(self):
         self.set_pwm(config.stop_pwm, config.stop_pwm)
@@ -526,7 +494,7 @@ class PiMain:
                 save_data.set_data(temp_data_dict, save_compass_data_path)
             self.compass_data_list.clear()
 
-    def get_distance_dict_millimeter(self, debug=True):
+    def get_distance_dict_millimeter(self, debug=False):
         max_count = 2
         id_count_dict = {}
         while True:
@@ -536,7 +504,7 @@ class PiMain:
                     distance_row = data_dict[obj_id][0]  # 距离
                     angle_row = -1 * data_dict[obj_id][1]  # 角度 将左正右负转化为左负右正
                     # 丢弃大于视场角范围的数据
-                    if abs(angle_row) >= (config.field_of_view / 2) or distance_row<0.3:
+                    if abs(angle_row) >= (config.field_of_view / 2) or distance_row < 0.3:
                         continue
                     self.distance_dict.update({obj_id: [distance_row, angle_row]})
                     id_count_dict.update({obj_id: max_count})
@@ -818,7 +786,7 @@ class PiMain:
                 else:
                     theta_ = self.weite_compass_obj.read_weite_compass(send_data=None, debug=debug)
                     # print(time.time(), 'theta_', theta_)
-                    theta_ = self.compass_filter(theta_)
+                    # theta_ = self.compass_filter(theta_)
                     if theta_:
                         # print('读取间隔时间', time.time() - last_read_time)
                         # last_read_time = time.time()
@@ -918,18 +886,23 @@ class PiMain:
                 if self.b_start_remote:
                     # 判断开始抽水  结束抽水
                     if int(self.remote_control_data[5]) == 10:
-                        self.remote_draw_status = 1
+                        self.remote_draw_status_0_1 = 1  # 第一个水壶抽水
                     elif int(self.remote_control_data[5]) == 1:
-                        self.remote_draw_status = 0
+                        self.remote_draw_status_0_1 = 2  # 第二个水壶抽水
                     elif int(self.remote_control_data[5]) == 0:
-                        self.remote_draw_status = 0
+                        self.remote_draw_status_0_1 = 0  # 1号抽水杆没有工作
                     # 判断开始排水  结束排水
                     if int(self.remote_control_data[7]) == 10:
-                        self.remote_drain_status = 1
+                        self.remote_draw_status_2_3 = 3  # 第三个水壶抽水
                     elif int(self.remote_control_data[7]) == 1:
-                        self.remote_drain_status = 0
+                        self.remote_draw_status_2_3 = 4  # 第四个水壶抽水
                     elif int(self.remote_control_data[7]) == 0:
-                        self.remote_drain_status = 0
+                        self.remote_draw_status_2_3 = 0  # 2号抽水杆没有工作
+                    # 当有一个需要抽水时就抽水
+                    if self.remote_draw_status_0_1 or self.remote_draw_status_2_3:
+                        self.remote_draw_status = 1  #
+                    else:
+                        self.remote_draw_status = 0
                     # 判断收起舵机  展开舵机
                     if int(self.remote_control_data[10]) == 1:
                         self.target_draw_steer_pwm = config.min_deep_steer_pwm

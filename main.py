@@ -3,48 +3,47 @@
 """
 import threading
 import time
+import sys
+import os
 import config
 from utils import log
 from messageBus import data_manager
-from drivers import audios_manager
-import sys
-import os
 
-sys.path.append(
-    os.path.join(
-        os.path.dirname(
-            os.path.abspath(__file__)),
-        'drivers'))
-sys.path.append(
-    os.path.join(
-        os.path.dirname(
-            os.path.abspath(__file__)),
-        'externalConnect'))
-sys.path.append(
-    os.path.join(
-        os.path.dirname(
-            os.path.abspath(__file__)),
-        'messageBus'))
-sys.path.append(
-    os.path.join(
-        os.path.dirname(
-            os.path.abspath(__file__)),
-        'moveControl'))
-sys.path.append(
-    os.path.join(
-        os.path.dirname(
-            os.path.abspath(__file__)),
-        'statics'))
-sys.path.append(
-    os.path.join(
-        os.path.dirname(
-            os.path.abspath(__file__)),
-        'storage'))
-sys.path.append(
-    os.path.join(
-        os.path.dirname(
-            os.path.abspath(__file__)),
-        'utils'))
+# sys.path.append(
+#     os.path.join(
+#         os.path.dirname(
+#             os.path.abspath(__file__)),
+#         'drivers'))
+# sys.path.append(
+#     os.path.join(
+#         os.path.dirname(
+#             os.path.abspath(__file__)),
+#         'externalConnect'))
+# sys.path.append(
+#     os.path.join(
+#         os.path.dirname(
+#             os.path.abspath(__file__)),
+#         'messageBus'))
+# sys.path.append(
+#     os.path.join(
+#         os.path.dirname(
+#             os.path.abspath(__file__)),
+#         'moveControl'))
+# sys.path.append(
+#     os.path.join(
+#         os.path.dirname(
+#             os.path.abspath(__file__)),
+#         'statics'))
+# sys.path.append(
+#     os.path.join(
+#         os.path.dirname(
+#             os.path.abspath(__file__)),
+#         'storage'))
+# sys.path.append(
+#     os.path.join(
+#         os.path.dirname(
+#             os.path.abspath(__file__)),
+#         'utils'))
 logger = log.LogHandler('main_log')
 
 
@@ -52,19 +51,6 @@ def main():
     config.update_setting()
     # 数据处理对象
     data_manager_obj = data_manager.DataManager()
-    # 查询改船是否注册 若未注册直接退出
-    """
-        try:
-        binding_data = data_manager_obj.send(
-            method='http', data="", url=config.http_binding, http_type='GET')
-        if int(binding_data['flag']) != 1:
-            if config.b_play_audio:
-                audios_manager.play_audio('register.mp3')
-            logger.error({'binding status': binding_data['flag']})
-        logger.info({'binding status': binding_data['flag']})
-    except Exception as e1:
-        logger.error({'binding_data error': e1})
-    """
     # 通用调用函数
     common_func_list = [data_manager_obj.move_control,
                         data_manager_obj.check_status,
@@ -105,12 +91,10 @@ def main():
                         ]
         pi_func_flag.append(True)
         pi_func_flag.append(True)
-        print('##################config.b_pin_compass', config.b_pin_compass)
         pi_func_flag.append(True if config.b_pin_compass else False)
         pi_func_flag.append(True if config.b_weite_compass else False)
         pi_func_flag.append(True if config.b_com_stc else False)
         pi_func_flag.append(True if config.b_millimeter_wave else False)
-        # pi_func_flag.append(True if config.b_laser or config.b_millimeter_wave else False)
         pi_func_flag.append(True if config.b_pin_stc else False)
         pi_func_flag.append(True if config.b_lora_remote_control else False)
         pi_func_flag.append(True if config.b_control_deep else False)
@@ -129,7 +113,6 @@ def main():
         for pi_thread in pi_thread_list:
             if pi_thread:
                 pi_thread.start()
-    print('home_debug', config.home_debug)
     thread_restart_time = 1
     #  判断线程是否死亡并重启线程
     while True:

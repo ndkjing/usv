@@ -53,7 +53,6 @@ class ServerData:
                     return_data = requests.get(url=url, headers=payload_header, params=dump_json_data, timeout=20)
                 else:
                     return_data = requests.get(url=url, headers=payload_header, timeout=20)
-                print('http返回数据', return_data)
             return return_data
         except Exception as e:
             self.logger.error({'http请求报错': e})
@@ -217,6 +216,10 @@ class MqttSendGet:
         self.path_id = None  # 手动记录路径点ID
         self.kp_v = 0.5
         self.token = None  # 用于发送数据验证
+        self.task_list = []  # 获取存储的任务  经纬度，采样深度，采样量数据样式([lng,lat],[bottle_id,deep,capacity],[bottle_id,deep,capacity])
+        self.draw_bottle_id = None  # 前端设置抽水瓶号id
+        self.draw_deep = None  # 前端设置抽水深度
+        self.draw_capacity = None  # 前端设置抽水容量
         self.get_task = 0  # 是否需要获取任务
         self.task_id = ''  # 任务id
         self.cancel_task = 0  # 取消任务
@@ -262,7 +265,6 @@ class MqttSendGet:
         try:
             # 回调更新控制数据
             topic = msg.topic
-
 
             # 处理控制数据
             if topic == 'control_data_%s' % config.ship_code:
@@ -333,7 +335,11 @@ class MqttSendGet:
                     return
                 send_info = None  # 需要发送消息
                 if switch_data.get('b_draw') is not None:
-                    self.b_draw = int(switch_data.get('b_draw'))
+                    # 采样船需要设置瓶号 深度和水量才能开始抽水
+                    if self.draw_bottle_id and self.draw_deep and self.draw_capacity:
+                        self.b_draw = int(switch_data.get('b_draw'))
+                    else:
+                        self.b_draw = 0
                     send_info = "点击采样"
                 # 前大灯 1 打开前大灯 没有该键表示不打开
                 if switch_data.get('headlight') is not None:
@@ -391,27 +397,13 @@ class MqttSendGet:
                     if user_lng_lat_data.get('lng_lat') is None:
                         self.logger.error('user_lng_lat_用户点击经纬度数据没有经纬度字段')
                     if user_lng_lat_data.get('zoom') is None:
-                        self.logger.error('user_lng_lat_用户点击经纬度数据没有zoom字段')
-                        # return
                         # 没有也没事
                         user_lng_lat_data.update({'zoom': 15})
-                    if user_lng_lat_data.get('meter_pix') is None:
-                        self.logger.error('user_lng_lat_用户点击经纬度数据没有meter_pix字段')
-                    if user_lng_lat_data.get('config') is None:
-                        self.logger.error('user_lng_lat_用户点击经纬度数据没有config字段')
-
                     # 添加新的点
                     lng_lat = user_lng_lat_data.get('lng_lat')
                     self.target_lng_lat = lng_lat
                     self.target_lng_lat_status = [0] * len(lng_lat)
-                    zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
-                    self.zoom.append(zoom)
-                    self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
-                    if user_lng_lat_data.get('config').get('back_home') is not None:
-                        self.back_home = user_lng_lat_data.get('config').get('back_home')
-
-                    self.fix_point = user_lng_lat_data.get('config').get('fixpoint')
-
+                    self.zoom.append(15)
                 self.logger.info({'topic': topic,
                                   'user_lng_lat_data': user_lng_lat_data,
                                   })
@@ -690,7 +682,7 @@ class MqttSendGet:
                     self.task_id = task_data.get("task_id")
                 if self.get_task == 1:
                     self.task_id = task_data.get("task_id")
-                self.logger.info(task_data)
+                self.logger.info({"任务话题数据":task_data})
                 if self.send_log:
                     send_log_data = {
                         "deviceId": config.ship_code,
@@ -723,7 +715,37 @@ class MqttSendGet:
 
             # 监听提示消息判断是否断开网络连接需要返航
             elif topic == 'notice_info_%s' % config.ship_code:
-                self.last_command_time=time.time()
+                self.last_command_time = time.time()
+
+            # 采样瓶设置数据话题
+            elif topic == 'bottle_setting_%s' % config.ship_code:
+                bottle_setting_data = json.loads(msg.payload)
+                if bottle_setting_data.get("info_type") is None:
+                    self.logger.error('"bottle_setting_data"设置启动消息没有"info_type"字段')
+                    return
+                if int(bottle_setting_data.get("info_type")) == 1:
+                    if bottle_setting_data.get("bottle_id"):
+                        self.draw_bottle_id = int(bottle_setting_data.get("bottle_id"))
+                        if self.draw_bottle_id > config.number_of_bottles:
+                            self.draw_bottle_id = config.number_of_bottles
+                    if bottle_setting_data.get("deep"):
+                        self.draw_deep = float(bottle_setting_data.get("deep"))
+                        if self.draw_deep > config.draw_deep:
+                            self.draw_deep = config.draw_deep
+                    if bottle_setting_data.get("amount"):
+                        self.draw_capacity = int(bottle_setting_data.get("amount"))
+                        if self.draw_capacity > config.max_draw_capacity:
+                            self.draw_capacity = config.max_draw_capacity
+                    if self.draw_bottle_id and self.draw_deep and self.draw_capacity:
+                        self.publish_topic(topic='bottle_setting_%s' % config.ship_code,
+                                           data={
+                                               "info_type": 2,
+                                               "bottle_id": self.draw_bottle_id,
+                                               "deep": self.draw_deep,
+                                               "amount": self.draw_capacity,
+                                           },
+                                           )
+                    self.logger.info({"采样瓶设置": bottle_setting_data})
 
         except Exception as e:
             self.logger.error({'error': e})

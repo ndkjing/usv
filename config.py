@@ -7,9 +7,9 @@ import ship_code_config
 
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
+if not os.path.exists(os.path.join(root_path, 'statics')):
+    os.mkdir(os.path.join(root_path, 'statics'))
 if not os.path.exists(maps_dir):
-    if not os.path.exists(os.path.join(root_path, 'statics')):
-        os.mkdir(os.path.join(root_path, 'statics'))
     os.mkdir(os.path.join(root_path, 'statics', 'mapsData'))
 
 # 保存所有地图湖泊信息位置
@@ -48,7 +48,7 @@ class ShipType(enum.Enum):
     adcp = 5
 
 
-current_ship_type = ShipType.water_detect
+current_ship_type = ShipType.multi_draw
 
 sysstr = platform.system()
 if sysstr == "Windows":
@@ -75,17 +75,13 @@ baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
 gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
 # 腾讯地图key
 tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
-
 draw_time = 10
-
 # 速度等级 1到5级 速度从低到高，仅能控制手动模式下速度   1 级表示1600 5 2000
 speed_grade = 3
 arrive_distance = 2.5  # 到达范围   ==》改为给设置区域扫描间隔使用
 scan_gap = 10  # 扫描间隔
-
 # 多点和寻点模式下查找连接点数量
 # keep_point = 0
-
 # 单片机发送给树莓派等待时间
 stc2pi_timeout = 1
 # 船编号
@@ -97,15 +93,14 @@ stc_baud = 115200
 b_com_stc = os.path.exists(stc_port) and b_use_com_stc  # 判断是否存在以及是否使用
 local_http = False
 if local_http:
-    http_domin = 'peri.xxlun.com'
-else:
     http_domin = '192.168.8.26:8008'
-
+else:
+    http_domin = 'peri.xxlun.com'
 # http 接口
 # 发送检测数据
 http_data_save = "http://%s/union/water/save" % http_domin
 # 发送抽水瓶号数据
-http_draw_save = 'http://%s/union/admin/xxl/data/sampling/save' % http_domin
+http_draw_save = 'http://%s/union/sampling/save' % http_domin
 # 获取存储的任务数据
 http_get_task = 'http://%s/union/task/list/1/1' % http_domin
 http_update_task = 'http://%s/union/upDataTask' % http_domin
@@ -126,7 +121,10 @@ http_action_get = "http://%s/union/plan/save" % http_domin
 http_plan_update = "http://%s/union/task/update" % http_domin
 # 获取token
 http_get_token = "http://%s/union/device/login" % http_domin
-
+# 获取图片下载地址接口
+http_get_img_path = "http://%s/union/device/getPicUrl" % http_domin
+# 上传图片接口
+http_upload_img = "http://%s/union/user/uploadFile" % http_domin
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884
@@ -136,8 +134,8 @@ ship_gaode_lng_lat = [114.524096, 30.506853]  # 九峰水库
 # ship_gaode_lng_lat = [114.170754,30.522358]   # 三角湖
 # ship_gaode_lng_lat = [114.431419,30.524192]     # 喻家湖
 # pid三参数
-kp = 0.7
-ki = 0.2
+kp = 0.5
+ki = 0
 kd = 0.1
 # 最大pwm值
 max_pwm = 1800
@@ -167,7 +165,7 @@ calibration_compass = 0
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
 # 平滑路径最小单位 m
-smooth_path_ceil_size = 3
+smooth_path_ceil_size = 2
 # 前视觉距离
 forward_see_distance = 5
 # 舵机最大扫描角度单侧 左边为正右边为负
@@ -175,6 +173,7 @@ steer_max_angle = 30
 # 最小转向距离
 min_steer_distance = 10  # 自动模式下避障距离 单位m
 # 测试在家调试也发送数据
+
 debug_send_detect_data = 0
 # 转向速度
 angular_velocity = 90
@@ -281,7 +280,7 @@ def update_height_setting():
                     print({'error': e})
             if height_setting_data.get('left_motor_cw') is not None:
                 try:
-                    print('height_setting_data.getleft_motor_cw', height_setting_data.get('left_motor_cw'))
+                    print('left_motor_cw', height_setting_data.get('left_motor_cw'))
                     left_motor_cw = int(height_setting_data.get('left_motor_cw'))
                 except Exception as e:
                     print({'error': e})
@@ -305,7 +304,6 @@ def update_height_setting():
                         s_energy_backhome = 0
                     elif s_energy_backhome >= 100:
                         s_energy_backhome = 80
-
                     energy_backhome = s_energy_backhome
                 except Exception as e:
                     print({'error': e})
@@ -345,14 +343,14 @@ def write_setting(b_base=False, b_height=False, b_base_default=False, b_height_d
     if b_base:
         with open(base_setting_path, 'w') as bf:
             json.dump({'speed_grade': speed_grade,
-                       'arrive_range': arrive_distance,
+                       'arrive_range': scan_gap,
                        'keep_point': find_points_num,
                        },
                       bf)
     if b_base_default:
         with open(base_setting_default_path, 'w') as bdf:
             json.dump({'speed_grade': speed_grade,
-                       'arrive_range': arrive_distance,
+                       'arrive_range': scan_gap,
                        'keep_point': find_points_num,
                        },
                       bdf)
@@ -479,9 +477,9 @@ class WaterType(enum.Enum):
     NH3_NH4 = 5
 
 
-draw_deep = 0.5  # 抽水深度
+draw_deep = 0.5  # 最大抽水深度
 draw_capacity = 1000  # 需要抽水容量
-max_draw_capacity = 5000  # 单个瓶子最大抽水容量
+max_draw_capacity = 1000  # 单个瓶子最大抽水容量
 draw_speed = 2000  # 抽水速度 毫升/分钟
 number_of_bottles = 4  # 总共包含抽水瓶数
 max_draw_time = int(60 * max_draw_capacity / draw_speed)
