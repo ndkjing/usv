@@ -144,9 +144,9 @@ min_pwm = 1200
 # 停止中位pwm
 stop_pwm = 1500
 # 左侧电机正反桨  0 正桨叶   1 反桨叶    M1 右桨叶  M2 左桨叶
-left_motor_cw = 0
+left_motor_cw = 1
 # 右侧电机正反桨  0 正桨叶   1 反桨叶
-right_motor_cw = 1
+right_motor_cw = 0
 # 断网返航 0关闭  1开启 大于1的数值表示断网超过该值就返航，默认600秒
 network_backhome = 1
 # 剩余电量返航 0关闭  1开启 大于1的数值表示剩余电量低于该值就返航，默认30
@@ -478,8 +478,8 @@ class WaterType(enum.Enum):
 
 
 draw_deep = 0.5  # 最大抽水深度
-draw_capacity = 1000  # 需要抽水容量
-max_draw_capacity = 1000  # 单个瓶子最大抽水容量
+draw_capacity = 5000  # 需要抽水容量
+max_draw_capacity = 5000  # 单个瓶子最大抽水容量
 draw_speed = 2000  # 抽水速度 毫升/分钟
 number_of_bottles = 4  # 总共包含抽水瓶数
 max_draw_time = int(60 * max_draw_capacity / draw_speed)
