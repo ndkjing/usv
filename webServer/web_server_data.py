@@ -33,18 +33,21 @@ class ServerData:
             self.mqtt_send_get_obj.subscribe_topic(topic=topic_, qos=qos_)
 
     # 发送数据到服务器http
-    def send_server_http_data(self, request_type, data, url):
+    def send_server_http_data(self, request_type, data, url, token=None):
         # 请求头设置
         payloadHeader = {
             'Content-Type': 'application/json',
         }
         assert request_type in ['POST', 'GET']
         if request_type == 'POST':
+            if token:
+                payloadHeader.update({'token': token})
             dumpJsonData = json.dumps(data)
             return_data = requests.post(
                 url=url, data=dumpJsonData, headers=payloadHeader)
         else:
             return_data = requests.get(url=url)
+        print('上传采样数据:', return_data)
         return return_data
 
     # 发送数据到服务器mqtt
@@ -165,7 +168,7 @@ class MqttSendGet:
         self.reset_pool_click = 0
         # 检查要发给前端绘图话题数据
         self.need_send_distribution = None
-        self.height_width=100   # 宽高比 设置宽为100  计算高度与宽比值
+        self.height_width = 100  # 宽高比 设置宽为100  计算高度与宽比值
         # 更新船当前到岸边距离 当收到新的经纬度后设置该值为True
         self.update_safe_distance = False
         self.back_home = 0
@@ -420,7 +423,7 @@ class MqttSendGet:
                     print('发送数据到服务器')
                     try:
                         # 发送数据到服务器
-                        save_name = upload_file.post_data(url=url_data, file=file,id=1)
+                        save_name = upload_file.post_data(url=url_data, file=file, id=1)
                         if save_name:
                             self.need_send_distribution = 1
                         else:
@@ -505,7 +508,7 @@ class MqttSendGet:
 if __name__ == '__main__':
     # obj = ServerData()
     logger = log.LogHandler('server_data_test')
-    mqtt_obj = MqttSendGet(logger,ship_code=None)
+    mqtt_obj = MqttSendGet(logger, ship_code=None)
     data_define_obj = DataDefine()
     # 启动后自动订阅话题
     for topic, qos in data_define_obj.topics:

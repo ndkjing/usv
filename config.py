@@ -15,13 +15,10 @@ if not os.path.exists(maps_dir):
 # 保存所有地图湖泊信息位置
 local_map_data_path = os.path.join(maps_dir, 'local_map.json')
 # 保存行驶路径和时间数据
-run_distance_time_path = os.path.join(root_path, 'statics', 'run_distance_time_path.json')
 base_setting_path = os.path.join(root_path, 'statics', 'configs', 'base_setting.json')
 base_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'base_setting_default.json')
 height_setting_path = os.path.join(root_path, 'statics', 'configs', 'height_setting.json')
 height_setting_default_path = os.path.join(root_path, 'statics', 'configs', 'height_setting_default.json')
-# 保存湖号和路径数据
-save_plan_path = os.path.join(root_path, 'statics', 'configs', 'save_plan_path.json')
 # 保存声呐信息路径
 save_sonar_path = os.path.join(root_path, 'statics', 'geojeson_data.json')
 # 保存抓取的水质数据
@@ -48,7 +45,15 @@ class ShipType(enum.Enum):
     adcp = 5
 
 
-current_ship_type = ShipType.multi_draw
+# 船号对应类型
+ship_code_type_dict = {
+    'XXLJC4LCGSCSD1DA003': ShipType.water_detect,
+    'XXLJC4LCGSCSD1DA004': ShipType.multi_draw,
+    'XXLJC4LCGSCSD1DA005': ShipType.water_detect,
+    'XXLJC4LCGSCSD1DA007': ShipType.adcp
+}
+
+current_ship_type = ship_code_type_dict[ship_code_config.ship_code]
 
 sysstr = platform.system()
 if sysstr == "Windows":
@@ -75,13 +80,12 @@ baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
 gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
 # 腾讯地图key
 tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
-draw_time = 10
+
+draw_time = 15  # 水质检测船传感器仓抽满水时间
 # 速度等级 1到5级 速度从低到高，仅能控制手动模式下速度   1 级表示1600 5 2000
 speed_grade = 3
 arrive_distance = 2.5  # 到达范围   ==》改为给设置区域扫描间隔使用
 scan_gap = 10  # 扫描间隔
-# 多点和寻点模式下查找连接点数量
-# keep_point = 0
 # 单片机发送给树莓派等待时间
 stc2pi_timeout = 1
 # 船编号
@@ -165,7 +169,7 @@ calibration_compass = 0
 # 地图规划最小单位，米
 cell_size = int(arrive_distance)
 # 平滑路径最小单位 m
-smooth_path_ceil_size = 2
+smooth_path_ceil_size = 1
 # 前视觉距离
 forward_see_distance = 5
 # 舵机最大扫描角度单侧 左边为正右边为负
@@ -496,6 +500,7 @@ obstacle_points = [[114.523433, 30.506193],
                    [114.524334, 30.506304]
                    ]
 
+forward_target_distance = 6  # 前进寻找下一点距离
 remote_control_outtime = 2  # 接受不到遥控器消息后断开遥控器使能时间单位秒
 
 if __name__ == '__main__':

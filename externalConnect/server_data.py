@@ -164,7 +164,6 @@ class MqttSendGet:
         self.path_id_confirm = None
         # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　-1为停止  -2 为不为平台控制
         self.control_move_direction = -2
-        self.last_control_move_direction = -2
         # 抽水控制位  0为不抽水　1为抽水
         self.b_draw = 0
         # 前大灯 1 打开前大灯 没有该键表示不打开
@@ -227,8 +226,10 @@ class MqttSendGet:
         self.action_name = ""
         self.cancel_action = 0  # 取消行动
         self.pause_continue_data_type = 2  # 暂停继续控制 1：暂停自动  2：继续自动
+        self.rocker_angle = -1
 
-    # 连接MQTT服务器
+        # 连接MQTT服务器
+
     def mqtt_connect(self):
         if not self.is_connected:
             try:
@@ -265,9 +266,13 @@ class MqttSendGet:
         try:
             # 回调更新控制数据
             topic = msg.topic
-
+            if topic == 'rocker_%s' % config.ship_code:
+                rocker_data = json.loads(msg.payload)
+                if rocker_data.get('angle'):
+                    self.rocker_angle = rocker_data.get('angle')
+                self.logger.info({"摇杆数据:": rocker_data})
             # 处理控制数据
-            if topic == 'control_data_%s' % config.ship_code:
+            elif topic == 'control_data_%s' % config.ship_code:
                 self.b_receive_mqtt = True
                 send_info = None
                 control_data = json.loads(msg.payload)
@@ -282,7 +287,6 @@ class MqttSendGet:
                     else:
                         self.use_col_gap = False
                         self.row_gap = 0
-                self.last_control_move_direction = self.control_move_direction
                 self.control_move_direction = int(control_data.get('move_direction'))
                 if self.control_move_direction == -1:  # 电机停止时设置取消暂停
                     self.pause_continue_data_type = 2
@@ -322,10 +326,7 @@ class MqttSendGet:
                         "operation": send_info
                     }
                     send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
-                self.logger.info({'topic': topic,
-                                  'control_move_direction': self.control_move_direction,
-                                  'mode': control_data.get('mode')
-                                  })
+                self.logger.info({'手动控制数据:': control_data})
 
             # 处理开关信息
             if topic == 'switch_%s' % config.ship_code:
@@ -682,7 +683,7 @@ class MqttSendGet:
                     self.task_id = task_data.get("task_id")
                 if self.get_task == 1:
                     self.task_id = task_data.get("task_id")
-                self.logger.info({"任务话题数据":task_data})
+                self.logger.info({"任务话题数据": task_data})
                 if self.send_log:
                     send_log_data = {
                         "deviceId": config.ship_code,

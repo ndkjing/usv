@@ -13,8 +13,8 @@ logger = log.LogHandler('pi_log')
 class SimplePid:
     def __init__(self):
         self.errorSum = 0
-        self.currentError = 0
-        self.previousError = 0
+        self.previous_error = 0
+        self.previous_pid_time = time.time()
         # 左右侧超声波距离，没有返回None  -1 表示距离过近
         self.left_distance = None
         self.right_distance = None
@@ -26,16 +26,17 @@ class SimplePid:
         # 统计累计误差
         self.adjust_p_list.append(theta_error)
         error_sum = sum(self.adjust_p_list)
-        max_error_sum = 1000
+        max_error_sum = 180
         if error_sum >= max_error_sum:
             error_sum = max_error_sum
         elif error_sum <= -max_error_sum:
             error_sum = -max_error_sum
         control = config.kp * theta_error + config.ki * error_sum + \
-                  config.kd * (theta_error - self.previousError)
+                  config.kd * (theta_error - self.previous_error) / (time.time() - self.previous_pid_time)
         # print(time.time(), 'theta_error', theta_error, 'error_sum', error_sum, 'delta_error',
         #       theta_error - self.previousError)
-        self.previousError = theta_error
+        self.previous_error = theta_error
+        self.previous_pid_time = time.time()
         return control
 
     def update_p(self):
@@ -124,28 +125,29 @@ class SimplePid:
         right_pwm = config.stop_pwm + int(forward_pwm) + int(steer_pwm)
         return left_pwm, right_pwm
 
-    def pid_pwm_4(self, distance, theta_error,throttle=1):
+    def pid_pwm_4(self, distance: float, theta_error: float, throttle: int = 1):
         """
         距离余弦值和角度计算，距离控制速度  角度控制转向
         :param distance:
         :param theta_error:
+        ：@param throttle 动力比例 [0,1]
         :return:
         """
         # (1 / (1 + e ^ -0.2x) - 0.5) * 1000
         steer_control = self.update_steer_pid_1(theta_error)
-        steer_pwm = (0.6 / (1.0 + e ** (-0.015 * steer_control)) - 0.3) * 1000
-        forward_pwm = (1.0 / (1.0 + e ** (-0.3 * distance)) - 0.5) * 1000
+        steer_pwm = (1 / (1.0 + e ** (-0.015 * steer_control)) - 0.5) * 1000
+        forward_pwm = (1.0 / (1.0 + e ** (-0.45 * distance)) - 0.5) * 1000
         # 缩放到指定最大值范围内
-        max_control = (config.max_pwm - config.stop_pwm)*throttle
+        max_control = (config.max_pwm - config.stop_pwm) * throttle
         # max_control = config.max_pwm - config.stop_pwm
         if forward_pwm + abs(steer_pwm) > max_control:
             temp_forward_pwm = forward_pwm
-            forward_pwm = max_control * (temp_forward_pwm) / (temp_forward_pwm + abs(steer_pwm))
-            steer_pwm = max_control * (steer_pwm / (temp_forward_pwm + abs(steer_pwm)))
+            forward_pwm = int(max_control * temp_forward_pwm / (temp_forward_pwm + abs(steer_pwm)))
+            steer_pwm = int(max_control * (steer_pwm / (temp_forward_pwm + abs(steer_pwm))))
         # forward_pwm = int(forward_pwm * throttle)
         # steer_pwm = int(steer_pwm * (1 - (1 - throttle) * 0.5))
-        left_pwm = config.stop_pwm + int(forward_pwm) - int(steer_pwm)
-        right_pwm = config.stop_pwm + int(forward_pwm) + int(steer_pwm)
+        left_pwm = config.stop_pwm + forward_pwm - steer_pwm
+        right_pwm = config.stop_pwm + forward_pwm + steer_pwm
         return left_pwm, right_pwm
 
     def pid_turn_pwm(self, angular_velocity_error):

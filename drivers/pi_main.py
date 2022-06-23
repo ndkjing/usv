@@ -177,7 +177,7 @@ class PiMain:
                 com = 0
             if com == 0:
                 return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.lora_rx, tx_pin=config.lora_tx,
-                                              baud=config.lora_baud, time_out=0.19, value_lock=self.value_lock)
+                                              baud=config.lora_baud, time_out=0.3, value_lock=self.value_lock)
             baud = 9600
             return com_data.ComData(com=com,
                                     baud=baud,
@@ -212,16 +212,13 @@ class PiMain:
                 self.angular_velocity = round((self.theta_list[-1][1] - self.theta_list[-4][1]) / (
                         self.theta_list[-1][0] - self.theta_list[-4][0]), 1)
                 self.last_angular_velocity = self.angular_velocity
-            if not self.last_theta:
-                self.last_theta = theta_
-                return_theta = theta_
-            else:
-                if abs(theta_ - self.last_theta) > 180:
-                    return_theta = self.last_theta
-                else:
-                    self.last_theta = theta_
-                    return_theta = theta_
-                self.last_theta = theta_
+            return_theta = theta_
+            self.last_theta = theta_
+            # if abs(theta_ - self.last_theta) > 180:
+            #     return_theta = self.last_theta
+            # else:
+            #     self.last_theta = theta_
+            #     return_theta = theta_
         else:
             self.angular_velocity = self.last_angular_velocity
             return_theta = self.last_theta
@@ -313,7 +310,7 @@ class PiMain:
             left_pwm = config.stop_pwm + int(config.speed_grade) * 100
         if right_pwm is None:
             right_pwm = config.stop_pwm + int(config.speed_grade) * 100
-        self.set_pwm(left_pwm, right_pwm)
+        self.set_pwm(left_pwm, right_pwm,b_limit_max=False)
 
     def backword(self, left_pwm=None, right_pwm=None):
         if left_pwm is None:
@@ -366,7 +363,7 @@ class PiMain:
         self.target_draw_steer_pwm = deep_pwm
 
     def loop_change_draw_steer(self, b_slow=True):
-        delta_change = 5
+        delta_change = 1
         while 1:
             if not config.b_control_deep:
                 time.sleep(1)
@@ -380,8 +377,8 @@ class PiMain:
                     add_or_sub = 0
                 self.draw_steer_pwm +=delta_change * add_or_sub
                 self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
-                print('setpwm11', config.draw_steer, self.draw_steer_pwm,self.target_draw_steer_pwm)
-                time.sleep(0.04)
+                # print('setpwm11', config.draw_steer, self.draw_steer_pwm,self.target_draw_steer_pwm)
+                time.sleep(0.01)
             else:
                 time.sleep(0.1)
 
@@ -399,34 +396,38 @@ class PiMain:
         self.set_pwm(config.stop_pwm, config.stop_pwm)
         time.sleep(config.motor_init_time)
 
-    def set_pwm(self, set_left_pwm, set_right_pwm):
+    def set_pwm(self, set_left_pwm, set_right_pwm, b_limit_max=True):
         """
         设置pwm波数值
         :param set_left_pwm:
         :param set_right_pwm:
+        :@param b_limit_max 限制到自己设定到最大值 True 为 [config.min_pwm,config.max_pwm] False:[1000,2000]
         :return:
         """
         # 判断是否大于阈值
-        if set_left_pwm >= config.max_pwm:
-            set_left_pwm = config.max_pwm
-        if set_left_pwm <= config.min_pwm:
-            set_left_pwm = config.min_pwm
-        if set_right_pwm >= config.max_pwm:
-            set_right_pwm = config.max_pwm
-        if set_right_pwm <= config.min_pwm:
-            set_right_pwm = config.min_pwm
-
-        # 如果有反桨叶反转电机pwm值 改为固定值
+        if b_limit_max:
+            if set_left_pwm >= config.max_pwm:
+                set_left_pwm = config.max_pwm
+            if set_left_pwm <= config.min_pwm:
+                set_left_pwm = config.min_pwm
+            if set_right_pwm >= config.max_pwm:
+                set_right_pwm = config.max_pwm
+            if set_right_pwm <= config.min_pwm:
+                set_right_pwm = config.min_pwm
+        else:
+            if set_left_pwm >= 2000:
+                set_left_pwm = 2000
+            if set_left_pwm <= 1000:
+                set_left_pwm = 1000
+            if set_right_pwm >= 2000:
+                set_right_pwm = 2000
+            if set_right_pwm <= 1000:
+                set_right_pwm = 1000
+        # 如果有反桨叶反转电机pwm值
         if config.left_motor_cw == 1:
             set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
         if config.right_motor_cw == 1:
             set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
-        # left_motor_cw = 1
-        # right_motor_cw = 0
-        # if left_motor_cw == 1:
-        #     set_left_pwm = config.stop_pwm - (set_left_pwm - config.stop_pwm)
-        # if right_motor_cw == 1:
-        #     set_right_pwm = config.stop_pwm - (set_right_pwm - config.stop_pwm)
         self.target_left_pwm = int(set_left_pwm / (20000 / self.pice) / (50 / self.hz))
         self.target_right_pwm = int(set_right_pwm / (20000 / self.pice) / (50 / self.hz))
 
@@ -455,12 +456,12 @@ class PiMain:
                 if self.b_start_remote:
                     time.sleep(sleep_time / 4)
                 else:
-                    time.sleep(sleep_time)
+                    time.sleep(sleep_time/2)
             else:
                 if self.b_start_remote:
                     time.sleep(sleep_time / 4)
                 else:
-                    time.sleep(sleep_time)
+                    time.sleep(sleep_time/2)
 
     def set_steer_engine(self, angle):
         self.pi.set_PWM_dutycycle(26, angle)
@@ -747,16 +748,16 @@ class PiMain:
                         config.calibration_compass = 0
                         config.write_setting(b_height=True)
                 else:
-                    theta_ = self.compass_obj.read_compass(send_data='31')
+                    theta_ = self.compass_obj.read_compass(send_data='31',debug=debug)
                     # try:
                     #     self.save_compass_data(theta_=theta_)
                     # except Exception as s_e:
                     #     self.logger_obj.error({'save_compass_data': s_e})
-                    theta_ = self.compass_filter(theta_)
+                    # theta_ = self.compass_filter(theta_)
                     if theta_:
                         self.theta = theta_
                 if debug:
-                    print('time', time.time(), self.theta, self.angular_velocity)
+                    print('time', time.time(), self.theta)
 
     # 读取维特罗盘数据
     def get_weite_compass_data(self, debug=False):

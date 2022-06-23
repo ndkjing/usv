@@ -238,7 +238,6 @@ class DataDefine:
             ('pool_info_%s' % config.ship_code, 0),
             ('auto_lng_lat_%s' % config.ship_code, 0),
             ('path_planning_%s' % config.ship_code, 0),
-            # ('status_data_%s' % (config.ship_code), 0),
             ('base_setting_%s' % config.ship_code, 0),
             ('height_setting_%s' % config.ship_code, 0),
             ('refresh_%s' % config.ship_code, 0),
@@ -257,6 +256,7 @@ class DataDefine:
             ('pause_continue_%s' % config.ship_code, 0),
             ('path_planning_confirm_%s' % config.ship_code, 0),
             ('notice_info_%s' % config.ship_code, 0),
+            ('rocker_%s' % config.ship_code, 0),
             ('bottle_setting_%s' % config.ship_code, 0)
         )
 
