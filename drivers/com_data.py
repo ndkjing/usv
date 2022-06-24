@@ -110,6 +110,28 @@ class ComData:
         else:
             self.uart.write(data.encode())
 
+    # 读取深度传感器数据
+    def read_deep_data(self, data='010300000001840A', b_hex=True):
+        print('com send_data', data)
+        if b_hex:
+            self.uart.write(bytes.fromhex(data))
+        data_read = self.uart.readline()
+        str_data = str(binascii.b2a_hex(data_read))[2:-1]
+        print('read_sonar str_data', str_data)
+        # print(r'str_data.split', str_data.split('aa'))
+        # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
+        distance = 0
+        for i in str_data.split('aa'):
+            if len(i) == 8:
+                distance = int(str_data[4:8], 16) / 1000
+                if distance == 0.275:
+                    continue
+                print('深度:', distance)
+        # print(str_data.split('ff')[0][:4])
+        if distance <= 0.25:
+            return -1
+        else:
+            return distance
     # 更多示例
     # self.main_engine.write(chr(0x06).encode("utf-8"))  # 十六制发送一个数据
     # print(self.main_engine.read().hex())  #  # 十六进制的读取读一个字节

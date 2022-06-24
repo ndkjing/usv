@@ -5,7 +5,7 @@ import os
 import enum
 
 # ship_code = 'XXLJC4LCGSCAHSD0DA000'
-ship_code = 'XXLJC4LCGSCSD1DA004'
+ship_code = 'XXLJC4LCGSCSD1DA007'
 
 root_path = os.path.dirname(os.path.abspath(__file__))
 # 保存视频播放地址

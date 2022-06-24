@@ -118,11 +118,18 @@ class PiMain:
         # 记录上一次收到有效lora遥控器数据时间
         self.lora_control_receive_time = None
         # 串口数据收发对象
+        self.com_data_obj = None
+        self.deep_obj = None
         if config.b_com_stc:
             self.com_data_obj = self.get_com_obj(port=config.stc_port,
                                                  baud=config.stc_baud,
                                                  timeout=config.stc2pi_timeout
                                                  )
+        if config.b_com_deep:
+            self.deep_obj = self.get_com_obj(port=config.deep_port,
+                                             baud=config.deep_baud,
+                                             timeout=1
+                                             )
         self.dump_energy = None
         self.last_dump_energy = None  # 用于判断记录日志用
         self.speed = None  # gps中获取船速
@@ -200,6 +207,7 @@ class PiMain:
     def get_stc_obj(self):
         return pi_softuart.PiSoftuart(pi=self.pi, rx_pin=config.stc_rx, tx_pin=config.stc_tx,
                                       baud=config.stc_baud, time_out=1)
+
 
     # 罗盘角度滤波
     def compass_filter(self, theta_):
@@ -310,7 +318,7 @@ class PiMain:
             left_pwm = config.stop_pwm + int(config.speed_grade) * 100
         if right_pwm is None:
             right_pwm = config.stop_pwm + int(config.speed_grade) * 100
-        self.set_pwm(left_pwm, right_pwm,b_limit_max=False)
+        self.set_pwm(left_pwm, right_pwm, b_limit_max=False)
 
     def backword(self, left_pwm=None, right_pwm=None):
         if left_pwm is None:
@@ -370,12 +378,12 @@ class PiMain:
                 continue
             if self.draw_steer_pwm != self.target_draw_steer_pwm:
                 if self.target_draw_steer_pwm - self.draw_steer_pwm > 0:
-                    add_or_sub =1
+                    add_or_sub = 1
                 elif self.target_draw_steer_pwm - self.draw_steer_pwm < 0:
                     add_or_sub = -1
                 else:
                     add_or_sub = 0
-                self.draw_steer_pwm +=delta_change * add_or_sub
+                self.draw_steer_pwm += delta_change * add_or_sub
                 self.pi.set_servo_pulsewidth(config.draw_steer, self.draw_steer_pwm)
                 # print('setpwm11', config.draw_steer, self.draw_steer_pwm,self.target_draw_steer_pwm)
                 time.sleep(0.01)
@@ -456,12 +464,12 @@ class PiMain:
                 if self.b_start_remote:
                     time.sleep(sleep_time / 4)
                 else:
-                    time.sleep(sleep_time/2)
+                    time.sleep(sleep_time / 2)
             else:
                 if self.b_start_remote:
                     time.sleep(sleep_time / 4)
                 else:
-                    time.sleep(sleep_time/2)
+                    time.sleep(sleep_time / 2)
 
     def set_steer_engine(self, angle):
         self.pi.set_PWM_dutycycle(26, angle)
@@ -748,7 +756,7 @@ class PiMain:
                         config.calibration_compass = 0
                         config.write_setting(b_height=True)
                 else:
-                    theta_ = self.compass_obj.read_compass(send_data='31',debug=debug)
+                    theta_ = self.compass_obj.read_compass(send_data='31', debug=debug)
                     # try:
                     #     self.save_compass_data(theta_=theta_)
                     # except Exception as s_e:

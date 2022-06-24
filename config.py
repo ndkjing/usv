@@ -105,6 +105,8 @@ else:
 http_data_save = "http://%s/union/water/save" % http_domin
 # 发送抽水瓶号数据
 http_draw_save = 'http://%s/union/sampling/save' % http_domin
+# 深度数据
+
 # 获取存储的任务数据
 http_get_task = 'http://%s/union/task/list/1/1' % http_domin
 http_update_task = 'http://%s/union/upDataTask' % http_domin
@@ -471,6 +473,10 @@ b_drain = 1  # 是否有排水泵
 min_deep_steer_pwm = 800  # 最下面
 max_deep_steer_pwm = 2400  # 最上面
 
+b_adcp_deep=1
+deep_port = '/dev/ttyUSB0'  # '/dev/ttyAMA0'
+deep_baud = 115200
+b_com_deep = os.path.exists(deep_port) and b_adcp_deep  # 判断是否存在以及是否使用
 
 class WaterType(enum.Enum):
     wt = 0

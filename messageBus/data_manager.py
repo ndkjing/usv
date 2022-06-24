@@ -234,6 +234,7 @@ class DataManager:
         self.creator = ""  # 行动人
         self.save_direction_angle = None  # 当使用方位时记录开始的角度值
         self.ship_type_obj = ship_type.ShipType(config.current_ship_type)
+        self.deep=0  # adcp检测深度
 
     # 重连mqtt服务器
     def connect_mqtt_server(self):
@@ -1530,6 +1531,8 @@ class DataManager:
                         self.control_info += ' 停止'
                 if 0 <= self.server_data_obj.mqtt_send_get_obj.rocker_angle < 360:
                     self.rocker_angle(self.server_data_obj.mqtt_send_get_obj.rocker_angle)
+                elif self.server_data_obj.mqtt_send_get_obj.rocker_angle == -1 and not config.home_debug:
+                    self.pi_main_obj.stop()
             # 遥控器控制
             elif self.ship_status == ShipStatus.remote_control or self.ship_status == ShipStatus.tasking:
                 # lora遥控器
@@ -2008,6 +2011,8 @@ class DataManager:
                 "side_light_info": self.server_data_obj.mqtt_send_get_obj.side_light,
                 # 自动巡航下角度偏差
                 "theta_error": round(self.theta_error, 2),
+                # adcp开关信息
+                "adcp_info": self.server_data_obj.mqtt_send_get_obj.adcp
             }
             notice_info_data.update({"mapId": self.data_define_obj.pool_code})
             # 遥控器是否启用
@@ -2151,6 +2156,8 @@ class DataManager:
                 # "audio_light": self.server_data_obj.mqtt_send_get_obj.audio_light,
                 # 舷灯 1 允许打开舷灯 没有该键或者0表示不打开
                 "side_light": self.server_data_obj.mqtt_send_get_obj.side_light,
+                # adcp
+                "adcp": self.server_data_obj.mqtt_send_get_obj.adcp
             }
             # if not config.home_debug:
             #     switch_data.update({'b_draw': self.server_data_obj.mqtt_send_get_obj.b_draw})

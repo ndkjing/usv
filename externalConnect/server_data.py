@@ -227,9 +227,12 @@ class MqttSendGet:
         self.cancel_action = 0  # 取消行动
         self.pause_continue_data_type = 2  # 暂停继续控制 1：暂停自动  2：继续自动
         self.rocker_angle = -1
+        self.adcp_record_distance = 1
+        self.adcp_record_time = 1
+        self.adcp_info_type = None
+        self.adcp = 1  # adcp 开关信息
 
-        # 连接MQTT服务器
-
+    # 连接MQTT服务器
     def mqtt_connect(self):
         if not self.is_connected:
             try:
@@ -327,7 +330,6 @@ class MqttSendGet:
                     }
                     send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
                 self.logger.info({'手动控制数据:': control_data})
-
             # 处理开关信息
             if topic == 'switch_%s' % config.ship_code:
                 self.b_receive_mqtt = True
@@ -354,6 +356,9 @@ class MqttSendGet:
                 if switch_data.get('side_light') is not None:
                     self.side_light = int(switch_data.get('side_light'))
                     send_info = "改变舷灯"
+                # ADCP
+                if switch_data.get('adcp') is not None:
+                    self.adcp = int(switch_data.get('adcp'))
                 if self.send_log and send_info is not None:
                     send_log_data = {
                         "deviceId": config.ship_code,
@@ -748,6 +753,24 @@ class MqttSendGet:
                                            )
                     self.logger.info({"采样瓶设置": bottle_setting_data})
 
+            # ADCP 设置数据
+            elif topic == 'adcp_setting_%s' % config.ship_code:
+                adcp_setting_data = json.loads(msg.payload)
+                if adcp_setting_data.get("info_type") is None:
+                    self.logger.error('"refresh_"设置启动消息没有"info_type"字段')
+                    return
+                self.adcp_info_type = int(adcp_setting_data.get("info_type"))
+                if self.adcp_info_type == 1:
+                    if adcp_setting_data.get("record_distance"):
+                        self.adcp_record_distance = adcp_setting_data.get("record_distance")
+                    if adcp_setting_data.get("record_time"):
+                        self.adcp_record_time = adcp_setting_data.get("record_time")
+                    if self.adcp_record_distance and self.adcp_record_time:  # 如果自己有数据才回
+                        adcp_data = {"info_type": 2,
+                                     "record_distance": self.adcp_record_distance,
+                                     "record_time": self.adcp_record_time}
+                        self.publish_topic('adcp_setting_%s' % config.ship_code, data=adcp_data)
+                self.logger.info({'adcp_setting_data': adcp_setting_data})
         except Exception as e:
             self.logger.error({'error': e})
 
