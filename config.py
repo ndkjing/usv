@@ -43,6 +43,7 @@ class ShipType(enum.Enum):
     water_detect = 3
     dock = 4
     adcp = 5
+    multi_draw_detect = 6
 
 
 # 船号对应类型
@@ -50,7 +51,8 @@ ship_code_type_dict = {
     'XXLJC4LCGSCSD1DA003': ShipType.water_detect,
     'XXLJC4LCGSCSD1DA004': ShipType.multi_draw,
     'XXLJC4LCGSCSD1DA005': ShipType.water_detect,
-    'XXLJC4LCGSCSD1DA007': ShipType.adcp
+    'XXLJC4LCGSCSD1DA007': ShipType.adcp,
+    'XXLJC4LCGSCSD1DA008': ShipType.multi_draw_detect
 }
 
 current_ship_type = ship_code_type_dict[ship_code_config.ship_code]
@@ -106,7 +108,7 @@ http_data_save = "http://%s/union/water/save" % http_domin
 # 发送抽水瓶号数据
 http_draw_save = 'http://%s/union/sampling/save' % http_domin
 # 深度数据
-
+http_deep_save = 'http://%s/union/adcp/save' % http_domin
 # 获取存储的任务数据
 http_get_task = 'http://%s/union/task/list/1/1' % http_domin
 http_update_task = 'http://%s/union/upDataTask' % http_domin

@@ -112,23 +112,18 @@ class ComData:
 
     # 读取深度传感器数据
     def read_deep_data(self, data='010300000001840A', b_hex=True):
-        print('com send_data', data)
+        # print('com send_data', data)
         if b_hex:
             self.uart.write(bytes.fromhex(data))
         data_read = self.uart.readline()
         str_data = str(binascii.b2a_hex(data_read))[2:-1]
         print('read_sonar str_data', str_data)
-        # print(r'str_data.split', str_data.split('aa'))
-        # print(r'str_data.split', int(str_data.split('ff')[0][:4], 16))
         distance = 0
-        for i in str_data.split('aa'):
-            if len(i) == 8:
-                distance = int(str_data[4:8], 16) / 1000
-                if distance == 0.275:
-                    continue
-                print('深度:', distance)
+        if str_data.startswith('0103'):
+            distance = int(str_data[6:10], 16) / 100
+            print('深度:', distance)
         # print(str_data.split('ff')[0][:4])
-        if distance <= 0.25:
+        if distance <= 0.73:
             return -1
         else:
             return distance
@@ -349,13 +344,13 @@ if __name__ == '__main__':
             except Exception as e:
                 print({'error': e})
     elif b_deep:
-        serial_obj = ComData(config.stc_port,
-                             9600,
+        serial_obj = ComData(config.deep_port,
+                             config.deep_baud,
                              timeout=1,
                              logger=logger)
-        while True:
-            print(serial_obj.read_deep())
-        # print(serial_obj.read_deep())
+        # while True:
+        #     print(serial_obj.read_deep())
+        print(serial_obj.read_deep_data())
         # print(serial_obj.readline())
         # print(serial_obj.readline())
     elif b_ultrasonic:
@@ -375,7 +370,6 @@ if __name__ == '__main__':
                                   timeout=0.2,
                                   logger=logger)
         lora_serial_obj.read_remote_control()
-
     elif b_gps:
         serial_obj1 = ComData('com4',
                               115200,

@@ -1,4 +1,3 @@
-a = 0x010300000001840A
-a = '010300000001840A'
-b = bytes.fromhex(a)
-print(a)
+str_data = '0103020049b844'
+distance = int(str_data[6:10], 16) / 100
+print(distance)

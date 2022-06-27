@@ -1,626 +1,1226 @@
-2022-06-24 16:24:43,768 server_data.py[line:256] INFO Connected with result code:  0
-2022-06-24 16:24:44,585 server_data.py[line:804] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:44,631 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
-2022-06-24 16:24:44,631 server_data.py[line:804] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:44,691 server_data.py[line:804] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:44,796 server_data.py[line:804] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:44,873 server_data.py[line:804] INFO {'topic': 'start_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:44,934 server_data.py[line:804] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:44,979 server_data.py[line:804] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,054 server_data.py[line:804] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,114 server_data.py[line:804] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,129 server_data.py[line:804] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,159 server_data.py[line:804] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,189 server_data.py[line:804] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,220 server_data.py[line:804] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,249 server_data.py[line:804] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,279 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/get?deviceId=XXLJC4LCGSCSD1DA007
-2022-06-24 16:24:45,279 server_data.py[line:804] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,369 server_data.py[line:804] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,399 server_data.py[line:804] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,444 server_data.py[line:804] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,504 server_data.py[line:804] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,565 server_data.py[line:804] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,640 server_data.py[line:804] INFO {'topic': 'token_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,671 server_data.py[line:804] INFO {'topic': 'task_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,731 server_data.py[line:804] INFO {'topic': 'action_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,821 server_data.py[line:804] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,881 server_data.py[line:804] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,942 server_data.py[line:804] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:45,987 server_data.py[line:804] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:46,049 server_data.py[line:804] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:46,079 server_data.py[line:804] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:46,124 server_data.py[line:804] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:24:50,293 server_data.py[line:569] INFO {'refresh_': {'info_type': 1}}
-2022-06-24 16:24:50,506 server_data.py[line:509] INFO {'base_setting ': {'info_type': 1}}
-2022-06-24 16:24:50,748 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:24:50,748 server_data.py[line:774] INFO {'adcp_setting_data': {'info_type': 1}}
-2022-06-24 16:24:51,139 server_data.py[line:509] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
-2022-06-24 16:24:52,015 server_data.py[line:392] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'lng_lat': [114.524084, 30.505745], 'zoom': 16.32}
-2022-06-24 16:24:52,861 server_data.py[line:495] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'mapId': '1539911190092759042'}
-2022-06-24 16:24:58,793 server_data.py[line:414] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'user_lng_lat_data': {'lng_lat': [[114.524096, 30.506853], [114.523829, 30.506267], [114.524333, 30.505602]], 'zoom': 15}}
-2022-06-24 16:24:58,913 server_data.py[line:459] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'sampling_points': [[114.524096, 30.506853], [114.523829, 30.506267], [114.524333, 30.505602]], 'path_points': [[114.524084, 30.506855], [114.524084, 30.506855], [114.524084, 30.506781], [114.524084, 30.506707], [114.523998, 30.506633], [114.523998, 30.506559], [114.523912, 30.506485], [114.523826, 30.506411], [114.523826, 30.506337], [114.523826, 30.506263], [114.52432, 30.505615]]}
-2022-06-24 16:25:00,081 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:25:09,176 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA007', 'move_direction': -1}}
-2022-06-24 16:25:10,885 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:52:37,510 server_data.py[line:256] INFO Connected with result code:  0
-2022-06-24 16:52:37,525 server_data.py[line:805] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:37,585 server_data.py[line:805] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:37,676 server_data.py[line:805] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:37,706 server_data.py[line:805] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:37,736 server_data.py[line:805] INFO {'topic': 'start_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:37,782 server_data.py[line:805] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:37,812 server_data.py[line:805] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:37,857 server_data.py[line:805] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:37,917 server_data.py[line:805] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:37,947 server_data.py[line:805] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,083 server_data.py[line:805] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,113 server_data.py[line:805] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,158 server_data.py[line:805] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,189 server_data.py[line:805] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,236 server_data.py[line:805] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,282 server_data.py[line:805] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,342 server_data.py[line:805] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,403 server_data.py[line:805] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,448 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
-2022-06-24 16:52:38,478 server_data.py[line:805] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,538 server_data.py[line:805] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,583 server_data.py[line:805] INFO {'topic': 'token_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,613 server_data.py[line:805] INFO {'topic': 'task_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,643 server_data.py[line:805] INFO {'topic': 'action_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,688 server_data.py[line:805] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,718 server_data.py[line:805] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,748 server_data.py[line:805] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,763 server_data.py[line:805] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,793 server_data.py[line:805] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,824 server_data.py[line:805] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:38,854 server_data.py[line:805] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 16:52:39,308 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/get?deviceId=XXLJC4LCGSCSD1DA007
-2022-06-24 16:52:40,570 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:52:45,658 server_data.py[line:569] INFO {'refresh_': {'info_type': 1}}
-2022-06-24 16:52:45,688 server_data.py[line:509] INFO {'base_setting ': {'info_type': 1}}
-2022-06-24 16:52:46,018 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 1}}
-2022-06-24 16:52:46,681 server_data.py[line:509] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
-2022-06-24 16:52:50,069 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:52:50,189 server_data.py[line:373] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA007', 'b_sampling': None, 'b_draw': None, 'headlight': None, 'audio_light': None, 'side_light': None}
-2022-06-24 16:52:51,986 server_data.py[line:373] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA007', 'b_sampling': None, 'b_draw': None, 'headlight': None, 'audio_light': None, 'side_light': None}
-2022-06-24 16:52:59,307 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 1, 'record_time': '3'}}
-2022-06-24 16:53:00,902 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:53:03,948 server_data.py[line:569] INFO {'refresh_': {'info_type': 1}}
-2022-06-24 16:53:04,069 server_data.py[line:509] INFO {'base_setting ': {'info_type': 1}}
-2022-06-24 16:53:04,265 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 1}}
-2022-06-24 16:53:04,747 server_data.py[line:509] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
-2022-06-24 16:53:10,532 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:53:17,817 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 1, 'record_distance': 1}}
-2022-06-24 16:53:17,997 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': '3'}}
-2022-06-24 16:53:19,958 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 1, 'record_time': '2'}}
-2022-06-24 16:53:20,050 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': '2'}}
-2022-06-24 16:53:20,202 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:53:30,770 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:53:40,550 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:53:50,189 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:54:00,768 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:54:10,221 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:54:20,950 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:54:30,548 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:54:40,158 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:54:50,889 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:55:00,314 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:55:10,869 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:55:20,559 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:55:30,170 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:55:40,832 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:55:50,494 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:56:00,976 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:56:10,568 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:56:20,136 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:56:30,751 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:56:40,332 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:56:50,031 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:57:00,533 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:57:10,125 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:57:20,770 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:57:30,414 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:57:33,665 server_data.py[line:569] INFO {'refresh_': {'info_type': 1}}
-2022-06-24 16:57:33,833 server_data.py[line:509] INFO {'base_setting ': {'info_type': 1}}
-2022-06-24 16:57:34,255 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 1}}
-2022-06-24 16:57:34,589 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': '2'}}
-2022-06-24 16:57:35,010 server_data.py[line:509] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
-2022-06-24 16:57:40,094 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:57:50,672 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:58:00,386 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:58:10,181 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:58:20,746 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:58:30,393 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:58:40,894 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:58:50,535 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:59:00,161 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:59:10,803 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:59:20,464 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:59:30,262 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 16:59:50,311 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:00:00,880 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:00:10,586 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:00:20,333 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:00:30,891 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:00:40,608 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:00:50,442 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:01:00,180 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:01:10,878 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:01:20,469 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:01:30,071 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:01:40,799 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:01:50,371 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:02:00,981 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:02:10,604 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:02:20,374 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:02:30,955 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:02:40,570 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:02:50,228 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:03:00,770 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:03:10,413 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:03:20,221 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:03:30,934 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:03:40,479 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:03:50,167 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:04:00,564 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:04:10,210 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:04:20,889 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:04:30,450 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:04:40,079 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:04:50,766 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:05:00,272 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:05:10,966 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:05:20,689 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:05:30,596 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:05:40,174 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:05:50,800 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:06:00,425 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:06:10,988 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:06:20,551 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:06:30,185 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:06:40,906 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:06:50,330 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:07:00,960 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:07:10,660 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:07:20,270 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:07:30,830 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:07:40,376 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:07:50,074 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:08:00,699 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:08:10,168 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:08:20,743 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:08:30,333 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:08:40,955 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:08:50,589 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:09:10,171 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:09:20,741 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:09:30,566 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:09:40,261 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:09:50,768 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:10:00,519 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:10:10,027 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:10:20,759 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:10:30,420 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:10:40,177 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:10:50,789 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:11:00,447 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:11:20,200 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:11:30,759 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:11:40,419 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:11:50,034 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:12:00,801 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:12:10,531 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:12:20,201 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:12:30,848 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:12:40,409 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:13:00,279 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:13:10,818 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:13:20,317 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:13:30,978 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:13:40,501 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:13:50,248 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:14:00,713 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:14:10,322 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:14:20,919 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:14:30,624 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:14:40,404 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:14:50,998 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:15:00,652 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:15:10,306 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:15:20,804 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:15:30,422 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:15:40,992 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:15:50,751 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:16:00,199 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:16:10,942 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:16:20,590 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:16:30,168 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:16:40,723 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:16:50,263 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:17:00,936 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:17:10,473 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:17:20,072 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:17:30,636 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:17:40,234 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:17:50,760 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:18:00,504 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:18:10,173 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:18:20,772 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:18:30,520 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:18:40,134 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:18:50,885 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:19:00,414 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:19:10,166 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:19:20,803 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:19:30,369 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:19:40,972 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:19:50,487 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:20:00,133 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:20:10,779 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:20:20,480 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:20:30,067 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:20:40,753 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:20:50,492 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:21:10,136 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:21:20,749 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:21:25,636 server_data.py[line:256] INFO Connected with result code:  0
-2022-06-24 17:21:25,637 server_data.py[line:805] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:25,667 server_data.py[line:805] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:25,743 server_data.py[line:805] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:25,833 server_data.py[line:805] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:25,878 server_data.py[line:805] INFO {'topic': 'start_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:25,969 server_data.py[line:805] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,030 server_data.py[line:805] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,075 server_data.py[line:805] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,120 server_data.py[line:805] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,165 server_data.py[line:805] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,195 server_data.py[line:805] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,240 server_data.py[line:805] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,285 server_data.py[line:805] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,315 server_data.py[line:805] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,330 server_data.py[line:805] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,375 server_data.py[line:805] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,435 server_data.py[line:805] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,495 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
-2022-06-24 17:21:26,510 server_data.py[line:805] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,601 server_data.py[line:805] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,677 server_data.py[line:805] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,722 server_data.py[line:805] INFO {'topic': 'token_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,737 server_data.py[line:805] INFO {'topic': 'task_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,767 server_data.py[line:805] INFO {'topic': 'action_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,873 server_data.py[line:805] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:26,918 server_data.py[line:805] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:27,008 server_data.py[line:805] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:27,114 server_data.py[line:805] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:27,174 server_data.py[line:805] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:27,250 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/get?deviceId=XXLJC4LCGSCSD1DA007
-2022-06-24 17:21:27,250 server_data.py[line:805] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:27,385 server_data.py[line:805] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:21:30,879 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:21:40,374 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:21:50,117 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:22:00,992 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:22:10,885 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:22:20,577 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:22:30,346 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:22:40,319 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:22:50,245 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:23:00,083 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:23:10,937 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:23:20,839 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:23:30,513 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:23:40,248 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:23:50,086 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:24:00,911 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:24:10,718 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:24:20,580 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:24:30,226 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:24:40,005 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:24:50,613 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:25:00,505 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:25:10,120 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:25:20,058 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:25:30,903 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:25:40,864 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:25:50,843 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:26:00,479 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:26:10,113 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:26:20,933 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:26:30,688 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:26:40,370 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:26:50,149 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:27:00,091 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:27:10,732 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:27:20,539 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:27:30,246 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:27:40,089 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:27:50,701 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:28:00,603 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:28:05,534 server_data.py[line:256] INFO Connected with result code:  0
-2022-06-24 17:28:05,580 server_data.py[line:805] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:05,701 server_data.py[line:805] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:05,746 server_data.py[line:805] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:05,776 server_data.py[line:805] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:05,821 server_data.py[line:805] INFO {'topic': 'start_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:05,896 server_data.py[line:805] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:05,986 server_data.py[line:805] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,031 server_data.py[line:805] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,092 server_data.py[line:805] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,137 server_data.py[line:805] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,213 server_data.py[line:805] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,243 server_data.py[line:805] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,318 server_data.py[line:805] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,348 server_data.py[line:805] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,408 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
-2022-06-24 17:28:06,408 server_data.py[line:805] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,498 server_data.py[line:805] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,678 server_data.py[line:805] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,723 server_data.py[line:805] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,753 server_data.py[line:805] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,787 server_data.py[line:805] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,828 server_data.py[line:805] INFO {'topic': 'token_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,888 server_data.py[line:805] INFO {'topic': 'task_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,949 server_data.py[line:805] INFO {'topic': 'action_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:06,994 server_data.py[line:805] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:07,040 server_data.py[line:805] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:07,071 server_data.py[line:805] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:07,086 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/get?deviceId=XXLJC4LCGSCSD1DA007
-2022-06-24 17:28:07,131 server_data.py[line:805] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:07,267 server_data.py[line:805] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:07,282 server_data.py[line:805] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:07,358 server_data.py[line:805] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:10,567 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:28:40,538 server_data.py[line:256] INFO Connected with result code:  0
-2022-06-24 17:28:40,583 server_data.py[line:805] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:40,613 server_data.py[line:805] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:40,629 server_data.py[line:805] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:40,659 server_data.py[line:805] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:40,720 server_data.py[line:805] INFO {'topic': 'start_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:40,750 server_data.py[line:805] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:40,796 server_data.py[line:805] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:40,841 server_data.py[line:805] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:40,871 server_data.py[line:805] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:40,916 server_data.py[line:805] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:40,961 server_data.py[line:805] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,006 server_data.py[line:805] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,066 server_data.py[line:805] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,111 server_data.py[line:805] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,156 server_data.py[line:805] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,201 server_data.py[line:805] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,276 server_data.py[line:805] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,321 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
-2022-06-24 17:28:41,351 server_data.py[line:805] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,441 server_data.py[line:805] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,517 server_data.py[line:805] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,547 server_data.py[line:805] INFO {'topic': 'token_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,608 server_data.py[line:805] INFO {'topic': 'task_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,668 server_data.py[line:805] INFO {'topic': 'action_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,713 server_data.py[line:805] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,743 server_data.py[line:805] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,773 server_data.py[line:805] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,803 server_data.py[line:805] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,879 server_data.py[line:805] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,909 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/get?deviceId=XXLJC4LCGSCSD1DA007
-2022-06-24 17:28:41,925 server_data.py[line:805] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:41,985 server_data.py[line:805] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:28:44,367 server_data.py[line:569] INFO {'refresh_': {'info_type': 1}}
-2022-06-24 17:28:44,517 server_data.py[line:509] INFO {'base_setting ': {'info_type': 1}}
-2022-06-24 17:28:46,556 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 1, 'record_time': '5'}}
-2022-06-24 17:28:46,843 server_data.py[line:509] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
-2022-06-24 17:28:47,599 server_data.py[line:569] INFO {'refresh_': {'info_type': 1}}
-2022-06-24 17:28:47,917 server_data.py[line:509] INFO {'base_setting ': {'info_type': 1}}
-2022-06-24 17:28:48,052 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 1}}
-2022-06-24 17:28:48,714 server_data.py[line:509] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
-2022-06-24 17:28:50,543 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:29:00,175 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:29:10,842 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:29:20,450 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:29:30,049 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:29:34,123 server_data.py[line:569] INFO {'refresh_': {'info_type': 1}}
-2022-06-24 17:29:34,304 server_data.py[line:509] INFO {'base_setting ': {'info_type': 1}}
-2022-06-24 17:29:34,621 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 1}}
-2022-06-24 17:29:35,149 server_data.py[line:509] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
-2022-06-24 17:29:40,761 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:29:50,310 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:30:10,264 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:30:20,909 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:30:29,364 server_data.py[line:569] INFO {'refresh_': {'info_type': 1}}
-2022-06-24 17:30:29,500 server_data.py[line:509] INFO {'base_setting ': {'info_type': 1}}
-2022-06-24 17:30:29,846 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 1}}
-2022-06-24 17:30:30,162 server_data.py[line:509] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
-2022-06-24 17:30:30,538 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:30:40,125 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:30:50,929 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:31:00,796 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:31:10,390 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:31:20,937 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:31:30,474 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:31:31,917 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
-2022-06-24 17:31:40,460 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:31:50,897 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:32:00,704 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:32:10,279 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:32:20,758 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:32:30,392 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:32:40,959 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:32:50,553 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:33:00,077 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:33:10,707 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:33:20,204 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:33:30,836 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:33:40,218 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:33:50,910 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:34:00,367 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:34:10,987 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:34:20,503 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:34:30,175 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:34:40,953 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:34:50,609 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:35:00,249 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:35:10,718 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:35:20,355 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:35:30,069 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:35:40,687 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:35:50,270 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:36:10,316 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:36:20,860 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:36:30,589 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:36:40,133 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:36:50,680 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:37:00,234 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:37:10,922 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:37:20,559 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:37:30,238 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:37:40,827 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:37:50,269 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:38:00,842 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:38:10,469 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:38:20,136 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:38:30,828 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:38:40,350 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:38:50,043 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:39:00,555 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:39:10,272 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:39:20,897 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:39:30,517 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:39:50,110 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:39:51,633 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
-2022-06-24 17:40:00,339 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:40:10,924 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:40:20,600 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:40:30,111 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:40:40,015 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:40:50,764 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:41:00,425 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:41:10,011 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:41:20,624 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:41:30,473 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:41:40,139 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:41:50,770 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:42:00,400 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:42:10,000 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:42:20,514 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:42:30,186 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:42:40,987 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:42:50,553 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:43:00,113 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:43:10,706 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:43:20,253 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:43:30,900 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:43:40,414 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:43:50,098 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:44:00,801 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:44:10,294 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:44:20,925 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:44:30,361 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:44:40,961 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:44:50,574 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:45:00,248 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:45:10,803 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:45:20,357 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:45:30,866 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:45:40,362 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:46:23,849 server_data.py[line:256] INFO Connected with result code:  0
-2022-06-24 17:46:23,911 server_data.py[line:806] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,016 server_data.py[line:806] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,046 server_data.py[line:806] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,091 server_data.py[line:806] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,152 server_data.py[line:806] INFO {'topic': 'start_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,182 server_data.py[line:806] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,212 server_data.py[line:806] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,242 server_data.py[line:806] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,288 server_data.py[line:806] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,333 server_data.py[line:806] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,393 server_data.py[line:806] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,408 server_data.py[line:806] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,468 server_data.py[line:806] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,513 server_data.py[line:806] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,543 server_data.py[line:806] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,573 server_data.py[line:806] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,588 server_data.py[line:806] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,633 server_data.py[line:806] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,678 server_data.py[line:806] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,723 server_data.py[line:806] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,753 server_data.py[line:806] INFO {'topic': 'token_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,768 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
-2022-06-24 17:46:24,813 server_data.py[line:806] INFO {'topic': 'task_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,888 server_data.py[line:806] INFO {'topic': 'action_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,934 server_data.py[line:806] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:24,994 server_data.py[line:806] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:25,039 server_data.py[line:806] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:25,115 server_data.py[line:806] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:25,145 server_data.py[line:806] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:25,175 server_data.py[line:806] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:25,235 server_data.py[line:806] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:46:25,417 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/get?deviceId=XXLJC4LCGSCSD1DA007
-2022-06-24 17:46:31,645 server_data.py[line:776] INFO {'adcp_setting_data': {'info_type': 1, 'record_time': '4'}}
-2022-06-24 17:46:34,454 server_data.py[line:569] INFO {'refresh_': {'info_type': 1}}
-2022-06-24 17:46:34,589 server_data.py[line:509] INFO {'base_setting ': {'info_type': 1}}
-2022-06-24 17:46:34,906 server_data.py[line:776] INFO {'adcp_setting_data': {'info_type': 1}}
-2022-06-24 17:46:35,300 server_data.py[line:509] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
-2022-06-24 17:46:40,143 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:46:40,700 server_data.py[line:776] INFO {'adcp_setting_data': {'info_type': 1, 'record_time': '4'}}
-2022-06-24 17:46:50,811 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:47:00,466 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:47:10,101 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:47:14,589 server_data.py[line:776] INFO {'adcp_setting_data': {'info_type': 1, 'record_distance': '1.2'}}
-2022-06-24 17:47:14,771 server_data.py[line:776] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': '1.2', 'record_time': '4'}}
-2022-06-24 17:47:16,512 server_data.py[line:776] INFO {'adcp_setting_data': {'info_type': 1, 'record_time': '3'}}
-2022-06-24 17:47:17,360 server_data.py[line:776] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': '1.2', 'record_time': '3'}}
-2022-06-24 17:47:20,703 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:47:21,202 server_data.py[line:569] INFO {'refresh_': {'info_type': 1}}
-2022-06-24 17:47:21,338 server_data.py[line:509] INFO {'base_setting ': {'info_type': 1}}
-2022-06-24 17:47:21,550 server_data.py[line:776] INFO {'adcp_setting_data': {'info_type': 1}}
-2022-06-24 17:47:21,852 server_data.py[line:776] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': '1.2', 'record_time': '3'}}
-2022-06-24 17:47:22,259 server_data.py[line:509] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
-2022-06-24 17:47:30,352 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:47:40,932 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:47:50,494 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:48:00,168 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:48:10,126 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:48:13,243 server_data.py[line:256] INFO Connected with result code:  0
-2022-06-24 17:48:13,273 server_data.py[line:805] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,318 server_data.py[line:805] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,348 server_data.py[line:805] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,378 server_data.py[line:805] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,408 server_data.py[line:805] INFO {'topic': 'start_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,454 server_data.py[line:805] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,499 server_data.py[line:805] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,546 server_data.py[line:805] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,636 server_data.py[line:805] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,666 server_data.py[line:805] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,697 server_data.py[line:805] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,757 server_data.py[line:805] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,787 server_data.py[line:805] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,817 server_data.py[line:805] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,862 server_data.py[line:805] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,937 server_data.py[line:805] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:13,997 server_data.py[line:805] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,042 server_data.py[line:805] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,057 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
-2022-06-24 17:48:14,133 server_data.py[line:805] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,162 server_data.py[line:805] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,223 server_data.py[line:805] INFO {'topic': 'token_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,283 server_data.py[line:805] INFO {'topic': 'task_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,328 server_data.py[line:805] INFO {'topic': 'action_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,404 server_data.py[line:805] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,480 server_data.py[line:805] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,525 server_data.py[line:805] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,663 server_data.py[line:805] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,740 server_data.py[line:805] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,785 server_data.py[line:805] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,815 server_data.py[line:805] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA007', 'qos': 0}
-2022-06-24 17:48:14,830 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/get?deviceId=XXLJC4LCGSCSD1DA007
-2022-06-24 17:48:20,266 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 1, 'record_time': '3'}}
-2022-06-24 17:48:20,537 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:48:20,582 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': '3'}}
-2022-06-24 17:48:28,758 server_data.py[line:569] INFO {'refresh_': {'info_type': 1}}
-2022-06-24 17:48:28,970 server_data.py[line:509] INFO {'base_setting ': {'info_type': 1}}
-2022-06-24 17:48:29,181 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 1}}
-2022-06-24 17:48:29,392 server_data.py[line:775] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': '3'}}
-2022-06-24 17:48:29,588 server_data.py[line:509] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
-2022-06-24 17:48:30,118 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:48:40,826 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:48:50,557 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
-2022-06-24 17:49:00,313 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 08:55:11,905 server_data.py[line:256] INFO Connected with result code:  0
+2022-06-27 08:55:12,794 server_data.py[line:37] INFO http://192.168.8.26:8008/union/device/login
+2022-06-27 08:55:12,929 server_data.py[line:809] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:12,989 server_data.py[line:809] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,049 server_data.py[line:809] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,065 server_data.py[line:809] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,095 server_data.py[line:809] INFO {'topic': 'start_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,157 server_data.py[line:809] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,217 server_data.py[line:809] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,247 server_data.py[line:809] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,277 server_data.py[line:809] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,307 server_data.py[line:809] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,428 server_data.py[line:809] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,443 server_data.py[line:809] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,503 server_data.py[line:809] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,596 server_data.py[line:809] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,641 server_data.py[line:809] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,717 server_data.py[line:809] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,747 server_data.py[line:809] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,777 server_data.py[line:809] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,852 server_data.py[line:809] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:13,927 server_data.py[line:809] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:14,002 server_data.py[line:809] INFO {'topic': 'token_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:14,064 server_data.py[line:809] INFO {'topic': 'task_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:14,124 server_data.py[line:809] INFO {'topic': 'action_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:14,230 server_data.py[line:809] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:14,275 server_data.py[line:809] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:14,335 server_data.py[line:809] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:14,380 server_data.py[line:809] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:14,440 server_data.py[line:809] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:14,500 server_data.py[line:809] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:14,530 server_data.py[line:809] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:55:26,101 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 08:55:26,282 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 08:55:26,673 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 08:55:27,065 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 08:55:27,231 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 08:55:28,803 server_data.py[line:396] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA004', 'lng_lat': [114.52397, 30.505957], 'zoom': 16.74}
+2022-06-27 08:55:29,592 server_data.py[line:499] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA004', 'mapId': '1539055921582358529'}
+2022-06-27 08:55:33,398 server_data.py[line:58] ERROR {'http请求报错': ReadTimeout(ReadTimeoutError("HTTPConnectionPool(host='192.168.8.26', port=8008): Read timed out. (read timeout=20)"))}
+2022-06-27 08:55:34,528 server_data.py[line:37] INFO http://192.168.8.26:8008/union/device/login
+2022-06-27 08:55:39,530 server_data.py[line:695] INFO {'任务话题数据': {'info_type': 1, 'get_task': 1, 'task_id': '1540636804425265153'}}
+2022-06-27 08:55:39,847 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 08:55:39,999 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 08:55:40,285 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 08:55:40,558 server_data.py[line:37] INFO http://192.168.8.26:8008/union/task/list/1/1?taskId=1540636804425265153
+2022-06-27 08:55:40,799 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2022-06-27 08:55:40,936 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 08:55:41,044 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 08:55:42,146 server_data.py[line:37] INFO http://192.168.8.26:8008/union/task/list/1/1?taskId=1540636804425265153
+2022-06-27 08:55:43,720 server_data.py[line:37] INFO http://192.168.8.26:8008/union/task/list/1/1?taskId=1540636804425265153
+2022-06-27 08:55:45,304 server_data.py[line:37] INFO http://192.168.8.26:8008/union/task/list/1/1?taskId=1540636804425265153
+2022-06-27 08:55:46,682 server_data.py[line:37] INFO http://192.168.8.26:8008/union/task/list/1/1?taskId=1540636804425265153
+2022-06-27 08:55:48,195 server_data.py[line:37] INFO http://192.168.8.26:8008/union/task/list/1/1?taskId=1540636804425265153
+2022-06-27 08:56:10,629 server_data.py[line:256] INFO Connected with result code:  0
+2022-06-27 08:56:10,659 server_data.py[line:809] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:10,690 server_data.py[line:809] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:10,720 server_data.py[line:809] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:10,780 server_data.py[line:809] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:10,826 server_data.py[line:809] INFO {'topic': 'start_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:10,871 server_data.py[line:809] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:10,931 server_data.py[line:809] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:10,976 server_data.py[line:809] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,054 server_data.py[line:809] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,084 server_data.py[line:809] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,129 server_data.py[line:809] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,189 server_data.py[line:809] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,221 server_data.py[line:809] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,281 server_data.py[line:809] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,312 server_data.py[line:809] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,357 server_data.py[line:809] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,403 server_data.py[line:809] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,448 server_data.py[line:809] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,494 server_data.py[line:809] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,509 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
+2022-06-27 08:56:11,584 server_data.py[line:809] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,644 server_data.py[line:809] INFO {'topic': 'token_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,691 server_data.py[line:809] INFO {'topic': 'task_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,766 server_data.py[line:809] INFO {'topic': 'action_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,811 server_data.py[line:809] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,856 server_data.py[line:809] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,901 server_data.py[line:809] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:11,962 server_data.py[line:809] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:12,008 server_data.py[line:809] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:12,084 server_data.py[line:809] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:12,144 server_data.py[line:809] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 08:56:12,401 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/get?deviceId=XXLJC4LCGSCSD1DA004
+2022-06-27 08:56:15,676 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 08:56:15,736 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 08:56:16,070 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 08:56:16,574 server_data.py[line:396] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA004', 'lng_lat': [114.524251, 30.505702], 'zoom': 16.74}
+2022-06-27 08:56:17,030 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 08:56:17,182 server_data.py[line:499] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA004', 'mapId': '1539055921582358529'}
+2022-06-27 08:56:17,410 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 08:56:20,825 server_data.py[line:695] INFO {'任务话题数据': {'info_type': 1, 'get_task': 1, 'task_id': '1540636804425265153'}}
+2022-06-27 08:56:20,901 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 08:56:21,068 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 08:56:21,128 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 08:56:21,520 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 08:56:21,855 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/list/1/1?taskId=1540636804425265153
+2022-06-27 08:56:21,945 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2022-06-27 08:56:22,156 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 08:56:22,291 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 08:56:22,915 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.524014, 30.506758], [114.523956, 30.506539], [114.524116, 30.506239]], 'path_points': [[114.524014, 30.506758], [114.523956, 30.506539], [114.524116, 30.506239]]}
+2022-06-27 08:56:30,298 server_data.py[line:714] INFO {'topic': 'action_XXLJC4LCGSCSD1DA004', 'action_data': {'action_type': 1, 'action_name': '0627-1'}}
+2022-06-27 08:56:30,646 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 08:56:31,207 server_data.py[line:37] INFO http://peri.xxlun.com/union/plan/save
+2022-06-27 08:56:40,766 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 08:56:50,434 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 08:56:55,167 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/update
+2022-06-27 08:56:55,514 server_data.py[line:37] INFO http://peri.xxlun.com/union/sampling/save
+2022-06-27 08:57:00,131 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 08:57:10,856 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 08:57:17,343 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/update
+2022-06-27 08:57:17,843 server_data.py[line:37] INFO http://peri.xxlun.com/union/sampling/save
+2022-06-27 08:57:20,287 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:00:30,200 server_data.py[line:256] INFO Connected with result code:  0
+2022-06-27 09:00:30,231 server_data.py[line:809] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,322 server_data.py[line:809] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,368 server_data.py[line:809] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,444 server_data.py[line:809] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,474 server_data.py[line:809] INFO {'topic': 'start_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,519 server_data.py[line:809] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,564 server_data.py[line:809] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,610 server_data.py[line:809] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,625 server_data.py[line:809] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,670 server_data.py[line:809] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,715 server_data.py[line:809] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,882 server_data.py[line:809] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,927 server_data.py[line:809] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:30,973 server_data.py[line:809] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,018 server_data.py[line:809] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,050 server_data.py[line:809] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,065 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
+2022-06-27 09:00:31,125 server_data.py[line:809] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,171 server_data.py[line:809] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,231 server_data.py[line:809] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,277 server_data.py[line:809] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,307 server_data.py[line:809] INFO {'topic': 'token_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,337 server_data.py[line:809] INFO {'topic': 'task_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,367 server_data.py[line:809] INFO {'topic': 'action_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,443 server_data.py[line:809] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,488 server_data.py[line:809] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,639 server_data.py[line:809] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,669 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/get?deviceId=XXLJC4LCGSCSD1DA004
+2022-06-27 09:00:31,684 server_data.py[line:809] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,775 server_data.py[line:809] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,820 server_data.py[line:809] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:31,866 server_data.py[line:809] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:00:35,537 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:00:35,672 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:00:37,123 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:00:37,484 server_data.py[line:396] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA004', 'lng_lat': [114.523981, 30.505889], 'zoom': 17.05}
+2022-06-27 09:00:38,025 server_data.py[line:499] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA004', 'mapId': '1539055921582358529'}
+2022-06-27 09:00:40,262 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:00:40,337 server_data.py[line:695] INFO {'任务话题数据': {'info_type': 1, 'get_task': 1, 'task_id': '1540636804425265153'}}
+2022-06-27 09:00:40,774 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:00:40,942 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:00:41,197 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:00:41,347 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/list/1/1?taskId=1540636804425265153
+2022-06-27 09:00:41,409 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:00:41,470 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:00:41,771 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2022-06-27 09:00:41,831 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.524014, 30.506758], [114.523956, 30.506539], [114.524116, 30.506239]], 'path_points': [[114.524014, 30.506758], [114.523956, 30.506539], [114.524116, 30.506239]]}
+2022-06-27 09:00:49,636 server_data.py[line:714] INFO {'topic': 'action_XXLJC4LCGSCSD1DA004', 'action_data': {'action_type': 1, 'action_name': '0625-2'}}
+2022-06-27 09:00:50,103 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:00:50,601 server_data.py[line:37] INFO http://peri.xxlun.com/union/plan/save
+2022-06-27 09:01:00,388 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:01:10,963 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:01:13,998 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/update
+2022-06-27 09:01:15,040 server_data.py[line:37] INFO http://peri.xxlun.com/union/sampling/save
+2022-06-27 09:01:20,427 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:01:30,891 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:01:37,145 server_data.py[line:37] INFO http://peri.xxlun.com/union/sampling/save
+2022-06-27 09:01:40,648 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:01:50,153 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:02:00,936 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:02:10,493 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:02:20,104 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:02:30,804 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:02:40,530 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:02:45,297 server_data.py[line:256] INFO Connected with result code:  0
+2022-06-27 09:02:45,312 server_data.py[line:809] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:45,342 server_data.py[line:809] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:45,433 server_data.py[line:809] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:45,478 server_data.py[line:809] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:45,523 server_data.py[line:809] INFO {'topic': 'start_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:45,569 server_data.py[line:809] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:45,630 server_data.py[line:809] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:45,660 server_data.py[line:809] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:45,705 server_data.py[line:809] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:45,780 server_data.py[line:809] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:45,871 server_data.py[line:809] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:45,916 server_data.py[line:809] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:45,976 server_data.py[line:809] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,036 server_data.py[line:809] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,113 server_data.py[line:809] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,128 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
+2022-06-27 09:02:46,143 server_data.py[line:809] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,188 server_data.py[line:809] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,233 server_data.py[line:809] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,248 server_data.py[line:809] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,293 server_data.py[line:809] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,338 server_data.py[line:809] INFO {'topic': 'token_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,368 server_data.py[line:809] INFO {'topic': 'task_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,413 server_data.py[line:809] INFO {'topic': 'action_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,458 server_data.py[line:809] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,535 server_data.py[line:809] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,610 server_data.py[line:809] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,670 server_data.py[line:809] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,762 server_data.py[line:809] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,807 server_data.py[line:809] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:46,807 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/get?deviceId=XXLJC4LCGSCSD1DA004
+2022-06-27 09:02:46,822 server_data.py[line:809] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:02:50,293 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:02:50,473 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:02:50,549 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:02:50,821 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:02:51,516 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:02:51,546 server_data.py[line:396] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA004', 'lng_lat': [114.52405, 30.505817], 'zoom': 16.79}
+2022-06-27 09:02:51,667 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:02:52,226 server_data.py[line:499] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA004', 'mapId': '1539055921582358529'}
+2022-06-27 09:03:10,808 server_data.py[line:256] INFO Connected with result code:  0
+2022-06-27 09:03:10,853 server_data.py[line:809] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:10,883 server_data.py[line:809] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:10,913 server_data.py[line:809] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:10,958 server_data.py[line:809] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,078 server_data.py[line:809] INFO {'topic': 'start_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,183 server_data.py[line:809] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,258 server_data.py[line:809] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,378 server_data.py[line:809] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,393 server_data.py[line:809] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,423 server_data.py[line:809] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,468 server_data.py[line:809] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,543 server_data.py[line:809] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,573 server_data.py[line:809] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,634 server_data.py[line:809] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,680 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
+2022-06-27 09:03:11,725 server_data.py[line:809] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,875 server_data.py[line:809] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,905 server_data.py[line:809] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:11,950 server_data.py[line:809] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:12,010 server_data.py[line:809] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:12,055 server_data.py[line:809] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:12,115 server_data.py[line:809] INFO {'topic': 'token_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:12,160 server_data.py[line:809] INFO {'topic': 'task_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:12,235 server_data.py[line:809] INFO {'topic': 'action_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:12,296 server_data.py[line:809] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:12,341 server_data.py[line:809] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:12,402 server_data.py[line:809] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:12,432 server_data.py[line:809] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:12,492 server_data.py[line:809] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:12,522 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/get?deviceId=XXLJC4LCGSCSD1DA004
+2022-06-27 09:03:12,552 server_data.py[line:809] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:12,718 server_data.py[line:809] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:03:16,163 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:03:16,346 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:03:16,738 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:03:16,949 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:03:16,964 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:03:19,948 server_data.py[line:695] INFO {'任务话题数据': {'info_type': 1, 'get_task': 1, 'task_id': '1540636804425265153'}}
+2022-06-27 09:03:20,053 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:03:20,234 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:03:20,355 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:03:20,658 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:03:20,764 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:03:20,959 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:03:20,960 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/list/1/1?taskId=1540636804425265153
+2022-06-27 09:03:21,745 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.524116, 30.506239]], 'path_points': [[114.524116, 30.506239]]}
+2022-06-27 09:03:25,129 server_data.py[line:396] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA004', 'lng_lat': [114.524043, 30.505952], 'zoom': 16.49}
+2022-06-27 09:03:25,974 server_data.py[line:499] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA004', 'mapId': '1539055921582358529'}
+2022-06-27 09:03:32,686 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:03:33,289 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:03:33,698 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:03:34,634 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [[114.524116, 30.506239]], 'path_points': [[114.524116, 30.506239]], 'info_type': 2}}
+2022-06-27 09:03:35,069 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:03:35,732 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [[114.524116, 30.506239]], 'path_points': [[114.524116, 30.506239]], 'info_type': 2}}
+2022-06-27 09:03:36,292 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:03:36,838 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:03:37,034 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:03:37,653 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:03:39,220 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [[114.524116, 30.506239]], 'path_points': [[114.524116, 30.506239]], 'info_type': 2}}
+2022-06-27 09:03:39,341 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:03:39,507 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:03:40,414 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:03:40,414 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [[114.524116, 30.506239]], 'path_points': [[114.524116, 30.506239]], 'info_type': 2}}
+2022-06-27 09:03:41,636 server_data.py[line:714] INFO {'topic': 'action_XXLJC4LCGSCSD1DA004', 'action_data': {'action_type': 1}}
+2022-06-27 09:03:50,305 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:04:00,912 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:04:10,421 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:04:12,655 server_data.py[line:37] INFO http://peri.xxlun.com/union/sampling/save
+2022-06-27 09:04:13,425 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/update
+2022-06-27 09:04:16,620 server_data.py[line:695] INFO {'任务话题数据': {'info_type': 1, 'get_task': 1, 'task_id': '1540636804425265153'}}
+2022-06-27 09:04:16,847 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/list/1/1?taskId=1540636804425265153
+2022-06-27 09:04:16,907 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:04:16,938 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:04:17,255 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:04:17,451 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:04:17,707 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.524014, 30.506758], [114.523956, 30.506539], [114.524116, 30.506239]], 'path_points': [[114.524014, 30.506758], [114.523956, 30.506539], [114.524116, 30.506239]]}
+2022-06-27 09:04:17,993 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2022-06-27 09:04:18,234 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:04:20,287 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:04:24,831 server_data.py[line:714] INFO {'topic': 'action_XXLJC4LCGSCSD1DA004', 'action_data': {'action_type': 1, 'action_name': '0627-2'}}
+2022-06-27 09:04:25,299 server_data.py[line:37] INFO http://peri.xxlun.com/union/plan/save
+2022-06-27 09:04:30,954 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:04:40,607 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:04:50,215 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:04:57,869 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/update
+2022-06-27 09:04:58,307 server_data.py[line:37] INFO http://peri.xxlun.com/union/sampling/save
+2022-06-27 09:05:00,708 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:05:10,430 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:05:19,951 server_data.py[line:37] INFO http://peri.xxlun.com/union/sampling/save
+2022-06-27 09:05:21,326 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/update
+2022-06-27 09:05:30,765 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:05:40,354 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:10:53,742 server_data.py[line:256] INFO Connected with result code:  0
+2022-06-27 09:10:53,788 server_data.py[line:809] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:53,848 server_data.py[line:809] INFO {'topic': 'control_data_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:53,878 server_data.py[line:809] INFO {'topic': 'path_confirm_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:53,923 server_data.py[line:809] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:53,953 server_data.py[line:809] INFO {'topic': 'start_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:53,983 server_data.py[line:809] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,013 server_data.py[line:809] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,058 server_data.py[line:809] INFO {'topic': 'auto_lng_lat_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,104 server_data.py[line:809] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,150 server_data.py[line:809] INFO {'topic': 'base_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,180 server_data.py[line:809] INFO {'topic': 'height_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,210 server_data.py[line:809] INFO {'topic': 'refresh_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,255 server_data.py[line:809] INFO {'topic': 'reset_pool_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,316 server_data.py[line:809] INFO {'topic': 'heart_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,361 server_data.py[line:809] INFO {'topic': 'set_home_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,391 server_data.py[line:809] INFO {'topic': 'poweroff_restart_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,436 server_data.py[line:809] INFO {'topic': 'bank_distance_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,467 server_data.py[line:809] INFO {'topic': 'record_point_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,528 server_data.py[line:809] INFO {'topic': 'record_path_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,558 server_data.py[line:809] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,605 server_data.py[line:809] INFO {'topic': 'token_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,606 server_data.py[line:809] INFO {'topic': 'task_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,619 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
+2022-06-27 09:10:54,619 server_data.py[line:809] INFO {'topic': 'action_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,786 server_data.py[line:809] INFO {'topic': 'jump_point_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,816 server_data.py[line:809] INFO {'topic': 'pause_continue_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,876 server_data.py[line:809] INFO {'topic': 'path_planning_confirm_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:54,951 server_data.py[line:809] INFO {'topic': 'notice_info_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:55,041 server_data.py[line:809] INFO {'topic': 'rocker_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:55,102 server_data.py[line:809] INFO {'topic': 'bottle_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:55,133 server_data.py[line:809] INFO {'topic': 'adcp_setting_XXLJC4LCGSCSD1DA004', 'qos': 0}
+2022-06-27 09:10:55,677 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/get?deviceId=XXLJC4LCGSCSD1DA004
+2022-06-27 09:10:59,948 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:11:00,040 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:11:00,238 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:11:00,465 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:11:01,128 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:11:01,430 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:11:03,528 server_data.py[line:396] INFO {'topic': 'pool_click_XXLJC4LCGSCSD1DA004', 'lng_lat': [114.524067, 30.50588], 'zoom': 16.91}
+2022-06-27 09:11:04,371 server_data.py[line:499] INFO {'topic': 'pool_info_XXLJC4LCGSCSD1DA004', 'mapId': '1539055921582358529'}
+2022-06-27 09:11:10,857 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:11:14,187 server_data.py[line:695] INFO {'任务话题数据': {'info_type': 1, 'get_task': 1, 'task_id': '1540636804425265153'}}
+2022-06-27 09:11:14,383 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:11:14,489 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:11:14,940 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:11:15,091 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2022-06-27 09:11:15,121 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:11:15,349 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/list/1/1?taskId=1540636804425265153
+2022-06-27 09:11:15,515 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:11:16,115 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.524014, 30.506758], [114.523956, 30.506539], [114.524116, 30.506239]], 'path_points': [[114.524014, 30.506758], [114.523956, 30.506539], [114.524116, 30.506239]]}
+2022-06-27 09:11:20,530 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:11:24,384 server_data.py[line:714] INFO {'topic': 'action_XXLJC4LCGSCSD1DA004', 'action_data': {'action_type': 1, 'action_name': '0627-3'}}
+2022-06-27 09:11:24,491 server_data.py[line:37] INFO http://peri.xxlun.com/union/plan/save
+2022-06-27 09:11:30,024 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:11:40,588 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:11:48,736 server_data.py[line:37] INFO http://peri.xxlun.com/union/sampling/save
+2022-06-27 09:11:49,172 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/update
+2022-06-27 09:11:50,303 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:12:00,867 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:12:10,419 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:12:11,610 server_data.py[line:37] INFO http://peri.xxlun.com/union/sampling/save
+2022-06-27 09:12:12,215 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/update
+2022-06-27 09:12:20,332 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:12:30,009 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:12:40,571 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:12:50,311 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:13:00,974 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:13:10,510 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:13:20,102 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:13:30,538 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:13:40,076 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:13:50,801 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:14:00,355 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:14:10,883 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:14:20,594 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:14:30,085 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:14:40,716 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:14:50,251 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:15:00,004 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:15:10,493 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:15:20,242 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:15:30,793 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:15:40,508 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:15:50,127 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:16:00,543 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:16:10,096 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:16:20,705 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:16:30,333 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:16:40,058 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:16:50,744 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:17:00,217 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:17:10,878 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:17:20,516 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:17:30,230 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:17:40,791 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:17:50,428 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:18:00,920 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:18:10,406 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:18:20,027 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:18:30,562 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:18:40,123 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:18:50,829 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:19:00,459 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:19:10,237 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:19:20,670 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:19:30,331 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:19:40,962 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:19:50,697 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:20:00,473 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:20:10,039 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:20:20,775 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:20:30,405 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:20:40,044 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:20:50,876 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:21:00,317 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:21:10,977 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:21:20,513 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:21:30,018 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:21:40,588 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:21:50,096 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:22:00,558 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:22:10,983 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:22:20,638 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:22:30,346 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:22:40,135 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:22:45,626 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:22:45,806 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:22:46,126 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:22:46,354 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:22:46,701 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2022-06-27 09:22:47,141 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:22:50,715 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:23:00,393 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:23:10,030 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:23:20,690 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:23:30,146 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:23:40,810 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:23:50,506 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:24:10,236 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:24:20,864 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:24:30,347 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:24:40,997 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:24:47,690 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:24:47,735 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:24:47,932 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:24:48,174 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:24:48,448 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:24:48,617 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2022-06-27 09:24:50,563 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:25:00,012 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:25:10,837 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:25:20,432 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:25:30,071 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:25:40,719 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:25:50,394 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:26:00,141 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:26:10,920 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:26:20,569 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:26:30,300 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:26:40,716 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:26:50,225 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:27:00,934 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:27:10,575 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:27:20,257 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:27:30,997 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:27:40,620 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:27:50,150 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:28:00,727 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:28:10,280 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:28:20,068 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:28:30,649 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:28:40,215 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:28:50,912 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:29:00,493 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:29:10,124 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:29:20,963 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:29:30,659 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:29:40,272 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:29:41,691 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
+2022-06-27 09:29:50,296 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:30:00,982 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:30:10,649 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:30:20,111 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:30:30,880 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:30:40,474 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:30:50,074 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:31:00,559 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:31:10,086 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:31:20,512 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:31:30,082 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:31:40,695 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:31:50,266 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:32:00,845 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:32:10,538 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:32:20,020 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:32:30,566 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:32:40,381 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:32:50,878 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:33:00,426 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:33:10,089 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:33:20,794 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:33:30,574 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:33:40,136 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:33:50,774 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:34:00,457 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:34:10,921 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:34:20,448 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:34:30,120 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:34:40,716 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:34:50,353 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:35:10,338 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:35:20,881 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:35:30,380 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:35:40,043 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:35:50,681 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:36:00,175 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:36:10,674 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:36:20,303 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:36:28,085 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:36:28,312 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:36:28,675 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:36:29,173 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:36:29,461 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2022-06-27 09:36:29,597 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:36:30,171 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:36:30,337 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:36:30,487 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:36:30,758 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:36:30,924 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:36:31,059 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:36:31,210 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [], 'path_points': [], 'info_type': 2}}
+2022-06-27 09:36:34,832 server_data.py[line:760] INFO {'采样瓶设置': {'info_type': 1, 'bottle_id': '1', 'deep': '0.1', 'amount': '500'}}
+2022-06-27 09:36:35,569 server_data.py[line:377] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA004', 'b_sampling': None, 'b_draw': 1, 'headlight': None, 'audio_light': None, 'side_light': None}
+2022-06-27 09:36:40,250 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:36:50,888 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:36:51,946 server_data.py[line:37] INFO http://peri.xxlun.com/union/sampling/save
+2022-06-27 09:37:00,757 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:37:10,433 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:37:20,086 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:37:20,101 server_data.py[line:377] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA004', 'b_sampling': None, 'b_draw': 1, 'headlight': None, 'audio_light': None, 'side_light': None}
+2022-06-27 09:37:30,623 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:37:36,768 server_data.py[line:37] INFO http://peri.xxlun.com/union/sampling/save
+2022-06-27 09:37:40,442 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:37:45,025 server_data.py[line:377] INFO {'topic': 'switch_XXLJC4LCGSCSD1DA004', 'b_sampling': None, 'b_draw': 1, 'headlight': None, 'audio_light': None, 'side_light': None}
+2022-06-27 09:37:50,060 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:38:00,783 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:38:02,809 server_data.py[line:37] INFO http://peri.xxlun.com/union/sampling/save
+2022-06-27 09:38:10,315 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:38:30,291 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:38:40,937 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:38:50,540 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:39:00,036 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:39:10,577 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:39:20,250 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:39:30,976 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:39:40,544 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:39:50,143 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:40:00,767 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:40:10,380 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:40:20,185 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:40:30,836 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:40:40,355 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:40:50,899 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:41:00,490 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:41:10,127 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:41:20,640 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:41:30,170 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:41:40,899 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:41:50,481 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:42:00,187 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:42:10,791 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:42:20,422 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:42:30,136 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:42:40,886 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:42:50,359 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:43:00,722 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:43:10,377 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:43:20,993 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:43:30,630 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:43:40,315 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:43:50,959 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:44:00,571 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:44:10,226 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:44:20,806 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:44:30,572 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:44:40,359 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:44:50,977 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:45:00,627 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:45:10,091 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:45:20,711 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:45:30,286 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:45:40,898 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:45:50,368 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:46:10,175 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:46:15,253 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 98}}
+2022-06-27 09:46:15,360 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 84}}
+2022-06-27 09:46:15,541 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 82}}
+2022-06-27 09:46:15,751 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 81}}
+2022-06-27 09:46:16,429 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 80}}
+2022-06-27 09:46:16,474 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 71}}
+2022-06-27 09:46:16,640 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 69}}
+2022-06-27 09:46:16,760 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 65}}
+2022-06-27 09:46:16,941 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 61}}
+2022-06-27 09:46:16,987 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 60}}
+2022-06-27 09:46:18,240 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 61}}
+2022-06-27 09:46:18,270 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 61}}
+2022-06-27 09:46:18,451 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 61}}
+2022-06-27 09:46:18,571 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 65}}
+2022-06-27 09:46:18,784 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 74}}
+2022-06-27 09:46:18,814 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 86}}
+2022-06-27 09:46:18,995 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 98}}
+2022-06-27 09:46:19,447 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 99}}
+2022-06-27 09:46:19,554 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 100}}
+2022-06-27 09:46:19,615 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 101}}
+2022-06-27 09:46:19,690 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 101}}
+2022-06-27 09:46:19,796 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 102}}
+2022-06-27 09:46:19,947 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 103}}
+2022-06-27 09:46:20,068 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 103}}
+2022-06-27 09:46:20,249 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 104}}
+2022-06-27 09:46:20,415 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 111}}
+2022-06-27 09:46:20,611 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 116}}
+2022-06-27 09:46:20,672 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 120}}
+2022-06-27 09:46:20,762 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 127}}
+2022-06-27 09:46:20,792 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:46:20,964 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 133}}
+2022-06-27 09:46:20,989 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 133}}
+2022-06-27 09:46:21,018 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 134}}
+2022-06-27 09:46:21,108 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 136}}
+2022-06-27 09:46:21,303 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 136}}
+2022-06-27 09:46:21,470 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 137}}
+2022-06-27 09:46:21,530 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 136}}
+2022-06-27 09:46:21,726 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 135}}
+2022-06-27 09:46:23,552 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 134}}
+2022-06-27 09:46:23,703 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 133}}
+2022-06-27 09:46:23,793 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 133}}
+2022-06-27 09:46:23,944 server_data.py[line:276] INFO {'摇杆数据:': {'angle': 132}}
+2022-06-27 09:46:24,366 server_data.py[line:276] INFO {'摇杆数据:': {'angle': -1}}
+2022-06-27 09:46:30,328 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:46:40,037 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:46:40,901 server_data.py[line:418] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'user_lng_lat_data': {'lng_lat': [[114.52415, 30.506389], [114.525799, 30.506284]], 'zoom': 15}}
+2022-06-27 09:46:41,112 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.52415, 30.506389], [114.525799, 30.506284]], 'path_points': [[114.524142, 30.506389], [114.524153, 30.506361], [114.524196, 30.506361], [114.524239, 30.506361], [114.524282, 30.506324], [114.524325, 30.506287], [114.524368, 30.50625], [114.524411, 30.506213], [114.524454, 30.506176], [114.524497, 30.506139], [114.52454, 30.506102], [114.524583, 30.506065], [114.524626, 30.506028], [114.524668, 30.505991], [114.524711, 30.505954], [114.524754, 30.505954], [114.524797, 30.505917], [114.52484, 30.505917], [114.524883, 30.505917], [114.524926, 30.50588], [114.524969, 30.50588], [114.525012, 30.50588], [114.525055, 30.50588], [114.525098, 30.50588], [114.525141, 30.50588], [114.525184, 30.50588], [114.525227, 30.50588], [114.52527, 30.50588], [114.525313, 30.505917], [114.525356, 30.505917], [114.525399, 30.505917], [114.525442, 30.505954], [114.525485, 30.505991], [114.525528, 30.506028], [114.525571, 30.506065], [114.525614, 30.506102], [114.525657, 30.506139], [114.5257, 30.506176], [114.525743, 30.506213], [114.525786, 30.50625], [114.525828, 30.506287]]}
+2022-06-27 09:46:44,576 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'move_direction': -1}}
+2022-06-27 09:46:47,091 server_data.py[line:418] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'user_lng_lat_data': {'lng_lat': [[114.524259, 30.506373], [114.525594, 30.506108]], 'zoom': 15}}
+2022-06-27 09:46:47,407 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.524259, 30.506373], [114.525594, 30.506108]], 'path_points': [[114.52425, 30.50638], [114.524282, 30.506361], [114.524325, 30.506324], [114.524368, 30.506287], [114.524411, 30.50625], [114.524454, 30.506213], [114.524497, 30.506176], [114.52454, 30.506139], [114.524583, 30.506102], [114.524583, 30.506065], [114.524626, 30.506028], [114.524668, 30.505991], [114.524711, 30.505954], [114.524754, 30.505954], [114.524797, 30.505917], [114.52484, 30.505917], [114.524883, 30.505917], [114.524926, 30.50588], [114.524969, 30.50588], [114.525012, 30.50588], [114.525055, 30.50588], [114.525098, 30.50588], [114.525141, 30.50588], [114.525184, 30.50588], [114.525227, 30.50588], [114.52527, 30.50588], [114.525313, 30.505917], [114.525356, 30.505917], [114.525399, 30.505917], [114.525442, 30.505954], [114.525485, 30.505991], [114.525528, 30.506028], [114.525571, 30.506065], [114.525614, 30.506102]]}
+2022-06-27 09:46:48,615 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'move_direction': -1}}
+2022-06-27 09:46:50,837 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:46:54,265 server_data.py[line:418] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'user_lng_lat_data': {'lng_lat': [[114.524307, 30.506337], [114.523494, 30.506897]], 'zoom': 15}}
+2022-06-27 09:46:56,806 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.524307, 30.506337], [114.523494, 30.506897]], 'path_points': [[114.524303, 30.506343], [114.523487, 30.506898]]}
+2022-06-27 09:46:59,661 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'move_direction': -1}}
+2022-06-27 09:47:00,478 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:47:05,391 server_data.py[line:418] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'user_lng_lat_data': {'lng_lat': [[114.52423, 30.506349], [114.524503, 30.506687]], 'zoom': 15}}
+2022-06-27 09:47:07,693 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.52423, 30.506349], [114.524503, 30.506687]], 'path_points': [[114.524228, 30.506352], [114.524497, 30.506694]]}
+2022-06-27 09:47:10,096 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:47:12,258 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'move_direction': -1}}
+2022-06-27 09:47:16,121 server_data.py[line:418] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'user_lng_lat_data': {'lng_lat': [[114.524324, 30.506485], [114.525586, 30.506282]], 'zoom': 15}}
+2022-06-27 09:47:16,365 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.524324, 30.506485], [114.525586, 30.506282]], 'path_points': [[114.524314, 30.506491], [114.525581, 30.506287]]}
+2022-06-27 09:47:20,549 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'move_direction': -1}}
+2022-06-27 09:47:20,685 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:47:24,920 server_data.py[line:418] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'user_lng_lat_data': {'lng_lat': [[114.524524, 30.506465], [114.524275, 30.506096]], 'zoom': 15}}
+2022-06-27 09:47:25,283 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.524524, 30.506465], [114.524275, 30.506096]], 'path_points': [[114.524518, 30.506472], [114.524271, 30.506102]]}
+2022-06-27 09:47:30,435 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:47:32,760 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'move_direction': -1}}
+2022-06-27 09:47:35,516 server_data.py[line:418] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'user_lng_lat_data': {'lng_lat': [[114.52434, 30.506206], [114.523867, 30.506268]], 'zoom': 15}}
+2022-06-27 09:47:35,772 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.52434, 30.506206], [114.523867, 30.506268]], 'path_points': [[114.524336, 30.506213], [114.523863, 30.506269]]}
+2022-06-27 09:47:40,982 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:47:42,249 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'move_direction': -1}}
+2022-06-27 09:47:42,401 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'move_direction': -1}}
+2022-06-27 09:47:45,620 server_data.py[line:418] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'user_lng_lat_data': {'lng_lat': [[114.524029, 30.506252], [114.525718, 30.506406]], 'zoom': 15}}
+2022-06-27 09:47:46,104 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.524029, 30.506252], [114.525718, 30.506406]], 'path_points': [[114.524024, 30.506259], [114.524024, 30.50625], [114.524067, 30.50625], [114.52411, 30.50625], [114.524153, 30.50625], [114.524196, 30.506213], [114.524239, 30.506176], [114.524282, 30.506139], [114.524325, 30.506139], [114.524368, 30.506139], [114.524411, 30.506139], [114.524454, 30.506139], [114.524497, 30.506139], [114.52454, 30.506102], [114.524583, 30.506065], [114.524626, 30.506028], [114.524668, 30.505991], [114.524711, 30.505954], [114.524754, 30.505954], [114.524797, 30.505917], [114.52484, 30.505917], [114.524883, 30.505917], [114.524926, 30.50588], [114.524969, 30.50588], [114.525012, 30.50588], [114.525055, 30.50588], [114.525098, 30.50588], [114.525141, 30.50588], [114.525184, 30.50588], [114.525227, 30.50588], [114.52527, 30.50588], [114.525313, 30.505917], [114.525356, 30.505917], [114.525399, 30.505917], [114.525442, 30.505954], [114.525485, 30.505991], [114.525528, 30.506028], [114.525571, 30.506065], [114.525614, 30.506102], [114.525614, 30.506139], [114.525614, 30.506176], [114.525657, 30.506213], [114.525657, 30.50625], [114.5257, 30.506287], [114.5257, 30.506324], [114.5257, 30.506361], [114.525743, 30.506398]]}
+2022-06-27 09:47:48,624 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'move_direction': -1}}
+2022-06-27 09:47:48,867 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'move_direction': -1}}
+2022-06-27 09:47:50,513 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:48:00,053 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:48:10,806 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:48:20,390 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:48:30,941 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:48:40,561 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:48:50,403 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:49:00,193 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:49:10,867 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:49:20,590 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:49:30,124 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:49:40,891 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:49:50,382 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:50:10,194 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:50:20,882 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:50:30,607 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:50:40,407 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:50:50,966 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:51:00,459 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:51:10,180 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:51:20,824 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:51:30,503 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:51:40,225 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:51:50,052 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:52:00,647 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:52:10,197 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:52:20,974 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:52:30,538 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:52:40,227 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:52:50,780 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:53:00,320 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:53:20,245 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:53:30,791 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:53:40,603 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:53:50,262 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:54:00,020 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:54:10,679 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:54:20,202 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:54:30,710 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:54:40,324 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:54:50,873 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:55:00,484 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:55:10,109 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:55:20,626 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:55:23,268 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:55:23,329 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:55:23,708 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:55:23,845 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:55:24,129 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [], 'path_points': [], 'bottle_info': [1, 0.1, 500], 'info_type': 2}}
+2022-06-27 09:55:24,174 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:55:30,307 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:55:30,775 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 09:55:30,850 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 09:55:31,150 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 09:55:31,256 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 09:55:31,408 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '20', 'info_type': 3}}
+2022-06-27 09:55:31,467 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [], 'path_points': [], 'bottle_info': [1, 0.1, 500], 'info_type': 2}}
+2022-06-27 09:55:40,974 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:55:50,655 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:56:00,220 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:56:10,086 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:56:20,871 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:56:30,468 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:56:40,118 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:56:50,853 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:57:00,413 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:57:10,123 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:57:20,832 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:57:30,826 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:57:40,362 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:57:50,101 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:58:00,605 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:58:10,335 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:58:20,162 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:58:30,020 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:58:40,868 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:58:50,535 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:59:00,204 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:59:10,903 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:59:20,324 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:59:30,101 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:59:40,704 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 09:59:50,220 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:00:00,882 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:00:10,470 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:00:20,093 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:00:30,970 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:00:40,660 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:00:50,166 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:01:00,875 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:01:10,591 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:01:20,279 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:01:30,155 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:01:40,921 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:01:50,518 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:02:00,389 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:02:10,011 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:02:20,850 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:02:30,526 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:02:50,207 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:03:00,827 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:03:10,507 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:03:20,189 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:03:30,107 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:03:40,708 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:03:50,317 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:04:00,072 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:04:10,555 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:04:20,270 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:04:30,895 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:04:40,544 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:04:50,176 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:05:00,924 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:05:10,511 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:05:30,293 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:05:40,113 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:05:50,723 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:06:00,539 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:06:01,173 server_data.py[line:418] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'user_lng_lat_data': {'lng_lat': [[114.524087, 30.506285], [114.52433, 30.506333]], 'zoom': 15}}
+2022-06-27 10:06:01,416 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.524087, 30.506285], [114.52433, 30.506333]], 'path_points': [[114.524078, 30.506287], [114.524325, 30.506333]]}
+2022-06-27 10:06:08,585 server_data.py[line:37] INFO http://peri.xxlun.com/union/task/update
+2022-06-27 10:06:10,166 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:06:11,854 server_data.py[line:418] INFO {'topic': 'user_lng_lat_XXLJC4LCGSCSD1DA004', 'user_lng_lat_data': {'lng_lat': [[114.524306, 30.506326], [114.525614, 30.506457]], 'zoom': 15}}
+2022-06-27 10:06:12,394 server_data.py[line:463] INFO {'topic': 'path_planning_XXLJC4LCGSCSD1DA004', 'sampling_points': [[114.524306, 30.506326], [114.525614, 30.506457]], 'path_points': [[114.524303, 30.506333], [114.524325, 30.506324], [114.524368, 30.506287], [114.524411, 30.50625], [114.524454, 30.506213], [114.524497, 30.506176], [114.52454, 30.506139], [114.524583, 30.506102], [114.524583, 30.506065], [114.524626, 30.506028], [114.524668, 30.505991], [114.524711, 30.505954], [114.524754, 30.505954], [114.524797, 30.505917], [114.52484, 30.505917], [114.524883, 30.505917], [114.524926, 30.50588], [114.524969, 30.50588], [114.525012, 30.50588], [114.525055, 30.50588], [114.525098, 30.50588], [114.525141, 30.50588], [114.525184, 30.50588], [114.525227, 30.50588], [114.52527, 30.50588], [114.525313, 30.505917], [114.525356, 30.505917], [114.525399, 30.505917], [114.525442, 30.505954], [114.525485, 30.505991], [114.525528, 30.506028], [114.525571, 30.506065], [114.525614, 30.506102], [114.525614, 30.506139], [114.525614, 30.506176], [114.525614, 30.506213], [114.525614, 30.50625], [114.525614, 30.506287], [114.525614, 30.506324], [114.525614, 30.506361], [114.525614, 30.506398], [114.525614, 30.506435]]}
+2022-06-27 10:06:14,951 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'move_direction': -1}}
+2022-06-27 10:06:17,321 server_data.py[line:332] INFO {'手动控制数据:': {'deviceId': 'XXLJC4LCGSCSD1DA004', 'move_direction': -1}}
+2022-06-27 10:06:20,975 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:06:30,513 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:06:38,910 server_data.py[line:666] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA004', 'surrounded_': {'lng_lat': [[114.524365, 30.506111], [114.523672, 30.506194], [114.523083, 30.505625], [114.524151, 30.50485]]}}
+2022-06-27 10:06:40,148 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:06:42,336 server_data.py[line:513] INFO {'base_setting ': {'info_type': 2, 'arrive_range': '25'}}
+2022-06-27 10:06:45,872 server_data.py[line:513] INFO {'base_setting ': {'info_type': 2, 'arrive_range': '5'}}
+2022-06-27 10:06:50,888 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:06:59,068 server_data.py[line:666] INFO {'topic': 'surrounded_XXLJC4LCGSCSD1DA004', 'surrounded_': {'lng_lat': [[114.523886, 30.506005], [114.524773, 30.505882], [114.523484, 30.505302]]}}
+2022-06-27 10:07:00,470 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:07:10,118 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:07:20,709 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:07:30,593 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:07:40,177 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:07:50,970 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:08:00,573 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:08:10,315 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:08:20,064 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:08:30,701 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:08:40,467 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:08:50,517 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:09:00,341 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:09:10,012 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:09:20,585 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:09:30,206 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:09:40,944 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:09:50,417 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:10:00,922 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:10:10,426 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:10:16,680 server_data.py[line:573] INFO {'refresh_': {'info_type': 1}}
+2022-06-27 10:10:16,725 server_data.py[line:513] INFO {'base_setting ': {'info_type': 1}}
+2022-06-27 10:10:17,102 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 1}}
+2022-06-27 10:10:17,420 server_data.py[line:513] INFO {'base_setting ': {'speed_grade': 3, 'arrive_range': '5', 'info_type': 3}}
+2022-06-27 10:10:17,525 server_data.py[line:573] INFO {'refresh_': {'mapId': '1539055921582358529', 'sampling_points': [], 'path_points': [], 'bottle_info': [1, 0.1, 500], 'info_type': 2}}
+2022-06-27 10:10:17,600 server_data.py[line:779] INFO {'adcp_setting_data': {'info_type': 2, 'record_distance': 1, 'record_time': 1}}
+2022-06-27 10:10:20,968 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:10:30,539 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:10:40,292 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:10:50,229 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:11:00,016 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:11:10,718 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:11:20,385 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:11:30,208 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:11:40,710 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:11:50,600 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:12:00,019 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:12:10,822 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:12:20,565 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:12:30,193 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:12:40,772 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:12:50,322 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:13:00,170 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:13:10,705 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:13:20,473 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:13:30,216 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:13:40,795 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:13:50,391 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:14:00,111 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:14:10,655 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:14:20,259 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:14:30,930 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:14:40,513 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:14:50,085 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:15:00,940 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:15:10,902 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:15:20,400 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:15:30,222 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:15:40,795 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:15:50,581 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:16:00,264 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:16:20,144 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:16:30,827 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:16:40,512 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:16:50,146 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:17:00,908 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:17:10,559 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:17:20,210 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:17:30,847 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:17:40,473 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:17:50,215 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:18:00,963 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:18:10,619 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:18:20,167 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:18:30,974 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:18:40,735 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:18:50,457 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:19:00,372 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:19:10,863 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:19:20,551 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:19:30,152 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:19:40,767 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:19:50,390 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:20:00,934 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:20:10,559 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:20:20,192 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:20:30,758 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:20:40,335 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:20:50,999 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:21:00,690 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:21:10,282 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:21:20,901 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:21:30,507 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:21:40,142 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:21:50,693 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:22:00,335 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:22:10,047 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:22:20,547 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:22:30,207 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:22:40,484 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:22:50,065 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:23:00,696 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:23:10,370 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:23:20,167 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:23:30,748 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:23:40,356 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:23:50,946 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:24:00,657 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:24:10,411 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:24:20,130 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:24:30,754 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:24:40,366 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:24:50,965 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:25:00,641 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:25:10,165 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:25:20,664 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:25:30,413 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:25:40,978 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:25:50,457 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:26:00,048 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:26:10,778 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:26:20,385 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:26:30,103 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:26:40,734 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:26:50,283 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:27:00,923 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:27:10,443 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:27:20,136 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:27:30,785 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:27:40,358 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:27:50,868 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:28:00,420 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:28:10,085 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:28:20,706 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:28:30,337 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:28:40,921 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:28:50,562 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:29:00,391 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:29:10,926 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:29:20,428 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:29:30,136 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:29:40,633 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:29:50,201 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:30:00,966 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:30:10,584 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:30:20,235 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:30:30,883 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:30:40,592 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:30:50,365 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:31:00,074 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:31:10,841 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:31:20,484 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:31:40,232 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:31:50,983 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:32:00,517 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:32:10,092 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:32:20,750 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:32:30,503 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:32:40,136 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:32:50,756 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:33:00,644 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:33:10,106 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:33:20,755 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:33:30,349 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:33:40,137 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:33:50,758 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:34:00,260 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:34:10,849 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:34:20,509 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:34:30,095 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:34:40,811 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:34:50,380 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:35:00,048 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:35:10,751 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:35:20,445 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:35:30,004 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:35:40,670 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:35:42,085 server_data.py[line:37] INFO http://peri.xxlun.com/union/device/login
+2022-06-27 10:35:50,734 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:36:00,265 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:36:10,846 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:36:20,431 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:36:30,938 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:36:40,503 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:36:50,067 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:37:00,821 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:37:10,374 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:37:20,110 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:37:30,749 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:37:40,542 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:37:50,120 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:38:00,848 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:38:10,556 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:38:20,243 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:38:30,777 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:38:40,501 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:38:50,062 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:39:00,672 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:39:10,321 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:39:20,987 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:39:30,555 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:39:40,193 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:39:50,903 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:40:00,546 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:40:10,255 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:40:20,834 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:40:30,482 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:40:40,136 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:40:50,858 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:41:00,404 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:41:10,016 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:41:20,477 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:41:30,047 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:41:40,685 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:41:50,307 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:42:00,902 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:42:10,469 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:42:20,962 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:42:30,581 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:42:40,189 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:42:50,742 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:43:00,304 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:43:10,997 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:43:20,537 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:43:30,157 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:43:40,897 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:43:50,429 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:44:00,106 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:44:10,685 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:44:20,389 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:44:40,267 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:44:50,812 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:45:00,440 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:45:10,977 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:45:20,596 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:45:30,166 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:45:40,807 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:45:50,442 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:46:10,308 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:46:20,888 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:46:30,397 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:46:40,132 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:46:50,842 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:47:00,623 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:47:10,255 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:47:20,759 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:47:30,346 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:47:40,914 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:47:50,612 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:48:00,184 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:48:10,910 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:48:20,619 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:48:30,164 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:48:40,838 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:48:50,670 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:49:00,265 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:49:10,995 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:49:20,702 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:49:30,358 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:49:40,873 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:49:50,502 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:50:00,176 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:50:10,772 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:50:20,555 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:50:30,258 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:50:40,885 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:50:50,498 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:51:00,139 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:51:10,643 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:51:20,278 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:51:30,867 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:51:40,319 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:51:50,905 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:52:00,621 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:52:10,231 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:52:20,937 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:52:30,473 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:52:40,996 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:52:50,828 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:53:00,531 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:53:10,163 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:53:20,857 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:53:30,501 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:53:40,051 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:53:50,691 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:54:00,397 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:54:10,963 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:54:20,528 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:54:30,113 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:54:40,944 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:54:50,695 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:55:00,339 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:55:10,986 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:55:20,580 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:55:30,188 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:55:40,863 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:55:50,576 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:56:00,202 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:56:10,844 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:56:20,355 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:56:30,933 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:56:40,407 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:56:50,919 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:57:00,714 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:57:10,207 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:57:20,913 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:57:30,568 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:57:40,174 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:57:50,887 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:58:00,650 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:58:10,326 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:58:20,134 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:58:30,952 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:58:40,580 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:58:50,164 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:59:00,845 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:59:10,460 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:59:20,090 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:59:30,658 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:59:40,387 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 10:59:50,312 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:00:00,978 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:00:10,452 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:00:20,370 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:00:30,865 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:00:40,486 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:00:50,138 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:01:00,588 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:01:10,222 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:01:20,785 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:01:30,563 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:01:40,331 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:01:50,021 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:02:00,661 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:02:10,261 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:02:20,935 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:02:30,516 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:02:40,141 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:02:50,603 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:03:00,175 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:03:10,966 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:03:20,719 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:03:30,382 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:03:40,187 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:03:50,825 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:04:00,501 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:04:10,168 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:04:20,764 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:04:30,531 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:04:40,309 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:04:50,005 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:05:00,668 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:05:10,299 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:05:20,924 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:05:30,513 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:05:40,143 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:05:50,810 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:06:00,476 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:06:10,081 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:06:20,739 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:06:30,327 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:06:40,953 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:06:50,590 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:07:00,175 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:07:20,214 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:07:30,830 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:07:40,450 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:07:50,143 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:08:00,076 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:08:10,844 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:08:20,497 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:08:30,092 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:08:40,870 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:08:50,395 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:09:00,010 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:09:10,581 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:09:20,089 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:09:30,923 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:09:40,524 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:09:50,115 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:10:00,692 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:10:10,215 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:10:20,872 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:10:30,491 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:10:40,006 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:10:50,845 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:11:00,588 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:11:10,109 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:11:20,734 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:11:30,295 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:11:40,890 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:11:50,531 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:12:00,118 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:12:10,698 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:12:20,448 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:12:30,123 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:12:40,800 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:12:50,399 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:13:00,984 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:13:10,675 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:13:20,504 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:13:30,054 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:13:40,917 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:13:50,599 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update
+2022-06-27 11:14:00,291 server_data.py[line:37] INFO http://peri.xxlun.com/union/mileage/update

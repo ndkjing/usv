@@ -339,11 +339,15 @@ class MqttSendGet:
                 send_info = None  # 需要发送消息
                 if switch_data.get('b_draw') is not None:
                     # 采样船需要设置瓶号 深度和水量才能开始抽水
-                    if self.draw_bottle_id and self.draw_deep and self.draw_capacity:
-                        self.b_draw = int(switch_data.get('b_draw'))
+                    if config.current_ship_type==config.ShipType.multi_draw:
+                        if self.draw_bottle_id and self.draw_deep and self.draw_capacity:
+                            self.b_draw = int(switch_data.get('b_draw'))
+                            send_info = "点击采样"
+                        else:
+                            self.b_draw = 0
                     else:
-                        self.b_draw = 0
-                    send_info = "点击采样"
+                        self.b_draw = int(switch_data.get('b_draw'))
+                        send_info = "点击采样"
                 # 前大灯 1 打开前大灯 没有该键表示不打开
                 if switch_data.get('headlight') is not None:
                     self.headlight = int(switch_data.get('headlight'))
@@ -565,7 +569,7 @@ class MqttSendGet:
                         config.update_height_setting()
 
             # 刷新后请求数据消息
-            elif topic == 'refresh_%s' % (config.ship_code):
+            elif topic == 'refresh_%s' % config.ship_code:
                 self.logger.info({'refresh_': json.loads(msg.payload)})
                 refresh_data = json.loads(msg.payload)
                 if refresh_data.get("info_type") is None:
@@ -576,7 +580,7 @@ class MqttSendGet:
                     self.refresh_info_type = info_type
 
             # 处理重置
-            elif topic == 'reset_pool_%s' % (config.ship_code):
+            elif topic == 'reset_pool_%s' % config.ship_code:
                 reset_pool_data = json.loads(msg.payload)
                 if reset_pool_data.get('reset_pool') is None:
                     self.logger.error('reset_pool_处理控制数据没有reset_pool')
@@ -587,7 +591,7 @@ class MqttSendGet:
                                   })
 
             # 处理设置返航点
-            elif topic == 'set_home_%s' % (config.ship_code):
+            elif topic == 'set_home_%s' % config.ship_code:
                 set_home_data = json.loads(msg.payload)
                 if set_home_data.get('lng_lat') is None:
                     self.logger.error('set_home_处理控制数据没有lng_lat')
@@ -598,7 +602,7 @@ class MqttSendGet:
                                   })
 
             # 处理关机和重启
-            elif topic == 'poweroff_restart_%s' % (config.ship_code):
+            elif topic == 'poweroff_restart_%s' % config.ship_code:
                 poweroff_restart_data = json.loads(msg.payload)
                 if poweroff_restart_data.get('poweroff_restart') is None:
                     self.logger.error('poweroff_restart_处理控制数据没有lng_lat')
@@ -696,6 +700,7 @@ class MqttSendGet:
                     }
                     send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
 
+            # 设置行动名 开始/取消行动
             elif topic == 'action_%s' % config.ship_code:
                 action_data = json.loads(msg.payload)
                 if action_data.get("action_type") is None:
@@ -708,6 +713,7 @@ class MqttSendGet:
                 self.logger.info({'topic': topic,
                                   'action_data': action_data,
                                   })
+
             # 暂停开始消息
             elif topic == 'pause_continue_%s' % config.ship_code:
                 pause_continue_data = json.loads(msg.payload)
@@ -762,9 +768,9 @@ class MqttSendGet:
                 self.adcp_info_type = int(adcp_setting_data.get("info_type"))
                 if self.adcp_info_type == 1:
                     if adcp_setting_data.get("record_distance"):
-                        self.adcp_record_distance = adcp_setting_data.get("record_distance")
+                        self.adcp_record_distance = int(adcp_setting_data.get("record_distance"))
                     if adcp_setting_data.get("record_time"):
-                        self.adcp_record_time = adcp_setting_data.get("record_time")
+                        self.adcp_record_time = int(adcp_setting_data.get("record_time"))
                     if self.adcp_record_distance and self.adcp_record_time:  # 如果自己有数据才回
                         adcp_data = {"info_type": 2,
                                      "record_distance": self.adcp_record_distance,
