@@ -1200,7 +1200,7 @@ class DataManager:
                     angle = -1 * self.tcp_server_obj.ship_obstacle_data_dict.get(self.ship_id)[k][0]
                     distance = self.tcp_server_obj.ship_obstacle_data_dict.get(self.ship_id)[k][1]
                     obstacle_index = angle // config.view_cell + self.cell_size // 2
-                    if distance > config.min_steer_distance:
+                    if distance > self.server_data_obj.mqtt_send_get_obj.obstacle_avoid_distance:
                         b_obstacle = 0
                     else:
                         b_obstacle = 1
@@ -1229,7 +1229,7 @@ class DataManager:
                 else:
                     distance_info_data.update({'direction': 0})
                 # print('self.obstacle_list', self.obstacle_list, self.ceil_go_throw)
-                print("障碍物数据:", distance_info_data)
+                # print("障碍物数据:", distance_info_data)
                 self.send(method='mqtt',
                           topic='distance_info_%s' % self.ship_code,
                           data=distance_info_data,

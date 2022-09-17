@@ -151,7 +151,7 @@ ship_gaode_lng_lat = [114.524096, 30.506853]  # 九峰水库
 home_debug = 0
 find_points_num = 5
 
-tcp_server_ip ="0.0.0.0"
+tcp_server_ip = "0.0.0.0"
 tcp_server_port = 5566
 
 if __name__ == '__main__':

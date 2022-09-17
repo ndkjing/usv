@@ -239,9 +239,9 @@ class TcpServer:
                 if not data.startswith('S8'):
                     server_logger.info('tcp发送数据%s\r\n' % data)
                 # server_logger.info('tcp发送数据%s\r\n' % data)
-                if self.ship_id_time_dict.get(ship_id) and time.time() - self.ship_id_time_dict.get(ship_id) > 60:
-                    server_logger.error('tcp超时60主动断开连接')
-                    raise Exception
+                if self.ship_id_time_dict.get(ship_id) and time.time() - self.ship_id_time_dict.get(ship_id) > 300:
+                    server_logger.error('tcp超时300主动断开连接')
+                    # raise Exception  # TODO 暂时不抛出异常
                 self.client_dict.get(ship_id).send(data.encode())
         except Exception as e:
             if ship_id not in self.disconnect_client_list:
