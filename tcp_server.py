@@ -101,7 +101,6 @@ class TcpServer:
                 # print(time.time(), 'recv_data', recv_data)
                 if recv_data:
                     recv_content_all = recv_data.decode("gbk")
-                    # print('recv_content_all',recv_content_all)
                     recv_content_all_list = recv_content_all.split('\r\n')
                     for recv_content in recv_content_all_list:
                         ship_id_list = re.findall('[ABCD](\d+)', recv_content)
@@ -138,6 +137,18 @@ class TcpServer:
                                         self.ship_status_data_dict.update(
                                             {ship_id: [lng, lat, dump_energy, current_angle, current_mode, angle_error,
                                                        speed]})
+                                    elif len(rec_list) == 10:
+                                        speed = int(rec_list[7])
+                                        speed = round(speed / 1000.0 / 3.6, 1)
+                                        deep = int(rec_list[8])
+                                        deep = round(deep / 100.0 + config.deep_recoup, 2)
+                                        height = int(rec_list[9].split('Z')[0])
+                                        # print('海拔:',height)
+                                        self.ship_id_deep_dict.update({ship_id: deep})
+                                        self.ship_status_data_dict.update(
+                                            {ship_id: [lng, lat, dump_energy, current_angle, current_mode, angle_error,
+                                                       speed]})
+                                    # print('self.ship_status_data_dict',self.ship_status_data_dict)
                                     if time.time() - pre_log_info_time > 10:
                                         server_logger.info({"船状态数据": recv_content})
                                         pre_log_info_time = time.time()
@@ -218,6 +229,8 @@ class TcpServer:
                 server_logger.error({'tcp解析数据报错ValueError..': e1})
             except IndexError as e2:
                 server_logger.error({'tcp接受数据报错IndexError..': e2})
+            except ConnectionResetError as e3:
+                server_logger.error({'tcp接受数据连接重置..': e3})
             except Exception as e:
                 server_logger.error({'tcp接受数据报错Exception..': e})
                 if addr_dict.get(addr):
@@ -239,8 +252,8 @@ class TcpServer:
                 if not data.startswith('S8'):
                     server_logger.info('tcp发送数据%s\r\n' % data)
                 # server_logger.info('tcp发送数据%s\r\n' % data)
-                if self.ship_id_time_dict.get(ship_id) and time.time() - self.ship_id_time_dict.get(ship_id) > 300:
-                    server_logger.error('tcp超时300主动断开连接')
+                # if self.ship_id_time_dict.get(ship_id) and time.time() - self.ship_id_time_dict.get(ship_id) > 300:
+                #     server_logger.error('tcp超时300主动断开连接')
                     # raise Exception  # TODO 暂时不抛出异常
                 self.client_dict.get(ship_id).send(data.encode())
         except Exception as e:

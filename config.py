@@ -52,6 +52,7 @@ ship_code_type_dict = {
     'XXLJC4LCGSCSD1DA008': ShipType.multi_draw_detect,
     'XXLJC4LCGSCSD1DA009': ShipType.water_detect,
     'XXLJC4LCGSCSD1DA010': ShipType.multi_draw_detect,
+    'XXLJC4LCGSCSD1DA015': ShipType.adcp,
 }
 ship_id = 8  # 设备id
 ship_code = 'XXLJC4LCGSCSD1DA00' + str(ship_id)

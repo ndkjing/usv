@@ -367,7 +367,7 @@ class DataManager:
                 # 切换到遥控器控制  此时等于暂停自动
                 if b_remote_control:
                     self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
-                    if self.server_data_obj.mqtt_send_get_obj.pause_continue_data_type == 1:  # 清楚暂停标记
+                    if self.server_data_obj.mqtt_send_get_obj.pause_continue_data_type == 1:  # 清除暂停标记
                         self.server_data_obj.mqtt_send_get_obj.pause_continue_data_type = 2
                     self.ship_status = ShipStatus.remote_control
                 # 切换到返航
@@ -871,7 +871,7 @@ class DataManager:
                     else:
                         self.run_distance += speed_distance
                         if self.tcp_server_obj.ship_status_data_dict.get(self.ship_id):
-                            speed_scale = 1.2  # 速度放大比例
+                            speed_scale = 1.3  # 速度放大比例
                             self.speed = round(
                                 speed_scale * self.tcp_server_obj.ship_status_data_dict.get(self.ship_id)[6], 1)
                             # print('sudu',self.tcp_server_obj.ship_status_data_dict.get(self.ship_id)[6],self.speed)
@@ -948,7 +948,8 @@ class DataManager:
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % self.ship_code, data=status_data,
                       qos=0)
-            if time.time() % 10 < 1:
+            print('self.dump_energy',self.dump_energy)
+            if time.time() % 20 < 1:
                 self.logger.info({'status_data_': status_data})
 
     # 配置更新
@@ -1040,7 +1041,7 @@ class DataManager:
                 continue
             # 检查电量 如果连续20次检测电量平均值低于电量阈值就报警
             if self.server_data_obj.mqtt_send_get_obj.energy_backhome:
-                energy_backhome_threshold = 10 if self.server_data_obj.mqtt_send_get_obj.energy_backhome < 10 else self.server_data_obj.mqtt_send_get_obj.energy_backhome
+                energy_backhome_threshold = max(self.server_data_obj.mqtt_send_get_obj.energy_backhome,10)
                 if len(self.dump_energy_deque) > 0 and sum(self.dump_energy_deque) / len(
                         self.dump_energy_deque) < energy_backhome_threshold:
                     self.low_dump_energy_warnning = 1
@@ -1059,16 +1060,12 @@ class DataManager:
                     n = 1
                 else:
                     n = 0
-                if self.server_data_obj.mqtt_send_get_obj.energy_backhome != 0:
-                    e = 1
-                else:
-                    e = 0
                 if self.server_data_obj.mqtt_send_get_obj.obstacle_avoid_type != 0:
                     o = 1
                 else:
                     o = 0
-                send_data = 'S4,%d,%d,%d,3,%dZ' % (n, e, o, self.server_data_obj.mqtt_send_get_obj.max_pwm_grade)
-                print('######## 设置改变##############')
+                send_data = 'S4,%d,%d,%d,3,%dZ' % (n, self.server_data_obj.mqtt_send_get_obj.energy_backhome, o, self.server_data_obj.mqtt_send_get_obj.max_pwm_grade)
+                print('######## 设置改变##############',send_data)
                 # self.tcp_send_data = 'S4,%d,%d,%d,3,3Z' % (n, e, o)
                 self.set_send_data(send_data, 4)
                 self.server_data_obj.mqtt_send_get_obj.pre_energy_backhome = self.server_data_obj.mqtt_send_get_obj.energy_backhome

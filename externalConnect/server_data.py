@@ -271,7 +271,7 @@ class MqttSendGet:
                             if s_energy_backhome <= 0:
                                 s_energy_backhome = 0
                             elif s_energy_backhome >= 100:
-                                s_energy_backhome = 80
+                                s_energy_backhome = 100
                             self.energy_backhome = s_energy_backhome
                         except Exception as e:
                             self.logger.error({'获取电量返航设置错误': e})
