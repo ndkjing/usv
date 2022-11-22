@@ -48,11 +48,12 @@ def main():
         except KeyboardInterrupt as e:
             while True:
                 try:
-                    main_obj.tcp_server_obj.close()
+                    # logger.info("KeyboardInterrupt 主线程中关闭socket客户端")
+                    # main_obj.tcp_server_obj.close()
                     main_obj.tcp_server_obj.tcp_server_socket.detach()
                     main_obj.is_close = 1
                     logger.info({'主动结束...': e})
-                    time.sleep(8)
+                    time.sleep(5)
                     return
                 except Exception as e1:
                     print('不要多次CTRL+C...')

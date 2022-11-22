@@ -33,8 +33,13 @@ class TcpServer:
         # AF_INET：使用标准的IPv4地址或主机名，SOCK_STREAM：说明这是一个TCP服务器
         self.tcp_server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # 服务器监听的ip和端口号
-        self.tcp_server_socket.bind((self.bind_ip, self.bind_port))
-
+        try:
+            self.tcp_server_socket.bind((self.bind_ip, self.bind_port))
+        except OSError as e:
+            print("连接报错")
+            # 设置socket参数使端口可以再次使用
+            self.tcp_server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            self.tcp_server_socket.bind((self.bind_ip, self.bind_port))
         print("[*] Listening on %s:%d" % (self.bind_ip, self.bind_port))
         self.tcp_server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)
         # 最大连接数
@@ -54,13 +59,13 @@ class TcpServer:
         self.ship_id_deep_dict = {}  # 船号检测到的深度
         self.ship_id_send_dict = {}  # 船号对应要发送数据
 
-    def wait_connect(self):
-        # 等待客户连接，连接成功后，将socket对象保存到client，将细节数据等保存到addr
-        if self.main_obj.is_close:
-            return
-        client, addr = self.tcp_server_socket.accept()
-        self.b_connect = 1
-        self.client = client
+    # def wait_connect(self):
+    #     # 等待客户连接，连接成功后，将socket对象保存到client，将细节数据等保存到addr
+    #     if self.main_obj.is_close:
+    #         return
+    #     client, addr = self.tcp_server_socket.accept()
+    #     self.b_connect = 1
+    #     self.client = client
 
     def start_server(self):
         self.tcp_server_socket.settimeout(3)
@@ -69,6 +74,7 @@ class TcpServer:
             # 等待客户连接，连接成功后，将socket对象保存到client，将细节数据等保存到addr
             try:
                 client, addr = self.tcp_server_socket.accept()
+                # client.settimeout(3)
                 server_logger.info({time.time(): ["客户端的ip地址和端口号为:", addr]})
                 # 代码执行到此，说明客户端和服务端套接字建立连接成功
                 client_handler = threading.Thread(target=self.handle_client, args=(client, addr))
@@ -78,11 +84,11 @@ class TcpServer:
                 time.sleep(0.5)
             except socket.timeout as e:
                 if self.main_obj.is_close:
+                    server_logger.info({"socket.timeout socket 关闭": e})
                     self.close()
-                    print('主动断开')
                     return
             except OSError as e1:
-                server_logger.error({'OSError': e1})
+                server_logger.error({'OSError socket 关闭': e1})
                 self.close()
                 return
 
@@ -96,11 +102,12 @@ class TcpServer:
         while True:
             try:
                 if self.main_obj.is_close:
-                    return
+                    print('handle_client 退出')
                 recv_data = client.recv(1024, 0)
-                # print(time.time(), 'recv_data', recv_data)
+                # print('recv_data', recv_data)
                 if recv_data:
                     recv_content_all = recv_data.decode("gbk")
+                    # print(time.time(), 'recv_content_all', recv_content_all)
                     recv_content_all_list = recv_content_all.split('\r\n')
                     for recv_content in recv_content_all_list:
                         ship_id_list = re.findall('[ABCD](\d+)', recv_content)
@@ -231,6 +238,8 @@ class TcpServer:
                 server_logger.error({'tcp接受数据报错IndexError..': e2})
             except ConnectionResetError as e3:
                 server_logger.error({'tcp接受数据连接重置..': e3})
+            except TimeoutError as e4:
+                server_logger.error({'tcp接受数据TimeoutError..': e4})
             except Exception as e:
                 server_logger.error({'tcp接受数据报错Exception..': e})
                 if addr_dict.get(addr):
@@ -238,11 +247,13 @@ class TcpServer:
                         self.disconnect_client_list.append(addr_dict.get(addr))
                     if addr_dict.get(addr) in self.client_dict:
                         del self.client_dict[addr_dict.get(addr)]
-                time.sleep(5)
-                return
+                time.sleep(2)
+                continue
 
     def close(self):
+        # self.tcp_server_socket.shutdown(0)
         self.tcp_server_socket.close()
+        print('close tcp 关闭')
 
     def write_data(self, ship_id, data):
         if self.main_obj.is_close:
@@ -254,7 +265,7 @@ class TcpServer:
                 # server_logger.info('tcp发送数据%s\r\n' % data)
                 # if self.ship_id_time_dict.get(ship_id) and time.time() - self.ship_id_time_dict.get(ship_id) > 300:
                 #     server_logger.error('tcp超时300主动断开连接')
-                    # raise Exception  # TODO 暂时不抛出异常
+                # raise Exception  # TODO 暂时不抛出异常
                 self.client_dict.get(ship_id).send(data.encode())
         except Exception as e:
             if ship_id not in self.disconnect_client_list:

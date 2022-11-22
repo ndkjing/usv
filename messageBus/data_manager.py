@@ -202,19 +202,25 @@ class DataManager:
                         target=common_func_list[index_common_thread])
                     common_thread_list[index_common_thread].start()
             time.sleep(1)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出thread_control线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出thread_control线程": self.ship_id})
                 return
 
     # 重连mqtt服务器
     def connect_mqtt_server(self):
         while True:
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出connect_mqtt_server线程": self.ship_id})
+                return
             if not self.server_data_obj.mqtt_send_get_obj.is_connected and self.ship_id in self.tcp_server_obj.client_dict:
                 self.server_data_obj.mqtt_send_get_obj.mqtt_connect()
                 time.sleep(2)
             elif self.server_data_obj.mqtt_send_get_obj.is_connected and self.ship_id not in self.tcp_server_obj.client_dict:
                 self.server_data_obj.mqtt_send_get_obj.break_connect()
-                self.logger.info("船断线mqtt主动断开连接。。。")
+                self.logger.info("船断线mqtt主动断开connect_mqtt_server连接。。。")
                 time.sleep(2)
 
     def set_send_data(self, data, index):
@@ -227,8 +233,11 @@ class DataManager:
         control_count = 10  # 同样的控制数据最多发十次
         while True:
             time.sleep(0.05)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出loop_send_tcp_data线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出loop_send_tcp_data线程": self.ship_id})
                 return
             if self.tcp_server_obj.ship_id_send_dict.get(self.ship_id):
                 for info in self.tcp_server_obj.ship_id_send_dict.get(self.ship_id):
@@ -262,8 +271,11 @@ class DataManager:
     # 抽水排水控制
     def control_draw_thread(self):
         while True:
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出control_draw_thread线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出control_draw_thread线程": self.ship_id})
                 return
             time.sleep(1)
             if self.tcp_server_obj.ship_id_deep_dict.get(self.ship_id):
@@ -297,8 +309,11 @@ class DataManager:
         while True:
             # 删除任务模式，将抽水单独控制
             time.sleep(0.1)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出change_status线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出change_status线程": self.ship_id})
                 return
             if self.ship_id in self.tcp_server_obj.client_dict and \
                     self.tcp_server_obj.ship_status_data_dict.get(self.ship_id) and \
@@ -616,8 +631,11 @@ class DataManager:
     def move_control(self):
         while True:
             time.sleep(0.01)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出move_control线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出move_control线程": self.ship_id})
                 return
             self.direction = self.server_data_obj.mqtt_send_get_obj.control_move_direction
             control_info_dict = {
@@ -817,8 +835,11 @@ class DataManager:
         # 更新经纬度为高德经纬度
         while True:
             time.sleep(1.5)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出update_ship_gaode_lng_lat线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出update_ship_gaode_lng_lat线程": self.ship_id})
                 return
             if self.lng_lat is not None:
                 try:
@@ -848,8 +869,11 @@ class DataManager:
     def update_lng_lat(self):
         last_read_time = None
         while True:
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出update_lng_lat线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出update_lng_lat线程": self.ship_id})
                 return
             if self.tcp_server_obj.ship_status_data_dict.get(self.ship_id) and \
                     180 > self.tcp_server_obj.ship_status_data_dict.get(self.ship_id)[0] > 10 and \
@@ -890,8 +914,11 @@ class DataManager:
         last_run_distance = None
         while True:
             time.sleep(1)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出send_mqtt_status_data线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出send_mqtt_status_data线程": self.ship_id})
                 return
             if self.ship_id not in self.tcp_server_obj.client_dict:
                 continue
@@ -948,7 +975,6 @@ class DataManager:
             # 向mqtt发送数据
             self.send(method='mqtt', topic='status_data_%s' % self.ship_code, data=status_data,
                       qos=0)
-            print('self.dump_energy',self.dump_energy)
             if time.time() % 20 < 1:
                 self.logger.info({'status_data_': status_data})
 
@@ -956,8 +982,11 @@ class DataManager:
     def update_config(self):
         while True:
             time.sleep(1)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出update_config线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出update_config线程": self.ship_id})
                 return
             # 客户端获取基础设置数据
             if self.server_data_obj.mqtt_send_get_obj.base_setting_data_info in [1, 4]:
@@ -1005,8 +1034,11 @@ class DataManager:
         high_f_status_data = {}
         while 1:
             time.sleep(0.16)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出send_high_f_status_data线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出send_high_f_status_data线程": self.ship_id})
                 return
             if self.tcp_server_obj.ship_status_data_dict.get(self.ship_id):
                 high_f_status_data.update(
@@ -1024,8 +1056,11 @@ class DataManager:
     def loop_check_task(self):
         while True:
             time.sleep(1)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出loop_check_task线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出loop_check_task线程": self.ship_id})
                 return
             self.ship_type_obj.ship_obj.task(self)
 
@@ -1033,15 +1068,18 @@ class DataManager:
     def check_status(self):
         while True:
             # 循环等待一定时间
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出change_status线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出check_status线程": self.ship_id})
                 return
             time.sleep(1)
             if self.ship_id not in self.tcp_server_obj.client_dict:
                 continue
             # 检查电量 如果连续20次检测电量平均值低于电量阈值就报警
             if self.server_data_obj.mqtt_send_get_obj.energy_backhome:
-                energy_backhome_threshold = max(self.server_data_obj.mqtt_send_get_obj.energy_backhome,10)
+                energy_backhome_threshold = max(self.server_data_obj.mqtt_send_get_obj.energy_backhome, 10)
                 if len(self.dump_energy_deque) > 0 and sum(self.dump_energy_deque) / len(
                         self.dump_energy_deque) < energy_backhome_threshold:
                     self.low_dump_energy_warnning = 1
@@ -1064,8 +1102,9 @@ class DataManager:
                     o = 1
                 else:
                     o = 0
-                send_data = 'S4,%d,%d,%d,3,%dZ' % (n, self.server_data_obj.mqtt_send_get_obj.energy_backhome, o, self.server_data_obj.mqtt_send_get_obj.max_pwm_grade)
-                print('######## 设置改变##############',send_data)
+                send_data = 'S4,%d,%d,%d,3,%dZ' % (n, self.server_data_obj.mqtt_send_get_obj.energy_backhome, o,
+                                                   self.server_data_obj.mqtt_send_get_obj.max_pwm_grade)
+                print('######## 设置改变##############', send_data)
                 # self.tcp_send_data = 'S4,%d,%d,%d,3,3Z' % (n, e, o)
                 self.set_send_data(send_data, 4)
                 self.server_data_obj.mqtt_send_get_obj.pre_energy_backhome = self.server_data_obj.mqtt_send_get_obj.energy_backhome
@@ -1143,7 +1182,10 @@ class DataManager:
     def check_ping_delay(self):
         # 检查网络
         while True:
-            time.sleep(5)
+            time.sleep(3)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出check_ping_delay线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
                 self.logger.info({"船只断开连接check_ping_delay退出线程": self.ship_id})
                 return
@@ -1180,9 +1222,12 @@ class DataManager:
         min_distance = 40
         while True:
             time.sleep(0.4)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出send_distacne线程": self.ship_id})
+                return
             # print('.server_data_obj.mqtt_send_get_obj.scan_gap',self.server_data_obj.mqtt_send_get_obj.scan_gap)
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出send_distacne线程": self.ship_id})
                 return
             if not self.server_data_obj.mqtt_send_get_obj.is_connected:
                 continue
@@ -1250,8 +1295,11 @@ class DataManager:
         """
         while True:
             time.sleep(1)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出check_switch线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出check_switch线程": self.ship_id})
                 return
             switch_data = {
                 "info_type": 2,  # 树莓派发给前端
@@ -1285,7 +1333,10 @@ class DataManager:
         pre_record_lng_lat = [10.0, 10.0]  # 随便设置的初始值
         while True:
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出send_record_point_data线程": self.ship_id})
+                return
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出send_record_point_data线程": self.ship_id})
                 return
             if self.server_data_obj.mqtt_send_get_obj.b_record_point:
                 if self.gaode_lng_lat is None:
@@ -1338,8 +1389,11 @@ class DataManager:
     def scan_cal(self):
         scan_points = []
         while True:
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出scan_cal线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出scan_cal线程": self.ship_id})
                 return
             if self.server_data_obj.mqtt_send_get_obj.surrounded_points is not None and \
                     len(self.server_data_obj.mqtt_send_get_obj.surrounded_points) > 0 and \
@@ -1422,8 +1476,11 @@ class DataManager:
         http_get_time = True
         while True:
             time.sleep(1)
+            if self.tcp_server_obj.main_obj.is_close == 1:
+                self.logger.info({"人为主动断开退出loop_send_http线程": self.ship_id})
+                return
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
-                self.logger.info({"船只断开连接退出线程": self.ship_id})
+                self.logger.info({"船只断开连接退出loop_send_http线程": self.ship_id})
                 return
             # 登录获取值
             if not self.token:
@@ -1664,16 +1721,16 @@ class DataManager:
                 network_backhome_time = 1800
             else:
                 network_backhome_time = int(config.network_backhome)
-            # 使用过电脑端按键操作过才能进行断网返航
+            # 使用过电脑端按键操作过才能进行断网返航(防止启动时长时间没连上网判断为返航)
             if self.server_data_obj.mqtt_send_get_obj.b_receive_mqtt:
                 if time.time() - self.server_data_obj.mqtt_send_get_obj.last_command_time > network_backhome_time:
                     return_ship_status = ShipStatus.backhome_network
-                    # print('return_ship_status',return_ship_status)
         if self.low_dump_energy_warnning:
             # 记录是因为按了低电量判断为返航
             return_ship_status = ShipStatus.backhome_low_energy
         if return_ship_status is not None and self.ship_status not in [ShipStatus.backhome_network,
                                                                        ShipStatus.backhome_low_energy,
                                                                        ShipStatus.at_home]:
-            self.logger.info({"正在返航": return_ship_status})
+            pass
+            # self.logger.info({"正在返航": return_ship_status})
         return return_ship_status
