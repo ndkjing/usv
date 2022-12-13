@@ -103,6 +103,7 @@ class TcpServer:
             try:
                 if self.main_obj.is_close:
                     print('handle_client 退出')
+                    return
                 recv_data = client.recv(1024, 0)
                 # print('recv_data', recv_data)
                 if recv_data:
@@ -207,9 +208,9 @@ class TcpServer:
                                     else:
                                         self.ship_obstacle_data_dict.get(ship_id).update(
                                             {obj_id: [obj_angle, obj_distance]})
-                                    # print(time.time(), '障碍物检测反馈消息', recv_content.strip())
+                                    print(time.time(), '障碍物检测反馈消息', recv_content.strip())
                                     last_send_time = time.time()
-                                # print('self.ship_obstacle_data_dict', self.ship_obstacle_data_dict)
+                                print('self.ship_obstacle_data_dict', self.ship_obstacle_data_dict)
                         if recv_content.startswith('S') and ship_id:
                             server_logger.info({time.time(): ['接收客户端的确认数据:%s\r\n' % recv_content]})
                             self.receive_confirm_data = recv_content

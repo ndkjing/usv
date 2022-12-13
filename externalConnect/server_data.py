@@ -244,6 +244,7 @@ class MqttSendGet:
         self.pre_max_pwm_grade = 3  # 自动速度等级
         self.read_write_config()
         self.scan_gap = 10
+        self.deep = 0
         # print('self.obstacle_avoid_type', self.obstacle_avoid_type, self.energy_backhome, self.energy_backhome)
 
     # 读取与写入配置
@@ -833,6 +834,12 @@ class MqttSendGet:
             elif topic == 'notice_info_%s' % self.ship_code:
                 self.last_command_time = time.time()
 
+            # 监听深度消息
+            elif topic == 'deep_data_%s' % self.ship_code:
+                deep_data_ = json.loads(msg.payload)
+                if deep_data_.get("deep") is None:
+                    self.deep = deep_data_.get("deep")
+
             # 采样瓶设置数据话题
             elif topic == 'bottle_setting_%s' % self.ship_code:
                 bottle_setting_data = json.loads(msg.payload)
@@ -842,6 +849,9 @@ class MqttSendGet:
                 if int(bottle_setting_data.get("info_type")) == 1:
                     if bottle_setting_data.get("bottle_id"):
                         self.draw_bottle_id = int(bottle_setting_data.get("bottle_id"))
+                        # 检测仓从0设置到7
+                        if self.draw_bottle_id == 0:
+                            self.draw_bottle_id = 7
                         if self.draw_bottle_id > config.number_of_bottles:
                             self.draw_bottle_id = config.number_of_bottles
                     if bottle_setting_data.get("deep"):

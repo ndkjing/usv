@@ -40,6 +40,7 @@ class ShipType(enum.Enum):
     dock = 4
     adcp = 5
     multi_draw_detect = 6
+    multi_draw_detect_adcp = 7
 
 
 # 船号对应类型
@@ -52,6 +53,9 @@ ship_code_type_dict = {
     'XXLJC4LCGSCSD1DA008': ShipType.multi_draw_detect,
     'XXLJC4LCGSCSD1DA009': ShipType.water_detect,
     'XXLJC4LCGSCSD1DA010': ShipType.multi_draw_detect,
+    'XXLJC4LCGSCSD1DA011': ShipType.multi_draw_detect_adcp,
+    'XXLJC4LCGSCSD1DA012': ShipType.multi_draw_detect,
+    'XXLJC4LCGSCSD1DA013': ShipType.multi_draw_detect,
     'XXLJC4LCGSCSD1DA015': ShipType.adcp,
 }
 ship_id = 8  # 设备id
@@ -502,7 +506,7 @@ draw_deep = 0.5  # 最大抽水深度
 draw_capacity = 5000  # 需要抽水容量
 max_draw_capacity = 5000  # 单个瓶子最大抽水容量
 draw_speed = 2000  # 抽水速度 毫升/分钟
-number_of_bottles = 5  # 总共包含抽水瓶数
+number_of_bottles = 8  # 总共包含抽水瓶数  6采样+1检测
 max_draw_time = int(60 * max_draw_capacity / draw_speed)
 
 # 障碍物点

@@ -261,6 +261,7 @@ class DataDefine:
             ('rocker_%s' % ship_code, 0),
             ('bottle_setting_%s' % ship_code, 0),
             ('adcp_setting_%s' % ship_code, 0),
+            ('deep_data_%s' % ship_code, 0),
         )
         self.pool_code = ''
         self.water = self.water_data()

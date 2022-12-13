@@ -50,7 +50,7 @@ class DataManager:
         self.logger = LogHandler('data_manager_log_%d' % ship_id, level=20)
         self.server_log = LogHandler('server_data%d' % ship_id, level=20)
         self.ship_id = ship_id
-        self.ship_code = 'XXLJC4LCGSCSD1DA00' + str(ship_id)
+        self.ship_code = 'XXLJC4LCGSCSD1DA%03d' % ship_id
         self.data_define_obj = data_define.DataDefine(self.ship_code)
         # mqtt服务器数据收发对象
         self.server_data_obj = server_data.ServerData(self.server_log,
@@ -277,9 +277,13 @@ class DataManager:
             if self.ship_id in self.tcp_server_obj.disconnect_client_list:
                 self.logger.info({"船只断开连接退出control_draw_thread线程": self.ship_id})
                 return
-            time.sleep(1)
-            if self.tcp_server_obj.ship_id_deep_dict.get(self.ship_id):
-                self.deep = self.tcp_server_obj.ship_id_deep_dict.get(self.ship_id)
+            time.sleep(0.5)
+            # 船号11 为采样检测测深船 深度数据从mqtt接受
+            if self.ship_id == 11:
+                self.deep = self.server_data_obj.mqtt_send_get_obj.deep
+            else:
+                if self.tcp_server_obj.ship_id_deep_dict.get(self.ship_id):
+                    self.deep = self.tcp_server_obj.ship_id_deep_dict.get(self.ship_id)
             self.ship_type_obj.ship_obj.draw(self)
             # 定时发送心跳数据
             # if int(time.time()) % 3 == 2:
@@ -895,7 +899,7 @@ class DataManager:
                     else:
                         self.run_distance += speed_distance
                         if self.tcp_server_obj.ship_status_data_dict.get(self.ship_id):
-                            speed_scale = 1.3  # 速度放大比例
+                            speed_scale = 1.1  # 速度放大比例
                             self.speed = round(
                                 speed_scale * self.tcp_server_obj.ship_status_data_dict.get(self.ship_id)[6], 1)
                             # print('sudu',self.tcp_server_obj.ship_status_data_dict.get(self.ship_id)[6],self.speed)
@@ -1485,6 +1489,7 @@ class DataManager:
             # 登录获取值
             if not self.token:
                 login_data = {"deviceId": self.ship_code}
+                print('登录数据:', login_data)
                 return_login_data = self.server_data_obj.send_server_http_data('POST', login_data,
                                                                                config.http_get_token, token=self.token)
                 if return_login_data:
