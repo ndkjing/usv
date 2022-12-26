@@ -3,6 +3,7 @@
 """
 import server_config
 
+
 class DataDefine:
     def __init__(self, ship_code):
         """
@@ -22,7 +23,10 @@ class DataDefine:
             ('distribution_map_%s' % ship_code, 0),
             ('token_%s' % ship_code, 0),
             ('alarm_picture_%s' % ship_code, 0),
-            ('server_base_setting_%s' % ship_code, 0))
+            ('server_base_setting_%s' % ship_code, 0),
+            ('action_%s' % ship_code, 0),
+
+        )
         self.pool_code = ''
 
 

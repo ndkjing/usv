@@ -16,6 +16,7 @@ import json
 import requests
 import distribution_map
 
+
 class ServerData:
     def __init__(self, logger,
                  topics,
@@ -34,13 +35,13 @@ class ServerData:
             self.mqtt_send_get_obj.subscribe_topic(topic=topic_, qos=qos_)
 
     # 发送数据到服务器http
-    def send_server_http_data(self, request_type, data, url,token=None):
+    def send_server_http_data(self, request_type, data, url, token=None):
         # 请求头设置
         payloadHeader = {
             'Content-Type': 'application/json',
         }
         if token:
-            payloadHeader.update({'token':token})
+            payloadHeader.update({'token': token})
         assert request_type in ['POST', 'GET']
         if request_type == 'POST':
             dumpJsonData = json.dumps(data)
@@ -168,7 +169,7 @@ class MqttSendGet:
         self.reset_pool_click = 0
         # 检查要发给前端绘图话题数据
         self.need_send_distribution = None
-        self.height_width=100   # 宽高比 设置宽为100  计算高度与宽比值
+        self.height_width = 100  # 宽高比 设置宽为100  计算高度与宽比值
         # 更新船当前到岸边距离 当收到新的经纬度后设置该值为True
         self.update_safe_distance = False
         self.back_home = 0
@@ -179,8 +180,9 @@ class MqttSendGet:
         self.is_need_reconnect = False  # 判断是否需要重连
         self.is_reconnect_connected = False  # 判断重连是否连上
         self.token = None  # 存储自身上传数据token
-        self.alarm_picture_data={}
-
+        self.alarm_picture_data = {}
+        self.action_type = 0
+        self.action_id = ""
 
     # 断开MQTt回调
     def on_disconnect_callback(self, client, userdata, rc):
@@ -410,7 +412,7 @@ class MqttSendGet:
                     print('发送数据到服务器')
                     try:
                         # 发送数据到服务器
-                        save_name = upload_file.post_data(url=url_data, file=file,id=1)
+                        save_name = upload_file.post_data(url=url_data, file=file, id=1)
                         if save_name:
                             self.need_send_distribution = 1
                         else:
@@ -422,6 +424,8 @@ class MqttSendGet:
         # 服务器基础配置
         elif topic == 'server_base_setting_%s' % self.ship_code:
             server_base_setting_path = os.path.join(server_config.setting_dir, 'setting_%s.json' % self.ship_code)
+            if not os.path.exists(server_base_setting_path):
+                server_config.write_setting(True, True, self.ship_code)
             self.logger.info({'server_base_setting_ ': json.loads(msg.payload)})
             if len(msg.payload) < 5:
                 return
@@ -465,7 +469,7 @@ class MqttSendGet:
         elif topic == 'token_%s' % self.ship_code:
             token_data = json.loads(msg.payload)
             if token_data.get('type') and token_data.get('type') == 1:
-                self.publish_topic('token_%s' % self.ship_code,data={'type':2,'token':self.token})
+                self.publish_topic('token_%s' % self.ship_code, data={'type': 2, 'token': self.token})
             self.logger.info({'topic': topic,
                               'token_data': token_data,
                               })
@@ -473,10 +477,20 @@ class MqttSendGet:
         elif topic == 'alarm_picture_%s' % self.ship_code:
             alarm_picture_data = json.loads(msg.payload)
             if alarm_picture_data.get('type') and alarm_picture_data.get('type') == 2:
-                self.alarm_picture_data=alarm_picture_data
+                self.alarm_picture_data = alarm_picture_data
                 self.logger.info({'topic': topic,
                                   'alarm_picture_data': alarm_picture_data,
                                   })
+
+        elif topic == 'action_%s' % self.ship_code:
+            action_data = json.loads(msg.payload)
+            if action_data.get('action_type') and action_data.get('action_id'):
+                self.action_type = action_data.get('action_type')
+                self.action_id = action_data.get('action_id')
+            self.logger.info({'topic': topic,
+                              'action_data': action_data,
+                              })
+
     # 发布消息
     def publish_topic(self, topic, data, qos=0):
         """
@@ -509,4 +523,4 @@ class MqttSendGet:
 
 if __name__ == '__main__':
     logger = log.LogHandler('server_data_test')
-    mqtt_obj = MqttSendGet(logger,ship_code=None)
+    mqtt_obj = MqttSendGet(logger, ship_code=None)

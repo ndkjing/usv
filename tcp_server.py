@@ -208,9 +208,9 @@ class TcpServer:
                                     else:
                                         self.ship_obstacle_data_dict.get(ship_id).update(
                                             {obj_id: [obj_angle, obj_distance]})
-                                    print(time.time(), '障碍物检测反馈消息', recv_content.strip())
+                                    # print(time.time(), '障碍物检测反馈消息', recv_content.strip())
                                     last_send_time = time.time()
-                                print('self.ship_obstacle_data_dict', self.ship_obstacle_data_dict)
+                                # print('self.ship_obstacle_data_dict', self.ship_obstacle_data_dict)
                         if recv_content.startswith('S') and ship_id:
                             server_logger.info({time.time(): ['接收客户端的确认数据:%s\r\n' % recv_content]})
                             self.receive_confirm_data = recv_content
@@ -263,7 +263,7 @@ class TcpServer:
             if ship_id in self.client_dict.keys():
                 if not data.startswith('S8'):
                     server_logger.info('tcp发送数据%s\r\n' % data)
-                # server_logger.info('tcp发送数据%s\r\n' % data)
+                server_logger.info('tcp发送数据%s\r\n' % data)
                 # if self.ship_id_time_dict.get(ship_id) and time.time() - self.ship_id_time_dict.get(ship_id) > 300:
                 #     server_logger.error('tcp超时300主动断开连接')
                 # raise Exception  # TODO 暂时不抛出异常

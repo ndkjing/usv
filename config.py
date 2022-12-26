@@ -59,7 +59,7 @@ ship_code_type_dict = {
     'XXLJC4LCGSCSD1DA015': ShipType.adcp,
 }
 ship_id = 8  # 设备id
-ship_code = 'XXLJC4LCGSCSD1DA00' + str(ship_id)
+ship_code = 'XXLJC4LCGSCSD1DA%03d' % ship_id
 
 # current_ship_type = ship_code_type_dict.get(ship_code)
 sysstr = platform.system()

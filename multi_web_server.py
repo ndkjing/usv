@@ -6,31 +6,7 @@ import time
 import json
 import numpy as np
 import os
-import sys
 import copy
-
-# root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# sys.path.append(root_path)
-# sys.path.append(
-#     os.path.join(
-#         os.path.dirname(
-#             os.path.abspath(__file__)),
-#         'externalConnect'))
-# sys.path.append(
-#     os.path.join(
-#         os.path.dirname(
-#             os.path.abspath(__file__)),
-#         'moveControl'))
-# sys.path.append(
-#     os.path.join(
-#         os.path.dirname(
-#             os.path.abspath(__file__)),
-#         'statics'))
-# sys.path.append(
-#     os.path.join(
-#         os.path.dirname(
-#             os.path.abspath(__file__)),
-#         'utils'))
 
 from moveControl.pathPlanning import a_star
 import server_baidu_map as baidu_map
@@ -40,14 +16,13 @@ from web_server_data import ServerData
 import server_data_define
 import server_config
 import draw_img
-
+import config
 
 class WebServer:
     def __init__(self):
         self.data_define_obj_dict = {}  # 每个船的数据定义类
-        for ship_code in server_config.ship_code_list:
+        for ship_code in config.ship_code_type_dict.keys():
             self.data_define_obj_dict.update({ship_code: server_data_define.DataDefine(ship_code=ship_code)})
-
         self.baidu_map_obj_dict = {}
         # 日志对象
         self.logger = LogHandler('web_server', level=20)
@@ -55,7 +30,7 @@ class WebServer:
         self.map_log = LogHandler('map_log')
         # mqtt服务器数据收发对象
         self.server_data_obj_dict = {}
-        for ship_code in server_config.ship_code_list:
+        for ship_code in config.ship_code_type_dict.keys():
             self.server_data_obj_dict.update({ship_code: ServerData(self.server_log,
                                                                     topics=self.data_define_obj_dict.get(
                                                                         ship_code).topics,
@@ -200,6 +175,7 @@ class WebServer:
                                    1))
                 # 创建于查找湖泊
                 if self.data_define_obj_dict.get(ship_code).pool_code or not os.path.exists(save_img_path):
+                    print('self.data_define_obj_dict.get(ship_code).pool_code',self.data_define_obj_dict.get(ship_code).pool_code,os.path.exists(save_img_path),save_img_path)
                     # 创建地图对象
                     if os.path.exists(save_img_path) and self.baidu_map_obj_dict.get(ship_code) is not None:
                         continue
@@ -378,6 +354,10 @@ class WebServer:
                                                     http_type='POST',
                                                     token=self.server_data_obj_dict.get(
                                                         ship_code).mqtt_send_get_obj.token)
+                                if pool_id is None:
+                                    self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.token=None
+                                    os.remove(save_img_path)
+                                    continue
                             except Exception as e1:
                                 self.logger.error({'server_config.http_save:': e1})
                             self.logger.info({'新的湖泊 poolid': pool_id})
@@ -696,6 +676,89 @@ class WebServer:
                     self.server_data_obj_dict.get(
                         ship_code).mqtt_send_get_obj.is_reconnect_connected = False  # 设置等待连上为否
 
+            # ADCP 行动id计算湖泊深度图数据
+            for ship_code in server_config.ship_code_list:
+                if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.action_type == 2 and \
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.action_id:
+                    # 向服务器请求本行动数据
+                    """
+                    action_XXLJC4LCGSCSD1DA007
+                    {
+                    "action_type":2,
+                    "action_id":1545614559804981250
+                    }
+                    """
+                    request_deep_data = {
+                        "action_id": self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.action_id,
+                        "python": "python",
+                        "page": 1,
+                        "limit": 1
+                    }
+                    url = 'http://%s/union/adcp/list/1/1?planId=%s&python=python' % (
+                        server_config.http_domin, self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.action_id)
+                    return_deep_data = ship_state_utils.get_deep_date('GET', request_deep_data,
+                                                                      url,
+                                                                      token=self.server_data_obj_dict.get(
+                                                                          ship_code).mqtt_send_get_obj.token
+                                                                      )
+                    return_deep_data_json = json.loads(return_deep_data.content)
+                    print('深度数据请求return_deep_data', return_deep_data, return_deep_data_json)
+                    if return_deep_data_json.get("code") == 401:
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.token = None
+                        continue
+                    lng_lat_list = []
+                    deep_list = []
+                    if return_deep_data_json.get('code') == 200 and return_deep_data_json.get('data'):
+                        # 如果已经有了就不计算
+                        if return_deep_data_json.get('container'):
+                            self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.action_id = ""
+                            continue
+                        for i in return_deep_data_json.get('data'):
+                            lng_lat = json.loads(i.get('gjwd'))
+                            deep = float(i.get('deep'))
+                            lng_lat_list.append(lng_lat)
+                            deep_list.append(deep)
+                    record_deep_data = {}
+                    # 使用经纬度计算x轴坐标  对深度数据计算索引排序
+                    x_list, sorted_id2, sum_area = self.gen_send_deep_data(lng_lat_list, deep_list)
+                    deep_data_container = {
+                        "deep": deep_list,
+                        "coordinate": sorted_id2,
+                        "xaxis": x_list,
+                        "area": sum_area,
+                    }
+                    deep_data = {
+                        "container": json.dumps(deep_data_container),
+                        "id": self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.action_id
+                    }
+                    try:
+                        print('deep_data',deep_data)
+                        is_success = ship_state_utils.send_deep_date('POST', data=deep_data,
+                                                                     url=server_config.http_send_deep,
+                                                                     token=self.server_data_obj_dict.get(
+                                                                         ship_code).mqtt_send_get_obj.token
+                                                                     )
+                    except Exception as e:
+                        is_success = False
+                        self.logger.error({"发送测深绘图数据error": e})
+                    self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.action_id = ""
+
+    def gen_send_deep_data(self, lng_lat, y_list):
+        """
+        对测深数据深度计算索引排序，将经纬度转换为x轴数据
+        @param lng_lat:经纬度数组
+        @param y_list:深度数组
+        @return:x轴数据  y轴数据 面积积分
+        """
+        x_List = [i for i in range(len(lng_lat))]
+        sorted_id = sorted(range(len(y_list)), key=lambda k: y_list[k], reverse=False)
+        # print('元素索引序列：', sorted_id)
+        sorted_id2 = sorted(range(len(sorted_id)), key=lambda k: sorted_id[k], reverse=False)
+        # print('元素索引序列2：', sorted_id2)
+        dx = 1
+        sum_area = round(float(np.sum(np.asarray(y_list) * dx)), 2)
+        return x_List, sorted_id2, sum_area
+
     # 获取萤石云报警图片
     def get_ezviz_alarm_image(self):
         local_http = False
@@ -719,7 +782,7 @@ class WebServer:
             if not self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.token:
                 time.sleep(1)
                 continue
-            data_list = draw_img.get_img_url(http_get_img_path, {"deviceId": ship_code, 'type':0},
+            data_list = draw_img.get_img_url(http_get_img_path, {"deviceId": ship_code, 'type': 0},
                                              token=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.token)
             # print('data_list', data_list)
             if data_list:
@@ -776,6 +839,7 @@ class WebServer:
             time.sleep(8)
 
 
+
 if __name__ == '__main__':
     while True:
         try:
@@ -791,7 +855,7 @@ if __name__ == '__main__':
             send_bank_distance_thread.start()
             check_online_ship_thread.start()
             check_reconnrct_thread.start()
-            get_ezviz_thread.start()
+            # get_ezviz_thread.start()
             while True:
                 if not find_pool_thread.is_alive():
                     find_pool_thread = threading.Thread(target=web_server_obj.find_pool)

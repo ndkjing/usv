@@ -34,7 +34,7 @@ class ShipType:
 class WaterDetect:
     def __init__(self, ship_id):
         self.ship_id = ship_id
-        self.ship_code = 'XXLJC4LCGSCSD1DA00' + str(ship_id)
+        self.ship_code = 'XXLJC4LCGSCSD1DA%03d' % ship_id
 
     # 立即抽水
     def draw_sub(self, b_draw, bottle_id, draw_deep, draw_capacity, data_manager_obj):
@@ -418,7 +418,7 @@ class MultiDraw:
 
     def __init__(self, ship_id):
         self.ship_id = ship_id
-        self.ship_code = 'XXLJC4LCGSCSD1DA00' + str(ship_id)
+        self.ship_code = 'XXLJC4LCGSCSD1DA%03d' % ship_id
 
     # 立即抽水
     def draw_sub(self, b_draw, bottle_id, draw_deep, draw_capacity, data_manager_obj):
@@ -866,7 +866,7 @@ class Adcp:
         self.send_data_lng_lat = None
         self.b_send_data = False
         self.ship_id = ship_id
-        self.ship_code = 'XXLJC4LCGSCSD1DA00' + str(ship_id)
+        self.ship_code = 'XXLJC4LCGSCSD1DA%03d' % ship_id
 
     def check_task(self, data_manager_obj):
         if data_manager_obj.server_data_obj.mqtt_send_get_obj.get_task == 1 and data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id:
@@ -1146,7 +1146,7 @@ class MultiDrawDetect:
 
     def __init__(self, ship_id):
         self.ship_id = ship_id
-        self.ship_code = 'XXLJC4LCGSCSD1DA00' + str(ship_id)
+        self.ship_code = 'XXLJC4LCGSCSD1DA%03d' % ship_id
 
     # 立即抽水
     def draw_sub(self, b_draw, bottle_id, draw_deep, draw_capacity, data_manager_obj):
@@ -1634,7 +1634,7 @@ class MultiDrawDetectAdcp:
         self.send_data_lng_lat = None
         self.b_send_data = False
         self.ship_id = ship_id
-        self.ship_code = 'XXLJC4LCGSCSD1DA00' + str(ship_id)
+        self.ship_code = 'XXLJC4LCGSCSD1DA%03d' % ship_id
 
     # 立即抽水
     def draw_sub(self, b_draw, bottle_id, draw_deep, draw_capacity, data_manager_obj):
@@ -1994,6 +1994,7 @@ class MultiDrawDetectAdcp:
 
     # 上传数据
     def send_data(self, data_manager_obj):
+        print('b_draw_over_send_detect_data', data_manager_obj.b_draw_over_send_detect_data)
         if data_manager_obj.b_draw_over_send_data:
             if data_manager_obj.server_data_obj.mqtt_send_get_obj.pool_code:
                 data_manager_obj.data_define_obj.pool_code = data_manager_obj.server_data_obj.mqtt_send_get_obj.pool_code
@@ -2162,9 +2163,9 @@ class MultiDrawDetectAdcp:
             # 发送到服务器
             if len(data_manager_obj.data_define_obj.pool_code) > 0:
                 try:
-                    # 没有数据 偏差距离不变
-                    if not data_manager_obj.lng_lat or not data_manager_obj.server_data_obj.mqtt_send_get_obj.adcp:
-                        return
+                    # 没有数据 偏差距离不变  暂时不适用判断
+                    # if not data_manager_obj.lng_lat or not data_manager_obj.server_data_obj.mqtt_send_get_obj.adcp:
+                    #     return
                     print('深度数据', deep_data)
                     return_data = data_manager_obj.server_data_obj.send_server_http_data('POST',
                                                                                          deep_data,
@@ -2183,5 +2184,3 @@ class MultiDrawDetectAdcp:
                             self.b_send_data = False
                 except Exception as e:
                     data_manager_obj.logger.info({"发送深度数据error": e})
-
-

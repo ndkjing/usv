@@ -7,7 +7,7 @@ import config
 import tcp_server
 from utils import log
 from messageBus import data_manager
-
+import multi_web_server
 logger = log.LogHandler('main_log', level=20)
 
 
@@ -18,12 +18,52 @@ class Main:
         self.is_close = 0
 
 
+class WebServerManager:
+    def __init__(self):
+        self.web_server_obj = multi_web_server.WebServer()  # tcp发送数据对象
+
+    def start_web_server(self):
+        find_pool_thread = threading.Thread(target=self.web_server_obj.find_pool)
+        get_plan_path_thread = threading.Thread(target=self.web_server_obj.get_plan_path)
+        send_bank_distance_thread = threading.Thread(target=self.web_server_obj.send_bank_distance)
+        check_online_ship_thread = threading.Thread(target=self.web_server_obj.check_online_ship)
+        check_reconnrct_thread = threading.Thread(target=self.web_server_obj.check_reconnrct)
+        get_ezviz_thread = threading.Thread(target=self.web_server_obj.get_ezviz_alarm_image)
+        find_pool_thread.start()
+        get_plan_path_thread.start()
+        send_bank_distance_thread.start()
+        check_online_ship_thread.start()
+        check_reconnrct_thread.start()
+        # get_ezviz_thread.start()
+        while True:
+            if not find_pool_thread.is_alive():
+                find_pool_thread = threading.Thread(target=self.web_server_obj.find_pool)
+                find_pool_thread.start()
+            if not get_plan_path_thread.is_alive():
+                get_plan_path_thread = threading.Thread(target=self.web_server_obj.get_plan_path)
+                get_plan_path_thread.start()
+            if not send_bank_distance_thread.is_alive():
+                send_bank_distance_thread = threading.Thread(target=self.web_server_obj.send_bank_distance)
+                send_bank_distance_thread.start()
+            if not check_online_ship_thread.is_alive():
+                check_online_ship_thread = threading.Thread(target=self.web_server_obj.check_online_ship)
+                check_online_ship_thread.start()
+            if not check_reconnrct_thread.is_alive():
+                check_reconnrct_thread = threading.Thread(target=self.web_server_obj.check_reconnrct)
+                check_reconnrct_thread.start()
+            time.sleep(1)
+
+
 def main():
     config.update_setting()
     main_obj = Main()
     start_server_thread = threading.Thread(target=main_obj.tcp_server_obj.start_server)
     start_server_thread.setDaemon(True)
     start_server_thread.start()
+    web_server_manager_obj = WebServerManager()
+    start_web_server_thread = threading.Thread(target=web_server_manager_obj.start_web_server)
+    start_web_server_thread.setDaemon(True)
+    start_web_server_thread.start()
     ship_thread_dict = {}
     while True:
         try:
@@ -39,6 +79,7 @@ def main():
                     ship_thread.setDaemon(True)
                     ship_thread.start()
                     ship_thread_dict[ship_id] = ship_thread
+            # 删除失效船只
             for ship_id in ship_thread_dict:
                 if not ship_thread_dict.get(ship_id).is_alive():
                     if ship_id in list(main_obj.damanager_dict.keys()):

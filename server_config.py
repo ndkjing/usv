@@ -2,25 +2,11 @@ import enum
 import json
 import os
 import platform
-
+import config
 """
 服务器相关数据设置
 """
-ship_code_list = [
-    # 'XXLJC4LCGSCAHSD0DA000',
-    # 'XXLJC4LCGSCSD1DA001',
-    # 'XXLJC4LCGSCSD1DA002',
-    'XXLJC4LCGSCSD1DA003',
-    'XXLJC4LCGSCSD1DA004',
-    'XXLJC4LCGSCSD1DA005',
-    # 'XXLJC4LCGSCSD1DA006',
-    # 'XXLJC4LCGSCSD1DA007',
-    # 'XXLJC4LCGSCSD1DA008',
-    # 'XXLJC4LCGSCSD1DA009',
-    # 'XXLJC4LCGSCSD1DA010',
-    # 'XXLJC4LCGSCSD1DA011',
-    # 'XXLJC4LCGSCSD1DA012'
-]
+ship_code_list = config.ship_code_type_dict.keys()
 root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 b_use_path_planning = 1
 # 检测像素间隔
@@ -85,8 +71,8 @@ def update_base_setting(ship_code_):
 
 
 # 保存配置到文件中
-def write_setting(b_base=False, b_base_default=False):
-    for ship_code in ship_code_list:
+def write_setting(b_base=False, b_base_default=False,ship_code=None):
+    if ship_code:
         server_base_setting_path = os.path.join(setting_dir, 'setting_%s.json' % ship_code)
         server_base_default_setting_path = os.path.join(setting_dir, 'setting_default_%s.json' % ship_code)
         print('server_base_setting_path', server_base_setting_path)
@@ -102,6 +88,24 @@ def write_setting(b_base=False, b_base_default=False):
                            'pool_name': pool_name,
                            },
                           bdf)
+    else:
+
+        for ship_code in ship_code_list:
+            server_base_setting_path = os.path.join(setting_dir, 'setting_%s.json' % ship_code)
+            server_base_default_setting_path = os.path.join(setting_dir, 'setting_default_%s.json' % ship_code)
+            print('server_base_setting_path', server_base_setting_path)
+            if b_base:
+                with open(server_base_setting_path, 'w') as bf:
+                    json.dump({'secure_distance': path_search_safe_distance,
+                               'pool_name': pool_name,
+                               },
+                              bf)
+            if b_base_default:
+                with open(server_base_default_setting_path, 'w') as bdf:
+                    json.dump({'secure_distance': path_search_safe_distance,
+                               'pool_name': pool_name,
+                               },
+                              bdf)
 
 
 def write_ship_code_setting(ship_code_):
