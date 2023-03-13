@@ -74,15 +74,21 @@ class WaterDetect:
         """
         # 前端发送抽水深度和抽水时间
         if data_manager_obj.server_data_obj.mqtt_send_get_obj.b_draw:
-            data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_bottle_id = 5
-            data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_deep = 0.5
-            data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_capacity = 1000
+            # data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_bottle_id = 5
+            # data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_deep = 0.5
+            # data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_capacity = 1000
             temp_draw_bottle_id = data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_bottle_id
             temp_draw_deep = data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_deep
             temp_draw_capacity = data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_capacity
-            data_manager_obj.current_draw_bottle = temp_draw_bottle_id
-            data_manager_obj.current_draw_deep = temp_draw_deep
-            data_manager_obj.current_draw_capacity = temp_draw_capacity
+            # 水质检测船到点检测设置默认参数
+            temp_draw_bottle_id = 7
+            if temp_draw_deep is None:
+                temp_draw_deep = 0.5
+            if temp_draw_capacity is None:
+                temp_draw_capacity = 1000
+            data_manager_obj.current_draw_bottle = 7
+            data_manager_obj.current_draw_deep = 0.5
+            data_manager_obj.current_draw_capacity = 1000
             # print('#################前端设置抽水瓶号 深度 容量:', temp_draw_bottle_id, temp_draw_deep, temp_draw_capacity)
             self.draw_sub(True, temp_draw_bottle_id, temp_draw_deep, temp_draw_capacity, data_manager_obj)
             # 收到32返回抽水结束
@@ -119,7 +125,7 @@ class WaterDetect:
             data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_deep = None
             data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_capacity = None
             index = data_manager_obj.sort_task_done_list[data_manager_obj.current_arriver_index].index(0)
-            temp_draw_bottle_id = 5
+            temp_draw_bottle_id = 7
             temp_draw_deep = 50
             temp_bottle_amount = 20
             # 将存储的数据映射为真实深度和容量
@@ -391,6 +397,17 @@ class WaterDetect:
                 mqtt_send_detect_data.update({'planId': data_manager_obj.action_id})
             # if data_manager_obj.creator:
             #     mqtt_send_detect_data.update({"creator": data_manager_obj.creator})
+            # # 14号山西船有化学需氧量COD和氨氮NH3_NH4，没有电导率ED和浊度TD所以将对应位置数据清0
+            if int(self.ship_id) == 14:
+                mqtt_send_detect_data['water'].update({'ec': 0})
+                mqtt_send_detect_data['water'].update({'td': 0})
+                mqtt_send_detect_data.update({'ec': 0})
+                mqtt_send_detect_data.update({'td': 0})
+            else:
+                mqtt_send_detect_data['water'].update({'cod': 0})
+                mqtt_send_detect_data['water'].update({'nh3Nh4': 0})
+                mqtt_send_detect_data.update({'cod': 0})
+                mqtt_send_detect_data.update({'nh3Nh4': 0})
             print('水质数据', mqtt_send_detect_data)
             data_manager_obj.send(method='mqtt', topic='detect_data_%s' % data_manager_obj.data_define_obj.ship_code,
                                   data=mqtt_send_detect_data,
@@ -1160,8 +1177,6 @@ class MultiDrawDetect:
         """
         # 判断是否抽水  点击抽水情况
         draw_scale = 1.0  # 抽水放大系数  不同船只抽水速度不一样
-        if self.ship_id == 8:  # 8号船放大1.2倍
-            draw_scale = 0.79
         if b_draw:
             # data_manager_obj.tcp_send_data = 'S2,%d,%d,%dZ' % (bottle_id,
             #                                                    int(draw_deep * 10),
@@ -1593,11 +1608,27 @@ class MultiDrawDetect:
                 wt_data = data_manager_obj.tcp_server_obj.ship_detect_data_dict.get(self.ship_id)[0]
                 wt_data = data_valid.valid_water_data(config.WaterType.wt, wt_data)
                 mqtt_send_detect_data['water'].update({'wt': wt_data})
+                if len(data_manager_obj.tcp_server_obj.ship_detect_data_dict.get(self.ship_id)) == 7:
+                    cod_data = data_manager_obj.tcp_server_obj.ship_detect_data_dict.get(self.ship_id)[5]
+                    mqtt_send_detect_data['water'].update({'COD': cod_data})
+                    nh3nh4_data = data_manager_obj.tcp_server_obj.ship_detect_data_dict.get(self.ship_id)[6]
+                    mqtt_send_detect_data['water'].update({'NH3_NH4': nh3nh4_data})
             # 替换键
             for k_all, v_all in data_define.name_mappings.items():
                 for old_key, new_key in v_all.items():
                     pop_value = mqtt_send_detect_data[k_all].pop(old_key)
                     mqtt_send_detect_data[k_all].update({new_key: pop_value})
+            # 14号山西船有化学需氧量COD和氨氮NH3_NH4，没有电导率ED和浊度TD所以将对应位置数据清0
+            if int(self.ship_id) == 14:
+                mqtt_send_detect_data['water'].update({'ec': 0})
+                mqtt_send_detect_data['water'].update({'td': 0})
+                mqtt_send_detect_data.update({'ec': 0})
+                mqtt_send_detect_data.update({'td': 0})
+            else:
+                mqtt_send_detect_data['water'].update({'cod': 0})
+                mqtt_send_detect_data['water'].update({'nh3Nh4': 0})
+                mqtt_send_detect_data.update({'cod': 0})
+                mqtt_send_detect_data.update({'nh3Nh4': 0})
             # 添加经纬度
             mqtt_send_detect_data.update({'jwd': json.dumps(data_manager_obj.lng_lat)})
             mqtt_send_detect_data.update({'gjwd': json.dumps(data_manager_obj.gaode_lng_lat)})
@@ -1609,6 +1640,7 @@ class MultiDrawDetect:
             data_manager_obj.send(method='mqtt', topic='detect_data_%s' % self.ship_code,
                                   data=mqtt_send_detect_data,
                                   qos=0)
+            print('###################self.ship_id', self.ship_id)
             if len(data_manager_obj.data_define_obj.pool_code) > 0:
                 mqtt_send_detect_data.update({'mapId': data_manager_obj.data_define_obj.pool_code})
                 return_data = data_manager_obj.server_data_obj.send_server_http_data('POST',
@@ -1963,7 +1995,11 @@ class MultiDrawDetectAdcp:
                     if data_manager_obj.sort_task_list[i].get("data"):
                         for draw_item in data_manager_obj.sort_task_list[i].get("data"):
                             draw_item_dict = {}
-                            draw_item_dict.update({"cabin": draw_item[0]})
+                            # 之前设置检测仓瓶号为5现在改为7
+                            if draw_item[0] == 5:
+                                draw_item_dict.update({"cabin": 7})
+                            else:
+                                draw_item_dict.update({"cabin": draw_item[0]})
                             draw_item_dict.update({"deep": draw_item[1]})
                             draw_item_dict.update({"amount": draw_item[2]})
                             data.append(draw_item_dict)

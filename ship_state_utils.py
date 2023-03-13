@@ -106,6 +106,71 @@ def send_server_http_data(request_type, data, url, parm_type=1, token=None):
         return None
 
 
+def get_deep_date(request_type, data, url, parm_type=1, token=None):
+    try:
+        # 请求头设置
+        payload_header = {
+            'Content-Type': 'application/json',
+        }
+        if token:
+            payload_header.update({"token": token})
+        assert request_type in ['POST', 'GET']
+        if request_type == 'POST':
+            if parm_type == 1:
+                dump_json_data = json.dumps(data)
+                return_data = requests.post(
+                    url=url, data=dump_json_data, headers=payload_header, timeout=20)
+            else:
+                if isinstance(data, dict):
+                    dump_json_data = data
+                else:
+                    dump_json_data = json.dumps(data)
+                return_data = requests.post(
+                    url=url, params=dump_json_data, headers=payload_header, timeout=20)
+        else:
+            if data:
+                dump_json_data = json.dumps(data)
+                return_data = requests.get(url=url, headers=payload_header, params=dump_json_data, timeout=20)
+            else:
+                return_data = requests.get(url=url, headers=payload_header, timeout=20)
+            print('http返回数据', return_data)
+        return return_data
+    except Exception as e:
+        print({'http请求报错': e})
+        return None
+
+def send_deep_date(request_type, data, url, parm_type=1, token=None):
+    try:
+        # 请求头设置
+        payload_header = {
+            'Content-Type': 'application/json',
+        }
+        if token:
+            payload_header.update({"token": token})
+        assert request_type in ['POST', 'GET']
+        if request_type == 'POST':
+            if parm_type == 1:
+                dump_json_data = json.dumps(data)
+                return_data = requests.post(
+                    url=url, data=dump_json_data, headers=payload_header, timeout=20)
+            else:
+                if isinstance(data, dict):
+                    dump_json_data = data
+                else:
+                    dump_json_data = json.dumps(data)
+                return_data = requests.post(
+                    url=url, params=dump_json_data, headers=payload_header, timeout=20)
+        else:
+            if data:
+                dump_json_data = json.dumps(data)
+                return_data = requests.get(url=url, headers=payload_header, params=dump_json_data, timeout=20)
+            else:
+                return_data = requests.get(url=url, headers=payload_header, timeout=20)
+            print('http返回数据  send_deep_date', return_data,json.loads(return_data.content))
+        return return_data
+    except Exception as e:
+        print({'http请求报错': e})
+        return None
 if __name__ == "__main__":
     # response = post_file("http://192.168.8.26:8009/union/admin/uploadFile", "./webServer/demo.png")
     # print('res',response.content)

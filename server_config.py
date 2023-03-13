@@ -8,7 +8,7 @@ import config
 """
 ship_code_list = config.ship_code_type_dict.keys()
 root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-b_use_path_planning = 1
+b_use_path_planning = 0
 # 检测像素间隔
 pix_interval = 4
 # 构建地图单元格大小单位米
@@ -117,11 +117,11 @@ def write_ship_code_setting(ship_code_):
                    },
                   bf)
 
-
+import config
 # 百度地图key
 baidu_key = 'wIt2mDCMGWRIi2pioR8GZnfrhSKQHzLY'
 # 高德秘钥
-gaode_key = '8177df6428097c5e23d3280ffdc5a13a'
+gaode_key = config.gaode_key
 # 腾讯地图key
 tencent_key = 'PSABZ-URMWP-3ATDK-VBRCR-FBBMF-YHFCE'
 

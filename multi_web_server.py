@@ -18,6 +18,7 @@ import server_config
 import draw_img
 import config
 
+
 class WebServer:
     def __init__(self):
         self.data_define_obj_dict = {}  # 每个船的数据定义类
@@ -131,32 +132,37 @@ class WebServer:
 
     # 状态检查函数，检查自身状态发送对应消息
     def find_pool(self):
+        pre_click_lng_lat=None
         while True:
             # 循环等待一定时间
             time.sleep(0.1)
+            save_img_dir1 = os.path.join(server_config.root_path, 'statics')  # 计算存储图片路径和判断路径是否存在
+            if not os.path.exists(save_img_dir1):
+                os.mkdir(save_img_dir1)
+            save_img_dir = os.path.join(server_config.root_path, 'statics', 'imgs')  # 计算存储图片路径和判断路径是否存在
+            if not os.path.exists(save_img_dir):
+                os.mkdir(save_img_dir)
+            save_img_name_list = os.listdir(save_img_dir)  # 超过1000张图片时候删除图片
+            if len(save_img_name_list) > 1000:
+                for i in save_img_name_list:
+                    os.remove(os.path.join(save_img_dir, i))
             for ship_code in server_config.ship_code_list:
                 save_map_path = os.path.join(server_config.save_map_dir, 'map_%s.json' % ship_code)
-                save_img_dir1 = os.path.join(server_config.root_path, 'statics')  # 计算存储图片路径和判断路径是否存在
-                if not os.path.exists(save_img_dir1):
-                    os.mkdir(save_img_dir1)
-                save_img_dir = os.path.join(server_config.root_path, 'statics', 'imgs')  # 计算存储图片路径和判断路径是否存在
-                if not os.path.exists(save_img_dir):
-                    os.mkdir(save_img_dir)
-                save_img_name_list = os.listdir(save_img_dir)  # 超过1000张图片时候删除图片
-                if len(save_img_name_list) > 100:
-                    for i in save_img_name_list:
-                        os.remove(os.path.join(save_img_dir, i))
                 # 两种方式点击湖泊 新增和修改
                 if self.server_data_obj_dict.get(
                         ship_code).mqtt_send_get_obj.pool_click_lng_lat and self.server_data_obj_dict.get(
                     ship_code).mqtt_send_get_obj.pool_click_zoom:
                     click_lng_lat = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_lng_lat
                     click_zoom = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.pool_click_zoom
+                    if pre_click_lng_lat is not None and pre_click_lng_lat != click_lng_lat:
+                        self.data_define_obj_dict.get(ship_code).pool_code = ''
                 elif self.server_data_obj_dict.get(
                         ship_code).mqtt_send_get_obj.update_pool_click_lng_lat and self.server_data_obj_dict.get(
                     ship_code).mqtt_send_get_obj.update_pool_click_zoom:
                     click_lng_lat = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_pool_click_lng_lat
                     click_zoom = self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.update_pool_click_zoom
+                    if pre_click_lng_lat is not None and pre_click_lng_lat != click_lng_lat:
+                        self.data_define_obj_dict.get(ship_code).pool_code = ''
                 else:
                     continue  # 都没有点击就跳过查询
                 # 判断当前使用地图类型 循环检查3中类型地图 【 高德  腾讯 百度】
@@ -174,8 +180,10 @@ class WebServer:
                                    click_zoom,
                                    1))
                 # 创建于查找湖泊
-                if self.data_define_obj_dict.get(ship_code).pool_code or not os.path.exists(save_img_path):
-                    print('self.data_define_obj_dict.get(ship_code).pool_code',self.data_define_obj_dict.get(ship_code).pool_code,os.path.exists(save_img_path),save_img_path)
+                if not self.data_define_obj_dict.get(ship_code).pool_code:
+                    # print('self.data_define_obj_dict.get(ship_code).pool_code',
+                    #       self.data_define_obj_dict.get(ship_code).pool_code, os.path.exists(save_img_path),
+                    #       save_img_path)
                     # 创建地图对象
                     if os.path.exists(save_img_path) and self.baidu_map_obj_dict.get(ship_code) is not None:
                         continue
@@ -186,6 +194,8 @@ class WebServer:
                             logger=self.map_log,
                             map_type=self.current_map_type)
                         self.baidu_map_obj_dict.update({ship_code: baidu_map_obj})
+                        pre_click_lng_lat = copy.deepcopy(click_lng_lat)
+                    # print('#########', 111111111111111111)
                     pool_cnts, (pool_cx, pool_cy) = self.baidu_map_obj_dict.get(ship_code).get_pool_pix()  # 获取点击处湖泊范围
                     # 为None表示没有找到湖泊 继续换地图找
                     if pool_cnts is None:
@@ -355,7 +365,7 @@ class WebServer:
                                                     token=self.server_data_obj_dict.get(
                                                         ship_code).mqtt_send_get_obj.token)
                                 if pool_id is None:
-                                    self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.token=None
+                                    self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.token = None
                                     os.remove(save_img_path)
                                     continue
                             except Exception as e1:
@@ -498,6 +508,7 @@ class WebServer:
                 target_lng_lats=target_lng_lats,
                 b_show=False,
             )
+            print(return_gaode_lng_lat_path,'return_gaode_lng_lat_path')
             # 当查找不成功时
             if isinstance(return_gaode_lng_lat_path, str) or return_gaode_lng_lat_path is None:
                 self.logger.error(return_gaode_lng_lat_path)
@@ -646,6 +657,7 @@ class WebServer:
                                                                   token=self.server_data_obj_dict.get(
                                                                       ship_code).mqtt_send_get_obj.token)
                         print('is_success', is_success)
+                        self.data_define_obj_dict.get(ship_code).pool_code = ''  # 下线后清除
                         if is_success == 1:
                             ship_status_dict.update({ship_code: 0})
                         # 上传失败需要重新获取token
@@ -732,7 +744,7 @@ class WebServer:
                         "id": self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.action_id
                     }
                     try:
-                        print('deep_data',deep_data)
+                        print('deep_data', deep_data)
                         is_success = ship_state_utils.send_deep_date('POST', data=deep_data,
                                                                      url=server_config.http_send_deep,
                                                                      token=self.server_data_obj_dict.get(
@@ -837,7 +849,6 @@ class WebServer:
                                 data=alarm_data,
                                 qos=0)
             time.sleep(8)
-
 
 
 if __name__ == '__main__':

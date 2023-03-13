@@ -199,6 +199,24 @@ NH3_NH4 = [
     0.130
 ]
 
+min_max_COD = (0.5, 50)
+
+COD = [
+    11,
+    2,
+    13,
+    3,
+    3,
+    14,
+    4,
+    4,
+    5,
+    15,
+    5,
+    6,
+]
+
+
 water_data_dict = {}
 water_data_dict.update(
     {config.WaterType.wt: {'min_data': min_max_wt[0], 'max_data': min_max_wt[1], 'data': wt, 'keep_valid_decimals': 1}})

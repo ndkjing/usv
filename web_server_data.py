@@ -251,42 +251,7 @@ class MqttSendGet:
                               'self.update_pool_click_zoom': self.update_pool_click_zoom,
                               'self.update_map_id': self.update_map_id
                               })
-        # 用户点击经纬度和图层 保存到指定路径
-        # elif topic == 'user_lng_lat_%s' % (self.ship_code):
-        #     user_lng_lat_data = json.loads(msg.payload)
-        #     if user_lng_lat_data.get('area_scan'):  # 区域扫描模式不需要服务器路径规划
-        #         pass
-        #     elif user_lng_lat_data.get('path_id'):  # 轨迹跟踪模式不需要服务器路径规划
-        #         self.path_id = user_lng_lat_data.get('path_id')
-        #         pass
-        #     else:
-        #         if user_lng_lat_data.get('lng_lat') is None:
-        #             self.logger.error('user_lng_lat_用户点击经纬度数据没有经纬度字段')
-        #             return
-        #         if user_lng_lat_data.get('zoom') is None:
-        #             self.logger.error('user_lng_lat_用户点击经纬度数据没有zoom字段')
-        #             # return
-        #         if user_lng_lat_data.get('meter_pix') is None:
-        #             self.logger.error('user_lng_lat_用户点击经纬度数据没有meter_pix字段')
-        #         if user_lng_lat_data.get('config') is None:
-        #             self.logger.error('user_lng_lat_用户点击经纬度数据没有config字段')
-        #         # 添加新的点
-        #         lng_lat = user_lng_lat_data.get('lng_lat')
-        #         self.target_lng_lat = lng_lat
-        #         self.target_lng_lat_status = [0] * len(lng_lat)
-        #         if user_lng_lat_data.get('zoom') is None:
-        #             zoom=16
-        #         else:
-        #             zoom = int(round(float(user_lng_lat_data.get('zoom')), 0))
-        #         self.zoom.append(zoom)
-        #         self.meter_pix.update({zoom: float(user_lng_lat_data.get('meter_pix'))})
-        #         if user_lng_lat_data.get('config').get('back_home') is not None:
-        #             self.back_home = user_lng_lat_data.get('config').get('back_home')
-        #
-        #         self.fix_point = user_lng_lat_data.get('config').get('fixpoint')
-        #     self.logger.info({'topic': topic,
-        #                       'user_lng_lat_data': user_lng_lat_data
-        #                       })
+
         # 用户点击经纬度和图层 保存到指定路径
         elif topic == 'user_lng_lat_%s' % self.ship_code:
             user_lng_lat_data = json.loads(msg.payload)

@@ -10,7 +10,7 @@ import requests
 import copy
 import server_config
 from utils import lng_lat_calculate
-
+import config
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 # 方法一：找所有点

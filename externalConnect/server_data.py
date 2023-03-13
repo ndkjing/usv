@@ -212,7 +212,7 @@ class MqttSendGet:
         self.kp_v = 0.5
         self.token = None  # 用于发送数据验证
         self.task_list = []  # 获取存储的任务  经纬度，采样深度，采样量数据样式([lng,lat],[bottle_id,deep,capacity],[bottle_id,deep,capacity])
-        self.draw_bottle_id = 5  # 前端设置抽水瓶号id
+        self.draw_bottle_id = 7  # 前端设置抽水瓶号id
         self.draw_deep = None  # 前端设置抽水深度
         self.draw_capacity = None  # 前端设置抽水容量
         self.get_task = 0  # 是否需要获取任务
@@ -241,11 +241,14 @@ class MqttSendGet:
         self.energy_backhome = 0
         self.pre_energy_backhome = 0
         self.max_pwm_grade = 3  # 自动速度等级
-        self.pre_max_pwm_grade = 3  # 自动速度等级
+        self.pre_max_pwm_grade = 3
+        self.calibration_compass = 0  # 罗盘校准
+        self.pre_calibration_compass = 0
         self.read_write_config()
         self.scan_gap = 10
         self.deep = 0
         # print('self.obstacle_avoid_type', self.obstacle_avoid_type, self.energy_backhome, self.energy_backhome)
+        self.abnormal_confirm = 0  # 用户确认水泵抽水异常，舵机堵转标志位收到确认1后就停止发送
 
     # 读取与写入配置
     def read_write_config(self, r_w=1, b_h=1):
@@ -412,6 +415,7 @@ class MqttSendGet:
                     return
                 send_info = None  # 需要发送消息
                 if switch_data.get('b_draw') is not None:
+                    self.abnormal_confirm=0 # 点击抽水开始时设置抽水异常标志位为0
                     # 采样船需要设置瓶号 深度和水量才能开始抽水
                     if self.ship_type == config.ShipType.multi_draw:
                         if self.draw_bottle_id and self.draw_deep and self.draw_capacity:
@@ -423,10 +427,10 @@ class MqttSendGet:
                         self.b_draw = int(switch_data.get('b_draw'))
                         self.draw_deep = 0.5
                         self.draw_capacity = 1000
-                        self.draw_bottle_id = 5
+                        self.draw_bottle_id = 7
                     elif self.ship_type == config.ShipType.multi_draw_detect:
                         self.b_draw = int(switch_data.get('b_draw'))
-                        if self.draw_bottle_id == 5:
+                        if self.draw_bottle_id == 7:
                             if not self.draw_deep:
                                 self.draw_deep = 0.5
                             if not self.draw_capacity:
@@ -663,6 +667,13 @@ class MqttSendGet:
                                         self.obstacle_avoid_distance = s_obstacle_avoid_distance
                                 except Exception as e:
                                     print({'error': e})
+                            if self.height_setting_data.get('calibration_compass') is not None:
+                                try:
+                                    s_calibration_compass = int(height_setting_data.get('calibration_compass'))
+                                    if 0 <= s_calibration_compass <= 2:
+                                        self.calibration_compass = s_calibration_compass
+                                except Exception as e:
+                                    print({'error': e})
                         config.update_height_setting()
                     # 恢复默认配置
                     elif info_type == 4:
@@ -893,6 +904,13 @@ class MqttSendGet:
                                      "record_time": self.adcp_record_time}
                         self.publish_topic('adcp_setting_%s' % self.ship_code, data=adcp_data)
                 self.logger.info({'adcp_setting_data': adcp_setting_data})
+            # 提示采样/检测过程中舵机被堵转、水泵出现空抽
+            elif topic == 'pump_steer_abnormal_%s' % self.ship_code:
+                abnormal_data = json.loads(msg.payload)
+                if abnormal_data.get("confirm") is not None:
+                    self.abnormal_confirm = int(abnormal_data.get("confirm"))
+                    self.logger.info({'pump_steer_abnormal_': abnormal_data})
+
         except Exception as e:
             self.logger.error({'error': e})
 

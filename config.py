@@ -5,13 +5,13 @@ import os
 import platform
 import gaode_keys
 
+# 基于当前路径创建保存文件的文件夹
 root_path = os.path.dirname(os.path.abspath(__file__))
 maps_dir = os.path.join(root_path, 'statics', 'mapsData')
 if not os.path.exists(os.path.join(root_path, 'statics')):
     os.mkdir(os.path.join(root_path, 'statics'))
 if not os.path.exists(maps_dir):
     os.mkdir(os.path.join(root_path, 'statics', 'mapsData'))
-
 # 保存所有地图湖泊信息位置
 local_map_data_path = os.path.join(maps_dir, 'local_map.json')
 # 保存行驶路径和时间数据
@@ -24,7 +24,7 @@ save_sonar_path = os.path.join(root_path, 'statics', 'geojeson_data.json')
 # 保存抓取的水质数据
 save_water_data_path = os.path.join(root_path, 'statics', 'water_data.json')
 
-
+# 操作系统类型 判断在哪环境上运行(以前树莓派需要)
 class CurrentPlatform(enum.Enum):
     windows = 1
     linux = 2
@@ -56,7 +56,11 @@ ship_code_type_dict = {
     'XXLJC4LCGSCSD1DA011': ShipType.multi_draw_detect_adcp,
     'XXLJC4LCGSCSD1DA012': ShipType.multi_draw_detect,
     'XXLJC4LCGSCSD1DA013': ShipType.multi_draw_detect,
+    'XXLJC4LCGSCSD1DA014': ShipType.multi_draw_detect,# 广西船 水质检测+1个采样+ADCP
     'XXLJC4LCGSCSD1DA015': ShipType.adcp,
+    'XXLJC4LCGSCSD1DA016': ShipType.multi_draw,  # 第二个溢油船
+    # 'XXLJC4LCGSCSD1DA016': ShipType.multi_draw_detect,
+    # 'XXLJC4LCGSCSD1DA017': ShipType.multi_draw_detect,
 }
 ship_id = 8  # 设备id
 ship_code = 'XXLJC4LCGSCSD1DA%03d' % ship_id

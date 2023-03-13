@@ -52,12 +52,13 @@ class TcpServer:
         self.ship_draw_dict = {}  # 船抽水状态数据
         self.ship_detect_data_dict = {}  # 船检测数据
         self.ship_obstacle_data_dict = {}  # 船检测数据
-        self.receive_confirm_data = ""
+        self.receive_confirm_data = ""  # 返回的确认消息
         self.disconnect_client_list = []  # 断线了的船号
         self.base_setting_dict = {}  # 船只返航避障设置
         self.ship_id_time_dict = {}  # 船号最近收到的消息
         self.ship_id_deep_dict = {}  # 船号检测到的深度
         self.ship_id_send_dict = {}  # 船号对应要发送数据
+        self.gps_millimeter_wave_online = {}  # GPS和毫米波是否正常连接，0：没连接  1：正常连接
 
     # def wait_connect(self):
     #     # 等待客户连接，连接成功后，将socket对象保存到client，将细节数据等保存到addr
@@ -103,6 +104,7 @@ class TcpServer:
             try:
                 if self.main_obj.is_close:
                     print('handle_client 退出')
+                    time.sleep(1)
                     return
                 recv_data = client.recv(1024, 0)
                 # print('recv_data', recv_data)
@@ -136,6 +138,9 @@ class TcpServer:
                                         self.ship_status_data_dict.update(
                                             {ship_id: [lng, lat, dump_energy, current_angle, current_mode, angle_error,
                                                        speed]})
+                                        if current_angle or lng:
+                                            self.gps_millimeter_wave_online.update(
+                                                {ship_id: {"gps": 1}})
                                     elif len(rec_list) == 9:
                                         speed = int(rec_list[7])
                                         speed = round(speed / 1000.0 / 3.6, 1)
@@ -145,6 +150,9 @@ class TcpServer:
                                         self.ship_status_data_dict.update(
                                             {ship_id: [lng, lat, dump_energy, current_angle, current_mode, angle_error,
                                                        speed]})
+                                        if current_angle or lng:
+                                            self.gps_millimeter_wave_online.update(
+                                                {ship_id: {"gps": 1}})
                                     elif len(rec_list) == 10:
                                         speed = int(rec_list[7])
                                         speed = round(speed / 1000.0 / 3.6, 1)
@@ -156,6 +164,9 @@ class TcpServer:
                                         self.ship_status_data_dict.update(
                                             {ship_id: [lng, lat, dump_energy, current_angle, current_mode, angle_error,
                                                        speed]})
+                                        if current_angle or lng:
+                                            self.gps_millimeter_wave_online.update(
+                                                {ship_id: {"gps": 1}})
                                     # print('self.ship_status_data_dict',self.ship_status_data_dict)
                                     if time.time() - pre_log_info_time > 10:
                                         server_logger.info({"船状态数据": recv_content})
@@ -179,6 +190,26 @@ class TcpServer:
                                     if time.time() - pre_log_detect_time > 10:
                                         server_logger.info({'检测深度数据反馈消息 wt, ph, doDo, ec, td': [wt, ph, doDo, ec, td]})
                                         pre_log_detect_time = time.time()
+                                if len(rec_list) == 8:
+                                    wt = round(float(rec_list[1]) / 10.0, 2)
+                                    ph = round(float(rec_list[2]) / 100.0, 2)
+                                    doDo = round(float(rec_list[3]) / 100.0, 2)
+                                    ec = round(float(rec_list[4]) / 10.0, 2)
+                                    td = round(float(rec_list[5]) / 10.0, 2)
+                                    cod = round(float(rec_list[6]) / 10.0, 2)
+                                    nh3nh4 = round(float(rec_list[7].split('Z')[0]) / 100.0, 2)
+                                    # if doDo < 0.1:  # 说明在空气中
+                                    #     pass
+                                    # else:
+                                    #     self.ship_detect_data_dict.update(
+                                    #         {ship_id: [wt, ph, doDo, ec, td, cod, nh3nh4]})
+                                    self.ship_detect_data_dict.update(
+                                        {ship_id: [wt, ph, doDo, ec, td, cod, nh3nh4]})
+                                    if time.time() - pre_log_detect_time > 10:
+                                        server_logger.info({'检测深度数据反馈消息 wt, ph, doDo, ec, td cod nh3nh4': [wt, ph, doDo,
+                                                                                                           ec, td, cod,
+                                                                                                           nh3nh4]})
+                                        pre_log_detect_time = time.time()
                                 elif len(rec_list) == 2:
                                     deep = int(rec_list[1].split('Z')[0])
                                     self.ship_detect_data_dict.update(
@@ -200,6 +231,9 @@ class TcpServer:
                                     obj_id = int(rec_list[1])
                                     obj_angle = 2 * int(rec_list[2]) - 90
                                     obj_distance = int(rec_list[3].split('Z')[0]) / 100.0
+                                    if obj_distance:
+                                        self.gps_millimeter_wave_online.update(
+                                            {ship_id: {"millimeter_wave": 1}})
                                     if obj_distance > 15.0:  # 不处理大于15米障碍物
                                         continue
                                     if ship_id not in self.ship_obstacle_data_dict:
@@ -239,6 +273,8 @@ class TcpServer:
                 server_logger.error({'tcp接受数据报错IndexError..': e2})
             except ConnectionResetError as e3:
                 server_logger.error({'tcp接受数据连接重置..': e3})
+                time.sleep(2)
+                continue
             except TimeoutError as e4:
                 server_logger.error({'tcp接受数据TimeoutError..': e4})
             except Exception as e:
@@ -263,7 +299,6 @@ class TcpServer:
             if ship_id in self.client_dict.keys():
                 if not data.startswith('S8'):
                     server_logger.info('tcp发送数据%s\r\n' % data)
-                server_logger.info('tcp发送数据%s\r\n' % data)
                 # if self.ship_id_time_dict.get(ship_id) and time.time() - self.ship_id_time_dict.get(ship_id) > 300:
                 #     server_logger.error('tcp超时300主动断开连接')
                 # raise Exception  # TODO 暂时不抛出异常
