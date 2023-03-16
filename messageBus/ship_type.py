@@ -1119,6 +1119,8 @@ class Adcp:
             # 添加经纬度
             deep_data.update({'jwd': json.dumps(data_manager_obj.lng_lat)})
             deep_data.update({'gjwd': json.dumps(data_manager_obj.gaode_lng_lat)})
+            if len(data_manager_obj.tcp_server_obj.ship_status_data_dict.get(self.ship_id))>=8:
+                deep_data.update({'altitude': data_manager_obj.tcp_server_obj.ship_status_data_dict.get(self.ship_id)[7]})
             if data_manager_obj.action_id:
                 deep_data.update({'planId': data_manager_obj.action_id})
             data_manager_obj.send(method='mqtt', topic='deep_data_%s' % data_manager_obj.ship_code,
@@ -2184,6 +2186,9 @@ class MultiDrawDetectAdcp:
             deep_data.update({'gjwd': json.dumps(data_manager_obj.gaode_lng_lat)})
             if data_manager_obj.action_id:
                 deep_data.update({'planId': data_manager_obj.action_id})
+            # 添加高程
+            if len(data_manager_obj.tcp_server_obj.ship_status_data_dict.get(self.ship_id))>=8:
+                deep_data.update({'altitude': data_manager_obj.tcp_server_obj.ship_status_data_dict.get(self.ship_id)[7]})
             data_manager_obj.send(method='mqtt', topic='deep_data_%s' % data_manager_obj.ship_code,
                                   data={'deep': data_manager_obj.deep},
                                   qos=0)
@@ -2192,8 +2197,9 @@ class MultiDrawDetectAdcp:
             'deep':12,
             'deviceId':'XXLJC4LCGSCSD1DA007',
             'mapId':1539911190092759042,
-            'jwd':[114.321321,31.312231]
-            'gjwd':[114.121321,31.112231]
+            'jwd':[114.321321,31.312231],
+            'gjwd':[114.121321,31.112231],
+            'altitude':16.7  # 高程
             }
             """
             # 发送到服务器

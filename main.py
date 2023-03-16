@@ -9,11 +9,11 @@ from utils import log
 from messageBus import data_manager
 import multi_web_server
 logger = log.LogHandler('main_log', level=20)
-
+semaphore = threading.Semaphore(0)
 
 class Main:
-    def __init__(self):
-        self.tcp_server_obj = tcp_server.TcpServer(self)  # tcp发送数据对象
+    def __init__(self,semaphore_=None):
+        self.tcp_server_obj = tcp_server.TcpServer(self,semaphore=semaphore_)  # tcp发送数据对象
         self.damanager_dict = {}
         self.is_close = 0
 
@@ -56,7 +56,7 @@ class WebServerManager:
 
 def main():
     config.update_setting()
-    main_obj = Main()
+    main_obj = Main(semaphore_=semaphore)
     start_server_thread = threading.Thread(target=main_obj.tcp_server_obj.start_server)
     start_server_thread.setDaemon(True)
     start_server_thread.start()
@@ -74,7 +74,8 @@ def main():
                         continue
                     logger.info({'新船上线': ship_id})
                     main_obj.damanager_dict[ship_id] = data_manager.DataManager(ship_id=ship_id,
-                                                                                tcp_server_obj=main_obj.tcp_server_obj)
+                                                                                tcp_server_obj=main_obj.tcp_server_obj,
+                                                                                semaphore=semaphore)
                     ship_thread = threading.Thread(target=main_obj.damanager_dict[ship_id].thread_control)
                     ship_thread.setDaemon(True)
                     ship_thread.start()

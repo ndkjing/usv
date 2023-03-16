@@ -24,6 +24,7 @@ save_sonar_path = os.path.join(root_path, 'statics', 'geojeson_data.json')
 # 保存抓取的水质数据
 save_water_data_path = os.path.join(root_path, 'statics', 'water_data.json')
 
+
 # 操作系统类型 判断在哪环境上运行(以前树莓派需要)
 class CurrentPlatform(enum.Enum):
     windows = 1
@@ -53,14 +54,14 @@ ship_code_type_dict = {
     'XXLJC4LCGSCSD1DA008': ShipType.multi_draw_detect,
     'XXLJC4LCGSCSD1DA009': ShipType.water_detect,
     'XXLJC4LCGSCSD1DA010': ShipType.multi_draw_detect,
-    'XXLJC4LCGSCSD1DA011': ShipType.multi_draw_detect_adcp,
-    'XXLJC4LCGSCSD1DA012': ShipType.multi_draw_detect,
-    'XXLJC4LCGSCSD1DA013': ShipType.multi_draw_detect,
-    'XXLJC4LCGSCSD1DA014': ShipType.multi_draw_detect,# 广西船 水质检测+1个采样+ADCP
-    'XXLJC4LCGSCSD1DA015': ShipType.adcp,
+    'XXLJC4LCGSCSD1DA011': ShipType.multi_draw_detect_adcp,  # 山西船 采样检测+测深仪
+    'XXLJC4LCGSCSD1DA012': ShipType.multi_draw_detect,  # 福州
+    'XXLJC4LCGSCSD1DA013': ShipType.multi_draw_detect,  # 漳州
+    'XXLJC4LCGSCSD1DA014': ShipType.multi_draw_detect,  # 广西船 水质检测+1个采样+ADCP
+    'XXLJC4LCGSCSD1DA015': ShipType.adcp,  # 看数据用账号
     'XXLJC4LCGSCSD1DA016': ShipType.multi_draw,  # 第二个溢油船
-    # 'XXLJC4LCGSCSD1DA016': ShipType.multi_draw_detect,
-    # 'XXLJC4LCGSCSD1DA017': ShipType.multi_draw_detect,
+    'XXLJC4LCGSCSD1DA017': ShipType.multi_draw_detect,  # 给安徽演示用采样检测船
+    'XXLJC4LCGSCSD1DA018': ShipType.multi_draw_detect,  # 给公司演示用采样检测船
 }
 ship_id = 8  # 设备id
 ship_code = 'XXLJC4LCGSCSD1DA%03d' % ship_id

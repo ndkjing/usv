@@ -2,9 +2,11 @@ import json
 import os
 import server_config
 import copy
+
 """
 使用指定船编号和湖泊id删除湖泊
 """
+
 
 def delete_map(ship_code, mapid=None):
     save_map_path = os.path.join(server_config.save_map_dir, 'map_%s.json' % ship_code)
@@ -24,4 +26,4 @@ def delete_map(ship_code, mapid=None):
 
 
 if __name__ == '__main__':
-    delete_map(ship_code='XXLJC4LCGSCSD1DA003', mapid='1453256428554407938')
+    delete_map(ship_code='XXLJC4LCGSCSD1DA007', mapid='1472131549474172929')

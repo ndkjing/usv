@@ -26,7 +26,7 @@ server_logger = log.LogHandler('server_log', level=20)
 
 @singleton
 class TcpServer:
-    def __init__(self, main_obj):
+    def __init__(self, main_obj,semaphore):
         self.main_obj = main_obj
         self.bind_ip = server_config.tcp_server_ip  # 监听所有可用的接口
         self.bind_port = server_config.tcp_server_port  # 非特权端口号都可以使用
@@ -59,7 +59,7 @@ class TcpServer:
         self.ship_id_deep_dict = {}  # 船号检测到的深度
         self.ship_id_send_dict = {}  # 船号对应要发送数据
         self.gps_millimeter_wave_online = {}  # GPS和毫米波是否正常连接，0：没连接  1：正常连接
-
+        self.semaphore=semaphore
     # def wait_connect(self):
     #     # 等待客户连接，连接成功后，将socket对象保存到client，将细节数据等保存到addr
     #     if self.main_obj.is_close:
@@ -120,12 +120,14 @@ class TcpServer:
                             if recv_content.startswith('A'):
                                 rec_list = recv_content.split(',')
                                 if len(rec_list) >= 7:
-                                    # if ship_id not in self.client_dict:
                                     self.client_dict.update({ship_id: client})
                                     if ship_id not in addr_dict:
                                         addr_dict.update({addr: ship_id})
                                     if ship_id in self.disconnect_client_list:
                                         self.disconnect_client_list.remove(ship_id)
+                                    # 如果有信号量 则释放信号量
+                                    if self.semaphore is not None:
+                                        self.semaphore.release()
                                     lng = float(rec_list[1]) / 1000000.0
                                     lat = float(rec_list[2]) / 1000000.0
                                     dump_energy = round(float(rec_list[3]), 1)
@@ -163,7 +165,8 @@ class TcpServer:
                                         self.ship_id_deep_dict.update({ship_id: deep})
                                         self.ship_status_data_dict.update(
                                             {ship_id: [lng, lat, dump_energy, current_angle, current_mode, angle_error,
-                                                       speed]})
+                                                       speed, height]})
+                                        # 判断毫米波和GPS是否在线(获取到数据)
                                         if current_angle or lng:
                                             self.gps_millimeter_wave_online.update(
                                                 {ship_id: {"gps": 1}})
