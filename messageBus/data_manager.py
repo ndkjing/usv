@@ -165,6 +165,14 @@ class DataManager:
         self.tcp_server_obj.ship_id_send_dict.update({ship_id: self.send_data_list})
         self.pre_draw_info = 'S2,0,0,0Z'
         self.control_data = ''
+        self.pre_dock_lng_lat = []  # 船坞预先停靠点，在船坞正前方指定距离处
+        self.pre_dock_distance = 8  # 船坞预先停靠点距离 单位米
+        self.is_arrive_pre_dock = False  # 船是否到达船坞提前预设值点
+        self.is_arrive_dock = False  # 船是否到达船坞
+        # 使用阶梯到达船坞 先到船坞正前方8米  然后  6米   4米     2米
+        self.pre_dock_lng_lat_list = []  # 船坞预先停靠点，在船坞正前方指定距离处
+        self.pre_dock_distance_list = [8, 6, 4, 2]  # 船坞预先停靠点距离 单位米
+        self.is_arrive_pre_dock_list = []  # 船是否到达船坞提前预设值点
 
     def thread_control(self):
         # 通用调用函数
@@ -250,7 +258,7 @@ class DataManager:
                                 continue
                             # if self.ship_status != ShipStatus.computer_control and 'S3' in info:
                             #     continue
-                            if info.startswith('S3'): # S3手动控制消息最多发10次(防止收不到和不动的时候一直发送)
+                            if info.startswith('S3'):  # S3手动控制消息最多发10次(防止收不到和不动的时候一直发送)
                                 if self.control_data == info:
                                     control_count -= 1
                                     control_count = max(control_count, -1)
@@ -276,12 +284,7 @@ class DataManager:
                 self.logger.info({"船只断开连接退出control_draw_thread线程": self.ship_id})
                 return
             time.sleep(0.2)
-            # 船号11 为采样检测测深船 深度数据从mqtt接受
-            if self.ship_id == 11:
-                self.deep = self.server_data_obj.mqtt_send_get_obj.deep
-            else:
-                if self.tcp_server_obj.ship_id_deep_dict.get(self.ship_id):
-                    self.deep = self.tcp_server_obj.ship_id_deep_dict.get(self.ship_id)
+
             self.ship_type_obj.ship_obj.draw(self)
 
     # 清楚所有状态
@@ -308,6 +311,13 @@ class DataManager:
         while True:
             # 删除任务模式，将抽水单独控制
             time.sleep(0.1)
+            # 船号11 为采样检测测深船 深度数据从mqtt接受
+            # print("###########深度数据:", self.deep, self.server_data_obj.mqtt_send_get_obj.deep)
+            if self.ship_id == 11:
+                self.deep = self.server_data_obj.mqtt_send_get_obj.deep
+            else:
+                if self.tcp_server_obj.ship_id_deep_dict.get(self.ship_id):
+                    self.deep = self.tcp_server_obj.ship_id_deep_dict.get(self.ship_id)
             if self.tcp_server_obj.main_obj.is_close == 1:
                 self.logger.info({"人为主动断开退出change_status线程": self.ship_id})
                 return
@@ -339,6 +349,13 @@ class DataManager:
                     self.ship_status = ShipStatus.computer_control
                 # 切换到自动模式
                 elif len(self.server_data_obj.mqtt_send_get_obj.path_planning_points) > 0:
+                    self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
+                    if self.lng_lat is None:
+                        time.sleep(0.5)
+                    else:
+                        self.ship_status = ShipStatus.computer_auto
+                # 返回船坞切换到自动模式
+                elif self.pre_dock_lng_lat:
                     self.server_data_obj.mqtt_send_get_obj.control_move_direction = -2
                     if self.lng_lat is None:
                         time.sleep(0.5)
@@ -697,105 +714,180 @@ class DataManager:
                         #     self.pre_control_data = self.tcp_send_data
             # 电脑自动
             elif self.ship_status == ShipStatus.computer_auto:
-                # 计算总里程 和其他需要在巡航开始前计算数据
-                if self.totle_distance == 0:
-                    for index, gaode_lng_lat in enumerate(self.server_data_obj.mqtt_send_get_obj.path_planning_points):
-                        if index == 0:
-                            distance_p = lng_lat_calculate.distanceFromCoordinate(
-                                self.gaode_lng_lat[0],
-                                self.gaode_lng_lat[1],
-                                gaode_lng_lat[0],
-                                gaode_lng_lat[1])
-                            self.totle_distance += distance_p
-                        else:
-                            distance_p = lng_lat_calculate.distanceFromCoordinate(
-                                self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][0],
-                                self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][1],
-                                gaode_lng_lat[0],
-                                gaode_lng_lat[1])
-                            self.totle_distance += distance_p
-                    self.logger.info({'全部距离': self.totle_distance})
-                    self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps = []
-                    self.server_data_obj.mqtt_send_get_obj.sampling_points_gps = []
-                    # 将目标点转换为真实经纬度
-                    for path_planning_point in self.server_data_obj.mqtt_send_get_obj.path_planning_points:
-                        path_planning_point_gps = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
-                                                                                     self.gaode_lng_lat,
-                                                                                     path_planning_point)
-                        self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps.append(
-                            path_planning_point_gps)
-                    for sampling_point in self.server_data_obj.mqtt_send_get_obj.sampling_points:
-                        sampling_point_gps = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
-                                                                                self.gaode_lng_lat,
-                                                                                sampling_point)
-                        self.server_data_obj.mqtt_send_get_obj.sampling_points_gps.append(sampling_point_gps)
-                    self.path_info = [0, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
-                while self.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(0) > 0:
-                    # 被暂停
-                    if self.server_data_obj.mqtt_send_get_obj.pause_continue_data_type == 1:
-                        if self.ship_status != ShipStatus.computer_auto:  # 暂停时允许使用遥控器取消暂停状态
+                if self.pre_dock_lng_lat:  # 由船坞返航设置过来的自动模式
+                    back_method = 2  # 1:单个返航前置点     2:多个返航前置点
+                    while True:
+                        if back_method == 1:
+                            if not self.is_arrive_pre_dock:
+                                arrive_sample_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+                                                                                                  self.lng_lat[1],
+                                                                                                  self.pre_dock_lng_lat[
+                                                                                                      0],
+                                                                                                  self.pre_dock_lng_lat[
+                                                                                                      1])
+                                if arrive_sample_distance < 1:  # 距离小于1就定义为到达了预定义点
+                                    self.is_arrive_pre_dock = True
+                                print('到达提前点距离：', arrive_sample_distance)
+                                send_data = 'S1,%d,%dZ' % (
+                                    round(self.pre_dock_lng_lat[0], 6) * 1000000,
+                                    round(self.pre_dock_lng_lat[1], 6) * 1000000)
+                                self.set_send_data(send_data, 1)
+                            else:
+                                arrive_sample_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+                                                                                                  self.lng_lat[1],
+                                                                                                  self.server_data_obj.mqtt_send_get_obj.dock_lng_lat[
+                                                                                                      0],
+                                                                                                  self.server_data_obj.mqtt_send_get_obj.dock_lng_lat[
+                                                                                                      1])
+                                if arrive_sample_distance < 0.5:  # 距离小于指定值就定义为到达了预定义点
+                                    self.is_arrive_dock = True
+                                print('到达船坞距离：', arrive_sample_distance)
+                                if self.is_arrive_dock:
+                                    control_data = 'S3,-1,3Z'
+                                    self.set_send_data(control_data, 3)
+                                else:
+                                    send_data = 'S1,%d,%dZ' % (
+                                        round(self.pre_dock_lng_lat[0], 6) * 1000000,
+                                        round(self.pre_dock_lng_lat[1], 6) * 1000000)
+                                    self.set_send_data(send_data, 1)
+                        elif back_method == 2:
+                            if 0 in self.is_arrive_pre_dock_list:
+                                current_index = self.is_arrive_pre_dock_list.index(0)
+                                arrive_sample_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+                                                                                                  self.lng_lat[1],
+                                                                                                  self.pre_dock_lng_lat_list[
+                                                                                                      current_index][
+                                                                                                      0],
+                                                                                                  self.pre_dock_lng_lat_list[
+                                                                                                      current_index][
+                                                                                                      1])
+                                if arrive_sample_distance < 0.5:  # 距离小于指定值就定义为到达了预定义点
+                                    self.is_arrive_pre_dock_list[current_index] = 1
+                                print('索引：%d 到达提前点距离：%f' % (current_index, arrive_sample_distance))
+                                send_data = 'S1,%d,%dZ' % (
+                                    round(self.pre_dock_lng_lat[0], 6) * 1000000,
+                                    round(self.pre_dock_lng_lat[1], 6) * 1000000)
+                                self.set_send_data(send_data, 1)
+                            else:
+                                arrive_sample_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+                                                                                                  self.lng_lat[1],
+                                                                                                  self.server_data_obj.mqtt_send_get_obj.dock_lng_lat[
+                                                                                                      0],
+                                                                                                  self.server_data_obj.mqtt_send_get_obj.dock_lng_lat[
+                                                                                                      1])
+                                if arrive_sample_distance < 0.1:  # 距离小于1就定义为到达了预定义点
+                                    self.is_arrive_dock = True
+                                print('到达船坞距离：', arrive_sample_distance)
+                                if self.is_arrive_dock:
+                                    control_data = 'S3,-1,3Z'
+                                    self.set_send_data(control_data, 3)
+                                else:
+                                    send_data = 'S1,%d,%dZ' % (
+                                        round(self.pre_dock_lng_lat[0], 6) * 1000000,
+                                        round(self.pre_dock_lng_lat[1], 6) * 1000000)
+                        if self.ship_status != ShipStatus.computer_auto:
                             break
-                    # 判断是否接受到开始行动
-                    if self.server_data_obj.mqtt_send_get_obj.task_id and self.server_data_obj.mqtt_send_get_obj.action_type != 1:
-                        # 还没点击开始行动就点结束则取消行动
-                        if self.server_data_obj.mqtt_send_get_obj.control_move_direction == -1:
-                            self.server_data_obj.mqtt_send_get_obj.cancel_action = 1
-                        continue
-                    if self.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(0) <= 0:
-                        break
-                    index = self.server_data_obj.mqtt_send_get_obj.sampling_points_status.index(0)
-                    sampling_point_gps = self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[index]
-                    # 计算下一个目标点经纬度
-                    try:
-                        next_lng_lat = self.calc_target_lng_lat(index)
-                    except Exception as e:
-                        self.logger.error({'平滑路径报错': e})
-                        next_lng_lat = sampling_point_gps
-                    # next_lng_lat = sampling_point_gps
-                    # 当前位置到采样点距离
-                    arrive_sample_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
-                                                                                      self.lng_lat[1],
-                                                                                      sampling_point_gps[0],
-                                                                                      sampling_point_gps[1])
+                else:
+                    # 计算总里程 和其他需要在巡航开始前计算数据
+                    if self.totle_distance == 0:
+                        for index, gaode_lng_lat in enumerate(
+                                self.server_data_obj.mqtt_send_get_obj.path_planning_points):
+                            if index == 0:
+                                distance_p = lng_lat_calculate.distanceFromCoordinate(
+                                    self.gaode_lng_lat[0],
+                                    self.gaode_lng_lat[1],
+                                    gaode_lng_lat[0],
+                                    gaode_lng_lat[1])
+                                self.totle_distance += distance_p
+                            else:
+                                distance_p = lng_lat_calculate.distanceFromCoordinate(
+                                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][0],
+                                    self.server_data_obj.mqtt_send_get_obj.path_planning_points[index - 1][1],
+                                    gaode_lng_lat[0],
+                                    gaode_lng_lat[1])
+                                self.totle_distance += distance_p
+                        self.logger.info({'全部距离': self.totle_distance})
+                        self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps = []
+                        self.server_data_obj.mqtt_send_get_obj.sampling_points_gps = []
+                        # 将目标点转换为真实经纬度
+                        for path_planning_point in self.server_data_obj.mqtt_send_get_obj.path_planning_points:
+                            path_planning_point_gps = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
+                                                                                         self.gaode_lng_lat,
+                                                                                         path_planning_point)
+                            self.server_data_obj.mqtt_send_get_obj.path_planning_points_gps.append(
+                                path_planning_point_gps)
+                        for sampling_point in self.server_data_obj.mqtt_send_get_obj.sampling_points:
+                            sampling_point_gps = lng_lat_calculate.gps_gaode_to_gps(self.lng_lat,
+                                                                                    self.gaode_lng_lat,
+                                                                                    sampling_point)
+                            self.server_data_obj.mqtt_send_get_obj.sampling_points_gps.append(sampling_point_gps)
+                        self.path_info = [0, len(self.server_data_obj.mqtt_send_get_obj.sampling_points)]
+                    while self.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(0) > 0:
+                        # 被暂停
+                        if self.server_data_obj.mqtt_send_get_obj.pause_continue_data_type == 1:
+                            if self.ship_status != ShipStatus.computer_auto:  # 暂停时允许使用遥控器取消暂停状态
+                                break
+                        # 判断是否接受到开始行动
+                        if self.server_data_obj.mqtt_send_get_obj.task_id and self.server_data_obj.mqtt_send_get_obj.action_type != 1:
+                            # 还没点击开始行动就点结束则取消行动
+                            if self.server_data_obj.mqtt_send_get_obj.control_move_direction == -1:
+                                self.server_data_obj.mqtt_send_get_obj.cancel_action = 1
+                            continue
+                        if self.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(0) <= 0:
+                            break
+                        index = self.server_data_obj.mqtt_send_get_obj.sampling_points_status.index(0)
+                        sampling_point_gps = self.server_data_obj.mqtt_send_get_obj.sampling_points_gps[index]
+                        # 计算下一个目标点经纬度
+                        try:
+                            next_lng_lat = self.calc_target_lng_lat(index)
+                        except Exception as e:
+                            self.logger.error({'平滑路径报错': e})
+                            next_lng_lat = sampling_point_gps
+                        # next_lng_lat = sampling_point_gps
+                        # 当前位置到采样点距离
+                        arrive_sample_distance = lng_lat_calculate.distanceFromCoordinate(self.lng_lat[0],
+                                                                                          self.lng_lat[1],
+                                                                                          sampling_point_gps[0],
+                                                                                          sampling_point_gps[1])
 
-                    # 调试用 10秒后认为到达目的点
-                    # if config.current_platform == config.CurrentPlatform.windows:
-                    #     if self.point_arrive_start_time is None:
-                    #         self.point_arrive_start_time = time.time()
-                    #     if time.time() - self.point_arrive_start_time > 10:
-                    #         arrive_sample_distance = 1
-                    # 如果该点已经到达目的地
-                    if arrive_sample_distance < config.arrive_distance:
-                        # 清空经纬度不让船移动
-                        if index != 0:
-                            control_data = 'S3,-1,3Z'
-                            self.set_send_data(control_data, 3)
-                        # 判断是否是行动抽水
-                        if self.action_id and self.sample_index and self.sample_index[index]:
-                            self.b_arrive_point = 1  # 到点了用于通知抽水  暂时修改为不抽水
-                            self.current_arriver_index = index  # 当前到达点下标
-                        if self.ship_type_obj.ship_type == config.ShipType.water_detect and index != 0:
-                            self.b_arrive_point = 1  # 到点了用于通知抽水
-                        self.point_arrive_start_time = None
-                        self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] = 1
-                        # 全部点到达后清除自动状态
-                        if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) == sum(
-                                self.server_data_obj.mqtt_send_get_obj.sampling_points_status):
-                            time.sleep(2)
-                            self.is_plan_all_arrive = 1
-                            self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
-                    else:
-                        if arrive_sample_distance < config.forward_target_distance:
-                            send_lng_lat = sampling_point_gps
+                        # 调试用 10秒后认为到达目的点
+                        # if config.current_platform == config.CurrentPlatform.windows:
+                        #     if self.point_arrive_start_time is None:
+                        #         self.point_arrive_start_time = time.time()
+                        #     if time.time() - self.point_arrive_start_time > 10:
+                        #         arrive_sample_distance = 1
+                        # 如果该点已经到达目的地
+                        if arrive_sample_distance < config.arrive_distance:
+                            # 清空经纬度不让船移动
+                            if index != 0:
+                                control_data = 'S3,-1,3Z'
+                                self.set_send_data(control_data, 3)
+                            # 判断是否是行动抽水
+                            if self.action_id and self.sample_index and self.sample_index[index]:
+                                self.b_arrive_point = 1  # 到点了用于通知抽水  暂时修改为不抽水
+                                self.current_arriver_index = index  # 当前到达点下标
+                            if self.ship_type_obj.ship_type == config.ShipType.water_detect and index != 0:
+                                self.b_arrive_point = 1  # 到点了用于通知抽水
+                            self.point_arrive_start_time = None
+                            self.server_data_obj.mqtt_send_get_obj.sampling_points_status[index] = 1
+                            # 全部点到达后清除自动状态
+                            if len(self.server_data_obj.mqtt_send_get_obj.sampling_points_status) == sum(
+                                    self.server_data_obj.mqtt_send_get_obj.sampling_points_status):
+                                time.sleep(2)
+                                self.is_plan_all_arrive = 1
+                                self.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
                         else:
-                            send_lng_lat = next_lng_lat
-                        if self.server_data_obj.mqtt_send_get_obj.obstacle_avoid_type != 0:
-                            send_lng_lat, b_stop = self.get_avoid_obstacle_point(send_lng_lat, sampling_point_gps)
-                        send_data = 'S1,%d,%dZ' % (
-                            round(send_lng_lat[0], 6) * 1000000, round(send_lng_lat[1], 6) * 1000000)
-                        self.set_send_data(send_data, 1)
-                    if self.ship_status != ShipStatus.computer_auto:
-                        break
+                            if arrive_sample_distance < config.forward_target_distance:
+                                send_lng_lat = sampling_point_gps
+                            else:
+                                send_lng_lat = next_lng_lat
+                            if self.server_data_obj.mqtt_send_get_obj.obstacle_avoid_type != 0:
+                                send_lng_lat, b_stop = self.get_avoid_obstacle_point(send_lng_lat, sampling_point_gps)
+                            send_data = 'S1,%d,%dZ' % (
+                                round(send_lng_lat[0], 6) * 1000000, round(send_lng_lat[1], 6) * 1000000)
+                            self.set_send_data(send_data, 1)
+                        if self.ship_status != ShipStatus.computer_auto:
+                            break
             # 返航 断网返航 低电量返航
             elif self.ship_status in [ShipStatus.backhome_network, ShipStatus.backhome_low_energy]:
                 # 有返航点下情况下返回返航点，没有则停止
@@ -959,6 +1051,27 @@ class DataManager:
                       qos=0)
             if time.time() % 20 < 1:
                 self.logger.info({'status_data_': status_data})
+            if self.server_data_obj.mqtt_send_get_obj.dock_lng_lat and self.server_data_obj.mqtt_send_get_obj.dock_direction and not self.pre_dock_lng_lat:
+                # 预先停靠点 在船坞前方8米位置
+                self.pre_dock_lng_lat = lng_lat_calculate.one_point_diatance_to_end(
+                    self.server_data_obj.mqtt_send_get_obj.dock_lng_lat[0],
+                    self.server_data_obj.mqtt_send_get_obj.dock_lng_lat[1],
+                    self.server_data_obj.mqtt_send_get_obj.dock_direction,
+                    self.pre_dock_distance
+                )
+                for distance in self.pre_dock_distance_list:
+                    # 添加预定一点轨迹
+                    self.pre_dock_lng_lat_list.append(lng_lat_calculate.one_point_diatance_to_end(
+                        self.server_data_obj.mqtt_send_get_obj.dock_lng_lat[0],
+                        self.server_data_obj.mqtt_send_get_obj.dock_lng_lat[1],
+                        self.server_data_obj.mqtt_send_get_obj.dock_direction,
+                        distance
+                    ))
+                    self.is_arrive_pre_dock_list.append(0)  # 标记每个预定义点都是未到达
+            elif not self.server_data_obj.mqtt_send_get_obj.dock_lng_lat:
+                self.pre_dock_lng_lat = []
+                self.pre_dock_lng_lat_list = []
+                self.is_arrive_pre_dock_list = []
 
     # 配置更新
     def update_config(self):
@@ -1051,7 +1164,8 @@ class DataManager:
                     # 给自己调试用 Z轴角度  误差角度  当前经度 纬度
                     self.send(method='mqtt', topic='debug_1',
                               data={
-                                  "debug": "%d,%d,%f,%f" % (direction, theta_error, self.lng_lat[0], self.lng_lat[1])},
+                                  "debug": "%d,%d,%d,%d,%d,%d,%f,%f" % (
+                                      direction, theta_error, 0, 0, 0, 0, self.lng_lat[0], self.lng_lat[1])},
                               qos=0)
 
     # 检查任务
@@ -1504,9 +1618,9 @@ class DataManager:
                         self.logger.info({'登录返回token': return_login_data_json.get("data").get("token")})
                         self.token = return_login_data_json.get("data").get("token")
                     else:
-                        self.logger.error({'return_login_data': return_login_data_json})
+                        self.logger.error({'登录%s' % self.ship_code: return_login_data_json})
                 else:
-                    self.logger.error({'return_login_data': return_login_data})
+                    self.logger.error({'登录%s' % self.ship_code: return_login_data})
             if not self.token:
                 continue
             if http_get_time:

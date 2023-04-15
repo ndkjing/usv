@@ -4,18 +4,41 @@ import requests
 import json
 
 
+# def post_data(url, file, id=0):
+#     """
+#         :param url: 接口url
+#         :param file: 上传文件的路径
+#         :return:
+#         """
+#     files = {"file": open(file, "rb")}
+#     s = requests.session()
+#     if id == 1:
+#         r = s.post(url, params={"id": 1}, files=files, verify=False)
+#     else:
+#         r = s.post(url, files=files, verify=False)
+#     r_json = r.json()
+#     print('r', r_json)
+#     if r_json.get('success'):
+#         return r_json.get('data').get('picName')
+#     else:
+#         return False
+
 def post_data(url, file, id=0):
     """
         :param url: 接口url
         :param file: 上传文件的路径
         :return:
         """
+    print(file)
     files = {"file": open(file, "rb")}
     s = requests.session()
-    if id == 1:
-        r = s.post(url, params={"id": 1}, files=files, verify=False)
-    else:
-        r = s.post(url, files=files, verify=False)
+    payload_header = {
+        # 'Content-Type': 'multipart/form-data',
+    }
+    # token='eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJhZWU4OWJhNTc2NTA0YWE0YTUwNTY3YTI1NTA1ZjAxNCIsInN1YiI6IjE2MzgwMjAzODUyNTI5MDA4NjUiLCJpc3MiOiJzZyIsImlhdCI6MTY4MDc1OTg0NywiZXhwIjoxNjgwODQ2MjQ3fQ.cIz7QlbzOSDkV3HLEjNcoMKGce7YxBdJUrQ-xCMaHMQ'
+    # if token:
+    #     payload_header.update({"token": token})
+    r = s.post(url, files=files, headers=payload_header,verify=False)  #headers=payload_header,
     r_json = r.json()
     print('r', r_json)
     if r_json.get('success'):

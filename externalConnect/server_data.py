@@ -247,8 +247,9 @@ class MqttSendGet:
         self.read_write_config()
         self.scan_gap = 10
         self.deep = 0
-        # print('self.obstacle_avoid_type', self.obstacle_avoid_type, self.energy_backhome, self.energy_backhome)
         self.abnormal_confirm = 0  # 用户确认水泵抽水异常，舵机堵转标志位收到确认1后就停止发送
+        self.dock_lng_lat = []  # 船坞返航经纬度
+        self.dock_direction = None  # 船坞返航角度
 
     # 读取与写入配置
     def read_write_config(self, r_w=1, b_h=1):
@@ -368,8 +369,10 @@ class MqttSendGet:
                         self.use_col_gap = False
                         self.row_gap = 0
                 self.control_move_direction = int(control_data.get('move_direction'))
-                if self.control_move_direction == -1:  # 电机停止时设置取消暂停
-                    self.pause_continue_data_type = 2
+                if self.control_move_direction == -1:  # 停止时设置取消暂停
+                    self.pause_continue_data_type = 2   # 电机停止时设置取消暂停
+                    self.dock_lng_lat=[]   # 停止时设置取消船坞位置
+                    self.dock_direction=0  # 停止时设置取消船坞方向
                 nwse_dict = {
                     0: 10,
                     90: 190,
@@ -415,7 +418,7 @@ class MqttSendGet:
                     return
                 send_info = None  # 需要发送消息
                 if switch_data.get('b_draw') is not None:
-                    self.abnormal_confirm=0 # 点击抽水开始时设置抽水异常标志位为0
+                    self.abnormal_confirm = 0  # 点击抽水开始时设置抽水异常标志位为0
                     # 采样船需要设置瓶号 深度和水量才能开始抽水
                     if self.ship_type == config.ShipType.multi_draw:
                         if self.draw_bottle_id and self.draw_deep and self.draw_capacity:
@@ -734,7 +737,6 @@ class MqttSendGet:
 
             # 距离岸边距离话题
             elif topic == 'bank_distance_%s' % self.ship_code:
-                # self.logger.info({'dock_position_': json.loads(msg.payload)})
                 bank_distance_data = json.loads(msg.payload)
                 if bank_distance_data.get("bank_distance") is None:
                     self.logger.error('"refresh_"设置启动消息没有"bank_distance"字段')
@@ -848,7 +850,8 @@ class MqttSendGet:
             # 监听深度消息
             elif topic == 'deep_data_%s' % self.ship_code:
                 deep_data_ = json.loads(msg.payload)
-                if deep_data_.get("deep") is None:
+                # print("#######################接受mqtt熟读数据",deep_data_)
+                if deep_data_.get("deep") is not None:
                     self.deep = deep_data_.get("deep")
 
             # 采样瓶设置数据话题
@@ -911,6 +914,13 @@ class MqttSendGet:
                     self.abnormal_confirm = int(abnormal_data.get("confirm"))
                     self.logger.info({'pump_steer_abnormal_': abnormal_data})
 
+            # 船坞相关设置
+            elif topic == 'dock_position_%s' % self.ship_code:
+                dock_position_data = json.loads(msg.payload)
+                if dock_position_data.get("dock_lng_lat") is not None:
+                    self.dock_lng_lat = int(dock_position_data.get("dock_lng_lat"))
+                    self.dock_direction = int(dock_position_data.get("dock_direction"))
+                    self.logger.info({'船坞返航设置消息': dock_position_data})
         except Exception as e:
             self.logger.error({'error': e})
 

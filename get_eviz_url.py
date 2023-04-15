@@ -4,6 +4,7 @@ import time
 import requests
 from storage import save_data
 import server_config
+
 """
 通过萤石云设备序列号获取视频播放地址
 """
@@ -39,7 +40,7 @@ def get_video_url(serial_str, token, protocol=2):
         # 'Content-Type': 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
     }
-    url = 'https://open.ys7.com/api/lapp/v2/live/address/get?accessToken=%s&deviceSerial=%s&channelNo=1&protocol=%s&quality=2' % (
+    url = 'https://open.ys7.com/api/lapp/v2/live/address/get?accessToken=%s&deviceSerial=%s&channelNo=1&protocol=%s&quality=1' % (
         token, serial_str, protocol)
     return_data = requests.post(
         url=url, headers=payload_header)
@@ -58,7 +59,8 @@ def get_url(serial_str, protocol=2):
     update_token = False  # 是否需要重新更新token
     b_break = False  # 是否无法获取到直播地址  1 没有开机  2
     while not b_break:
-        if token_global_dict.get(serial_str) is None or token_global_dict.get(serial_str)[1] < time.time() or update_token:
+        if token_global_dict.get(serial_str) is None or token_global_dict.get(serial_str)[
+            1] < time.time() or update_token:
             token_data = get_access_toke(
                 data={'appKey': '1c7ea7dcea734a239a528fa458568f48', 'appSecret': '7efe513b44b4f81fc5cb97a7ab5afe55'},
                 url='https://open.ys7.com/api/lapp/token/get?appKey=1c7ea7dcea734a239a528fa458568f48&appSecret=7efe513b44b4f81fc5cb97a7ab5afe55')
@@ -91,6 +93,7 @@ def get_url(serial_str, protocol=2):
                 b_break = True
             else:
                 print({'get video_url error111': url_data.json()})
+    print("获取萤石云地址:", url)
     return url
 
 

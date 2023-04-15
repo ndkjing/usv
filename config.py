@@ -41,8 +41,7 @@ class ShipType(enum.Enum):
     dock = 4
     adcp = 5
     multi_draw_detect = 6
-    multi_draw_detect_adcp = 7
-
+    multi_draw_detect_adcp = 7   #  采样检测+测深仪
 
 # 船号对应类型
 ship_code_type_dict = {
@@ -62,7 +61,10 @@ ship_code_type_dict = {
     'XXLJC4LCGSCSD1DA016': ShipType.multi_draw,  # 第二个溢油船
     'XXLJC4LCGSCSD1DA017': ShipType.multi_draw_detect,  # 给安徽演示用采样检测船
     'XXLJC4LCGSCSD1DA018': ShipType.multi_draw_detect,  # 给公司演示用采样检测船
+    'XXLJC4LCGSCSD1DA019': ShipType.dock,   # 测试用船坞船
+    'XXLJC4LCGSCSD1DA020': ShipType.adcp,  # 给公司演示用采样测深船
 }
+
 ship_id = 8  # 设备id
 ship_code = 'XXLJC4LCGSCSD1DA%03d' % ship_id
 
@@ -115,35 +117,35 @@ else:
     http_domin = 'peri.xxlun.com'
 # http 接口
 # 发送检测数据
-http_data_save = "http://%s/union/water/save" % http_domin
+http_data_save = "https://%s/union/water/save" % http_domin
 # 发送抽水瓶号数据
-http_draw_save = 'http://%s/union/sampling/save' % http_domin
+http_draw_save = 'https://%s/union/sampling/save' % http_domin
 # 深度数据
-http_deep_save = 'http://%s/union/adcp/save' % http_domin
+http_deep_save = 'https://%s/union/adcp/save' % http_domin
 # 获取存储的任务数据
-http_get_task = 'http://%s/union/task/list/1/1' % http_domin
-http_update_task = 'http://%s/union/upDataTask' % http_domin
-http_delete_task = 'http://%s/union/task/delTask' % http_domin
+http_get_task = 'https://%s/union/task/list/1/1' % http_domin
+http_update_task = 'https://%s/union/upDataTask' % http_domin
+http_delete_task = 'https://%s/union/task/delTask' % http_domin
 # 上传日志接口
 http_log = 'https://%s/union/admin/xxl/log/save' % http_domin
 # 里程接口
-http_mileage_get = 'http://%s/union/mileage/get' % http_domin
-http_mileage_save = 'http://%s/union/mileage/save' % http_domin
-http_mileage_update = 'http://%s/union/mileage/update' % http_domin
+http_mileage_get = 'https://%s/union/mileage/get' % http_domin
+http_mileage_save = 'https://%s/union/mileage/save' % http_domin
+http_mileage_update = 'https://%s/union/mileage/update' % http_domin
 # 发送手动记录路劲数据
-http_record_path = "http://%s/union/route/save" % http_domin
+http_record_path = "https://%s/union/route/save" % http_domin
 # 获取手动记录轨迹
-http_record_get = "http://%s/union/route/list/1/1" % http_domin
+http_record_get = "https://%s/union/route/list/1/1" % http_domin
 # 获取行动id数据
-http_action_get = "http://%s/union/plan/save" % http_domin
+http_action_get = "https://%s/union/plan/save" % http_domin
 # 更新任务
-http_plan_update = "http://%s/union/task/update" % http_domin
+http_plan_update = "https://%s/union/task/update" % http_domin
 # 获取token
-http_get_token = "http://%s/union/device/login" % http_domin
+http_get_token = "https://%s/union/device/login" % http_domin
 # 获取图片下载地址接口
-http_get_img_path = "http://%s/union/device/getPicUrl" % http_domin
+http_get_img_path = "https://%s/union/device/getPicUrl" % http_domin
 # 上传图片接口
-http_upload_img = "http://%s/union/user/uploadFile" % http_domin
+http_upload_img = "https://%s/union/user/uploadFile" % http_domin
 # mqtt服务器ip地址和端口号
 mqtt_host = '47.97.183.24'
 mqtt_port = 1884

@@ -27,8 +27,11 @@ class ShipType:
             self.ship_obj = MultiDrawDetect(ship_id)
         elif self.ship_type == config.ShipType.multi_draw_detect_adcp:
             self.ship_obj = MultiDrawDetectAdcp(ship_id)
+        elif self.ship_type == config.ShipType.dock:
+            self.ship_obj = Dock(ship_id)
         else:
             print('错误船号ship_code', ship_code)
+
 
 
 class WaterDetect:
@@ -1084,7 +1087,7 @@ class Adcp:
                     data_manager_obj.logger.info({'更新任务': content_data})
                     data_manager_obj.is_need_update_plan = 0
 
-    # 上传数据
+    # 上传数据 必须要有经纬度
     def send_data(self, data_manager_obj):
         if not data_manager_obj.lng_lat:
             return
@@ -1108,7 +1111,6 @@ class Adcp:
         # elif time.time() - self.send_data_time > data_manager_obj.server_data_obj.mqtt_send_get_obj.adcp_record_time:
         #     self.b_send_data = True
         # print(time.time(),'超出时间测量', data_manager_obj.server_data_obj.mqtt_send_get_obj.adcp_record_time)
-
         if self.b_send_data and data_manager_obj.deep != -1 and data_manager_obj.deep > 0.01:
             if data_manager_obj.server_data_obj.mqtt_send_get_obj.pool_code:
                 data_manager_obj.data_define_obj.pool_code = data_manager_obj.server_data_obj.mqtt_send_get_obj.pool_code
@@ -1119,8 +1121,9 @@ class Adcp:
             # 添加经纬度
             deep_data.update({'jwd': json.dumps(data_manager_obj.lng_lat)})
             deep_data.update({'gjwd': json.dumps(data_manager_obj.gaode_lng_lat)})
-            if len(data_manager_obj.tcp_server_obj.ship_status_data_dict.get(self.ship_id))>=8:
-                deep_data.update({'altitude': data_manager_obj.tcp_server_obj.ship_status_data_dict.get(self.ship_id)[7]})
+            if len(data_manager_obj.tcp_server_obj.ship_status_data_dict.get(self.ship_id)) >= 8:
+                deep_data.update(
+                    {'altitude': data_manager_obj.tcp_server_obj.ship_status_data_dict.get(self.ship_id)[7]})
             if data_manager_obj.action_id:
                 deep_data.update({'planId': data_manager_obj.action_id})
             data_manager_obj.send(method='mqtt', topic='deep_data_%s' % data_manager_obj.ship_code,
@@ -2030,9 +2033,13 @@ class MultiDrawDetectAdcp:
                     data_manager_obj.logger.info({'更新任务': content_data})
                     data_manager_obj.is_need_update_plan = 0
 
-    # 上传数据
+    # 上传数据 会在data_manager中不断调用
     def send_data(self, data_manager_obj):
-        print('b_draw_over_send_detect_data', data_manager_obj.b_draw_over_send_detect_data)
+        # print('发送经纬度:', self.send_data_lng_lat,data_manager_obj.lng_lat,
+        #       data_manager_obj.deep,
+        #     data_manager_obj.server_data_obj.mqtt_send_get_obj.deep,
+        #       self.send_data_time
+        #       ,data_manager_obj.data_define_obj.pool_code)
         if data_manager_obj.b_draw_over_send_data:
             if data_manager_obj.server_data_obj.mqtt_send_get_obj.pool_code:
                 data_manager_obj.data_define_obj.pool_code = data_manager_obj.server_data_obj.mqtt_send_get_obj.pool_code
@@ -2125,6 +2132,23 @@ class MultiDrawDetectAdcp:
                 for old_key, new_key in v_all.items():
                     pop_value = mqtt_send_detect_data[k_all].pop(old_key)
                     mqtt_send_detect_data[k_all].update({new_key: pop_value})
+            # 14号山西船有化学需氧量COD和氨氮NH3_NH4，没有电导率ED和浊度TD所以将对应位置数据清0
+            if int(self.ship_id) == 14:
+                mqtt_send_detect_data['water'].update({'ec': 0})
+                mqtt_send_detect_data['water'].update({'td': 0})
+                mqtt_send_detect_data.update({'ec': 0})
+                mqtt_send_detect_data.update({'td': 0})
+            else:
+                if int(self.ship_id) == 11:
+                    wt_temp = round(13.5 + random.random() * 3, 1)
+                    if mqtt_send_detect_data['water'].get('wt') and mqtt_send_detect_data['water'].get('wt') > 25:
+                        mqtt_send_detect_data['water'].update({'wt': wt_temp})
+                    if mqtt_send_detect_data.get('wt') and mqtt_send_detect_data.get('wt') > 25:
+                        mqtt_send_detect_data.update({'wt': wt_temp})
+                mqtt_send_detect_data['water'].update({'cod': 0})
+                mqtt_send_detect_data['water'].update({'nh3Nh4': 0})
+                mqtt_send_detect_data.update({'cod': 0})
+                mqtt_send_detect_data.update({'nh3Nh4': 0})
             # 添加经纬度
             mqtt_send_detect_data.update({'jwd': json.dumps(data_manager_obj.lng_lat)})
             mqtt_send_detect_data.update({'gjwd': json.dumps(data_manager_obj.gaode_lng_lat)})
@@ -2165,14 +2189,14 @@ class MultiDrawDetectAdcp:
             self.b_send_data = True
             self.send_data_lng_lat = data_manager_obj.lng_lat
             self.send_data_time = time.time()
-            # print('初始测量')
+            print('#######################初始测量')
         elif isinstance(self.send_data_lng_lat,
                         list) and delta_distance > data_manager_obj.server_data_obj.mqtt_send_get_obj.adcp_record_distance:
             self.b_send_data = True
-            # print(delta_distance,'超过距离测量', data_manager_obj.server_data_obj.mqtt_send_get_obj.adcp_record_distance)
+            # print(delta_distance, '超过距离测量', data_manager_obj.server_data_obj.mqtt_send_get_obj.adcp_record_distance)
         # elif time.time() - self.send_data_time > data_manager_obj.server_data_obj.mqtt_send_get_obj.adcp_record_time:
         #     self.b_send_data = True
-        # print(time.time(),'超出时间测量', data_manager_obj.server_data_obj.mqtt_send_get_obj.adcp_record_time)
+        #     print(time.time(),'超出时间测量', data_manager_obj.server_data_obj.mqtt_send_get_obj.adcp_record_time)
 
         if self.b_send_data and data_manager_obj.deep != -1 and data_manager_obj.deep > 0.01:
             if data_manager_obj.server_data_obj.mqtt_send_get_obj.pool_code:
@@ -2187,11 +2211,12 @@ class MultiDrawDetectAdcp:
             if data_manager_obj.action_id:
                 deep_data.update({'planId': data_manager_obj.action_id})
             # 添加高程
-            if len(data_manager_obj.tcp_server_obj.ship_status_data_dict.get(self.ship_id))>=8:
-                deep_data.update({'altitude': data_manager_obj.tcp_server_obj.ship_status_data_dict.get(self.ship_id)[7]})
-            data_manager_obj.send(method='mqtt', topic='deep_data_%s' % data_manager_obj.ship_code,
-                                  data={'deep': data_manager_obj.deep},
-                                  qos=0)
+            if len(data_manager_obj.tcp_server_obj.ship_status_data_dict.get(self.ship_id)) >= 8:
+                deep_data.update(
+                    {'altitude': data_manager_obj.tcp_server_obj.ship_status_data_dict.get(self.ship_id)[7]})
+            # data_manager_obj.send(method='mqtt', topic='deep_data_%s' % data_manager_obj.ship_code,
+            #                       data={'deep': data_manager_obj.deep},
+            #                       qos=0)
             """
             {
             'deep':12,
@@ -2226,3 +2251,400 @@ class MultiDrawDetectAdcp:
                             self.b_send_data = False
                 except Exception as e:
                     data_manager_obj.logger.info({"发送深度数据error": e})
+
+
+class Dock:
+    def __init__(self, ship_id):
+        self.ship_id = ship_id
+        self.ship_code = 'XXLJC4LCGSCSD1DA%03d' % ship_id
+
+    # 立即抽水
+    def draw_sub(self, b_draw, bottle_id, draw_deep, draw_capacity, data_manager_obj):
+        """
+        @param b_draw: 抽水
+        @param bottle_id: 抽水瓶号
+        @param draw_deep: 抽水深度
+        @param draw_capacity: 抽水容量
+        @param data_manager_obj: 数据管理对象
+        @return:
+        """
+        # 判断是否抽水  点击抽水情况
+        draw_scale = 1.0  # 抽水放大系数  不同船只抽水速度不一样
+        if self.ship_id == 8:  # 8号船放大1.2倍
+            draw_scale = 0.75
+        if self.ship_id == 9:  # 9号船放大1.4倍
+            draw_scale = 1.4
+        if b_draw:
+            send_data = 'S2,%d,%d,%dZ' % (bottle_id,
+                                          int(draw_deep * 10),
+                                          int(draw_scale * draw_capacity / 10))
+            if data_manager_obj.pre_draw_info != send_data:
+                data_manager_obj.pre_draw_info = send_data
+                print('设置数据#########################')
+                data_manager_obj.set_send_data(send_data, 2)
+        else:
+            send_data = 'S2,0,0,0Z'
+            if data_manager_obj.pre_draw_info != send_data:
+                data_manager_obj.pre_draw_info = send_data
+                print('设置数据#########################')
+                data_manager_obj.set_send_data(send_data, 2)
+
+    # 判断怎么样抽水
+    def draw(self, data_manager_obj):
+        """
+        抽水控制函数
+        """
+        # 前端发送抽水深度和抽水时间
+        if data_manager_obj.server_data_obj.mqtt_send_get_obj.b_draw:
+            temp_draw_bottle_id = data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_bottle_id
+            temp_draw_deep = data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_deep
+            temp_draw_capacity = data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_capacity
+            # 水质检测船到点检测设置默认参数
+            temp_draw_bottle_id = 7
+            if temp_draw_deep is None:
+                temp_draw_deep = 0.5
+            if temp_draw_capacity is None:
+                temp_draw_capacity = 1000
+            data_manager_obj.current_draw_bottle = 7
+            data_manager_obj.current_draw_deep = 0.5
+            data_manager_obj.current_draw_capacity = 1000
+            # print('#################前端设置抽水瓶号 深度 容量:', temp_draw_bottle_id, temp_draw_deep, temp_draw_capacity)
+            self.draw_sub(True, temp_draw_bottle_id, temp_draw_deep, temp_draw_capacity, data_manager_obj)
+            # 收到32返回抽水结束
+            if data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id) and \
+                    data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id)[1] == 4 and \
+                    data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id)[
+                        0] == data_manager_obj.current_draw_bottle:
+                print('抽水完成设置draw为0', data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id))
+                data_manager_obj.server_data_obj.mqtt_send_get_obj.b_draw = 0
+                data_manager_obj.draw_over_bottle_info = [data_manager_obj.current_draw_bottle,
+                                                          data_manager_obj.current_draw_deep,
+                                                          data_manager_obj.current_draw_capacity]
+                if data_manager_obj.current_draw_bottle == 7:
+                    data_manager_obj.b_draw_over_send_detect_data = 1
+                else:
+                    data_manager_obj.b_draw_over_send_data = 1
+        # 前端没发送抽水且不是任务抽水
+        elif not data_manager_obj.server_data_obj.mqtt_send_get_obj.b_draw and not data_manager_obj.sort_task_list:
+            data_manager_obj.dump_draw_list = [0, 0]
+            # print('结束抽水')
+            self.draw_sub(False, 0, 0, 0, data_manager_obj)
+        if data_manager_obj.current_arriver_index == len(data_manager_obj.sort_task_done_list):
+            return
+        # if data_manager_obj.current_arriver_index is not None:
+        # print('到达任务点11111111',
+        #       data_manager_obj.sort_task_done_list,
+        #       data_manager_obj.current_arriver_index,)
+        # print('到达任务点222222222222',data_manager_obj.sort_task_done_list[data_manager_obj.current_arriver_index])
+        if data_manager_obj.current_arriver_index is not None and data_manager_obj.sort_task_done_list and \
+                data_manager_obj.sort_task_done_list[
+                    data_manager_obj.current_arriver_index].count(0) > 0:  # 是否是使用预先存储任务
+            # data_manager_obj.server_data_obj.mqtt_send_get_obj.b_draw = 1
+            data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_bottle_id = None
+            data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_deep = None
+            data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_capacity = None
+            index = data_manager_obj.sort_task_done_list[data_manager_obj.current_arriver_index].index(0)
+            temp_draw_bottle_id = 7
+            temp_draw_deep = 50
+            temp_bottle_amount = 20
+            # 将存储的数据映射为真实深度和容量
+            if temp_draw_deep == 10:
+                bottle_deep = 0.1
+            elif temp_draw_deep == 20:
+                bottle_deep = 0.2
+            elif temp_draw_deep == 30:
+                bottle_deep = 0.3
+            elif temp_draw_deep == 40:
+                bottle_deep = 0.4
+            else:
+                bottle_deep = config.draw_deep
+            if temp_bottle_amount == 10:
+                bottle_amount = 500
+            elif temp_bottle_amount == 20:
+                bottle_amount = 1000
+            elif temp_bottle_amount == 30:
+                bottle_amount = 2000
+            elif temp_bottle_amount == 40:
+                bottle_amount = 3000
+            elif temp_bottle_amount == 50:
+                bottle_amount = 4000
+            else:
+                bottle_amount = config.max_draw_capacity
+            data_manager_obj.current_draw_bottle = temp_draw_bottle_id
+            data_manager_obj.current_draw_deep = bottle_deep
+            data_manager_obj.current_draw_capacity = bottle_amount
+            print('index temp_draw_bottle_id,temp_draw_deep,temp_draw_time', index, temp_draw_bottle_id,
+                  bottle_deep,
+                  bottle_amount)
+            self.draw_sub(True, temp_draw_bottle_id, bottle_deep, bottle_amount, data_manager_obj)
+            print('data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id)',
+                  data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id))
+            print('data_manager_obj.current_draw_bottle', data_manager_obj.current_draw_bottle)
+            if data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id) and \
+                    data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id)[1] == 4 and \
+                    data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id)[
+                        0] == data_manager_obj.current_draw_bottle:
+                data_manager_obj.is_need_update_plan = 1  # 抽完水后需要更新任务状态
+                data_manager_obj.sort_task_done_list[data_manager_obj.current_arriver_index][index] = 1
+                if data_manager_obj.sort_task_done_list[data_manager_obj.current_arriver_index].count(0) == 0:
+                    data_manager_obj.server_data_obj.mqtt_send_get_obj.b_draw = 0
+                print('##########任务抽水完成一个', data_manager_obj.current_arriver_index,
+                      data_manager_obj.sort_task_done_list)
+                data_manager_obj.draw_over_bottle_info = [data_manager_obj.current_draw_bottle,
+                                                          data_manager_obj.current_draw_deep,
+                                                          data_manager_obj.current_draw_capacity]
+                if data_manager_obj.current_draw_bottle == 5:
+                    data_manager_obj.b_draw_over_send_detect_data = 1
+                else:
+                    data_manager_obj.b_draw_over_send_data = 1
+        # 前端没抽水 且任务模式当前点位全部抽完 则收回杆子
+        elif not data_manager_obj.server_data_obj.mqtt_send_get_obj.b_draw and \
+                data_manager_obj.current_arriver_index is not None and data_manager_obj.sort_task_done_list and \
+                data_manager_obj.sort_task_done_list[
+                    data_manager_obj.current_arriver_index].count(0) == 0:
+            data_manager_obj.dump_draw_list = [0, 0]
+            # print('任务停止抽水')
+            # print('data_manager_obj.server_data_obj.mqtt_send_get_obj.b_draw',
+            #       data_manager_obj.server_data_obj.mqtt_send_get_obj.b_draw)
+            # print('data_manager_obj.is_need_update_plan', data_manager_obj.is_need_update_plan)
+            # print('self.tcp_server_obj.ship_draw_dict.get(self.ship_id)',
+            #       data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id))
+            self.draw_sub(False, 0, 0, 0, data_manager_obj)
+        # 更新倒计时抽水时间
+        # print('22222222222',data_manager_obj.tcp_server_obj.ship_draw_dict,self.ship_id)
+        if data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id):
+            if data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id)[1] == 2:
+                data_manager_obj.dump_draw_list = [
+                    data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id)[2],
+                    data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id)[3]]
+            else:
+                data_manager_obj.dump_draw_list = [0, 0]
+
+    # 预先存储任务   计算距离并排序
+    def check_task(self, data_manager_obj):
+        if data_manager_obj.server_data_obj.mqtt_send_get_obj.get_task == 1 and data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id:
+            print("获取任务task_id", data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id)
+            url = config.http_get_task + "?taskId=%s" % data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id
+            return_data = data_manager_obj.server_data_obj.send_server_http_data('GET', '', url,
+                                                                                 token=data_manager_obj.token)
+            task_data_list = None
+            if return_data:
+                content_data = json.loads(return_data.content)
+                print('获取任务数据', content_data)
+                if not content_data.get('code'):
+                    data_manager_obj.logger.info({'获取任务 GET请求失败': content_data})
+                if content_data.get('data') and content_data.get('data').get('records') and len(
+                        content_data.get('data').get('records')) == 1:
+                    task_data = content_data.get('data').get('records')[0].get('task')
+                    temp_task_data = content_data.get('data').get('records')[0].get('taskTem')
+                    if content_data.get('data').get('records')[0].get('creator'):
+                        data_manager_obj.creator = content_data.get('data').get('records')[0].get('creator')
+                    if temp_task_data:
+                        temp_task_data = json.loads(temp_task_data)
+                    task_data = json.loads(task_data)
+                    print('task_data', task_data)
+                    print('temp_task_data', temp_task_data)
+                    # 上次任务还没有完成继续任务
+                    if temp_task_data and content_data.get('data').get('records')[0].get('planId'):
+                        data_manager_obj.action_id = content_data.get('data').get('records')[0].get('planId')
+                        data_manager_obj.server_data_obj.mqtt_send_get_obj.action_type = 3
+                        task_data_list = temp_task_data
+                    else:
+                        task_data_list = task_data
+            if not task_data_list:
+                print('############ 没有任务数据')
+                return
+            data_manager_obj.server_data_obj.mqtt_send_get_obj.get_task = 0
+            data_manager_obj.task_list = task_data_list
+            data_manager_obj.sort_task_list = task_data_list
+            data_manager_obj.has_task = 1
+
+    # 任务
+    def task(self, data_manager_obj):
+        if len(data_manager_obj.sort_task_list) == 0:
+            self.check_task(data_manager_obj)  # 检查是否需要发送预先存储任务
+        # 有任务发送任务状态 更新任务为正在执行
+        if data_manager_obj.has_task == 1:
+            # 任务模式自己规划路径不再重新规划路径
+            # 存放路径点和监测点
+            path_planning_data = {"sampling_points": [],
+                                  "path_points": []
+                                  }
+            print('data_manager_obj.sort_task_list', data_manager_obj.sort_task_list)
+            for i in data_manager_obj.sort_task_list:
+                if i.get("type") == 1:  # 检测点添加到监测点轨迹中
+                    data_manager_obj.sample_index.append(1)
+                    data_manager_obj.sort_task_done_list.append([0])
+                else:
+                    data_manager_obj.sample_index.append(0)
+                    data_manager_obj.sort_task_done_list.append([])
+                path_planning_data.get("sampling_points").append(i.get("lnglat"))
+                path_planning_data.get("path_points").append(i.get("lnglat"))
+            data_manager_obj.send(method='mqtt',
+                                  topic='path_planning_%s' % self.ship_code,
+                                  data=path_planning_data,
+                                  qos=0)
+            print('mqtt任务经纬度数据', path_planning_data)
+            print("task_id", data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id)
+            data_manager_obj.has_task = 0
+        # 更新剩余任务点 到点减一 所有点到达后设置任务状态为0
+        if data_manager_obj.server_data_obj.mqtt_send_get_obj.cancel_action == 1:  # 取消行动
+            print('data_manager_obj.server_data_obj.mqtt_send_get_obj.cancel_action',
+                  data_manager_obj.server_data_obj.mqtt_send_get_obj.cancel_action)
+            data_manager_obj.server_data_obj.mqtt_send_get_obj.cancel_action = 0
+            data_manager_obj.server_data_obj.mqtt_send_get_obj.control_move_direction = -1
+            update_plan_data = {"id": data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id,
+                                # "taskTem": '[]',
+                                "state": 0,
+                                "deviceId": self.ship_code,
+                                "planId": data_manager_obj.action_id
+                                }
+            print('更新任务消息', update_plan_data)
+            data_manager_obj.sort_task_list = []
+            return_data = data_manager_obj.server_data_obj.send_server_http_data('POST',
+                                                                                 update_plan_data,
+                                                                                 config.http_plan_update,
+                                                                                 token=data_manager_obj.token)
+            if return_data:
+                content_data = json.loads(return_data.content)
+                if content_data.get("code") != 200:
+                    data_manager_obj.logger.error('更新任务失败')
+                else:
+                    data_manager_obj.logger.info({'更新任务': content_data})
+                    data_manager_obj.server_data_obj.mqtt_send_get_obj.cancel_action = 0
+                    data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id = ''
+                    data_manager_obj.action_id = None
+                    data_manager_obj.server_data_obj.mqtt_send_get_obj.action_name = ""
+        if data_manager_obj.is_plan_all_arrive:
+            print('data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id',
+                  data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id)
+            print('data_manager_obj.is_plan_all_arrive', data_manager_obj.is_plan_all_arrive)
+            update_plan_data = {"id": data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id,
+                                "taskTem": '[]',
+                                "state": 0,
+                                "deviceId": self.ship_code,
+                                "planId": ""
+                                }
+            print('全部完成更新任务消息', update_plan_data)
+            data_manager_obj.sort_task_list = []
+            return_data = data_manager_obj.server_data_obj.send_server_http_data('POST',
+                                                                                 update_plan_data,
+                                                                                 config.http_plan_update,
+                                                                                 token=data_manager_obj.token)
+            if return_data:
+                content_data = json.loads(return_data.content)
+                if content_data.get("code") != 200:
+                    data_manager_obj.logger.error('更新任务失败')
+                else:
+                    data_manager_obj.logger.info({'更新任务': content_data})
+                    data_manager_obj.is_need_update_plan = 0
+                    data_manager_obj.is_plan_all_arrive = 0
+                    data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id = ''
+                    data_manager_obj.action_id = None
+                    data_manager_obj.server_data_obj.mqtt_send_get_obj.action_name = ""
+            data_manager_obj.server_data_obj.mqtt_send_get_obj.action_type = 2
+        if data_manager_obj.is_need_update_plan == 1 and not data_manager_obj.is_plan_all_arrive and data_manager_obj.server_data_obj.mqtt_send_get_obj.sampling_points_status.count(
+                0) > 0 and data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id:
+            print('#################data_manager_obj.is_need_update_plan', data_manager_obj.is_need_update_plan)
+            print('#################data_manager_obj.server_data_obj.mqtt_send_get_obj.sampling_points_status',
+                  data_manager_obj.server_data_obj.mqtt_send_get_obj.sampling_points_status)
+            if len(data_manager_obj.server_data_obj.mqtt_send_get_obj.sampling_points_status) > 0:
+                index = data_manager_obj.server_data_obj.mqtt_send_get_obj.sampling_points_status.index(0)
+                sampling_point_gps_list = []
+                for i in range(index, len(data_manager_obj.server_data_obj.mqtt_send_get_obj.sampling_points_status)):
+                    sampling_point_gps = data_manager_obj.server_data_obj.mqtt_send_get_obj.sampling_points[i]
+                    sampling_point_gps_list.append(
+                        {"lnglat": sampling_point_gps, "type": data_manager_obj.sample_index[i]})
+            else:
+                sampling_point_gps_list = []
+            update_plan_data = {"id": data_manager_obj.server_data_obj.mqtt_send_get_obj.task_id,
+                                "taskTem": json.dumps(sampling_point_gps_list),
+                                "state": 1,
+                                "deviceId": self.ship_code,
+                                "planId": data_manager_obj.action_id
+                                }
+            print('更新任务消息', update_plan_data)
+            return_data = data_manager_obj.server_data_obj.send_server_http_data('POST',
+                                                                                 update_plan_data,
+                                                                                 config.http_plan_update,
+                                                                                 token=data_manager_obj.token)
+            if return_data:
+                content_data = json.loads(return_data.content)
+                if content_data.get("code") != 200:
+                    data_manager_obj.logger.error('更新任务失败')
+                else:
+                    data_manager_obj.logger.info({'更新任务': content_data})
+                    data_manager_obj.is_need_update_plan = 0
+
+    # 上传数据
+    def send_data(self, data_manager_obj):
+        # 上传检测数据
+        if data_manager_obj.b_draw_over_send_detect_data:
+            if data_manager_obj.server_data_obj.mqtt_send_get_obj.pool_code:
+                data_manager_obj.data_define_obj.pool_code = data_manager_obj.server_data_obj.mqtt_send_get_obj.pool_code
+            detect_data = data_manager_obj.data_define_obj.detect
+            detect_data.update({'mapId': data_manager_obj.data_define_obj.pool_code})
+            detect_data.update({'deviceId': data_manager_obj.ship_code})
+            # 更新真实数据
+            mqtt_send_detect_data = data_define.fake_detect_data(detect_data)
+            if self.ship_id in data_manager_obj.tcp_server_obj.ship_detect_data_dict:
+                ec_data = data_manager_obj.tcp_server_obj.ship_detect_data_dict.get(self.ship_id)[3]
+                ec_data = data_valid.valid_water_data(config.WaterType.EC, ec_data)
+                mqtt_send_detect_data['water'].update({'EC': ec_data})
+                do_data = data_manager_obj.tcp_server_obj.ship_detect_data_dict.get(self.ship_id)[2]
+                do_data = data_valid.valid_water_data(config.WaterType.DO, do_data)
+                mqtt_send_detect_data['water'].update({'DO': do_data})
+                td_data = data_manager_obj.tcp_server_obj.ship_detect_data_dict.get(self.ship_id)[4]
+                td_data = data_valid.valid_water_data(config.WaterType.TD, td_data)
+                mqtt_send_detect_data['water'].update({'TD': td_data})
+                ph_data = data_manager_obj.tcp_server_obj.ship_detect_data_dict.get(self.ship_id)[1]
+                ph_data = data_valid.valid_water_data(config.WaterType.pH, ph_data)
+                mqtt_send_detect_data['water'].update({'pH': ph_data})
+                wt_data = data_manager_obj.tcp_server_obj.ship_detect_data_dict.get(self.ship_id)[0]
+                wt_data = data_valid.valid_water_data(config.WaterType.wt, wt_data)
+                mqtt_send_detect_data['water'].update({'wt': wt_data})
+            # 替换键
+            for k_all, v_all in data_define.name_mappings.items():
+                for old_key, new_key in v_all.items():
+                    pop_value = mqtt_send_detect_data[k_all].pop(old_key)
+                    mqtt_send_detect_data[k_all].update({new_key: pop_value})
+            # 添加经纬度
+            mqtt_send_detect_data.update({'jwd': json.dumps(data_manager_obj.lng_lat)})
+            mqtt_send_detect_data.update({'gjwd': json.dumps(data_manager_obj.gaode_lng_lat)})
+            mqtt_send_detect_data.update(mqtt_send_detect_data.get('water'))
+            if data_manager_obj.action_id:
+                mqtt_send_detect_data.update({'planId': data_manager_obj.action_id})
+            # if data_manager_obj.creator:
+            #     mqtt_send_detect_data.update({"creator": data_manager_obj.creator})
+            # # 14号山西船有化学需氧量COD和氨氮NH3_NH4，没有电导率ED和浊度TD所以将对应位置数据清0
+            if int(self.ship_id) == 14:
+                mqtt_send_detect_data['water'].update({'ec': 0})
+                mqtt_send_detect_data['water'].update({'td': 0})
+                mqtt_send_detect_data.update({'ec': 0})
+                mqtt_send_detect_data.update({'td': 0})
+            else:
+                mqtt_send_detect_data['water'].update({'cod': 0})
+                mqtt_send_detect_data['water'].update({'nh3Nh4': 0})
+                mqtt_send_detect_data.update({'cod': 0})
+                mqtt_send_detect_data.update({'nh3Nh4': 0})
+            print('水质数据', mqtt_send_detect_data)
+            data_manager_obj.send(method='mqtt', topic='detect_data_%s' % data_manager_obj.data_define_obj.ship_code,
+                                  data=mqtt_send_detect_data,
+                                  qos=0)
+            if len(data_manager_obj.data_define_obj.pool_code) > 0:
+                mqtt_send_detect_data.update({'mapId': data_manager_obj.data_define_obj.pool_code})
+                return_data = data_manager_obj.server_data_obj.send_server_http_data('POST',
+                                                                                     mqtt_send_detect_data,
+                                                                                     config.http_data_save,
+                                                                                     token=data_manager_obj.token)
+                print('发送检测数据返回:', return_data, json.loads(return_data.content))
+                if return_data:
+                    content_data = json.loads(return_data.content)
+                    if content_data.get("code") not in [200, 20000]:
+                        data_manager_obj.logger.error({'POST发送检测请求失败': content_data})
+                    else:
+                        # 发送结束改为False
+                        data_manager_obj.b_draw_over_send_detect_data = False
+                    data_manager_obj.logger.info({"本地保存检测数据": mqtt_send_detect_data})
+                    # if data_manager_obj.server_data_obj.mqtt_send_get_obj.scan_gap == 25:
+                    #     data_manager_obj.server_data_obj.mqtt_send_get_obj.b_draw = 1

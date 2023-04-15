@@ -26,4 +26,5 @@ def delete_map(ship_code, mapid=None):
 
 
 if __name__ == '__main__':
-    delete_map(ship_code='XXLJC4LCGSCSD1DA007', mapid='1472131549474172929')
+    delete_map(ship_code='XXLJC4LCGSCSD1DA011', mapid='1607268844699189250')
+

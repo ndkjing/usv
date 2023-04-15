@@ -620,9 +620,9 @@ class WebServer:
                             self.server_data_obj_dict.get(
                                 ship_code).mqtt_send_get_obj.token = return_login_data_json.get("data").get("token")
                         else:
-                            print('return_login_data', return_login_data_json)
+                            print('登录返回失败 %s '%ship_code, return_login_data_json)
                     else:
-                        print('return_login_data', return_login_data)
+                        print('登录请求失败 %s '%ship_code, return_login_data)
                 if not self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.token:
                     continue
                 # 收到数据认为上线

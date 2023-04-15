@@ -262,7 +262,9 @@ class DataDefine:
             ('bottle_setting_%s' % ship_code, 0),
             ('adcp_setting_%s' % ship_code, 0),
             ('deep_data_%s' % ship_code, 0),
-            ('pump_steer_abnormal_%s' % ship_code, 0),
+            ('pump_steer_abnormal_%s' % ship_code, 0),  # 抽水泵异常情况上传
+            ('dock_position_%s' % ship_code, 0),  # 船坞返航点设置
+            ('dock_setting_%s' % ship_code, 0),  # 船坞运动数据设置
         )
         self.pool_code = ''
         self.water = self.water_data()

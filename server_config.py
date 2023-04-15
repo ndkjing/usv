@@ -30,15 +30,15 @@ if local_http:
 else:
     http_domin = 'peri.xxlun.com'
 # 注册新的湖泊ID
-http_save = 'http://%s/union/map/save' % http_domin
+http_save = 'https://%s/union/map/save' % http_domin
 # 更新湖泊轮廓
-http_update_map = 'http://%s/union/map/update' % http_domin
+http_update_map = 'https://%s/union/map/update' % http_domin
 # 获取船状态
-http_get_ship_status = 'http://%s/union/admin/xxl/data/state' % http_domin
+http_get_ship_status = 'https://%s/union/admin/xxl/data/state' % http_domin
 # 更新船状态
-http_set_ship_status = 'http://%s/union/device/update' % http_domin
+http_set_ship_status = 'https://%s/union/device/update' % http_domin
 # 获取token
-http_get_token = "http://%s/union/device/login" % http_domin
+http_get_token = "https://%s/union/device/login" % http_domin
 
 
 def update_base_setting(ship_code_):
