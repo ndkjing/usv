@@ -1218,10 +1218,18 @@ class MultiDrawDetect:
             temp_draw_bottle_id = data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_bottle_id
             temp_draw_deep = data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_deep
             temp_draw_capacity = data_manager_obj.server_data_obj.mqtt_send_get_obj.draw_capacity
+            # 水质检测船到点检测设置默认参数
+            # if not temp_draw_deep or not temp_draw_bottle_id or not temp_draw_capacity:  # 有参数没有设置
+            #     temp_draw_deep = 0.5
+            #     temp_draw_bottle_id = 7
+            #     temp_draw_capacity = 1000
             data_manager_obj.current_draw_bottle = temp_draw_bottle_id
             data_manager_obj.current_draw_deep = temp_draw_deep
             data_manager_obj.current_draw_capacity = temp_draw_capacity
             # print('#################前端设置抽水瓶号 深度 容量:', temp_draw_bottle_id, temp_draw_deep, temp_draw_capacity)
+            data_manager_obj.current_draw_bottle = temp_draw_bottle_id
+            data_manager_obj.current_draw_deep = temp_draw_deep
+            data_manager_obj.current_draw_capacity = temp_draw_capacity
             self.draw_sub(True, temp_draw_bottle_id, temp_draw_deep, temp_draw_capacity, data_manager_obj)
             # 当抽水消息被确认后再判断抽水是否结束  收到32返回抽水结束
             if data_manager_obj.tcp_server_obj.ship_draw_dict.get(self.ship_id) and \

@@ -23,24 +23,24 @@ import json
 #     else:
 #         return False
 
-def post_data(url, file, id=0):
+def post_data(url, file, id=0,token=None):
     """
         :param url: 接口url
         :param file: 上传文件的路径
         :return:
         """
-    print(file)
+    print('请求发送图片:',url,token)
     files = {"file": open(file, "rb")}
     s = requests.session()
     payload_header = {
         # 'Content-Type': 'multipart/form-data',
     }
     # token='eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJhZWU4OWJhNTc2NTA0YWE0YTUwNTY3YTI1NTA1ZjAxNCIsInN1YiI6IjE2MzgwMjAzODUyNTI5MDA4NjUiLCJpc3MiOiJzZyIsImlhdCI6MTY4MDc1OTg0NywiZXhwIjoxNjgwODQ2MjQ3fQ.cIz7QlbzOSDkV3HLEjNcoMKGce7YxBdJUrQ-xCMaHMQ'
-    # if token:
-    #     payload_header.update({"token": token})
+    if token:
+        payload_header.update({"token": token})
     r = s.post(url, files=files, headers=payload_header,verify=False)  #headers=payload_header,
     r_json = r.json()
-    print('r', r_json)
+    print('上传文件:', r_json)
     if r_json.get('success'):
         return r_json.get('data').get('picName')
     else:

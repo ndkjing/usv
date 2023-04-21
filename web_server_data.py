@@ -15,7 +15,7 @@ import time
 import json
 import requests
 import distribution_map
-
+import upload_file
 
 class ServerData:
     def __init__(self, logger,
@@ -147,7 +147,6 @@ class MqttSendGet:
         # 行驶轨迹确认ID 与是否确认
         self.path_id = None
         self.path_id_confirm = None
-
         # 前后左右移动控制键　0 为前进　90 度向左　　180 向后　　270向右　　360为停止
         self.control_move_direction = str(360)
         # 测量控制位　0为不采样　1为采样
@@ -183,6 +182,8 @@ class MqttSendGet:
         self.alarm_picture_data = {}
         self.action_type = 0
         self.action_id = ""
+        self.delete_pool_mapId = ""
+        self.delete_pool_deviceId = ""
 
     # 断开MQTt回调
     def on_disconnect_callback(self, client, userdata, rc):
@@ -265,7 +266,6 @@ class MqttSendGet:
             self.logger.info({'topic': topic,
                               'target_lng_lat': self.target_lng_lat,
                               })
-
         # 用户设置自动求取检测点经纬度
         elif topic == 'auto_lng_lat_%s' % self.ship_code:
             auto_lng_lat_data = json.loads(msg.payload)
@@ -285,7 +285,6 @@ class MqttSendGet:
                               'col_gap': self.col_gap,
                               'safe_gap': self.safe_gap,
                               'round_pool_gap': self.round_pool_gap})
-
         # 返回路径规划点
         elif topic == 'path_planning_%s' % self.ship_code:
             path_planning_data = json.loads(msg.payload)
@@ -297,7 +296,6 @@ class MqttSendGet:
             self.logger.info({'topic': topic,
                               'path_points': path_planning_data.get('path_points'),
                               })
-
         # 用户确认轨迹
         elif topic == 'path_planning_confirm_%s' % self.ship_code:
             path_planning_confirm_data = json.loads(msg.payload)
@@ -314,7 +312,6 @@ class MqttSendGet:
                               'path_id': path_planning_confirm_data.get('path_id'),
                               'path_id_confirm': path_planning_confirm_data.get('confirm'),
                               })
-
         # 启动设备
         elif topic == 'start_%s' % self.ship_code:
             start_data = json.loads(msg.payload)
@@ -323,7 +320,6 @@ class MqttSendGet:
                 return
             self.b_start = int(start_data.get('search_pattern'))
             self.logger.info({'topic': topic, 'b_start': start_data.get('search_pattern')})
-
         # 湖泊id
         elif topic == 'pool_info_%s' % self.ship_code:
             pool_info_data = json.loads(msg.payload)
@@ -354,34 +350,35 @@ class MqttSendGet:
             distribution_map_data = json.loads(msg.payload)
             print('distribution_map_data')
             if distribution_map_data.get("deviceId"):
+                deviceId = distribution_map_data.get("deviceId")
+                mapId = distribution_map_data.get("mapId")
+                planId = distribution_map_data.get("planId")
+                data_type = distribution_map_data.get("data_type")
                 # 请求数据
-                distribution_info = distribution_map.save_geo_json_map(deviceId=distribution_map_data.get("deviceId"),
-                                                                       mapId=distribution_map_data.get("mapId"),
-                                                                       startTime=distribution_map_data.get("startTime"),
-                                                                       data_type=distribution_map_data.get("data_type"),
-                                                                       endTime=distribution_map_data.get("endTime"))
+                distribution_info = distribution_map.save_geo_json_map(deviceId=deviceId,
+                                                                       mapId=mapId,
+                                                                       planId=planId,
+                                                                       data_type=data_type,
+                                                                       token=self.token)
                 self.height_width = distribution_info[1]
                 if distribution_info[0] == 2:
                     # 发送到mqtt话题
                     self.need_send_distribution = 2
                 else:
                     # 绘制地图
-                    distribution_map.MyOrdinaryKriging(distribution_map_data.get("deviceId"),
-                                                       distribution_map_data.get("data_type"))
+                    distribution_map.MyOrdinaryKriging(planId,
+                                                       data_type,
+                                                       )
                     # 发送给服务器
-                    import upload_file
-                    ip_local = '192.168.8.26:8009'
-                    ip_xxl = 'ship.xxlun.com'
-                    url_data = "https://%s/union/admin/uploadFile" % ip_xxl
-                    file = "%s.png" % distribution_map_data.get("deviceId")
-                    print('发送数据到服务器')
+                    file_target = "%s_%s.png" % (planId, data_type)
                     try:
                         # 发送数据到服务器
-                        save_name = upload_file.post_data(url=url_data, file=file, id=1)
-                        if save_name:
-                            self.need_send_distribution = 1
-                        else:
-                            self.need_send_distribution = 2
+                        print('发送数据到服务器')
+                        # url_data = "http://service.newship.xxlun.com:12345/union/user/uploadimage?deviceId=%s&planId=%s" % (
+                        #     deviceId, planId)
+                        url_data = "https://peri.xxlun.com/union/user/uploadimage?deviceId=%s&planId=%s" % (
+                            deviceId, planId)
+                        upload_file.post_data(url=url_data, file=file_target, token=self.token)
                     except Exception as e:
                         print('e', e)
                         self.need_send_distribution = 2
@@ -455,6 +452,16 @@ class MqttSendGet:
             self.logger.info({'topic': topic,
                               'action_data': action_data,
                               })
+
+        # 船坞相关设置
+        elif topic == 'delete_pool_%s' % self.ship_code:
+            delete_pool_data = json.loads(msg.payload)  # a_delete_status
+            self.logger.info({'收到删除湖泊数据': delete_pool_data})
+            if delete_pool_data.get("a_delete_status") is None and delete_pool_data.get(
+                    "mapId") is not None and delete_pool_data.get("deviceId") is not None:
+                self.delete_pool_mapId = delete_pool_data.get("mapId")
+                self.delete_pool_deviceId = delete_pool_data.get("deviceId")
+                self.logger.info({'确定删除湖泊数据': delete_pool_data})
 
     # 发布消息
     def publish_topic(self, topic, data, qos=0):

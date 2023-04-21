@@ -250,6 +250,8 @@ class MqttSendGet:
         self.abnormal_confirm = 0  # 用户确认水泵抽水异常，舵机堵转标志位收到确认1后就停止发送
         self.dock_lng_lat = []  # 船坞返航经纬度
         self.dock_direction = None  # 船坞返航角度
+        self.delete_pool_mapId = ""
+        self.delete_pool_deviceId = ""
 
     # 读取与写入配置
     def read_write_config(self, r_w=1, b_h=1):
@@ -370,9 +372,9 @@ class MqttSendGet:
                         self.row_gap = 0
                 self.control_move_direction = int(control_data.get('move_direction'))
                 if self.control_move_direction == -1:  # 停止时设置取消暂停
-                    self.pause_continue_data_type = 2   # 电机停止时设置取消暂停
-                    self.dock_lng_lat=[]   # 停止时设置取消船坞位置
-                    self.dock_direction=0  # 停止时设置取消船坞方向
+                    self.pause_continue_data_type = 2  # 电机停止时设置取消暂停
+                    self.dock_lng_lat = []  # 停止时设置取消船坞位置
+                    self.dock_direction = 0  # 停止时设置取消船坞方向
                 nwse_dict = {
                     0: 10,
                     90: 190,
@@ -426,12 +428,12 @@ class MqttSendGet:
                             send_info = "点击采样"
                         else:
                             self.b_draw = 0
-                    elif self.ship_type == config.ShipType.water_detect:
+                    elif self.ship_type == config.ShipType.water_detect:# 水质检测船可以不用设置采样瓶号 深度和容量
                         self.b_draw = int(switch_data.get('b_draw'))
                         self.draw_deep = 0.5
                         self.draw_capacity = 1000
                         self.draw_bottle_id = 7
-                    elif self.ship_type == config.ShipType.multi_draw_detect:
+                    elif self.ship_type == config.ShipType.multi_draw_detect:# 采样检测船可以只设置瓶号 不用设置采样深度和容量
                         self.b_draw = int(switch_data.get('b_draw'))
                         if self.draw_bottle_id == 7:
                             if not self.draw_deep:
@@ -913,14 +915,19 @@ class MqttSendGet:
                 if abnormal_data.get("confirm") is not None:
                     self.abnormal_confirm = int(abnormal_data.get("confirm"))
                     self.logger.info({'pump_steer_abnormal_': abnormal_data})
-
-            # 船坞相关设置
             elif topic == 'dock_position_%s' % self.ship_code:
                 dock_position_data = json.loads(msg.payload)
                 if dock_position_data.get("dock_lng_lat") is not None:
-                    self.dock_lng_lat = int(dock_position_data.get("dock_lng_lat"))
-                    self.dock_direction = int(dock_position_data.get("dock_direction"))
-                    self.logger.info({'船坞返航设置消息': dock_position_data})
+                    self.dock_lng_lat = dock_position_data.get("dock_lng_lat")
+                    self.dock_direction = dock_position_data.get("dock_direction")
+                    self.logger.info({'船坞返航': dock_position_data})
+
+            # 提示采样/检测过程中舵机被堵转、水泵出现空抽
+            elif topic == 'pump_steer_abnormal_%s' % self.ship_code:
+                abnormal_data = json.loads(msg.payload)
+                if abnormal_data.get("confirm") is not None:
+                    self.abnormal_confirm = int(abnormal_data.get("confirm"))
+                    self.logger.info({'pump_steer_abnormal_': abnormal_data})
         except Exception as e:
             self.logger.error({'error': e})
 

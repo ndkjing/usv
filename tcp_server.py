@@ -264,7 +264,7 @@ class TcpServer:
                                 self.ship_id_send_dict[ship_id] = temp_info_list
                                 # print('22222222222222222self.ship_id_send_dict', self.ship_id_send_dict)
                             # print('3333333333333333333self.ship_id_send_dict.get(ship_id)', self.ship_id_send_dict)
-                        if time.time() - last_send_time > 2:  # 超时情空数据
+                        if time.time() - last_send_time > 2:  # 超时清除障碍物数据
                             self.ship_obstacle_data_dict.update({ship_id: {}})
                         if "Operating" in recv_content:
                             server_logger.error({"树莓派重启": time.asctime(time.localtime(time.time()))})

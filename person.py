@@ -77,7 +77,7 @@ class DetectVideo:
         # res = cv.resize(image, (image.shape[1], image.shape[0]), interpolation=cv.INTER_AREA)
         # cv.imwrite(file_target, image, [int(cv.IMWRITE_JPEG_QUALITY), 70])
         # time.sleep(100000)
-        save_name = upload_file.post_data(url=self.url_data, file=file_target)
+        save_name = upload_file.post_data(url=self.url_data, file=file_target)  # 请求原因放在URL中
         if save_name:
             print('save_name', save_name)
             send_data = {

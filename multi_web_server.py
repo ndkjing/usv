@@ -17,6 +17,7 @@ import server_data_define
 import server_config
 import draw_img
 import config
+import delete_mapid
 
 
 class WebServer:
@@ -132,7 +133,7 @@ class WebServer:
 
     # 状态检查函数，检查自身状态发送对应消息
     def find_pool(self):
-        pre_click_lng_lat=None
+        pre_click_lng_lat = None
         while True:
             # 循环等待一定时间
             time.sleep(0.1)
@@ -147,6 +148,31 @@ class WebServer:
                 for i in save_img_name_list:
                     os.remove(os.path.join(save_img_dir, i))
             for ship_code in server_config.ship_code_list:
+                # 删除湖泊
+                try:
+                    if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.delete_pool_mapId:
+                        delete_mapid.delete_map(
+                            self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.delete_pool_deviceId,
+                            self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.delete_pool_mapId)
+                        delete_pool_data = {
+                            # 设备号
+                            "deviceId": self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.delete_pool_deviceId,
+                            # 湖泊编号
+                            "mapId": self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.delete_pool_mapId,
+                            # 算法那边是否删除完成时候返回 1:删除完成
+                            "a_delete_status": 1
+                        }
+                        self.send(method='mqtt',
+                                  topic='delete_pool_%s' % self.server_data_obj_dict.get(
+                                      ship_code).mqtt_send_get_obj.delete_pool_deviceId,
+                                  ship_code=self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.delete_pool_deviceId,
+                                  data=delete_pool_data,
+                                  qos=0)
+                        print("删除湖泊发送mqtt消息:", delete_pool_data)
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.delete_pool_mapId = ""
+                        self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.delete_pool_deviceId = ""
+                except Exception as e_pool :
+                    self.logger.error({"删除湖泊数据错误:":e_pool})
                 save_map_path = os.path.join(server_config.save_map_dir, 'map_%s.json' % ship_code)
                 # 两种方式点击湖泊 新增和修改
                 if self.server_data_obj_dict.get(
@@ -508,7 +534,7 @@ class WebServer:
                 target_lng_lats=target_lng_lats,
                 b_show=False,
             )
-            print(return_gaode_lng_lat_path,'return_gaode_lng_lat_path')
+            print(return_gaode_lng_lat_path, 'return_gaode_lng_lat_path')
             # 当查找不成功时
             if isinstance(return_gaode_lng_lat_path, str) or return_gaode_lng_lat_path is None:
                 self.logger.error(return_gaode_lng_lat_path)
@@ -620,9 +646,9 @@ class WebServer:
                             self.server_data_obj_dict.get(
                                 ship_code).mqtt_send_get_obj.token = return_login_data_json.get("data").get("token")
                         else:
-                            print('登录返回失败 %s '%ship_code, return_login_data_json)
+                            print('登录返回失败 %s ' % ship_code, return_login_data_json)
                     else:
-                        print('登录请求失败 %s '%ship_code, return_login_data)
+                        print('登录请求失败 %s ' % ship_code, return_login_data)
                 if not self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.token:
                     continue
                 # 收到数据认为上线

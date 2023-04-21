@@ -1,6 +1,4 @@
 # 导入数据处理库
-import time
-
 import numpy as np
 import pandas as pd
 import plotnine
@@ -24,26 +22,17 @@ height_width = 100
 
 # 1 请求轮廓并保存为geojson
 def save_geo_json_map(deviceId="XXLJC4LCGSCAHSD0DA000",
-                    mapId = '1631946446780600322',
-                      planId="1648501925085827074",
-                      data_type="wt",
-                      token=None):
+                      mapId="1433665418824626178",
+                      startTime="2019-03-01",
+                      endTime="2022-03-01",
+                      data_type="wt"):
     global height_width
     print('data_type', data_type)
-    # deviceId = 'XXLJC4LCGSCSD1DA003'
-    # mapId = '1631946446780600322'
-    # planId = '1648501925085827074'
-    url1 = "https://peri.xxlun.com/union/water/list/1/1000"
-    url1 = url1 + "?deviceId=%s&mapId=%s&planId=%s&startTime=&endTime=" % (deviceId, mapId, planId)
+    url1 = "https://ship.xxlun.com/union/admin/xxl/data/getData"
+    url1 = url1 + "?deviceId=%s&mapId=%s&startTime=%s&endTime=%s" % (deviceId, mapId, startTime, endTime)
     print('url1', url1)
-    # 请求头设置
-    payloadHeader = {
-        'Content-Type': 'application/json',
-    }
-    if token:
-        payloadHeader.update({'token': token})
-    response1 = requests.get(url=url1, timeout=8, headers=payloadHeader)
-    # print('二维可视化请求数据返回', json.loads(response1.content))
+    response1 = requests.get(url=url1, timeout=8)
+    print('response1', response1)
     content_data1 = json.loads(response1.content)
     know_lon = []
     know_lat = []
@@ -52,17 +41,15 @@ def save_geo_json_map(deviceId="XXLJC4LCGSCAHSD0DA000",
     know_z_td = []
     know_z_ec = []
     know_z_wt = []
-    print('长度', len(content_data1.get("data").get("records")))
     # 判断是否有数据
-    if content_data1.get("code") == 200 and content_data1.get("data") and content_data1.get("data").get(
-            "records") and len(
-        content_data1.get("data").get("records")) > 0:
-        for i in content_data1.get("data").get("records"):
-            pH = round(float(i.get('ph')), 1)
-            doDO = round(float(i.get('doDo')), 1)
-            td = round(float(i.get('td')), 1)
-            ec = round(float(i.get('ec')), 1)
-            wt = round(float(i.get('wt')), 1)
+    if content_data1.get("success") and content_data1.get("data") and content_data1.get("data").get("data") and len(
+            content_data1.get("data").get("data").get("water")) > 0:
+        for i in content_data1.get("data").get("data").get("water"):
+            pH = round(float(i.get('ph')),1)
+            doDO = round(float(i.get('doDo')),1)
+            td = round(float(i.get('td')),1)
+            ec = round(float(i.get('ec')),1)
+            wt = round(float(i.get('wt')),1)
             gjwd = json.loads(i.get('gjwd'))
             know_lon.append(gjwd[0])
             know_lat.append(gjwd[1])
@@ -83,24 +70,24 @@ def save_geo_json_map(deviceId="XXLJC4LCGSCAHSD0DA000",
             draw_data['know_z'] = know_z_ec
         else:
             draw_data['know_z'] = know_z_wt
-        print('返回绘图数据:', draw_data['know_z'])
+        print('draw_dataknow_z',draw_data['know_z'])
     else:
         # 告诉用户没有数据
-        print('二维可视化绘图没有数据')
         return [2, height_width]
     # 2  请求数据并绘制绘制地图图片保存到本地
-    url2 = "https://peri.xxlun.com/union/map/list/0/10"
-    url2 = url2 + "?deviceId=%s&mapId=%s" % (deviceId, mapId)
-    response2 = requests.get(url=url2, timeout=8, headers=payloadHeader)
+    url2 = "https://ship.xxlun.com/union//admin/xxl/map/list/0/1"
+    url2 = url2 + "?mapId=%s" % mapId
+    response2 = requests.get(url=url2, timeout=8)
     content_data2 = json.loads(response2.content)
-    # print('content_data2', content_data2)
-    if content_data2.get("code") == 200 and content_data2.get("data") and \
-            content_data2.get("data").get("records") and \
-            len(content_data2.get("data").get("records")) > 0:
-        pool_lng_lats = json.loads(content_data2.get("data").get("records")[0].get("mapData"))
+    if content_data2.get("success") and content_data2.get("data") and \
+            content_data2.get("data").get("mapList") and \
+            content_data2.get("data").get("mapList").get("records") and \
+            len(content_data2.get("data").get("mapList").get("records")) > 0:
+        pool_lng_lats = json.loads(content_data2.get("data").get("mapList").get("records")[0].get("mapData"))
         pool_int_cnts = []  # 整形经纬度用于计算轮廓
         for i1 in pool_lng_lats:
             pool_int_cnts.append([int(i1[0] * 1000000), int(i1[1] * 1000000)])
+
         # 计算宽高比 近似用经纬度之比就可以
         (x, y, w, h) = cv2.boundingRect(np.asarray(pool_int_cnts))
         height_width = int((h / w) * 100)
@@ -125,7 +112,6 @@ def save_geo_json_map(deviceId="XXLJC4LCGSCAHSD0DA000",
         geojson_dict["coordinates"] = coordinates
         with open("map_geojson.json", 'w') as f:
             json.dump(geojson_dict, f)
-        print("保存geojson 数据")
         return [1, height_width]
     else:
         # 找不到地图
@@ -309,9 +295,9 @@ def idw_clip():
 
 
 # OrdinaryKriging 方法
-def MyOrdinaryKriging(planId, data_type):
+def MyOrdinaryKriging(deviceId, data_type):
     global height_width
-    print('水质类型:', data_type)
+    print('data_type', data_type)
     js = gpd.read_file(r"map_geojson.json")  # 读取geojson 文件
     js_box = js.geometry.total_bounds  # 获取包围框
     # 还是插入400*400的网格点  暂时使用100*100 网格大会比较清晰但是会导致内存不够和计算时间延长 根据电脑配置设置
@@ -365,15 +351,13 @@ def MyOrdinaryKriging(planId, data_type):
                               panel_grid_major_x=element_line(color="gray", size=.5),
                               panel_grid_major_y=element_line(color="gray", size=.5),
                           ))
-    save_img_name = r"%s_%s.png" % (planId, data_type)
-    file_target = "%s_%.png"
+    save_img_name = r"%s.png" % deviceId
     if os.path.exists(save_img_name):
         os.remove(save_img_name)
-    width = 5
-    height_width = int(width * height_width / 100.0)
-    if height_width > 4 * width:
-        height_width = 4 * width
-    print('保存图片路径%s 类型:%s' % (save_img_name, data_type))
+    width=5
+    height_width = int(width*height_width/100.0)
+    if height_width > 4*width:
+        height_width = 4*width
     Krig_inter_no_grid.save(save_img_name,
                             width=width, height=height_width, dpi=900, kwargs={"bbox_inches": 'tight'})
 

@@ -25,7 +25,7 @@ class DataDefine:
             ('alarm_picture_%s' % ship_code, 0),
             ('server_base_setting_%s' % ship_code, 0),
             ('action_%s' % ship_code, 0),
-
+            ('delete_pool_%s' % ship_code, 0),  # 删除湖泊设置
         )
         self.pool_code = ''
 
