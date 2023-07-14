@@ -1,0 +1,1 @@
+{"kp": "0.9", "ki": 0, "kd": 0.1, "max_pwm": 1800, "min_pwm": 1200, "left_motor_cw": 0, "right_motor_cw": 1, "stop_pwm": 1500, "network_backhome": "0", "energy_backhome": "0", "find_points_num": 5, "b_tsp": 0, "home_debug": 1, "obstacle_avoid_type": 0, "path_plan_type": 1, "calibration_compass": 0, "info_type": 2}
