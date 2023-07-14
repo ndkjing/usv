@@ -154,6 +154,17 @@ def get_x_y_distance(lon_lat0, lon_lat1):
     return x, y
 
 
+def distance_one_two_three(lng_lat_a,lng_lat_b,lng_lat_c):
+    """
+    求经纬度A点到 B C 点构成线的距离
+    """
+    distance_a_b = distanceFromCoordinate(lng_lat_a[0],lng_lat_a[1],lng_lat_b[0],lng_lat_b[1])
+    distance_a_c = distanceFromCoordinate(lng_lat_a[0],lng_lat_a[1],lng_lat_c[0],lng_lat_c[1])
+    distance_b_c = distanceFromCoordinate(lng_lat_b[0],lng_lat_b[1],lng_lat_c[0],lng_lat_c[1])
+    l = (distance_a_b+distance_a_c+distance_b_c)/2
+    s = (l*(l-distance_a_b)*(l-distance_a_c)*(l-distance_b_c))**0.5
+    return 2*s/distance_b_c
+
 if __name__ == '__main__':
     distance_all = 0
     list_l = [[114.384327, 30.484632], [114.384327, 30.484632], [114.384327, 30.484632], [114.384327, 30.484632],
@@ -277,6 +288,14 @@ if __name__ == '__main__':
     # 30.505588,114.528145
     distance = distanceFromCoordinate(114.504145, 30.501588, 114.528145, 30.505588)
     print('distance', distance)
-    temp = one_point_diatance_to_end(114.316966, 30.576768, 90, 1)
-    print(temp)
+    temp1 = one_point_diatance_to_end(114.316966, 30.576768, 90, 10)  # 30576767  114316861
+    print("temp1",temp1)
+    temp2 = one_point_diatance_to_end(114.316966, 30.576768, 180, 10)
+    print("temp2", temp2)
+    print("点到直线距离:",distance_one_two_three([114.316966, 30.576768],temp1,temp2))
+    print("点到点距离:",distanceFromCoordinate(temp1[0],temp1[1],temp2[0],temp2[1]))
+    temp = one_point_diatance_to_end(114.316966, 30.576768, 240, 10)
+    print("temp", temp)
+    temp = one_point_diatance_to_end(114.316966, 30.576768, 330, 10)
+    print("temp", temp)
     # current 114.432112, 30.522414 target 114.432112, 30.522414

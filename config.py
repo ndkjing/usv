@@ -41,28 +41,34 @@ class ShipType(enum.Enum):
     dock = 4
     adcp = 5
     multi_draw_detect = 6
-    multi_draw_detect_adcp = 7   #  采样检测+测深仪
+    multi_draw_detect_adcp = 7  # 采样检测+测深仪
+    adcp_draw_line = 8  # 测深仪+卷线
+
 
 # 船号对应类型
 ship_code_type_dict = {
     'XXLJC4LCGSCSD1DA002': ShipType.multi_draw_detect,  # 测试黑船
-    'XXLJC4LCGSCSD1DA003': ShipType.water_detect,
+    # 'XXLJC4LCGSCSD1DA003': ShipType.water_detect,
     'XXLJC4LCGSCSD1DA004': ShipType.multi_draw,
     'XXLJC4LCGSCSD1DA005': ShipType.water_detect,
     'XXLJC4LCGSCSD1DA007': ShipType.adcp,
     'XXLJC4LCGSCSD1DA008': ShipType.multi_draw_detect,
     'XXLJC4LCGSCSD1DA009': ShipType.water_detect,
-    'XXLJC4LCGSCSD1DA010': ShipType.multi_draw_detect,
+    'XXLJC4LCGSCSD1DA010': ShipType.multi_draw_detect,  # 第一个溢油船
     'XXLJC4LCGSCSD1DA011': ShipType.multi_draw_detect_adcp,  # 山西船 采样检测+测深仪
     'XXLJC4LCGSCSD1DA012': ShipType.multi_draw_detect,  # 福州
     'XXLJC4LCGSCSD1DA013': ShipType.multi_draw_detect,  # 漳州
     'XXLJC4LCGSCSD1DA014': ShipType.multi_draw_detect,  # 广西船 水质检测+1个采样+ADCP
     'XXLJC4LCGSCSD1DA015': ShipType.adcp,  # 看数据用账号
     'XXLJC4LCGSCSD1DA016': ShipType.multi_draw,  # 第二个溢油船
-    'XXLJC4LCGSCSD1DA017': ShipType.multi_draw_detect,  # 给安徽演示用采样检测船
-    'XXLJC4LCGSCSD1DA018': ShipType.multi_draw_detect,  # 给公司演示用采样检测船
-    'XXLJC4LCGSCSD1DA019': ShipType.dock,   # 测试用船坞船
-    'XXLJC4LCGSCSD1DA020': ShipType.adcp,  # 给公司演示用采样测深船
+    # 'XXLJC4LCGSCSD1DA017': ShipType.multi_draw_detect,  # 给安徽演示用采样检测船
+    'XXLJC4LCGSCSD1DA018': ShipType.multi_draw_detect,  # 给凉山采样检测船（实际采样船4个2000ml）
+    'XXLJC4LCGSCSD1DA019': ShipType.dock,  # 测试用船坞船
+    # 'XXLJC4LCGSCSD1DA020': ShipType.adcp,  # 给公司演示用采样测深船
+    'XXLJC4LCGSCSD1DA021': ShipType.adcp,  # 给海军工无人船
+    'XXLJC4LCGSCSD1DA022': ShipType.adcp,  # 公司多波束船
+    'XXLJC4LCGSCSD1DA023': ShipType.adcp_draw_line,  # 海南adcp+卷线皮艇船
+    'XXLJC4LCGSCSD1DA024': ShipType.adcp_draw_line,  # 海南adcp+卷线皮艇船
 }
 
 ship_id = 8  # 设备id
@@ -107,9 +113,9 @@ b_use_com_stc = 0  # 是否使用单片机硬件转接串口
 stc_port = '/dev/ttyUSB0'  # '/dev/ttyAMA0'
 stc_baud = 115200
 b_com_stc = os.path.exists(stc_port) and b_use_com_stc  # 判断是否存在以及是否使用
-local_http = False
+local_http = 0
 if local_http:
-    http_domin = '192.168.8.3:8008'
+    http_domin = '192.168.0.9:8008'
 else:
     http_domin = 'peri.xxlun.com'
 # http 接口
@@ -126,9 +132,14 @@ http_delete_task = 'https://%s/union/task/delTask' % http_domin
 # 上传日志接口
 http_log = 'https://%s/union/admin/xxl/log/save' % http_domin
 # 里程接口
-http_mileage_get = 'https://%s/union/mileage/get' % http_domin
-http_mileage_save = 'https://%s/union/mileage/save' % http_domin
-http_mileage_update = 'https://%s/union/mileage/update' % http_domin
+if local_http:
+    http_mileage_get = 'http://%s/union/mileage/get' % http_domin
+    http_mileage_save = 'http://%s/union/mileage/save' % http_domin
+    http_mileage_update = 'http://%s/union/mileage/update' % http_domin
+else:
+    http_mileage_get = 'https://%s/union/mileage/get' % http_domin
+    http_mileage_save = 'https://%s/union/mileage/save' % http_domin
+    http_mileage_update = 'https://%s/union/mileage/update' % http_domin
 # 发送手动记录路劲数据
 http_record_path = "https://%s/union/route/save" % http_domin
 # 获取手动记录轨迹
@@ -138,7 +149,12 @@ http_action_get = "https://%s/union/plan/save" % http_domin
 # 更新任务
 http_plan_update = "https://%s/union/task/update" % http_domin
 # 获取token
-http_get_token = "https://%s/union/device/login" % http_domin
+if local_http:
+    http_get_token = "http://%s/union/device/login" % http_domin
+    http_track_save = "http://service.newship.xxlun.com:12345/union/track/save"
+else:
+    http_get_token = "https://%s/union/device/login" % http_domin
+    http_track_save = "https://%s/union/track/save"% http_domin
 # 获取图片下载地址接口
 http_get_img_path = "https://%s/union/device/getPicUrl" % http_domin
 # 上传图片接口

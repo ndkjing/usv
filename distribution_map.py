@@ -361,7 +361,7 @@ def MyOrdinaryKriging(planId, data_type):
                               axis_ticks_major_x=element_blank(),
                               axis_ticks_major_y=element_blank(),
                               axis_text=element_text(size=12),
-                              axis_title=element_text(size=14),
+                              axis_title=element_text(size=12),
                               panel_grid_major_x=element_line(color="gray", size=.5),
                               panel_grid_major_y=element_line(color="gray", size=.5),
                           ))

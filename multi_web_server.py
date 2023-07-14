@@ -714,7 +714,7 @@ class WebServer:
                     self.server_data_obj_dict.get(
                         ship_code).mqtt_send_get_obj.is_reconnect_connected = False  # 设置等待连上为否
 
-            # ADCP 行动id计算湖泊深度图数据
+            # ADCP 行动id计算湖泊深度图数据 结束行动的时候调用页面单独点击也调用
             for ship_code in server_config.ship_code_list:
                 if self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.action_type == 2 and \
                         self.server_data_obj_dict.get(ship_code).mqtt_send_get_obj.action_id:

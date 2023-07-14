@@ -202,7 +202,7 @@ class MqttSendGet:
         self.send_log = 0  # 是否发送操作日志 不能在接收mqtt回调中发送http请求，会阻塞函数执行
         # 是否开始手动记录点
         self.b_record_point = 0
-        self.record_distance = 5  # 记录点距离
+        self.record_distance = 1  # 记录点距离
         self.record_name = ""  # 记录轨迹名称
         # 包围圈扫描
         self.surrounded_points = None  # 包围圈内点
@@ -240,11 +240,10 @@ class MqttSendGet:
         self.pre_network_backhome = 0
         self.energy_backhome = 0
         self.pre_energy_backhome = 0
-        self.max_pwm_grade = 3  # 自动速度等级
+        self.max_pwm_grade = 15  # 自动速度等级15  1.5m/s
         self.pre_max_pwm_grade = 3
         self.calibration_compass = 0  # 罗盘校准
         self.pre_calibration_compass = 0
-        self.read_write_config()
         self.scan_gap = 10
         self.deep = 0
         self.abnormal_confirm = 0  # 用户确认水泵抽水异常，舵机堵转标志位收到确认1后就停止发送
@@ -252,6 +251,12 @@ class MqttSendGet:
         self.dock_direction = None  # 船坞返航角度
         self.delete_pool_mapId = ""
         self.delete_pool_deviceId = ""
+        self.set_line_deep = 0  # 设置放线深度单位米
+        self.target_speed = 0.5  # 期望船运行速度0.1 -100 单位m/s
+        self.arrive_detect = 0  # 是否到点检测数据  0：到点不检测 1：到点检测
+        self.move_detect = 0  # 设置巡航检测 在船运行的过程中不断抽水检测数据 0：不检测   1：运动时抽水和检测
+        self.save_point = 0  # 设置在船运行的过程中保存路径 0：不保存   1：保存
+        self.read_write_config()  # 读取存储的配置信息
 
     # 读取与写入配置
     def read_write_config(self, r_w=1, b_h=1):
@@ -264,6 +269,7 @@ class MqttSendGet:
             if os.path.exists(self.height_setting_path):
                 with open(self.height_setting_path, 'r') as f:
                     self.height_setting_data = json.load(f)
+                    print('打开保存的self.height_setting_data',self.height_setting_data)
                     if self.height_setting_data.get('network_backhome') is not None:
                         try:
                             s_network_backhome = int(self.height_setting_data.get('network_backhome'))
@@ -304,8 +310,30 @@ class MqttSendGet:
                         if s_max_pwm >= 2000:
                             s_max_pwm = 2000
                         max_pwm = s_max_pwm
-                        self.max_pwm_grade = int((max_pwm - 1500) / 100)
-                    print("self.max_pwm_grade", self.max_pwm_grade)
+                        # self.max_pwm_grade = int((max_pwm - 1500) / 100)
+                    if self.height_setting_data.get('target_speed') is not None:  # 期望速度
+                        s_target_speed = float(self.height_setting_data.get('target_speed'))
+                        if s_target_speed >= 9.9:
+                            s_target_speed = 9.9
+                        if s_target_speed <= 0.3:
+                            s_target_speed = 0.3
+                        self.target_speed = s_target_speed
+                        self.max_pwm_grade = int(self.target_speed * 10)
+                        # self.pre_max_pwm_grade = int(self.target_speed * 10)
+                    if self.height_setting_data.get('arrive_detect') is not None:  # 是否到达目标点就检测数据
+                        s_arrive_detect = int(self.height_setting_data.get('arrive_detect'))
+                        if s_arrive_detect in [0, 1]:
+                            self.arrive_detect = s_arrive_detect
+                    if self.height_setting_data.get('move_detect') is not None:  # 是否运动过程中一直检测
+                        s_move_detect = int(self.height_setting_data.get('move_detect'))
+                        if s_move_detect in [0, 1]:
+                            self.move_detect = s_move_detect
+                    if self.height_setting_data.get('save_point') is not None:  # 是否运动过程中一直检测
+                        s_save_point = int(self.height_setting_data.get('save_point'))
+                        if s_save_point in [0, 1]:
+                            self.save_point = s_save_point
+                            print('修改self.save_point',self.save_point)
+
         elif b_h == 2:
             if os.path.exists(self.base_setting_path):
                 with open(self.base_setting_path, 'r') as f:
@@ -375,6 +403,8 @@ class MqttSendGet:
                     self.pause_continue_data_type = 2  # 电机停止时设置取消暂停
                     self.dock_lng_lat = []  # 停止时设置取消船坞位置
                     self.dock_direction = 0  # 停止时设置取消船坞方向
+                    if self.task_id:   # 点击停止时候取消任务模式
+                        self.cancel_action = 1
                 nwse_dict = {
                     0: 10,
                     90: 190,
@@ -428,12 +458,12 @@ class MqttSendGet:
                             send_info = "点击采样"
                         else:
                             self.b_draw = 0
-                    elif self.ship_type == config.ShipType.water_detect:# 水质检测船可以不用设置采样瓶号 深度和容量
+                    elif self.ship_type == config.ShipType.water_detect:  # 水质检测船可以不用设置采样瓶号 深度和容量
                         self.b_draw = int(switch_data.get('b_draw'))
                         self.draw_deep = 0.5
                         self.draw_capacity = 1000
                         self.draw_bottle_id = 7
-                    elif self.ship_type == config.ShipType.multi_draw_detect:# 采样检测船可以只设置瓶号 不用设置采样深度和容量
+                    elif self.ship_type == config.ShipType.multi_draw_detect:  # 采样检测船可以只设置瓶号 不用设置采样深度和容量
                         self.b_draw = int(switch_data.get('b_draw'))
                         if self.draw_bottle_id == 7:
                             if not self.draw_deep:
@@ -466,11 +496,7 @@ class MqttSendGet:
                     }
                     send_http_log(request_type="POST", data=send_log_data, url=config.http_log)
                 self.logger.info({'topic': topic,
-                                  'b_sampling': switch_data.get('b_sampling'),
-                                  'b_draw': switch_data.get('b_draw'),
-                                  'headlight': switch_data.get('headlight'),
-                                  'audio_light': switch_data.get('audio_light'),
-                                  'side_light': switch_data.get('side_light'),
+                                  '开关控制信息': switch_data
                                   })
             # 处理初始点击确定湖数据
             elif topic == 'pool_click_%s' % self.ship_code:
@@ -493,7 +519,7 @@ class MqttSendGet:
             # 用户点击经纬度和图层 保存到指定路径
             elif topic == 'user_lng_lat_%s' % self.ship_code:
                 user_lng_lat_data = json.loads(msg.payload)
-                if user_lng_lat_data.get('area_scan'):
+                if user_lng_lat_data.get('area_scan'):  # 区域扫描启动
                     self.surrounded_start = 1
                 elif user_lng_lat_data.get('path_id'):
                     self.path_id = user_lng_lat_data.get('path_id')
@@ -509,7 +535,7 @@ class MqttSendGet:
                     self.target_lng_lat_status = [0] * len(lng_lat)
                     self.zoom.append(15)
                 self.logger.info({'topic': topic,
-                                  'user_lng_lat_data': user_lng_lat_data,
+                                  '用户点击经纬度和图层': user_lng_lat_data,
                                   })
             # 用户设置自动求取检测点经纬度
             elif topic == 'auto_lng_lat_%s' % self.ship_code:
@@ -619,8 +645,7 @@ class MqttSendGet:
                     if s_max_pwm >= 2000:
                         s_max_pwm = 2000
                     max_pwm = s_max_pwm
-                    self.max_pwm_grade = int((max_pwm - 1500) / 100)
-                print("self.max_pwm_grade", self.max_pwm_grade)
+                    # self.max_pwm_grade = int((max_pwm - 1500) / 100)
                 if height_setting_data.get("info_type") is None:
                     self.logger.error('"height_setting_data"设置启动消息没有"info_type"字段')
                     return
@@ -679,6 +704,26 @@ class MqttSendGet:
                                         self.calibration_compass = s_calibration_compass
                                 except Exception as e:
                                     print({'error': e})
+                            if self.height_setting_data.get('target_speed') is not None:  # 期望速度
+                                s_target_speed = float(self.height_setting_data.get('target_speed'))
+                                if s_target_speed >= 9.9:
+                                    s_target_speed = 9.9
+                                if s_target_speed <= 0.3:
+                                    s_target_speed = 0.3
+                                self.target_speed = s_target_speed
+                                self.max_pwm_grade = int(self.target_speed * 10)
+                            if self.height_setting_data.get('arrive_detect') is not None:  # 是否到达目标点就检测数据
+                                s_arrive_detect = int(self.height_setting_data.get('arrive_detect'))
+                                if s_arrive_detect in [0, 1]:
+                                    self.arrive_detect = s_arrive_detect
+                            if self.height_setting_data.get('move_detect') is not None:  # 是否运动过程中一直检测
+                                s_move_detect = int(self.height_setting_data.get('move_detect'))
+                                if s_move_detect in [0, 1]:
+                                    self.move_detect = s_move_detect
+                            if self.height_setting_data.get('save_point') is not None:  # 是否运动过程中保存点轨迹
+                                s_save_point = int(self.height_setting_data.get('save_point'))
+                                if s_save_point in [0, 1]:
+                                    self.save_point = s_save_point
                         config.update_height_setting()
                     # 恢复默认配置
                     elif info_type == 4:
@@ -831,7 +876,7 @@ class MqttSendGet:
                 if self.action_type == 2:
                     self.cancel_action = 1
                 self.logger.info({'topic': topic,
-                                  'action_data': action_data,
+                                  '行动话题数据': action_data,
                                   })
 
             # 暂停开始消息
@@ -928,6 +973,14 @@ class MqttSendGet:
                 if abnormal_data.get("confirm") is not None:
                     self.abnormal_confirm = int(abnormal_data.get("confirm"))
                     self.logger.info({'pump_steer_abnormal_': abnormal_data})
+
+            # 卷线深度话题
+            elif topic == 'line_deep_%s' % self.ship_code:
+                line_deep_data = json.loads(msg.payload)
+                if line_deep_data.get("type") is not None and line_deep_data.get("type") == 1:
+                    self.set_line_deep = float(line_deep_data.get("set_deep"))
+                    self.logger.info({'设置拉线深度话题数据': line_deep_data})
+
         except Exception as e:
             self.logger.error({'error': e})
 

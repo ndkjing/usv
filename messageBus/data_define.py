@@ -265,6 +265,7 @@ class DataDefine:
             ('pump_steer_abnormal_%s' % ship_code, 0),  # 抽水泵异常情况上传
             ('dock_position_%s' % ship_code, 0),  # 船坞返航点设置
             ('dock_setting_%s' % ship_code, 0),  # 船坞运动数据设置
+            ('line_deep_%s' % ship_code, 0),  # 卷线深度话题设置
 
         )
         self.pool_code = ''
